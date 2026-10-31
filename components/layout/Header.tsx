@@ -42,6 +42,10 @@ export function Header() {
                 비용 계산기
               </Link>
               <Separator orientation="vertical" className="mx-1 h-4" />
+              <Link href="/cars" className={navCls(pathname.startsWith("/cars"))}>
+                차종별 비용
+              </Link>
+              <Separator orientation="vertical" className="mx-1 h-4" />
               <button
                 onClick={() => setShowAnalysisModal(true)}
                 className={navCls(false)}

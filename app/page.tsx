@@ -63,6 +63,11 @@ export default function Home() {
             className="font-semibold text-primary underline-offset-2 hover:underline"
           >
             정비 비용 계산기 바로가기 →
+          </Link> · <Link
+            href="/cars"
+            className="font-semibold text-primary underline-offset-2 hover:underline"
+          >
+            차종별 소모품 비용 보기 →
           </Link>
         </p>
       </div>
