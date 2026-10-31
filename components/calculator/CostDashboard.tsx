@@ -12,6 +12,14 @@ interface CostDashboardProps {
   summary: CostSummary | null
 }
 
+function trackEvent(type: "part_click" | "gongim_click", carId: string, partId?: string) {
+  fetch("/api/stats/track", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type, carId, partId }),
+  }).catch(() => {})
+}
+
 export function CostDashboard({ car, summary }: CostDashboardProps) {
   if (!car) {
     return <EmptyState message="차량을 선택하면 비용 분석이 시작됩니다." />
@@ -82,11 +90,18 @@ export function CostDashboard({ car, summary }: CostDashboardProps) {
             </div>
           </div>
 
-          {/* 오른쪽: 서비스 센터 (비교 참고용) */}
+          {/* 오른쪽: 공식 서비스 센터 (비교) */}
           <div className="space-y-1.5 rounded-lg bg-secondary/70 p-3">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground/70">
-              서비스 센터
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground/70">
+                서비스 센터
+              </p>
+              {summary.savingsPercent > 0 && (
+                <span className="rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400">
+                  -{summary.savingsPercent}%
+                </span>
+              )}
+            </div>
             <div className="flex justify-between text-xs text-muted-foreground/70">
               <span>부품비</span>
               <span className="tabular-nums">{formatPrice(summary.dealerPartsTotal)}</span>
@@ -95,11 +110,18 @@ export function CostDashboard({ car, summary }: CostDashboardProps) {
               <span>공임</span>
               <span className="tabular-nums">{formatPrice(summary.dealerLaborTotal)}</span>
             </div>
-            <div className="flex justify-between border-t border-border/50 pt-1.5">
-              <span className="text-sm font-semibold text-muted-foreground">합계</span>
-              <span className="text-sm font-semibold tabular-nums text-muted-foreground">
-                {formatPrice(summary.dealerTotal)}
-              </span>
+            <div className="flex flex-col gap-0.5 border-t border-border/50 pt-1.5">
+              <div className="flex justify-between">
+                <span className="text-sm font-semibold text-muted-foreground">합계</span>
+                <span className="text-sm font-semibold tabular-nums text-muted-foreground">
+                  {formatPrice(summary.dealerTotal)}
+                </span>
+              </div>
+              {summary.savings > 0 && (
+                <p className="text-right text-[10px] font-semibold tabular-nums text-emerald-400">
+                  {formatPriceCompact(summary.savings)} 저렴
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -137,6 +159,7 @@ export function CostDashboard({ car, summary }: CostDashboardProps) {
             href={getCoupangSearchUrl(part.coupangKeyword)}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackEvent("part_click", car.id, part.id)}
             className={cn(
               "flex w-full items-center justify-between rounded-lg border border-border bg-secondary px-3.5 py-2.5 text-sm transition-colors hover:border-primary/30 hover:bg-primary/5"
             )}
@@ -157,6 +180,7 @@ export function CostDashboard({ car, summary }: CostDashboardProps) {
           href={GONGIM_RESERVATION_URL}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackEvent("gongim_click", car.id)}
           className="block w-full"
         >
           <Button className="w-full gap-2 font-semibold" size="lg">

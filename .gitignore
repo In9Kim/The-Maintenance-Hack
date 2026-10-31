@@ -1,1 +1,8 @@
 node_modules
+.env*
+.next/
+*.tsbuildinfo
+.claude/settings.local.json
+data/verified_history.json
+data/stats.json
+data/cache_stats.json

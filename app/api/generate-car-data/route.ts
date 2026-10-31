@@ -1,12 +1,62 @@
 import { NextRequest, NextResponse } from "next/server"
-import { generateCarMaintenanceData, type GenerateCarInput } from "@/lib/gemini"
+import { generateCarMaintenanceData, decodeVin, type GenerateCarInput } from "@/lib/gemini"
+import type { CarModel } from "@/types"
 import fs from "fs"
 import path from "path"
+
+function normalizeForMatch(str: string): string {
+  return str.toLowerCase().replace(/[\s\-_]/g, "").replace(/[^\w가-힣]/g, "")
+}
+
+function isSimilarCar(existing: CarModel, brand: string, model: string, generation?: string): boolean {
+  if (normalizeForMatch(existing.brand) !== normalizeForMatch(brand)) return false
+
+  const normExisting = normalizeForMatch(existing.model)
+  const normInput = normalizeForMatch(model)
+  const modelMatch =
+    normExisting === normInput ||
+    normExisting.includes(normInput) ||
+    normInput.includes(normExisting)
+
+  if (!modelMatch) return false
+
+  if (generation && existing.generation) {
+    const normExistingGen = normalizeForMatch(existing.generation)
+    const normInputGen = normalizeForMatch(generation)
+    return normExistingGen.includes(normInputGen) || normInputGen.includes(normExistingGen)
+  }
+
+  return true
+}
+
+function readVehiclesDB(): { cars: CarModel[] } {
+  const dataPath = path.join(process.cwd(), "data", "vehicles.json")
+  return JSON.parse(fs.readFileSync(dataPath, "utf-8"))
+}
+
+function writeVehiclesDB(db: { cars: CarModel[] }): void {
+  const dataPath = path.join(process.cwd(), "data", "vehicles.json")
+  fs.writeFileSync(dataPath, JSON.stringify(db, null, 2), "utf-8")
+}
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const input = body as GenerateCarInput
+    let input = body as GenerateCarInput
+
+    // VIN이 제공된 경우 먼저 디코딩하여 표준화된 차량 정보 획득
+    const VIN_PLACEHOLDER = "_vin_"
+    if (input.vin) {
+      const vinInfo = await decodeVin(input.vin)
+      input = {
+        ...input,
+        brand: vinInfo.brand ?? (input.brand !== VIN_PLACEHOLDER ? input.brand : ""),
+        model: vinInfo.model ?? (input.model !== VIN_PLACEHOLDER ? input.model : ""),
+        generation: vinInfo.generation ?? input.generation,
+        yearRange: vinInfo.yearRange ?? input.yearRange,
+        engineType: vinInfo.engineType ?? (input.engineType !== VIN_PLACEHOLDER ? input.engineType : ""),
+      }
+    }
 
     if (!input.brand || !input.model || !input.engineType) {
       return NextResponse.json(
@@ -15,22 +65,42 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    // 1단계: Gemini 호출 전 DB 사전 중복 검사 (Fuzzy Matching)
+    try {
+      const db = readVehiclesDB()
+      const existing = db.cars.find((c) =>
+        isSimilarCar(c, input.brand, input.model, input.generation)
+      )
+      if (existing) {
+        console.log(`[중복 감지] 사전 검사: ${existing.brand} ${existing.model} ${existing.generation}`)
+        return NextResponse.json({ car: existing, duplicate: true })
+      }
+    } catch {
+      // DB 읽기 실패는 무시하고 Gemini 호출 진행
+    }
+
+    // 2단계: Gemini로 정규화된 차종 데이터 생성
     const carData = await generateCarMaintenanceData(input)
 
-    // 파일 캐싱: 개발 환경 또는 파일시스템이 writable한 경우
-    // Vercel 배포 환경에서는 read-only이므로 catch 후 무시
+    // 3단계: Gemini 응답의 표준화된 모델명으로 재중복 검사
     try {
-      const dataPath = path.join(process.cwd(), "data", "vehicles.json")
-      const raw = fs.readFileSync(dataPath, "utf-8")
-      const current = JSON.parse(raw) as { cars: { id: string }[] }
+      const db = readVehiclesDB()
 
-      if (!current.cars.some((c) => c.id === carData.id)) {
-        current.cars.push(carData)
-        fs.writeFileSync(dataPath, JSON.stringify(current, null, 2), "utf-8")
-        console.log(`[캐시] 새 차종 저장: ${carData.brand} ${carData.model} (${carData.id})`)
+      const existingAfterNorm = db.cars.find((c) =>
+        isSimilarCar(c, carData.brand, carData.model, carData.generation)
+      )
+      if (existingAfterNorm) {
+        console.log(`[중복 감지] 정규화 후 검사: ${existingAfterNorm.brand} ${existingAfterNorm.model}`)
+        return NextResponse.json({ car: existingAfterNorm, duplicate: true })
+      }
+
+      // 중복 없음 → 신규 저장 (is_verified: false로 저장 — 관리자 검증 필요)
+      if (!db.cars.some((c) => c.id === carData.id)) {
+        db.cars.push({ ...carData, is_verified: false })
+        writeVehiclesDB(db)
+        console.log(`[신규 저장] ${carData.brand} ${carData.model} (${carData.id}) — 검증 대기`)
       }
     } catch (cacheErr) {
-      // 파일 쓰기 실패는 비치명적 — 응답은 정상 반환
       console.warn("[캐시 건너뜀]", cacheErr instanceof Error ? cacheErr.message : cacheErr)
     }
 

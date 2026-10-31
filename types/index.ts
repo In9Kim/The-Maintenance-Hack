@@ -51,12 +51,25 @@ export interface MaintenancePart {
 
 export interface CarModel {
   id: string
-  brand: "기아" | "현대" | "제네시스" | "테슬라"
+  brand: "기아" | "현대" | "제네시스" | "테슬라" | string
   model: string
   generation: string
   yearRange: string
   engineTypes: string[]
   parts: MaintenancePart[]
+  /** undefined = 기존 검증 차종(true 취급), false = AI 생성 후 미검증 */
+  is_verified?: boolean
+}
+
+export interface VehicleStats {
+  carViews: Record<string, number>
+  partClicks: Record<string, number>
+  gongimClicks: Record<string, number>
+}
+
+export interface DuplicateGroup {
+  cars: CarModel[]
+  reason: string
 }
 
 export interface CostItem {

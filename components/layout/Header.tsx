@@ -1,24 +1,28 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Wrench, Upload } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Modal } from "@/components/ui/modal"
 
 export function Header() {
   const [showAnalysisModal, setShowAnalysisModal] = useState(false)
+  const pathname = usePathname()
 
-  function handleGuideClick(e: React.MouseEvent) {
-    e.preventDefault()
-    document.getElementById("guide-section")?.scrollIntoView({ behavior: "smooth" })
-  }
+  const navCls = (active: boolean) =>
+    `rounded-md px-3 py-1.5 transition-colors hover:bg-accent hover:text-foreground ${
+      active ? "text-foreground font-semibold" : "text-muted-foreground"
+    }`
 
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-md">
         <div className="container mx-auto max-w-7xl px-4">
           <div className="flex h-14 items-center justify-between">
-            <div className="flex items-center gap-2.5">
+            {/* 로고 */}
+            <Link href="/" className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                 <Wrench className="h-4 w-4 text-primary-foreground" />
               </div>
@@ -26,30 +30,24 @@ export function Header() {
               <span className="hidden text-xs text-muted-foreground sm:inline">
                 The Maintenance Hack
               </span>
-            </div>
+            </Link>
 
+            {/* 네비게이션 */}
             <nav className="flex items-center gap-1 text-sm">
-              <a
-                href="#"
-                className="rounded-md px-3 py-1.5 text-foreground transition-colors hover:bg-accent"
-              >
-                계산기
-              </a>
+              <Link href="/" className={navCls(pathname === "/")}>
+                호환성 검증
+              </Link>
+              <Separator orientation="vertical" className="mx-1 h-4" />
+              <Link href="/calculator" className={navCls(pathname === "/calculator")}>
+                비용 계산기
+              </Link>
               <Separator orientation="vertical" className="mx-1 h-4" />
               <button
                 onClick={() => setShowAnalysisModal(true)}
-                className="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                className={navCls(false)}
               >
                 견적서 분석
               </button>
-              <Separator orientation="vertical" className="mx-1 h-4" />
-              <a
-                href="#guide-section"
-                onClick={handleGuideClick}
-                className="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              >
-                가이드
-              </a>
             </nav>
           </div>
         </div>
