@@ -32,6 +32,8 @@ export function StatsPanel({ cars }: Props) {
   const [stats, setStats] = useState<CarStat[] | null>(null)
   const [topParts, setTopParts] = useState<{ key: string; count: number }[]>([])
   const [cacheStats, setCacheStats] = useState<CacheStatsData | null>(null)
+  const [outbound, setOutbound] = useState<Record<string, number>>({})
+  const [byDay, setByDay] = useState<Record<string, { events: number; outbound: number }>>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -42,6 +44,8 @@ export function StatsPanel({ cars }: Props) {
       .then(([usageData, cacheData]) => {
         setStats(usageData.carStats ?? [])
         setTopParts(usageData.topParts ?? [])
+        setOutbound(usageData.outbound ?? {})
+        setByDay(usageData.byDay ?? {})
         setCacheStats(cacheData)
       })
       .catch(() => setStats([]))
@@ -61,6 +65,8 @@ export function StatsPanel({ cars }: Props) {
 
   return (
     <div className="space-y-4">
+    {/* 구매·예약 사이트 이동 (1차 목표 지표) */}
+    <OutboundCard outbound={outbound} byDay={byDay} />
     {/* Google Sheets 캐시 절감 통계 */}
     <CacheSavingsCard data={cacheStats} />
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -260,6 +266,55 @@ function StatRow({
         <span>{label}</span>
       </div>
       <span className="tabular-nums font-medium">{value.toLocaleString()}</span>
+    </div>
+  )
+}
+
+const OUTBOUND_LABELS: Record<string, string> = { coupang: "쿠팡", naver: "네이버", gongim: "공임나라", other: "기타" }
+
+function OutboundCard({
+  outbound,
+  byDay,
+}: {
+  outbound: Record<string, number>
+  byDay: Record<string, { events: number; outbound: number }>
+}) {
+  const total = Object.values(outbound).reduce((a, b) => a + b, 0)
+  const days = Object.entries(byDay)
+    .sort(([a], [b]) => b.localeCompare(a))
+    .slice(0, 7)
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <p className="mb-3 text-sm font-semibold">구매·예약 사이트 이동 (누적 {total.toLocaleString("ko-KR")}회)</p>
+      <div className="mb-4 flex flex-wrap gap-2">
+        {Object.keys(OUTBOUND_LABELS).map((k) => (
+          <span key={k} className="rounded-full border border-border px-3 py-1 text-xs">
+            {OUTBOUND_LABELS[k]} <b className="tabular-nums">{(outbound[k] ?? 0).toLocaleString("ko-KR")}</b>
+          </span>
+        ))}
+      </div>
+      {days.length > 0 ? (
+        <table className="w-full text-xs">
+          <thead className="text-muted-foreground">
+            <tr>
+              <th className="py-1 text-left font-medium">날짜</th>
+              <th className="py-1 text-right font-medium">전체 행동</th>
+              <th className="py-1 text-right font-medium">사이트 이동</th>
+            </tr>
+          </thead>
+          <tbody>
+            {days.map(([day, v]) => (
+              <tr key={day} className="border-t border-border">
+                <td className="py-1">{day}</td>
+                <td className="py-1 text-right tabular-nums">{v.events}</td>
+                <td className="py-1 text-right tabular-nums">{v.outbound}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-xs text-muted-foreground">아직 기록이 없습니다. (구글시트 연결 후 쌓이기 시작해요)</p>
+      )}
     </div>
   )
 }

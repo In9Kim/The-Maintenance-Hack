@@ -21,8 +21,10 @@ export function generateStaticParams() {
   return seoCars().map((car) => ({ carId: car.id }))
 }
 
-export function generateMetadata({ params }: { params: { carId: string } }): Metadata {
-  const car = getSeoCar(params.carId)
+type Props = { params: Promise<{ carId: string }> }
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const car = getSeoCar((await params).carId)
   if (!car) return {}
   const name = carShortName(car)
   return {
@@ -32,8 +34,8 @@ export function generateMetadata({ params }: { params: { carId: string } }): Met
   }
 }
 
-export default function CarPage({ params }: { params: { carId: string } }) {
-  const car = getSeoCar(params.carId)
+export default async function CarPage({ params }: Props) {
+  const car = getSeoCar((await params).carId)
   if (!car) notFound()
 
   const name = carShortName(car)

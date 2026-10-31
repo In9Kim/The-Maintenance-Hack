@@ -1,53 +1,52 @@
-import { NextRequest, NextResponse } from "next/server"
-import type { VehicleStats } from "@/types"
-import fs from "fs"
-import path from "path"
+import { NextRequest, NextResponse, after } from "next/server"
+import { logEvent } from "@/lib/googleSheets"
 
-const STATS_PATH = path.join(process.cwd(), "data", "stats.json")
+// 허용하는 행동 유형과 이동 대상
+const TYPES = new Set(["outbound", "car_view", "calc_use", "report"])
+const TARGETS = new Set(["coupang", "naver", "gongim", "other", ""])
 
-function readStats(): VehicleStats {
-  try {
-    return JSON.parse(fs.readFileSync(STATS_PATH, "utf-8"))
-  } catch {
-    return { carViews: {}, partClicks: {}, gongimClicks: {} }
-  }
+// 예전 계산기 코드 호환: part_click → 쿠팡 이동, gongim_click → 공임나라 이동
+const LEGACY: Record<string, { type: string; target: string }> = {
+  part_click: { type: "outbound", target: "coupang" },
+  gongim_click: { type: "outbound", target: "gongim" },
 }
 
-function writeStats(stats: VehicleStats): void {
-  fs.writeFileSync(STATS_PATH, JSON.stringify(stats, null, 2), "utf-8")
-}
+const clip = (v: unknown, max: number) => (typeof v === "string" ? v.slice(0, max) : "")
 
 export async function POST(req: NextRequest) {
+  let body: Record<string, unknown>
   try {
-    const { type, carId, partId } = await req.json() as {
-      type: "car_view" | "part_click" | "gongim_click"
-      carId: string
-      partId?: string
-    }
-
-    if (!type || !carId) {
-      return NextResponse.json({ error: "type, carId는 필수입니다." }, { status: 400 })
-    }
-
-    const stats = readStats()
-
-    if (type === "car_view") {
-      stats.carViews[carId] = (stats.carViews[carId] ?? 0) + 1
-    } else if (type === "part_click" && partId) {
-      const key = `${carId}:${partId}`
-      stats.partClicks[key] = (stats.partClicks[key] ?? 0) + 1
-    } else if (type === "gongim_click") {
-      stats.gongimClicks[carId] = (stats.gongimClicks[carId] ?? 0) + 1
-    }
-
-    try {
-      writeStats(stats)
-    } catch {
-      // Vercel 등 read-only 환경에서는 무시
-    }
-
-    return NextResponse.json({ ok: true })
+    body = JSON.parse(await req.text())
   } catch {
-    return NextResponse.json({ error: "통계 기록 실패" }, { status: 500 })
+    return NextResponse.json({ error: "잘못된 요청입니다." }, { status: 400 })
   }
+
+  const legacy = LEGACY[clip(body.type, 30)]
+  const type = legacy?.type ?? clip(body.type, 30)
+  const target = legacy?.target ?? clip(body.target, 20)
+  if (!TYPES.has(type) || !TARGETS.has(target)) {
+    return NextResponse.json({ error: "알 수 없는 이벤트입니다." }, { status: 400 })
+  }
+
+  let referrer = ""
+  try {
+    const ref = clip(body.referrer, 300)
+    if (ref) referrer = new URL(ref).hostname
+  } catch {
+    /* 잘못된 referrer 무시 */
+  }
+
+  const event = {
+    type,
+    target,
+    carId: clip(body.carId, 100),
+    partId: clip(body.partId, 150),
+    path: clip(body.path, 300),
+    referrer,
+    meta: typeof body.meta === "object" && body.meta ? (body.meta as Record<string, unknown>) : undefined,
+  }
+
+  // 응답은 바로 보내고, 시트 기록은 뒤에서 처리
+  after(() => logEvent(event))
+  return NextResponse.json({ ok: true })
 }

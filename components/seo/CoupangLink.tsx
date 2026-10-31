@@ -3,12 +3,23 @@
 import { useEffect, useState } from "react"
 import { ShoppingCart } from "lucide-react"
 import { getCoupangSearchUrl } from "@/lib/utils"
+import { OutboundLink } from "@/components/seo/OutboundLink"
 
 /**
  * 쿠팡 파트너스 딥링크 버튼.
  * /api/coupang-link 로 수익 추적 링크를 받아오고, 실패하면 일반 검색 링크로 대체합니다.
  */
-export function CoupangLink({ keyword, label = "쿠팡에서 최저가 보기" }: { keyword: string; label?: string }) {
+export function CoupangLink({
+  keyword,
+  label = "쿠팡에서 최저가 보기",
+  carId,
+  partId,
+}: {
+  keyword: string
+  label?: string
+  carId?: string
+  partId?: string
+}) {
   const [href, setHref] = useState(() => getCoupangSearchUrl(keyword))
 
   useEffect(() => {
@@ -29,14 +40,16 @@ export function CoupangLink({ keyword, label = "쿠팡에서 최저가 보기" }
   }, [keyword])
 
   return (
-    <a
+    <OutboundLink
       href={href}
-      target="_blank"
-      rel="sponsored nofollow noopener"
+      target="coupang"
+      carId={carId}
+      partId={partId}
+      sponsored
       className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
     >
       <ShoppingCart className="h-4 w-4" />
       {label}
-    </a>
+    </OutboundLink>
   )
 }

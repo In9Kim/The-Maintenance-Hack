@@ -17,6 +17,7 @@ import {
   ExternalLink,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { track } from "@/lib/track"
 import type { CompatibilityResult, PartAnalysis } from "@/lib/gemini"
 
 // ─── 타입 ──────────────────────────────────────────────────────────
@@ -258,6 +259,9 @@ function ResultCard({ data, onReset, userInput }: { data: ApiResponse; onReset: 
             href={coupangUrl}
             target="_blank"
             rel="noopener noreferrer sponsored"
+            onClick={() =>
+              track({ type: "outbound", target: "coupang", meta: { from: "verify", part: inputPart, model: modelName } })
+            }
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#fe6001] px-4 py-3 text-sm font-bold text-white transition-all hover:bg-[#e55500]"
           >
             {coupangLoading ? (

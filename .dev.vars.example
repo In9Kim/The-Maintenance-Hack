@@ -1,0 +1,8 @@
+# 로컬 `npm run preview`용 예시. 복사해서 .dev.vars 로 저장 (커밋 금지)
+NEXTJS_ENV=development
+GEMINI_API_KEY=
+APPS_SCRIPT_URL=
+APPS_SCRIPT_SECRET=
+ADMIN_PASSWORD=
+COUPANG_ACCESS_KEY=
+COUPANG_SECRET_KEY=

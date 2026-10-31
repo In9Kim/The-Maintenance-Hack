@@ -1,46 +1,11 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse, after } from "next/server"
 import { verifyCompatibility } from "@/lib/gemini"
-import { lookupCache, writeCache, makeVinPrefix, GEMINI_COST_PER_CALL_KRW } from "@/lib/googleSheets"
+import { lookupCache, writeCache, makeVinPrefix, logEvent, sheetsEnabled } from "@/lib/googleSheets"
 import { createHash } from "crypto"
-import { existsSync, readFileSync, writeFileSync } from "fs"
-import path from "path"
 
-const HISTORY_PATH = path.join(process.cwd(), "data", "verified_history.json")
-const CACHE_STATS_PATH = path.join(process.cwd(), "data", "cache_stats.json")
 const VIN_REGEX = /^[A-HJ-NPR-Z0-9]{17}$/i
 // Block SSRF to private/loopback ranges
 const BLOCKED_HOSTNAMES = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.)/
-
-interface CacheStats {
-  hits: number
-  misses: number
-  estimatedSavingsKrw: number
-  lastUpdated: string
-}
-
-function readCacheStats(): CacheStats {
-  try {
-    if (existsSync(CACHE_STATS_PATH)) return JSON.parse(readFileSync(CACHE_STATS_PATH, "utf-8"))
-  } catch { /* fallthrough */ }
-  return { hits: 0, misses: 0, estimatedSavingsKrw: 0, lastUpdated: new Date().toISOString() }
-}
-
-function writeCacheStats(stats: CacheStats): void {
-  try {
-    writeFileSync(CACHE_STATS_PATH, JSON.stringify(stats, null, 2), "utf-8")
-  } catch {
-    console.warn("[verify] Could not write cache_stats.json")
-  }
-}
-
-function readHistory(): Record<string, unknown>[] {
-  if (!existsSync(HISTORY_PATH)) return []
-  try {
-    return JSON.parse(readFileSync(HISTORY_PATH, "utf-8"))
-  } catch {
-    return []
-  }
-}
 
 async function extractProductInfoFromUrl(url: string): Promise<string | null> {
   try {
@@ -145,62 +110,43 @@ export async function POST(req: NextRequest) {
     const safeCategory =
       typeof productCategory === "string" && productCategory.trim() ? productCategory.trim() : undefined
 
-    // ── Cache-Aside: Google Apps Script 캐시 조회 ────────────────────────
+    // ── Cache-Aside: 구글시트 캐시 조회 ────────────────────────────────
     const vinPrefix = makeVinPrefix(normalizedVin)
-    const sheetsEnabled = !!process.env.APPS_SCRIPT_URL
+    const useSheets = sheetsEnabled()
 
     let result
     let cacheHit = false
 
-    if (sheetsEnabled) {
+    if (useSheets) {
       const cached = await lookupCache(vinPrefix, productInfo)
       if (cached) {
         result = cached
         cacheHit = true
-        // 절감 통계 기록
-        const stats = readCacheStats()
-        stats.hits += 1
-        stats.estimatedSavingsKrw = Math.round((stats.hits * GEMINI_COST_PER_CALL_KRW) * 100) / 100
-        stats.lastUpdated = new Date().toISOString()
-        writeCacheStats(stats)
       }
     }
 
     if (!result) {
       // 캐시 미스 → Gemini API 호출
       result = await verifyCompatibility(normalizedVin, productInfo, safeCategory)
-
-      // 절감 통계 기록 (미스)
-      const stats = readCacheStats()
-      stats.misses += 1
-      stats.lastUpdated = new Date().toISOString()
-      writeCacheStats(stats)
-
-      // 결과를 Google Sheets에 비동기 저장 (응답 속도에 영향 없음)
-      if (sheetsEnabled) {
-        writeCache(vinPrefix, productInfo, result).catch(() => {})
-      }
     }
-    // ─────────────────────────────────────────────────────────────────────
 
-    // Persist anonymized record (VIN is hashed — no PII stored)
+    // 응답 후 백그라운드 저장: 캐시(미스일 때) + 행동 기록 (VIN은 해시만 — 개인정보 미저장)
     const vinHash = createHash("sha256").update(normalizedVin).digest("hex").slice(0, 16)
-    const history = readHistory()
-    history.push({
-      timestamp: new Date().toISOString(),
-      vinHash,
-      productCategory: safeCategory ?? null,
-      productInfo: productInfo.slice(0, 200),
-      compatibility: result.compatibility,
-      vehicle_spec: result.vehicle_spec,
-      cacheHit,
+    const finalResult = result
+    after(async () => {
+      if (useSheets && !cacheHit) await writeCache(vinPrefix, productInfo, finalResult)
+      await logEvent({
+        type: "verify",
+        meta: {
+          cacheHit,
+          vinHash,
+          category: safeCategory ?? null,
+          product: productInfo.slice(0, 120),
+          compatibility: finalResult.compatibility,
+          model: finalResult.vehicle_spec?.manufacturer_model ?? null,
+        },
+      })
     })
-    try {
-      writeFileSync(HISTORY_PATH, JSON.stringify(history, null, 2), "utf-8")
-    } catch {
-      // Non-critical: log but don't fail the request (read-only FS in prod)
-      console.warn("[verify] Could not write verified_history.json")
-    }
 
     return NextResponse.json({
       ...result,
