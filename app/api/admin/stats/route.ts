@@ -1,22 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-auth"
-import type { VehicleStats } from "@/types"
-import type { CarModel } from "@/types"
-import fs from "fs"
-import path from "path"
-
-function readStats(): VehicleStats {
-  try {
-    return JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "stats.json"), "utf-8"))
-  } catch {
-    return { carViews: {}, partClicks: {}, gongimClicks: {} }
-  }
-}
-
-function readVehicles(): CarModel[] {
-  const db = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "vehicles.json"), "utf-8"))
-  return db.cars
-}
+import { getEventStats } from "@/lib/googleSheets"
+import { getAllCars } from "@/lib/data/all-cars"
 
 export async function GET(req: NextRequest) {
   const token = req.cookies.get(ADMIN_COOKIE)?.value
@@ -24,10 +9,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const stats = readStats()
-  const cars = readVehicles()
+  const [stats, cars] = await Promise.all([getEventStats(), getAllCars()])
 
-  // 차종별 통계 집계 (클릭 합산)
+  // 차종별 통계 집계 (쿠팡 이동은 3점, 공임나라 이동은 5점 가중)
   const carStats = cars.map((car) => {
     const views = stats.carViews[car.id] ?? 0
     const clicks = Object.entries(stats.partClicks)
@@ -37,7 +21,6 @@ export async function GET(req: NextRequest) {
     return { car, views, clicks, gongimClicks, total: views + clicks * 3 + gongimClicks * 5 }
   })
 
-  // 부품별 클릭 Top 10
   const topParts = Object.entries(stats.partClicks)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 10)
@@ -46,6 +29,8 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     carStats: carStats.sort((a, b) => b.total - a.total),
     topParts,
+    outbound: stats.outbound,
+    byDay: stats.byDay,
     raw: stats,
   })
 }

@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse, after } from "next/server"
 import { generateCarMaintenanceData, decodeVin, type GenerateCarInput } from "@/lib/gemini"
 import type { CarModel } from "@/types"
-import fs from "fs"
-import path from "path"
+import { getAllCars } from "@/lib/data/all-cars"
+import { saveGeneratedCar } from "@/lib/googleSheets"
 
 function normalizeForMatch(str: string): string {
   return str.toLowerCase().replace(/[\s\-_]/g, "").replace(/[^\w가-힣]/g, "")
@@ -27,16 +27,6 @@ function isSimilarCar(existing: CarModel, brand: string, model: string, generati
   }
 
   return true
-}
-
-function readVehiclesDB(): { cars: CarModel[] } {
-  const dataPath = path.join(process.cwd(), "data", "vehicles.json")
-  return JSON.parse(fs.readFileSync(dataPath, "utf-8"))
-}
-
-function writeVehiclesDB(db: { cars: CarModel[] }): void {
-  const dataPath = path.join(process.cwd(), "data", "vehicles.json")
-  fs.writeFileSync(dataPath, JSON.stringify(db, null, 2), "utf-8")
 }
 
 export async function POST(req: NextRequest) {
@@ -65,10 +55,10 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 1단계: Gemini 호출 전 DB 사전 중복 검사 (Fuzzy Matching)
+    // 1단계: Gemini 호출 전 DB 사전 중복 검사 (Fuzzy Matching) — 기본 차종 + 시트의 생성 차종
+    const allCars = await getAllCars()
     try {
-      const db = readVehiclesDB()
-      const existing = db.cars.find((c) =>
+      const existing = allCars.find((c) =>
         isSimilarCar(c, input.brand, input.model, input.generation)
       )
       if (existing) {
@@ -83,25 +73,18 @@ export async function POST(req: NextRequest) {
     const carData = await generateCarMaintenanceData(input)
 
     // 3단계: Gemini 응답의 표준화된 모델명으로 재중복 검사
-    try {
-      const db = readVehiclesDB()
+    const existingAfterNorm = allCars.find((c) =>
+      isSimilarCar(c, carData.brand, carData.model, carData.generation)
+    )
+    if (existingAfterNorm) {
+      console.log(`[중복 감지] 정규화 후 검사: ${existingAfterNorm.brand} ${existingAfterNorm.model}`)
+      return NextResponse.json({ car: existingAfterNorm, duplicate: true })
+    }
 
-      const existingAfterNorm = db.cars.find((c) =>
-        isSimilarCar(c, carData.brand, carData.model, carData.generation)
-      )
-      if (existingAfterNorm) {
-        console.log(`[중복 감지] 정규화 후 검사: ${existingAfterNorm.brand} ${existingAfterNorm.model}`)
-        return NextResponse.json({ car: existingAfterNorm, duplicate: true })
-      }
-
-      // 중복 없음 → 신규 저장 (is_verified: false로 저장 — 관리자 검증 필요)
-      if (!db.cars.some((c) => c.id === carData.id)) {
-        db.cars.push({ ...carData, is_verified: false })
-        writeVehiclesDB(db)
-        console.log(`[신규 저장] ${carData.brand} ${carData.model} (${carData.id}) — 검증 대기`)
-      }
-    } catch (cacheErr) {
-      console.warn("[캐시 건너뜀]", cacheErr instanceof Error ? cacheErr.message : cacheErr)
+    // 중복 없음 → 구글시트에 저장 (검증 대기 상태 — 관리자 검증 필요)
+    if (!allCars.some((c) => c.id === carData.id)) {
+      after(() => saveGeneratedCar(carData))
+      console.log(`[신규 저장] ${carData.brand} ${carData.model} (${carData.id}) — 검증 대기`)
     }
 
     return NextResponse.json({ car: carData })

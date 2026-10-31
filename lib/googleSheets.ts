@@ -1,4 +1,5 @@
 import type { CompatibilityResult } from "./gemini"
+import type { CarModel } from "@/types"
 
 // Gemini 2.5 Flash 비용 추정: 호출당 ~2500 input + ~600 output tokens
 // Input: $0.075/1M, Output: $0.30/1M → $0.00037/call ≈ 0.5원 (KRW 1350 기준)
@@ -24,14 +25,22 @@ function getScriptUrl(): string {
   return url
 }
 
-// ── 조회/집계 전용 ── 응답 본문을 읽어야 하므로 일반 mode
+export function sheetsEnabled(): boolean {
+  return !!process.env.APPS_SCRIPT_URL
+}
+
+function withSecret(payload: Record<string, string>): string {
+  const secret = process.env.APPS_SCRIPT_SECRET
+  return new URLSearchParams(secret ? { ...payload, secret } : payload).toString()
+}
+
 // URLSearchParams → application/x-www-form-urlencoded → GAS e.parameter로 수신
 async function callGas<T>(payload: Record<string, string>): Promise<T> {
   const res = await fetch(getScriptUrl(), {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams(payload).toString(),
-    signal: AbortSignal.timeout(10_000),
+    body: withSecret(payload),
+    signal: AbortSignal.timeout(15_000),
   })
   if (!res.ok) throw new Error(`GAS HTTP 오류: ${res.status}`)
   const data = await res.json()
@@ -42,21 +51,13 @@ async function callGas<T>(payload: Record<string, string>): Promise<T> {
   return data as T
 }
 
-// ── 저장 전용 fire-and-forget ──
-// application/x-www-form-urlencoded 은 CORS-safelisted content type
-// → no-cors 모드와 호환, preflight OPTIONS 없이 전송
-// → 응답은 opaque(status=0, body=null)이므로 읽지 않음
+// 저장 전용: 실패해도 예외를 던지지 않음
 async function sendGas(payload: Record<string, string>): Promise<void> {
-  console.log("[gas:send] 전송 데이터:", Object.fromEntries(
-    Object.entries(payload).map(([k, v]) => [k, k === "resultJson" ? `(${v.length}자)` : v])
-  ))
-  await fetch(getScriptUrl(), {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams(payload).toString(),
-    signal: AbortSignal.timeout(10_000),
-  })
+  try {
+    await callGas(payload)
+  } catch (err) {
+    console.error(`[gas:${payload.action}]`, err)
+  }
 }
 
 /**
@@ -100,17 +101,13 @@ export async function writeCache(
     .filter(Boolean)
     .join(" / ")
 
-  try {
-    await sendGas({
-      action: "save",
-      vinMasked: vinPrefix + "******",
-      inputPart: normalizePartName(inputPart),
-      specs,
-      resultJson: JSON.stringify(result),   // 객체를 미리 직렬화 — GAS가 문자열로 받아 시트에 기록
-    })
-  } catch (err) {
-    console.error("[gas:save]", err)
-  }
+  await sendGas({
+    action: "save",
+    vinMasked: vinPrefix + "******",
+    inputPart: normalizePartName(inputPart),
+    specs,
+    resultJson: JSON.stringify(result), // 객체를 미리 직렬화 — GAS가 문자열로 받아 시트에 기록
+  })
 }
 
 /**
@@ -121,6 +118,105 @@ export async function getCacheRowCount(): Promise<number> {
     const res = await callGas<{ count: number }>({ action: "count" })
     return res.count ?? 0
   } catch {
+    return 0
+  }
+}
+
+// ── 행동 기록 (events 탭) ───────────────────────────────────────────────────
+
+export interface TrackEvent {
+  type: string
+  target?: string
+  carId?: string
+  partId?: string
+  path?: string
+  referrer?: string
+  meta?: Record<string, unknown>
+}
+
+export async function logEvent(e: TrackEvent): Promise<void> {
+  if (!sheetsEnabled()) return
+  await sendGas({
+    action: "event",
+    type: e.type,
+    target: e.target ?? "",
+    carId: e.carId ?? "",
+    partId: e.partId ?? "",
+    path: e.path ?? "",
+    referrer: e.referrer ?? "",
+    meta: e.meta ? JSON.stringify(e.meta) : "",
+  })
+}
+
+export interface EventStats {
+  total: number
+  byType: Record<string, number>
+  outbound: Record<string, number>
+  carViews: Record<string, number>
+  partClicks: Record<string, number>
+  gongimClicks: Record<string, number>
+  verify: { hits: number; misses: number }
+  byDay: Record<string, { events: number; outbound: number }>
+  topPaths: Record<string, number>
+}
+
+export const EMPTY_STATS: EventStats = {
+  total: 0,
+  byType: {},
+  outbound: {},
+  carViews: {},
+  partClicks: {},
+  gongimClicks: {},
+  verify: { hits: 0, misses: 0 },
+  byDay: {},
+  topPaths: {},
+}
+
+export async function getEventStats(days?: number): Promise<EventStats> {
+  if (!sheetsEnabled()) return EMPTY_STATS
+  try {
+    return await callGas<EventStats>({ action: "stats", days: days ? String(days) : "" })
+  } catch (err) {
+    console.error("[gas:stats]", err)
+    return EMPTY_STATS
+  }
+}
+
+// ── AI 생성 차종 (generated_cars 탭) ────────────────────────────────────────
+
+export async function listGeneratedCars(): Promise<CarModel[]> {
+  if (!sheetsEnabled()) return []
+  try {
+    const res = await callGas<{ cars: CarModel[] }>({ action: "car_list" })
+    return res.cars ?? []
+  } catch (err) {
+    console.error("[gas:car_list]", err)
+    return []
+  }
+}
+
+export async function saveGeneratedCar(car: CarModel): Promise<void> {
+  if (!sheetsEnabled()) return
+  const { is_verified: _ignored, ...rest } = car
+  await sendGas({ action: "car_save", carJson: JSON.stringify(rest) })
+}
+
+export async function updateGeneratedCar(id: string, patch: Partial<CarModel>): Promise<CarModel | null> {
+  try {
+    const res = await callGas<{ car: CarModel }>({ action: "car_update", id, patchJson: JSON.stringify(patch) })
+    return res.car
+  } catch (err) {
+    console.error("[gas:car_update]", err)
+    return null
+  }
+}
+
+export async function deleteGeneratedCars(ids: string[]): Promise<number> {
+  try {
+    const res = await callGas<{ removed: number }>({ action: "car_delete", idsJson: JSON.stringify(ids) })
+    return res.removed ?? 0
+  } catch (err) {
+    console.error("[gas:car_delete]", err)
     return 0
   }
 }

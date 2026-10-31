@@ -16,6 +16,7 @@ import {
 import { formatPrice } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
 import { CoupangLink } from "@/components/seo/CoupangLink"
+import { OutboundLink } from "@/components/seo/OutboundLink"
 import { Breadcrumbs, JsonLd, PartnersDisclosure } from "@/components/seo/Shared"
 
 export const dynamicParams = false
@@ -32,8 +33,10 @@ function load(params: Params) {
   return car && part ? { car, part } : null
 }
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
-  const found = load(params)
+type Props = { params: Promise<Params> }
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const found = load(await params)
   if (!found) return {}
   const { car, part } = found
   const name = carShortName(car)
@@ -46,8 +49,8 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
   }
 }
 
-export default function PartPage({ params }: { params: Params }) {
-  const found = load(params)
+export default async function PartPage({ params }: Props) {
+  const found = load(await params)
   if (!found) notFound()
   const { car, part } = found
 
@@ -145,15 +148,16 @@ export default function PartPage({ params }: { params: Params }) {
 
       {/* 행동 버튼 */}
       <section className="mb-10 flex flex-wrap gap-3">
-        <CoupangLink keyword={part.coupangKeyword} label={`${title} 쿠팡 최저가 보기`} />
-        <a
+        <CoupangLink keyword={part.coupangKeyword} label={`${title} 쿠팡 최저가 보기`} carId={car.id} partId={part.id} />
+        <OutboundLink
           href={GONGIM_RESERVATION_URL}
-          target="_blank"
-          rel="noopener nofollow"
+          target="gongim"
+          carId={car.id}
+          partId={part.id}
           className="inline-flex items-center rounded-lg border border-border px-4 py-2.5 text-sm font-semibold hover:bg-accent"
         >
           공임나라 예약
-        </a>
+        </OutboundLink>
         <Link
           href={calculatorHref(car, part)}
           className="inline-flex items-center rounded-lg border border-primary/50 px-4 py-2.5 text-sm font-semibold text-primary hover:bg-primary/10"

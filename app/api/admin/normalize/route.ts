@@ -1,18 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-auth"
 import type { CarModel, DuplicateGroup } from "@/types"
-import fs from "fs"
-import path from "path"
-
-const DATA_PATH = path.join(process.cwd(), "data", "vehicles.json")
-
-function readDB(): { cars: CarModel[] } {
-  return JSON.parse(fs.readFileSync(DATA_PATH, "utf-8"))
-}
-
-function writeDB(db: { cars: CarModel[] }): void {
-  fs.writeFileSync(DATA_PATH, JSON.stringify(db, null, 2), "utf-8")
-}
+import { getAllCars, isBaseCar } from "@/lib/data/all-cars"
+import { deleteGeneratedCars, updateGeneratedCar } from "@/lib/googleSheets"
 
 function normalize(str: string): string {
   return str.toLowerCase().replace(/[\s\-_]/g, "").replace(/[^\w가-힣]/g, "")
@@ -58,9 +48,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const db = readDB()
-  const duplicates = detectDuplicates(db.cars)
-  return NextResponse.json({ duplicates, total: db.cars.length })
+  const cars = await getAllCars()
+  return NextResponse.json({ duplicates: detectDuplicates(cars), total: cars.length })
 }
 
 // 중복 병합: keepId 를 남기고 나머지 제거
@@ -76,14 +65,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "keepId, removeIds 필드가 필요합니다." }, { status: 400 })
     }
 
-    const db = readDB()
-    db.cars = db.cars.filter((c) => !removeIds.includes(c.id))
-    // 유지 차종을 verified로 표시
-    const keeper = db.cars.find((c) => c.id === keepId)
-    if (keeper) keeper.is_verified = true
-    writeDB(db)
+    // 기본 차종(data/vehicles.json)은 삭제 대상에서 제외 — 시트의 생성 차종만 정리
+    const removable = removeIds.filter((id) => id !== keepId && !isBaseCar(id))
+    const removed = removable.length ? await deleteGeneratedCars(removable) : 0
+    // 유지 차종이 생성 차종이면 검증 완료로 표시
+    if (!isBaseCar(keepId)) await updateGeneratedCar(keepId, { is_verified: true })
 
-    return NextResponse.json({ ok: true, removed: removeIds.length })
+    return NextResponse.json({ ok: true, removed, skippedBase: removeIds.length - removable.length })
   } catch {
     return NextResponse.json({ error: "병합 처리 중 오류가 발생했습니다." }, { status: 500 })
   }

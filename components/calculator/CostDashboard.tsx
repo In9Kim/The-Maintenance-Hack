@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator"
 import { cn, formatPrice, formatPriceCompact, getCoupangSearchUrl } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
 import type { CostSummary, CarModel } from "@/types"
+import { track } from "@/lib/track"
 
 interface CostDashboardProps {
   car: CarModel | undefined
@@ -13,11 +14,7 @@ interface CostDashboardProps {
 }
 
 function trackEvent(type: "part_click" | "gongim_click", carId: string, partId?: string) {
-  fetch("/api/stats/track", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ type, carId, partId }),
-  }).catch(() => {})
+  track({ type: "outbound", target: type === "part_click" ? "coupang" : "gongim", carId, partId })
 }
 
 export function CostDashboard({ car, summary }: CostDashboardProps) {

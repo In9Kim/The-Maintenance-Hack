@@ -1,24 +1,17 @@
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-auth"
-import type { CarModel } from "@/types"
-import fs from "fs"
-import path from "path"
+import { getAllCars } from "@/lib/data/all-cars"
 import { VehicleTable } from "@/components/admin/VehicleTable"
 import { NormalizePanel } from "@/components/admin/NormalizePanel"
 import { StatsPanel } from "@/components/admin/StatsPanel"
-
-function readAllVehicles(): CarModel[] {
-  const raw = fs.readFileSync(path.join(process.cwd(), "data", "vehicles.json"), "utf-8")
-  return (JSON.parse(raw) as { cars: CarModel[] }).cars
-}
 
 export default async function AdminDashboardPage() {
   const cookieStore = await cookies()
   const token = cookieStore.get(ADMIN_COOKIE)?.value
   if (!(await verifyAdminToken(token ?? ""))) redirect("/admin/login")
 
-  const cars = readAllVehicles()
+  const cars = await getAllCars()
   const verified = cars.filter((c) => c.is_verified !== false).length
   const unverified = cars.length - verified
 

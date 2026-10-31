@@ -1,0 +1,20 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"main": ".open-next/worker.js",
+	"name": "maintenance-hack",
+	"compatibility_date": "2026-10-01",
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	"services": [
+		{
+			// 자기 자신 참조 (워커 이름과 같아야 함)
+			"binding": "WORKER_SELF_REFERENCE",
+			"service": "maintenance-hack"
+		}
+	],
+	// 무료 방문 분석은 Cloudflare 대시보드 > Workers > maintenance-hack > Metrics 에서 확인
+	"observability": { "enabled": true }
+}
