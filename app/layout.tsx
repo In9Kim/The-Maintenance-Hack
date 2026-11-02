@@ -15,7 +15,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   // 구글 서치콘솔 / 네이버 서치어드바이저 소유 확인 (HTML 태그 방식의 content 값만 환경변수에 넣으면 됨)
   verification: {
-    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    // 확인 코드는 공개되는 값이라 코드에 둬도 됨 (환경변수가 있으면 그 값 우선)
+    google: process.env.GOOGLE_SITE_VERIFICATION || "ZryKbedW7fZaETe8XMndNVYhb0oUfSzHwg_VvBw6DYo",
     other: process.env.NAVER_SITE_VERIFICATION
       ? { "naver-site-verification": process.env.NAVER_SITE_VERIFICATION }
       : undefined,
