@@ -207,7 +207,15 @@ async function main() {
   }
 
   const prevById = new Map(prev.items.map((it) => [it.id, it]))
-  const todo = rows.filter((r) => !prevById.has(r.id) || prevById.get(r.id).needsRetry).slice(0, MAX_NEW_PER_RUN)
+  // 새 글 + 다시 시도할 글. 다시 시도할 글은 검색 기간(기본 120일) 밖으로 밀려났어도 저장된 정보로 처리
+  const listed = new Set(rows.map((r) => r.id))
+  const retryOld = prev.items
+    .filter((it) => it.needsRetry && !listed.has(it.id))
+    .map((it) => ({ id: it.id, title: it.title, date: it.date, url: it.url }))
+  const todo = [...rows.filter((r) => !prevById.has(r.id) || prevById.get(r.id).needsRetry), ...retryOld].slice(
+    0,
+    MAX_NEW_PER_RUN
+  )
 
   const updated = new Map(prevById)
   for (const row of todo) {

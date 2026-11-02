@@ -178,13 +178,319 @@
    "date": "2026-07-02",
    "url": "https://www.molit.go.kr/USR/NEWS/m_71/dtl.jsp?id=95092178",
    "pdfUrl": "https://www.molit.go.kr/LCMS/DWN.jsp?fold=koreaNews/mobile/file&fileName=260702%28%EC%84%9D%EA%B0%84%29_BYD%C2%B7%EB%B2%A4%EC%B8%A0_%EB%93%B1_%EC%9E%90%EB%B0%9C%EC%A0%81_%EC%8B%9C%EC%A0%95%EC%A1%B0%EC%B9%98%28%EB%A6%AC%EC%BD%9C%29%28%EC%9E%90%EB%8F%99%EC%B0%A8%EC%A0%95%EC%B1%85%EA%B3%BC%29.pdf",
-   "summary": "총 6개사 38개 차종 146,505대",
-   "groups": [],
-   "extractedBy": null,
-   "attempts": 1,
-   "needsRetry": true,
-   "firstSeen": "2026-07-02",
-   "error": "GEMINI_API_KEY 없음"
+   "summary": "BYD·벤츠 등 자발적 시정조치(리콜)",
+   "groups": [
+    {
+     "id": "2025-06-19-molit-b5f1da",
+     "makerSlug": "byd",
+     "makerName": "BYD",
+     "maker": "비와이디코리아(유)",
+     "part": "좌석 안전띠 경고 장치",
+     "defect": "좌석 안전띠 미착용 경고가 다른 알림이 뜨는 경우 가려져 보이지 않는 현상이 발생하여 안전기준 부적합",
+     "startDate": "2025-06-19",
+     "total": 18091,
+     "cars": [
+      {
+       "name": "SEALION 7",
+       "from": "2025-07-07",
+       "to": "2026-06-05",
+       "count": 6021
+      },
+      {
+       "name": "ATTO 3",
+       "from": "2024-08-14",
+       "to": "2026-05-27",
+       "count": 4409
+      },
+      {
+       "name": "DOLPHIN",
+       "from": "2025-12-16",
+       "to": "2026-06-05",
+       "count": 1541
+      },
+      {
+       "name": "DOLPHIN Active",
+       "from": "2026-02-06",
+       "to": "2026-05-19",
+       "count": 147
+      },
+      {
+       "name": "SEAL Dynamic AWD",
+       "from": "2024-08-12",
+       "to": "2026-04-16",
+       "count": 666
+      },
+      {
+       "name": "SEAL",
+       "from": "2025-12-08",
+       "to": "2026-05-12",
+       "count": 405
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2025-06-26-molit-1bfdfd",
+     "makerSlug": "mercedes-benz",
+     "makerName": "메르세데스-벤츠",
+     "maker": "메르세데스벤츠코리아(주)",
+     "part": "운전대 전자장치 제어 회로",
+     "defect": "운전대 전자장치 제어 회로의 내구성 부족으로 인해 경음기 및 운전대 버튼 등이 작동하지 않을 가능성",
+     "startDate": "2025-06-26",
+     "total": 2113,
+     "cars": [
+      {
+       "name": "C 300 4MATIC",
+       "from": "2023-06-06",
+       "to": "2024-04-30",
+       "count": 2113
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2025-06-26-molit-04a812",
+     "makerSlug": "stellantis",
+     "makerName": "스텔란티스(지프·푸조 등)",
+     "maker": "스텔란티스코리아(주)",
+     "part": "고압 연료펌프",
+     "defect": "고압 연료펌프 부속품 내구성 부족으로 인해 주행 중 시동이 꺼질 가능성",
+     "startDate": "2025-06-26",
+     "total": 1731,
+     "cars": [
+      {
+       "name": "300C",
+       "from": "2011-09-14",
+       "to": "2014-08-22",
+       "count": 1731
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-07-03-molit-51105e",
+     "makerSlug": "maker-504c66",
+     "makerName": "재규어랜드로버코리아",
+     "maker": "(주)재규어랜드로버코리아",
+     "part": "운전대 에어백 연결장치",
+     "defect": "운전대 에어백 연결장치의 내구성 부족으로 인해 에어백 경고등이 점등되고, 충돌 시 에어백이 작동하지 않을 가능성",
+     "startDate": "2026-07-03",
+     "total": 14373,
+     "cars": [
+      {
+       "name": "디펜더 110 D240",
+       "from": "2020-01-14",
+       "to": "2020-10-26",
+       "count": 653
+      },
+      {
+       "name": "디펜더 110 D250",
+       "from": "2021-04-20",
+       "to": "2026-05-13",
+       "count": 1144
+      },
+      {
+       "name": "디펜더 110 D300",
+       "from": "2021-04-19",
+       "to": "2026-05-22",
+       "count": 1818
+      },
+      {
+       "name": "디펜더 110 P300",
+       "from": "2021-04-15",
+       "to": "2026-05-28",
+       "count": 1088
+      },
+      {
+       "name": "디펜더 110 P400",
+       "from": "2022-05-06",
+       "to": "2026-05-28",
+       "count": 560
+      },
+      {
+       "name": "디펜더 110 P635 OCTA",
+       "from": "2024-10-21",
+       "to": "2026-05-22",
+       "count": 97
+      },
+      {
+       "name": "디펜더 90 D250",
+       "from": "2021-04-19",
+       "to": "2026-05-25",
+       "count": 366
+      },
+      {
+       "name": "디펜더 90 P400",
+       "from": "2023-10-09",
+       "to": "2026-01-14",
+       "count": 34
+      },
+      {
+       "name": "디펜더 130 D300",
+       "from": "2022-08-31",
+       "to": "2025-07-09",
+       "count": 115
+      },
+      {
+       "name": "디펜더 130 P400",
+       "from": "2022-08-24",
+       "to": "2026-04-24",
+       "count": 153
+      },
+      {
+       "name": "디스커버리 D250",
+       "from": "2021-04-26",
+       "to": "2025-04-24",
+       "count": 151
+      },
+      {
+       "name": "디스커버리 D300",
+       "from": "2021-04-22",
+       "to": "2024-06-20",
+       "count": 74
+      },
+      {
+       "name": "디스커버리 D350",
+       "from": "2024-07-02",
+       "to": "2026-05-21",
+       "count": 72
+      },
+      {
+       "name": "디스커버리 P300",
+       "from": "2024-04-05",
+       "to": "2025-12-16",
+       "count": 43
+      },
+      {
+       "name": "디스커버리 P360",
+       "from": "2021-04-12",
+       "to": "2026-06-02",
+       "count": 178
+      },
+      {
+       "name": "더 뉴 레인지로버 D350 LWB",
+       "from": "2022-05-10",
+       "to": "2025-04-28",
+       "count": 468
+      },
+      {
+       "name": "더 뉴 레인지로버 D350 SWB",
+       "from": "2022-01-26",
+       "to": "2023-08-17",
+       "count": 340
+      },
+      {
+       "name": "더 뉴 레인지로버 P530 LWB",
+       "from": "2022-01-18",
+       "to": "2026-06-03",
+       "count": 4475
+      },
+      {
+       "name": "더 뉴 레인지로버 P530 SWB",
+       "from": "2022-01-18",
+       "to": "2026-06-03",
+       "count": 796
+      },
+      {
+       "name": "더 뉴 레인지로버 P615 SV",
+       "from": "2023-09-07",
+       "to": "2026-05-29",
+       "count": 240
+      },
+      {
+       "name": "더 뉴 레인지로버 P550e SWB",
+       "from": "2023-10-25",
+       "to": "2026-06-03",
+       "count": 386
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-07-06-molit-71bd85",
+     "makerSlug": "hyundai",
+     "makerName": "현대자동차",
+     "maker": "현대자동차(주)",
+     "part": "계기판 제어 소프트웨어",
+     "defect": "계기판 제어 소프트웨어 설계 오류로 인해 계기판 깜빡임 또는 꺼짐이 발생하는 안전기준 부적합",
+     "startDate": "2026-07-06",
+     "total": 54792,
+     "cars": [
+      {
+       "name": "투싼",
+       "from": "2023-07-24",
+       "to": "2026-04-17",
+       "count": 20786
+      },
+      {
+       "name": "투싼 하이브리드",
+       "from": "2023-11-16",
+       "to": "2026-05-15",
+       "count": 33995
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-07-13-molit-1f459d",
+     "makerSlug": "maker-de93f3",
+     "makerName": "볼보자동차코리아",
+     "maker": "(주)볼보자동차코리아",
+     "part": "48V 발전기",
+     "defect": "48V 발전기 부속품 내구성 부족으로 인해 12V 배터리 및 엔진의 경고등이 점등되고, 스타트스탑 사용 시 재시동이 되지 않을 가능성",
+     "startDate": "2026-07-13",
+     "total": 55405,
+     "cars": [
+      {
+       "name": "XC60",
+       "from": "2020-11-10",
+       "to": "2024-10-29",
+       "count": 15698
+      },
+      {
+       "name": "XC90",
+       "from": "2020-10-28",
+       "to": "2024-10-28",
+       "count": 5600
+      },
+      {
+       "name": "S60",
+       "from": "2020-11-16",
+       "to": "2024-06-11",
+       "count": 5190
+      },
+      {
+       "name": "V60CC",
+       "from": "2020-11-13",
+       "to": "2024-09-04",
+       "count": 4696
+      },
+      {
+       "name": "S90",
+       "from": "2020-10-18",
+       "to": "2025-03-07",
+       "count": 11807
+      },
+      {
+       "name": "V90CC",
+       "from": "2020-10-18",
+       "to": "2024-10-22",
+       "count": 1390
+      },
+      {
+       "name": "XC40",
+       "from": "2020-06-10",
+       "to": "2024-10-26",
+       "count": 11024
+      }
+     ],
+     "verified": true
+    }
+   ],
+   "extractedBy": "gemini-3.5-flash-lite",
+   "attempts": 2,
+   "needsRetry": false,
+   "firstSeen": "2026-07-02"
   },
   {
    "id": "95091930",
@@ -192,13 +498,193 @@
    "date": "2026-04-22",
    "url": "https://www.molit.go.kr/USR/NEWS/m_71/dtl.jsp?id=95091930",
    "pdfUrl": "https://www.molit.go.kr/LCMS/DWN.jsp?fold=koreaNews/mobile/file&fileName=260422%28%EC%84%9D%EA%B0%84%29_%EC%BC%80%EC%9D%B4%EC%A7%80%EB%AA%A8%EB%B9%8C%EB%A6%AC%ED%8B%B0%C2%B7%EA%B8%B0%EC%95%84_%EB%93%B1_%EC%9E%90%EB%B0%9C%EC%A0%81_%EC%8B%9C%EC%A0%95%EC%A1%B0%EC%B9%98%28%EC%9E%90%EB%8F%99%EC%B0%A8%EC%A0%95%EC%B1%85%EA%B3%BC%29.pdf",
-   "summary": "총 4개사 17개 차종 532,144대",
-   "groups": [],
-   "extractedBy": null,
-   "attempts": 1,
-   "needsRetry": true,
-   "firstSeen": "2026-04-22",
-   "error": "GEMINI_API_KEY 없음"
+   "summary": "총 4개사 17개 차종 532,144대 자발적 시정조치",
+   "groups": [
+    {
+     "id": "2026-04-20-molit-90851c",
+     "makerSlug": "kg-mobility",
+     "makerName": "KG모빌리티",
+     "maker": "케이지모빌리티㈜",
+     "part": "계기판 디스플레이",
+     "defect": "메모리 부하로 인해 계기판 디스플레이가 멈추거나 꺼질 가능성",
+     "startDate": "2026-04-20",
+     "total": 51535,
+     "cars": [
+      {
+       "name": "토레스",
+       "from": "2024-03-18",
+       "to": "2026-04-03",
+       "count": 12306
+      },
+      {
+       "name": "토레스HEV",
+       "from": "2025-03-11",
+       "to": "2026-04-03",
+       "count": 4698
+      },
+      {
+       "name": "토레스EVX",
+       "from": "2023-10-11",
+       "to": "2026-04-03",
+       "count": 10331
+      },
+      {
+       "name": "액티언",
+       "from": "2024-08-01",
+       "to": "2026-04-03",
+       "count": 7898
+      },
+      {
+       "name": "액티언HEV",
+       "from": "2025-06-23",
+       "to": "2026-04-03",
+       "count": 6347
+      },
+      {
+       "name": "무쏘EV",
+       "from": "2025-02-25",
+       "to": "2026-04-03",
+       "count": 9321
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-04-20-molit-c9b327",
+     "makerSlug": "kg-mobility",
+     "makerName": "KG모빌리티",
+     "maker": "케이지모빌리티㈜",
+     "part": "후방추돌경고등",
+     "defect": "소프트웨어 설계 미흡으로 후방추돌경고등 점멸 주기를 만족하지 않는 안전기준 부적합",
+     "startDate": "2026-04-20",
+     "total": 18533,
+     "cars": [
+      {
+       "name": "토레스EVX",
+       "from": "2023-10-11",
+       "to": "2026-03-31",
+       "count": 9093
+      },
+      {
+       "name": "무쏘EV",
+       "from": "2025-02-25",
+       "to": "2026-03-31",
+       "count": 9320
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-04-28-molit-71a28e",
+     "makerSlug": "kia",
+     "makerName": "기아",
+     "maker": "기아㈜",
+     "part": "엔진제어장치",
+     "defect": "엔진제어장치 소프트웨어 설계 미흡으로 주행 중 시동꺼짐이 발생할 가능성",
+     "startDate": "2026-04-28",
+     "total": 220059,
+     "cars": [
+      {
+       "name": "레이",
+       "from": "2019-12-05",
+       "to": "2025-08-08",
+       "count": 220059
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-04-23-molit-481534",
+     "makerSlug": "toyota",
+     "makerName": "토요타·렉서스",
+     "maker": "한국토요타자동차㈜",
+     "part": "뒷문 외부핸들",
+     "defect": "회로 설계 미흡으로 주행 중 뒷문이 열릴 가능성",
+     "startDate": "2026-04-23",
+     "total": 2132,
+     "cars": [
+      {
+       "name": "프리우스 2WD",
+       "from": "2023-09-15",
+       "to": "2025-11-03",
+       "count": 1766
+      },
+      {
+       "name": "프리우스 AWD",
+       "from": "2023-09-22",
+       "to": "2025-10-28",
+       "count": 28
+      },
+      {
+       "name": "프리우스 PHEV",
+       "from": "2023-11-06",
+       "to": "2025-11-03",
+       "count": 320
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-06-04-molit-18ea01",
+     "makerSlug": "hyundai",
+     "makerName": "현대자동차",
+     "maker": "현대자동차㈜",
+     "part": "1열 좌석 안전띠 고정 장치",
+     "defect": "1열 좌석 안전띠 고정 장치 설계 미흡으로 충돌사고 시 승객을 정상적으로 보호하지 못할 가능성",
+     "startDate": "2026-06-04",
+     "total": 239683,
+     "cars": [
+      {
+       "name": "싼타페",
+       "from": "2023-03-09",
+       "to": "2026-01-28",
+       "count": 46453
+      },
+      {
+       "name": "싼타페 하이브리드",
+       "from": "2023-03-09",
+       "to": "2026-02-02",
+       "count": 110891
+      },
+      {
+       "name": "아이오닉6",
+       "from": "2022-08-17",
+       "to": "2025-06-26",
+       "count": 29156
+      },
+      {
+       "name": "G90",
+       "from": "2021-12-08",
+       "to": "2026-03-31",
+       "count": 52652
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-04-20-molit-cd9ec7",
+     "makerSlug": "hyundai",
+     "makerName": "현대자동차",
+     "maker": "현대자동차㈜",
+     "part": "차체",
+     "defect": "차체 설계 미흡에 따른 중문 상단부 차체 구조물 균열로 안전에 지장을 줄 가능성",
+     "startDate": "2026-04-20",
+     "total": 202,
+     "cars": [
+      {
+       "name": "일렉시티 이층전기버스",
+       "from": "2021-03-02",
+       "to": "2026-04-15",
+       "count": 192
+      }
+     ],
+     "verified": true
+    }
+   ],
+   "extractedBy": "gemini-3.5-flash-lite",
+   "attempts": 2,
+   "needsRetry": false,
+   "firstSeen": "2026-04-22"
   },
   {
    "id": "95091817",
@@ -206,13 +692,228 @@
    "date": "2026-03-24",
    "url": "https://www.molit.go.kr/USR/NEWS/m_71/dtl.jsp?id=95091817",
    "pdfUrl": "https://www.molit.go.kr/LCMS/DWN.jsp?fold=koreaNews/mobile/file&fileName=260324%28%EC%84%9D%EA%B0%84%29+%ED%98%84%EB%8C%80+%ED%8C%B0%EB%A6%AC%EC%84%B8%EC%9D%B4%EB%93%9C+%EC%A0%84%EB%8F%99%EC%8B%9C%ED%8A%B8+%EA%B4%80%EB%A0%A8+%EA%B2%B0%ED%95%A8+%EB%93%B1%EC%97%90+%EB%8C%80%ED%95%9C+%EC%9E%90%EB%B0%9C%EC%A0%81+%EC%8B%9C%EC%A0%95%EC%A1%B0%EC%B9%98%28%EC%9E%90%EB%8F%99%EC%B0%A8%EC%A0%95%EC%B1%85%EA%B3%BC%29.pdf",
-   "summary": null,
-   "groups": [],
-   "extractedBy": null,
-   "attempts": 1,
-   "needsRetry": true,
-   "firstSeen": "2026-03-24",
-   "error": "GEMINI_API_KEY 없음"
+   "summary": "총 4개사 24개 차종 408,942대 자발적 시정조치",
+   "groups": [
+    {
+     "id": "2026-03-25-molit-16e828",
+     "makerSlug": "kia",
+     "makerName": "기아",
+     "maker": "기아㈜",
+     "part": "저압연료라인",
+     "defect": "저압연료라인 설계 미흡으로 인해 연료가 누유되어 주행중 시동꺼짐 및 화재가 발생할 가능성",
+     "startDate": "2026-03-25",
+     "total": 201841,
+     "cars": [
+      {
+       "name": "카니발",
+       "from": "2020-07-22",
+       "to": "2025-08-22",
+       "count": 201841
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-03-20-molit-aed7ea",
+     "makerSlug": "hyundai",
+     "makerName": "현대자동차",
+     "maker": "현대자동차㈜",
+     "part": "전동시트",
+     "defect": "전동시트 제어기 소프트웨어 설계 미흡으로 인해 전동시트 작동 중 탑승자나 사물과의 접촉을 감지하지 못해 안전에 지장을 줄 가능성",
+     "startDate": "2026-03-20",
+     "total": 57987,
+     "cars": [
+      {
+       "name": "팰리세이드 하이브리드",
+       "from": "2024-07-29",
+       "to": "2026-03-14",
+       "count": 37346
+      },
+      {
+       "name": "팰리세이드",
+       "from": "2024-12-24",
+       "to": "2026-03-14",
+       "count": 19032
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-04-10-molit-3bd27b",
+     "makerSlug": "hyundai",
+     "makerName": "현대자동차",
+     "maker": "현대자동차㈜",
+     "part": "3열 좌측 시트 버클 배선",
+     "defect": "3열 좌측 안전띠 버클 배선 설계 미흡으로 안전띠가 체결되지 않아도 경고장치가 작동하지 않는 안전기준 부적합",
+     "startDate": "2026-04-10",
+     "total": 41143,
+     "cars": [
+      {
+       "name": "팰리세이드 하이브리드",
+       "from": "2025-04-03",
+       "to": "2025-12-01",
+       "count": 25986
+      },
+      {
+       "name": "팰리세이드",
+       "from": "2024-12-24",
+       "to": "2025-11-17",
+       "count": 15151
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-03-16-molit-ee470f",
+     "makerSlug": "kg-mobility",
+     "makerName": "KG모빌리티",
+     "maker": "케이지모빌리티㈜",
+     "part": "냉각팬 저항",
+     "defect": "냉각팬 저항 코일의 열적 부하 및 과열로 인한 화재 발생 가능성",
+     "startDate": "2026-03-16",
+     "total": 78293,
+     "cars": [
+      {
+       "name": "토레스/토레스 밴",
+       "from": "2022-06-21",
+       "to": "2025-02-05",
+       "count": 72002
+      },
+      {
+       "name": "액티언",
+       "from": "2024-08-01",
+       "to": "2025-02-18",
+       "count": 6284
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-03-24-molit-fdd8fe",
+     "makerSlug": "bmw",
+     "makerName": "BMW",
+     "maker": "비엠더블유코리아㈜",
+     "part": "에어컨 배선",
+     "defect": "에어컨 배선 설계 미흡으로 에어컨 필터 교체 과정에서 배선이 손상되어 이로 인한 단락이 발생할 경우 화재가 발생할 가능성",
+     "startDate": "2026-03-24",
+     "total": 29678,
+     "cars": [
+      {
+       "name": "BMW 520i",
+       "from": "2023-06-20",
+       "to": "2025-04-09",
+       "count": 13332
+      },
+      {
+       "name": "BMW 530i xDrive",
+       "from": "2023-06-19",
+       "to": "2025-04-08",
+       "count": 5519
+      },
+      {
+       "name": "BMW 740i xDrive",
+       "from": "2023-06-29",
+       "to": "2025-04-08",
+       "count": 2317
+      },
+      {
+       "name": "BMW i5 eDrive40",
+       "from": "2023-06-29",
+       "to": "2025-04-08",
+       "count": 1623
+      },
+      {
+       "name": "BMW 740d xDrive",
+       "from": "2022-11-07",
+       "to": "2025-04-09",
+       "count": 1386
+      },
+      {
+       "name": "BMW 530e",
+       "from": "2023-11-02",
+       "to": "2025-04-08",
+       "count": 945
+      },
+      {
+       "name": "BMW 740i",
+       "from": "2022-06-20",
+       "to": "2024-11-13",
+       "count": 925
+      },
+      {
+       "name": "BMW 523d",
+       "from": "2023-07-12",
+       "to": "2025-04-08",
+       "count": 692
+      },
+      {
+       "name": "BMW i7 xDrive60",
+       "from": "2022-07-01",
+       "to": "2025-04-07",
+       "count": 573
+      },
+      {
+       "name": "BMW i7 eDrive50",
+       "from": "2023-07-05",
+       "to": "2025-04-08",
+       "count": 538
+      },
+      {
+       "name": "BMW 750e xDrive",
+       "from": "2023-02-15",
+       "to": "2025-04-08",
+       "count": 479
+      },
+      {
+       "name": "BMW 530e xDrive",
+       "from": "2024-07-18",
+       "to": "2025-04-08",
+       "count": 385
+      },
+      {
+       "name": "BMW i5 xDrive40",
+       "from": "2024-02-14",
+       "to": "2025-04-08",
+       "count": 281
+      },
+      {
+       "name": "BMW 523d xDrive",
+       "from": "2023-06-20",
+       "to": "2025-03-24",
+       "count": 269
+      },
+      {
+       "name": "BMW i5 M60 xDrive",
+       "from": "2023-07-03",
+       "to": "2025-04-07",
+       "count": 147
+      },
+      {
+       "name": "BMW M5",
+       "from": "2024-07-04",
+       "to": "2025-04-07",
+       "count": 129
+      },
+      {
+       "name": "BMW i7 M70 xDrive",
+       "from": "2023-08-25",
+       "to": "2025-04-01",
+       "count": 73
+      },
+      {
+       "name": "BMW 550e xDrive",
+       "from": "2024-06-27",
+       "to": "2025-03-28",
+       "count": 57
+      }
+     ],
+     "verified": true
+    }
+   ],
+   "extractedBy": "gemini-3.5-flash-lite",
+   "attempts": 2,
+   "needsRetry": false,
+   "firstSeen": "2026-03-24"
   },
   {
    "id": "95091735",
@@ -220,13 +921,274 @@
    "date": "2026-02-25",
    "url": "https://www.molit.go.kr/USR/NEWS/m_71/dtl.jsp?id=95091735",
    "pdfUrl": "https://www.molit.go.kr/LCMS/DWN.jsp?fold=koreaNews/mobile/file&fileName=260226%28%EC%A1%B0%EA%B0%84%29+%ED%98%84%EB%8C%80%C2%B7%EA%B8%B0%EC%95%84+%EB%93%B1+%EC%9E%90%EB%B0%9C%EC%A0%81+%EC%8B%9C%EC%A0%95%EC%A1%B0%EC%B9%98%28%EC%9E%90%EB%8F%99%EC%B0%A8%EC%A0%95%EC%B1%85%EA%B3%BC%29.pdf",
-   "summary": "총 3개사 37개 차종 107,158대",
-   "groups": [],
-   "extractedBy": null,
-   "attempts": 1,
-   "needsRetry": true,
-   "firstSeen": "2026-02-25",
-   "error": "GEMINI_API_KEY 없음"
+   "summary": "총 3개사 37개 차종 107,158대 자발적 시정조치",
+   "groups": [
+    {
+     "id": "2026-02-27-molit-bbc575",
+     "makerSlug": "hyundai",
+     "makerName": "현대자동차",
+     "maker": "현대자동차㈜",
+     "part": "배터리관리시스템",
+     "defect": "배터리관리시스템 소프트웨어 설계 미흡으로 고전압배터리 문제 발생 시 사전에 감지하지 못해 고전압배터리에서 화재가 발생할 가능성",
+     "startDate": "2026-02-27",
+     "total": 37690,
+     "cars": [
+      {
+       "name": "코나 전기차",
+       "from": "2018-01-29",
+       "to": "2021-03-26",
+       "count": 34063
+      },
+      {
+       "name": "아이오닉 개조 전기차",
+       "from": "2019-05-02",
+       "to": "2020-10-23",
+       "count": 2676
+      },
+      {
+       "name": "일렉시티",
+       "from": "2017-11-16",
+       "to": "2021-10-27",
+       "count": 764
+      },
+      {
+       "name": "일렉시티 이층버스",
+       "from": "2021-04-09",
+       "to": "2026-01-26",
+       "count": 187
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-02-27-molit-d40790",
+     "makerSlug": "kia",
+     "makerName": "기아",
+     "maker": "기아㈜",
+     "part": "배터리관리시스템",
+     "defect": "배터리관리시스템 소프트웨어 설계 미흡으로 고전압배터리 문제 발생 시 사전에 감지하지 못해 고전압배터리에서 화재가 발생할 가능성",
+     "startDate": "2026-02-27",
+     "total": 1590,
+     "cars": [
+      {
+       "name": "니로 전기차",
+       "from": "2021-05-20",
+       "to": "2021-11-16",
+       "count": 1590
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-03-04-molit-fea54c",
+     "makerSlug": "bmw",
+     "makerName": "BMW",
+     "maker": "비엠더블유코리아㈜",
+     "part": "스타터 모터",
+     "defect": "스타터 모터 내부 부품 단락으로 인한 화재 발생 가능성",
+     "startDate": "2026-03-04",
+     "total": 67878,
+     "cars": [
+      {
+       "name": "BMW 520i",
+       "from": "2020-07-31",
+       "to": "2022-09-23",
+       "count": 16517
+      },
+      {
+       "name": "BMW 320d",
+       "from": "2020-09-18",
+       "to": "2022-09-29",
+       "count": 1549
+      },
+      {
+       "name": "BMW 320d Touring",
+       "from": "2022-07-12",
+       "to": "2022-09-27",
+       "count": 45
+      },
+      {
+       "name": "BMW 320d xDrive",
+       "from": "2020-09-29",
+       "to": "2022-09-26",
+       "count": 402
+      },
+      {
+       "name": "BMW 320i",
+       "from": "2020-09-18",
+       "to": "2024-05-15",
+       "count": 9691
+      },
+      {
+       "name": "BMW 320i Touring",
+       "from": "2020-09-18",
+       "to": "2022-09-30",
+       "count": 1051
+      },
+      {
+       "name": "BMW 330i",
+       "from": "2021-02-01",
+       "to": "2022-12-16",
+       "count": 7
+      },
+      {
+       "name": "BMW 330i xDrive",
+       "from": "2022-04-05",
+       "to": "2022-09-30",
+       "count": 2
+      },
+      {
+       "name": "BMW 420d Coupe",
+       "from": "2020-08-17",
+       "to": "2020-12-08",
+       "count": 67
+      },
+      {
+       "name": "BMW 420d Gran Coupe",
+       "from": "2021-07-19",
+       "to": "2022-09-29",
+       "count": 143
+      },
+      {
+       "name": "BMW 420i",
+       "from": "2022-02-23",
+       "to": "2022-02-23",
+       "count": 1
+      },
+      {
+       "name": "BMW 420i Convertible",
+       "from": "2020-11-12",
+       "to": "2023-02-13",
+       "count": 829
+      },
+      {
+       "name": "BMW 420i Coupe",
+       "from": "2020-07-31",
+       "to": "2022-08-31",
+       "count": 835
+      },
+      {
+       "name": "BMW 420i Gran Coupe",
+       "from": "2021-07-22",
+       "to": "2022-09-29",
+       "count": 427
+      },
+      {
+       "name": "BMW 430i",
+       "from": "2020-07-31",
+       "to": "2021-11-25",
+       "count": 102
+      },
+      {
+       "name": "BMW 430i xDrive",
+       "from": "2022-03-30",
+       "to": "2022-03-30",
+       "count": 1
+      },
+      {
+       "name": "BMW 525i",
+       "from": "2020-12-03",
+       "to": "2021-12-01",
+       "count": 2
+      },
+      {
+       "name": "BMW 530i",
+       "from": "2020-07-31",
+       "to": "2022-09-23",
+       "count": 7880
+      },
+      {
+       "name": "BMW 530i xDrive",
+       "from": "2020-07-31",
+       "to": "2022-09-23",
+       "count": 4089
+      },
+      {
+       "name": "BMW 620d",
+       "from": "2020-07-31",
+       "to": "2022-09-06",
+       "count": 2440
+      },
+      {
+       "name": "BMW 620d xDrive",
+       "from": "2020-08-17",
+       "to": "2022-09-06",
+       "count": 1253
+      },
+      {
+       "name": "BMW 630i",
+       "from": "2021-04-23",
+       "to": "2022-07-13",
+       "count": 4
+      },
+      {
+       "name": "BMW 730Li",
+       "from": "2021-10-14",
+       "to": "2021-10-14",
+       "count": 1
+      },
+      {
+       "name": "BMW X3 xDrive20d",
+       "from": "2020-12-20",
+       "to": "2022-12-15",
+       "count": 1090
+      },
+      {
+       "name": "BMW X3 xDrive20i",
+       "from": "2020-12-16",
+       "to": "2023-05-01",
+       "count": 8623
+      },
+      {
+       "name": "BMW X3 xDrive30i",
+       "from": "2021-08-17",
+       "to": "2022-08-05",
+       "count": 2
+      },
+      {
+       "name": "BMW X4 xDrive20d",
+       "from": "2020-12-18",
+       "to": "2022-12-16",
+       "count": 1197
+      },
+      {
+       "name": "BMW X4 xDrive20i",
+       "from": "2020-12-16",
+       "to": "2022-12-16",
+       "count": 8831
+      },
+      {
+       "name": "BMW X4 xDrive25i",
+       "from": "2021-06-17",
+       "to": "2021-06-17",
+       "count": 1
+      },
+      {
+       "name": "BMW X4 xDrive30i",
+       "from": "2022-02-18",
+       "to": "2022-02-18",
+       "count": 1
+      },
+      {
+       "name": "BMW X5 xDrive30i",
+       "from": "2021-07-25",
+       "to": "2021-07-25",
+       "count": 1
+      },
+      {
+       "name": "BMW Z4 sDrive20i",
+       "from": "2020-09-02",
+       "to": "2022-08-30",
+       "count": 794
+      }
+     ],
+     "verified": true
+    }
+   ],
+   "extractedBy": "gemini-3.6-flash",
+   "attempts": 2,
+   "needsRetry": false,
+   "firstSeen": "2026-02-25"
   },
   {
    "id": "95091694",
@@ -234,13 +1196,384 @@
    "date": "2026-02-11",
    "url": "https://www.molit.go.kr/USR/NEWS/m_71/dtl.jsp?id=95091694",
    "pdfUrl": "https://www.molit.go.kr/LCMS/DWN.jsp?fold=koreaNews/mobile/file&fileName=260211%28%EC%84%9D%EA%B0%84%29+%ED%98%84%EB%8C%80%C2%B7%EA%B8%B0%EC%95%84+%EB%93%B1+%EC%9E%90%EB%B0%9C%EC%A0%81+%EC%8B%9C%EC%A0%95%EC%A1%B0%EC%B9%98%28%EC%9E%90%EB%8F%99%EC%B0%A8%EC%A0%95%EC%B1%85%EA%B3%BC%29.pdf",
-   "summary": "총 3개사 51개 차종 179,880대",
-   "groups": [],
-   "extractedBy": null,
-   "attempts": 1,
-   "needsRetry": true,
-   "firstSeen": "2026-02-11",
-   "error": "GEMINI_API_KEY 없음"
+   "summary": "총 3개사 51개 차종 179,880대 자발적 시정조치",
+   "groups": [
+    {
+     "id": "2026-02-12-molit-db817b",
+     "makerSlug": "hyundai",
+     "makerName": "현대자동차",
+     "maker": "현대자동차㈜",
+     "part": "전동식 진공펌프",
+     "defect": "전동식 진공펌프 소프트웨어 오류로 인한 진공펌프 작동 불량으로 제동 성능이 저하될 가능성",
+     "startDate": "2026-02-12",
+     "total": 36603,
+     "cars": [
+      {
+       "name": "포터Ⅱ 일렉트릭",
+       "from": "2022-04-28",
+       "to": "2023-09-01",
+       "count": 36603
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-02-11-molit-4c736f",
+     "makerSlug": "hyundai",
+     "makerName": "현대자동차",
+     "maker": "현대자동차㈜",
+     "part": "계기판 제어기",
+     "defect": "계기판 제어 소프트웨어 오류로 인해 계기판 꺼짐이 발생하는 안전기준 부적합",
+     "startDate": "2026-02-11",
+     "total": 39148,
+     "cars": [
+      {
+       "name": "그랜저",
+       "from": "2025-07-04",
+       "to": "2025-10-10",
+       "count": 2811
+      },
+      {
+       "name": "그랜저 하이브리드",
+       "from": "2025-07-02",
+       "to": "2025-09-30",
+       "count": 4831
+      },
+      {
+       "name": "넥쏘",
+       "from": "2025-07-02",
+       "to": "2025-09-03",
+       "count": 1162
+      },
+      {
+       "name": "싼타페",
+       "from": "2025-07-04",
+       "to": "2025-09-23",
+       "count": 842
+      },
+      {
+       "name": "싼타페 하이브리드",
+       "from": "2025-07-03",
+       "to": "2025-10-14",
+       "count": 3330
+      },
+      {
+       "name": "쏘나타",
+       "from": "2025-07-01",
+       "to": "2025-09-30",
+       "count": 3002
+      },
+      {
+       "name": "쏘나타 하이브리드",
+       "from": "2025-07-01",
+       "to": "2025-09-30",
+       "count": 1094
+      },
+      {
+       "name": "아이오닉5",
+       "from": "2025-07-10",
+       "to": "2025-10-28",
+       "count": 2227
+      },
+      {
+       "name": "아이오닉5 N Line",
+       "from": "2025-07-22",
+       "to": "2025-09-23",
+       "count": 18
+      },
+      {
+       "name": "아이오닉6",
+       "from": "2025-07-11",
+       "to": "2025-10-13",
+       "count": 611
+      },
+      {
+       "name": "아이오닉9",
+       "from": "2025-07-03",
+       "to": "2025-10-10",
+       "count": 1971
+      },
+      {
+       "name": "코나",
+       "from": "2025-06-30",
+       "to": "2025-11-13",
+       "count": 1496
+      },
+      {
+       "name": "코나 EV",
+       "from": "2025-07-09",
+       "to": "2025-11-14",
+       "count": 732
+      },
+      {
+       "name": "코나 하이브리드",
+       "from": "2025-06-30",
+       "to": "2025-11-13",
+       "count": 799
+      },
+      {
+       "name": "투싼",
+       "from": "2025-06-27",
+       "to": "2025-09-23",
+       "count": 1641
+      },
+      {
+       "name": "투싼 하이브리드",
+       "from": "2025-06-27",
+       "to": "2025-09-29",
+       "count": 1800
+      },
+      {
+       "name": "펠리세이드",
+       "from": "2025-06-27",
+       "to": "2025-10-18",
+       "count": 1569
+      },
+      {
+       "name": "펠리세이드 하이브리드",
+       "from": "2025-06-27",
+       "to": "2025-10-23",
+       "count": 7974
+      },
+      {
+       "name": "ST1",
+       "from": "2025-08-07",
+       "to": "2025-11-25",
+       "count": 222
+      },
+      {
+       "name": "엑시언트",
+       "from": "2025-07-18",
+       "to": "2025-10-02",
+       "count": 294
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-02-24-molit-418e35",
+     "makerSlug": "kia",
+     "makerName": "기아",
+     "maker": "기아㈜",
+     "part": "전동식 진공펌프",
+     "defect": "전동식 진공펌프 소프트웨어 오류로 인한 진공펌프 작동 불량으로 제동 성능이 저하될 가능성",
+     "startDate": "2026-02-24",
+     "total": 25078,
+     "cars": [
+      {
+       "name": "봉고Ⅲ EV",
+       "from": "2022-05-02",
+       "to": "2023-08-30",
+       "count": 25078
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-02-11-molit-2e0e45",
+     "makerSlug": "kia",
+     "makerName": "기아",
+     "maker": "기아㈜",
+     "part": "계기판 제어기",
+     "defect": "계기판 제어 소프트웨어 오류로 인해 계기판 꺼짐이 발생하는 안전기준 부적합",
+     "startDate": "2026-02-11",
+     "total": 69137,
+     "cars": [
+      {
+       "name": "K8",
+       "from": "2025-07-01",
+       "to": "2025-10-27",
+       "count": 2279
+      },
+      {
+       "name": "K8 하이브리드",
+       "from": "2025-07-01",
+       "to": "2025-10-28",
+       "count": 3766
+      },
+      {
+       "name": "EV3",
+       "from": "2025-07-02",
+       "to": "2025-10-13",
+       "count": 4675
+      },
+      {
+       "name": "EV4",
+       "from": "2025-07-09",
+       "to": "2025-09-22",
+       "count": 1024
+      },
+      {
+       "name": "EV6",
+       "from": "2025-07-01",
+       "to": "2025-12-17",
+       "count": 1734
+      },
+      {
+       "name": "EV9",
+       "from": "2025-06-24",
+       "to": "2025-11-01",
+       "count": 504
+      },
+      {
+       "name": "K5",
+       "from": "2025-06-30",
+       "to": "2025-10-29",
+       "count": 2437
+      },
+      {
+       "name": "K5 하이브리드",
+       "from": "2025-06-30",
+       "to": "2025-10-29",
+       "count": 1162
+      },
+      {
+       "name": "PV5",
+       "from": "2025-07-27",
+       "to": "2025-12-03",
+       "count": 491
+      },
+      {
+       "name": "스포티지",
+       "from": "2025-06-25",
+       "to": "2025-10-23",
+       "count": 10125
+      },
+      {
+       "name": "스포티지 하이브리드",
+       "from": "2025-06-25",
+       "to": "2025-10-23",
+       "count": 4774
+      },
+      {
+       "name": "쏘렌토",
+       "from": "2025-07-09",
+       "to": "2025-10-18",
+       "count": 4471
+      },
+      {
+       "name": "쏘렌토 하이브리드",
+       "from": "2025-06-30",
+       "to": "2025-10-20",
+       "count": 12403
+      },
+      {
+       "name": "카니발",
+       "from": "2025-06-25",
+       "to": "2025-10-22",
+       "count": 5574
+      },
+      {
+       "name": "카니발 하이브리드",
+       "from": "2025-06-24",
+       "to": "2025-10-28",
+       "count": 11141
+      },
+      {
+       "name": "타스만",
+       "from": "2025-07-02",
+       "to": "2025-10-15",
+       "count": 1543
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-02-04-molit-2ff96d",
+     "makerSlug": "bmw",
+     "makerName": "BMW",
+     "maker": "비엠더블유코리아㈜",
+     "part": "에어컨 컴프레셔 제어장치",
+     "defect": "에어컨 컴프레셔 제어장치 소프트웨어 오류로 인해 고전압시스템이 차단되어 시동이 꺼질 가능성",
+     "startDate": "2026-02-04",
+     "total": 9914,
+     "cars": [
+      {
+       "name": "BMW i5 eDrive40",
+       "from": "2022-07-29",
+       "to": "2025-02-25",
+       "count": 2585
+      },
+      {
+       "name": "BMW i5 M60 xDrive",
+       "from": "2023-06-27",
+       "to": "2025-02-19",
+       "count": 335
+      },
+      {
+       "name": "BMW i5 xDrive40",
+       "from": "2024-02-14",
+       "to": "2025-02-25",
+       "count": 308
+      },
+      {
+       "name": "BMW i7 eDrive50",
+       "from": "2023-06-30",
+       "to": "2025-02-18",
+       "count": 867
+      },
+      {
+       "name": "BMW i7 M70 xDrive",
+       "from": "2023-07-28",
+       "to": "2025-02-21",
+       "count": 118
+      },
+      {
+       "name": "BMW i7 xDrive60",
+       "from": "2022-02-15",
+       "to": "2025-02-25",
+       "count": 1187
+      },
+      {
+       "name": "BMW iX M60",
+       "from": "2022-03-29",
+       "to": "2025-02-24",
+       "count": 176
+      },
+      {
+       "name": "BMW iX xDrive40",
+       "from": "2021-08-02",
+       "to": "2021-11-18",
+       "count": 202
+      },
+      {
+       "name": "BMW iX xDrive50",
+       "from": "2020-10-19",
+       "to": "2024-12-17",
+       "count": 1669
+      },
+      {
+       "name": "BMW iX1 xDrive30",
+       "from": "2022-11-08",
+       "to": "2025-02-27",
+       "count": 1806
+      },
+      {
+       "name": "BMW iX2 eDrive20",
+       "from": "2024-03-01",
+       "to": "2024-09-16",
+       "count": 243
+      },
+      {
+       "name": "MINI Countryman E",
+       "from": "2024-02-23",
+       "to": "2024-10-25",
+       "count": 157
+      },
+      {
+       "name": "MINI Countryman SE ALL4",
+       "from": "2023-11-30",
+       "to": "2025-02-24",
+       "count": 232
+      }
+     ],
+     "verified": true
+    }
+   ],
+   "extractedBy": "gemini-3.6-flash",
+   "attempts": 2,
+   "needsRetry": false,
+   "firstSeen": "2026-02-11"
   },
   {
    "id": "95091643",
@@ -248,13 +1581,144 @@
    "date": "2026-01-29",
    "url": "https://www.molit.go.kr/USR/NEWS/m_71/dtl.jsp?id=95091643",
    "pdfUrl": "https://www.molit.go.kr/LCMS/DWN.jsp?fold=koreaNews/mobile/file&fileName=260129%28%EC%84%9D%EA%B0%84%29+%EB%B3%BC%EB%B3%B4+GS%EA%B8%80%EB%A1%9C%EB%B2%8C+%EB%93%B1+%EC%9E%90%EB%B0%9C%EC%A0%81+%EC%8B%9C%EC%A0%95%EC%A1%B0%EC%B9%98%28%EC%9E%90%EB%8F%99%EC%B0%A8%EC%A0%95%EC%B1%85%EA%B3%BC%29.pdf",
-   "summary": "총 4개사 11개 차종 55,178대",
-   "groups": [],
-   "extractedBy": null,
-   "attempts": 1,
-   "needsRetry": true,
-   "firstSeen": "2026-01-29",
-   "error": "GEMINI_API_KEY 없음"
+   "summary": "총 4개사 11개 차종 55,178대 자발적 시정조치",
+   "groups": [
+    {
+     "id": "2026-01-26-molit-3b9074",
+     "makerSlug": "maker-497b70",
+     "makerName": "볼보자동차코리아",
+     "maker": "㈜볼보자동차코리아",
+     "part": "비상자동제동장치",
+     "defect": "비상자동제동장치 센서의 한계로 의도치 않은 자동 긴급 제동이 발생할 가능성",
+     "startDate": "2026-01-26",
+     "total": 50434,
+     "cars": [
+      {
+       "name": "XC60",
+       "from": "2017-04-28",
+       "to": "2021-04-23",
+       "count": 10952
+      },
+      {
+       "name": "XC90",
+       "from": "2015-12-04",
+       "to": "2021-04-23",
+       "count": 9019
+      },
+      {
+       "name": "XC40",
+       "from": "2018-04-27",
+       "to": "2022-05-13",
+       "count": 8777
+      },
+      {
+       "name": "S90",
+       "from": "2016-04-29",
+       "to": "2021-05-21",
+       "count": 8304
+      },
+      {
+       "name": "S60",
+       "from": "2019-05-17",
+       "to": "2022-05-20",
+       "count": 5706
+      },
+      {
+       "name": "V60CC",
+       "from": "2018-11-16",
+       "to": "2022-05-20",
+       "count": 5233
+      },
+      {
+       "name": "V90CC",
+       "from": "2016-12-02",
+       "to": "2021-05-21",
+       "count": 2443
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-01-29-molit-ae3774",
+     "makerSlug": "maker-d76608",
+     "makerName": "GS글로벌",
+     "maker": "㈜GS글로벌",
+     "part": "차량 제어장치 소프트웨어",
+     "defect": "차량 제어장치 소프트웨어 오류로 인해 주차(P)단으로 변속 시 전자식 주차브레이크가 작동하지 않을 가능성",
+     "startDate": "2026-01-29",
+     "total": 1692,
+     "cars": [
+      {
+       "name": "T4K",
+       "from": "2023-03-27",
+       "to": "2024-06-24",
+       "count": 1594
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-01-26-molit-cc75eb",
+     "makerSlug": "ford",
+     "makerName": "포드",
+     "maker": "포드세일즈서비스코리아(유)",
+     "part": "차체 제어장치",
+     "defect": "차체 제어장치 수분 유입으로 차폭등, 후미등 및 번호등이 정상 작동되지 않는 안전기준 부적합",
+     "startDate": "2026-01-26",
+     "total": 1489,
+     "cars": [
+      {
+       "name": "머스탱",
+       "from": "2023-10-10",
+       "to": "2025-05-14",
+       "count": 1176
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-01-23-molit-4cbeb3",
+     "makerSlug": "maker-9c8d3e",
+     "makerName": "재규어랜드로버코리아",
+     "maker": "㈜재규어랜드로버코리아",
+     "part": "조수석 에어백",
+     "defect": "조수석 에어백 조립 불량으로 인해 에어백 전개 시 에어백이 손상되어 탑승자가 상해를 입을 가능성",
+     "startDate": "2026-01-23",
+     "total": 1416,
+     "cars": [
+      {
+       "name": "레인지로버 이보크",
+       "from": "2021-01-27",
+       "to": "2024-10-07",
+       "count": 1390
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-01-26-molit-9030ae",
+     "makerSlug": "ford",
+     "makerName": "포드",
+     "maker": "포드세일즈서비스코리아(유)",
+     "part": "후방카메라",
+     "defect": "후방 카메라 내구성 부족으로 인해 후방 카메라가 정상 작동하지 않을 가능성",
+     "startDate": "2026-01-26",
+     "total": 147,
+     "cars": [
+      {
+       "name": "익스페디션",
+       "from": "2021-01-19",
+       "to": "2021-03-11",
+       "count": 147
+      }
+     ],
+     "verified": true
+    }
+   ],
+   "extractedBy": "gemini-3.6-flash",
+   "attempts": 2,
+   "needsRetry": false,
+   "firstSeen": "2026-01-29"
   },
   {
    "id": "95091607",
@@ -262,13 +1726,516 @@
    "date": "2026-01-15",
    "url": "https://www.molit.go.kr/USR/NEWS/m_71/dtl.jsp?id=95091607",
    "pdfUrl": "https://www.molit.go.kr/LCMS/DWN.jsp?fold=koreaNews/mobile/file&fileName=260115%28%EC%84%9D%EA%B0%84%29+%ED%98%84%EB%8C%80%C2%B7%EA%B8%B0%EC%95%84+%EB%93%B1+%EC%9E%90%EB%B0%9C%EC%A0%81+%EC%8B%9C%EC%A0%95%EC%A1%B0%EC%B9%98%28%EB%A6%AC%EC%BD%9C%29%28%EC%9E%90%EB%8F%99%EC%B0%A8%EC%A0%95%EC%B1%85%EA%B3%BC%29.pdf",
-   "summary": "총 4개사 74개 차종 344,073대",
-   "groups": [],
-   "extractedBy": null,
-   "attempts": 1,
-   "needsRetry": true,
-   "firstSeen": "2026-01-15",
-   "error": "GEMINI_API_KEY 없음"
+   "summary": "총 4개사 74개 차종 344,073대 자발적 시정조치",
+   "groups": [
+    {
+     "id": "2026-01-19-molit-2bd6e8",
+     "makerSlug": "hyundai",
+     "makerName": "현대자동차",
+     "maker": "현대자동차㈜",
+     "part": "무단변속기",
+     "defect": "무단변속기 제조불량으로 인해 변속기 내 밸브바디에 이물질이 유입되어 유압제어 불안정이 발생하는 경우 구동력이 전달되지 않을 가능성",
+     "startDate": "2026-01-19",
+     "total": 130283,
+     "cars": [
+      {
+       "name": "아반떼(AD)",
+       "from": "2018-08-23",
+       "to": "2020-03-24",
+       "count": 84953
+      },
+      {
+       "name": "베뉴(QX)",
+       "from": "2019-06-25",
+       "to": "2021-10-20",
+       "count": 45330
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-01-15-molit-dc4dfe",
+     "makerSlug": "kia",
+     "makerName": "기아",
+     "maker": "기아㈜",
+     "part": "무단변속기",
+     "defect": "무단변속기 제조불량으로 인해 변속기 내 밸브바디에 이물질이 유입되어 유압제어 불안정이 발생하는 경우 구동력이 전달되지 않을 가능성",
+     "startDate": "2026-01-15",
+     "total": 113793,
+     "cars": [
+      {
+       "name": "K3(BD)",
+       "from": "2018-01-31",
+       "to": "2021-06-03",
+       "count": 113793
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-01-14-molit-c564f6",
+     "makerSlug": "kia",
+     "makerName": "기아",
+     "maker": "기아㈜",
+     "part": "바디제어장치",
+     "defect": "소프트웨어 설계 오류에 따른 주차센서 통신 불량으로 주차 거리 경고 기능이 미작동 하여 안전기준에 부적합할 가능성",
+     "startDate": "2026-01-14",
+     "total": 3895,
+     "cars": [
+      {
+       "name": "스포티지(NQ5 PE)",
+       "from": "2025-06-24",
+       "to": "2025-09-01",
+       "count": 2782
+      },
+      {
+       "name": "스포티지하이브리드(NQ5 PE HEV)",
+       "from": "2025-06-23",
+       "to": "2025-08-28",
+       "count": 1113
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-01-12-molit-a43f5f",
+     "makerSlug": "mercedes-benz",
+     "makerName": "메르세데스-벤츠",
+     "maker": "메르세데스벤츠코리아㈜",
+     "part": "인포테인먼트 제어장치",
+     "defect": "소프트웨어 불량으로 인해 운행 중에 계기반이 꺼질 가능성으로 운전자가 일시적으로 차량 운행 정보를 확인하지 못할 가능성",
+     "startDate": "2026-01-12",
+     "total": 56208,
+     "cars": [
+      {
+       "name": "E200",
+       "from": "2023-07-06",
+       "to": "2025-12-02",
+       "count": 19085
+      },
+      {
+       "name": "E 300 4MATIC",
+       "from": "2023-04-05",
+       "to": "2025-12-02",
+       "count": 15256
+      },
+      {
+       "name": "E 220d 4MATIC",
+       "from": "2023-03-30",
+       "to": "2025-12-02",
+       "count": 2541
+      },
+      {
+       "name": "E 350e 4MATIC",
+       "from": "2024-01-27",
+       "to": "2025-12-02",
+       "count": 964
+      },
+      {
+       "name": "E 450 4MATIC",
+       "from": "2023-07-04",
+       "to": "2025-07-21",
+       "count": 2066
+      },
+      {
+       "name": "AMG E 53 Hybrid 4MATIC+",
+       "from": "2024-02-28",
+       "to": "2025-07-07",
+       "count": 221
+      },
+      {
+       "name": "C 200",
+       "from": "2024-05-17",
+       "to": "2025-12-02",
+       "count": 2398
+      },
+      {
+       "name": "C 300 4MATIC",
+       "from": "2024-02-17",
+       "to": "2024-07-28",
+       "count": null
+      },
+      {
+       "name": "AMG GT 55 4MATIC+",
+       "from": "2025-02-05",
+       "to": "2025-06-27",
+       "count": 1
+      },
+      {
+       "name": "AMG GT 63 S E Performance",
+       "from": "2025-02-05",
+       "to": "2025-07-17",
+       "count": null
+      },
+      {
+       "name": "AMG SL 43",
+       "from": "2025-06-24",
+       "to": "2025-07-03",
+       "count": 6
+      },
+      {
+       "name": "AMG SL 63 4MATIC+",
+       "from": "2025-02-05",
+       "to": "2025-04-30",
+       "count": 3
+      },
+      {
+       "name": "Maybach SL 680 Mo",
+       "from": "2025-03-05",
+       "to": "2025-07-22",
+       "count": 2
+      },
+      {
+       "name": "CLE 200",
+       "from": "2023-05-12",
+       "to": "2025-12-02",
+       "count": 1633
+      },
+      {
+       "name": "CLE 450 4MATIC",
+       "from": "2023-05-12",
+       "to": "2025-12-02",
+       "count": 618
+      },
+      {
+       "name": "AMG CLE 53 4MATIC+",
+       "from": "2025-01-30",
+       "to": "2025-07-14",
+       "count": 41
+      },
+      {
+       "name": "CLE 200",
+       "from": "2023-10-12",
+       "to": "2025-12-02",
+       "count": 1469
+      },
+      {
+       "name": "CLE 450 4MATIC",
+       "from": "2023-10-07",
+       "to": "2025-12-02",
+       "count": 354
+      },
+      {
+       "name": "AMG CLE 53 4MATIC+",
+       "from": "2024-05-24",
+       "to": "2025-12-02",
+       "count": 319
+      },
+      {
+       "name": "GLC 300 4MATIC",
+       "from": "2024-01-30",
+       "to": "2025-12-02",
+       "count": 3304
+      },
+      {
+       "name": "AMG GLC 43 4MATIC",
+       "from": "2024-03-15",
+       "to": "2025-07-01",
+       "count": 321
+      },
+      {
+       "name": "GLC 220d 4MATIC",
+       "from": "2024-03-14",
+       "to": "2025-07-07",
+       "count": 477
+      },
+      {
+       "name": "GLC 300 4MATIC",
+       "from": "2024-03-14",
+       "to": "2025-08-21",
+       "count": 4053
+      },
+      {
+       "name": "AMG GLC 43 4MATIC",
+       "from": "2024-01-24",
+       "to": "2025-12-02",
+       "count": 388
+      }
+     ],
+     "verified": false
+    },
+    {
+     "id": "2026-01-26-molit-9db183",
+     "makerSlug": "porsche",
+     "makerName": "포르쉐",
+     "maker": "포르쉐코리아(주)",
+     "part": "주행보조시스템",
+     "defect": "차량의 전자기 간섭으로 인해 서라운드뷰 카메라가 작동하지 않아 후진기어 상태에서 후방카메라가 보이지 않을 가능성",
+     "startDate": "2026-01-26",
+     "total": 39894,
+     "cars": [
+      {
+       "name": "카이엔",
+       "from": "2018-08-16",
+       "to": "2025-05-30",
+       "count": 9420
+      },
+      {
+       "name": "카이엔 쿠페",
+       "from": "2019-10-03",
+       "to": "2025-05-30",
+       "count": 9053
+      },
+      {
+       "name": "타이칸",
+       "from": "2021-06-22",
+       "to": "2025-06-05",
+       "count": 2565
+      },
+      {
+       "name": "타이칸 4S",
+       "from": "2020-09-23",
+       "to": "2025-06-03",
+       "count": 2422
+      },
+      {
+       "name": "카이엔 E-하이브리드 쿠페",
+       "from": "2019-09-27",
+       "to": "2025-05-02",
+       "count": 2292
+      },
+      {
+       "name": "카이엔 E-하이브리드",
+       "from": "2019-08-01",
+       "to": "2025-05-30",
+       "count": 1873
+      },
+      {
+       "name": "파나메라 4",
+       "from": "2023-10-23",
+       "to": "2025-06-27",
+       "count": 1837
+      },
+      {
+       "name": "파나메라 4 E-하이브리드",
+       "from": "2024-06-18",
+       "to": "2025-06-06",
+       "count": 904
+      },
+      {
+       "name": "911 카레라 4 GTS카브리올레",
+       "from": "2021-11-04",
+       "to": "2025-07-21",
+       "count": 652
+      },
+      {
+       "name": "911 카레라 4S 카브리올레",
+       "from": "2019-09-13",
+       "to": "2024-09-18",
+       "count": 643
+      },
+      {
+       "name": "타이칸 GTS",
+       "from": "2022-02-15",
+       "to": "2025-07-30",
+       "count": 601
+      },
+      {
+       "name": "911 카레라 4S",
+       "from": "2019-07-25",
+       "to": "2024-09-06",
+       "count": 526
+      },
+      {
+       "name": "911 카레라 4 GTS",
+       "from": "2021-10-08",
+       "to": "2025-06-18",
+       "count": 468
+      },
+      {
+       "name": "911 카레라 카브리올레",
+       "from": "2019-10-11",
+       "to": "2025-01-20",
+       "count": 428
+      },
+      {
+       "name": "911 카레라",
+       "from": "2019-09-30",
+       "to": "2024-11-11",
+       "count": 357
+      },
+      {
+       "name": "카이엔 터보 쿠페",
+       "from": "2019-10-03",
+       "to": "2023-03-31",
+       "count": 344
+      },
+      {
+       "name": "911 카레라 4 카브리올레",
+       "from": "2019-11-05",
+       "to": "2024-09-04",
+       "count": 337
+      },
+      {
+       "name": "카이엔 터보",
+       "from": "2019-07-30",
+       "to": "2022-12-22",
+       "count": 310
+      },
+      {
+       "name": "타이칸 터보",
+       "from": "2021-01-21",
+       "to": "2025-06-17",
+       "count": 274
+      },
+      {
+       "name": "911 터보 S",
+       "from": "2020-10-10",
+       "to": "2025-06-23",
+       "count": 289
+      },
+      {
+       "name": "911 카레라 GTS 카브리올레",
+       "from": "2021-11-25",
+       "to": "2025-07-04",
+       "count": 271
+      },
+      {
+       "name": "911 카레라 S 카브리올레",
+       "from": "2019-09-13",
+       "to": "2024-09-13",
+       "count": 283
+      },
+      {
+       "name": "카이엔 터보 GT",
+       "from": "2021-10-14",
+       "to": "2025-05-20",
+       "count": 269
+      },
+      {
+       "name": "911 카레라 S",
+       "from": "2019-09-13",
+       "to": "2024-09-25",
+       "count": 268
+      },
+      {
+       "name": "911 터보 S 카브리올레",
+       "from": "2020-09-28",
+       "to": "2023-12-08",
+       "count": 262
+      },
+      {
+       "name": "타이칸 4S 크로스투리스모",
+       "from": "2021-11-11",
+       "to": "2025-05-26",
+       "count": 231
+      },
+      {
+       "name": "911 카레라 GTS",
+       "from": "2021-11-26",
+       "to": "2025-07-01",
+       "count": 210
+      },
+      {
+       "name": "911 카레라 4",
+       "from": "2019-11-05",
+       "to": "2024-09-27",
+       "count": 219
+      },
+      {
+       "name": "카이엔 GTS 쿠페",
+       "from": "2024-08-06",
+       "to": "2025-01-22",
+       "count": 201
+      },
+      {
+       "name": "타이칸 터보 S",
+       "from": "2020-12-21",
+       "to": "2025-04-02",
+       "count": 193
+      },
+      {
+       "name": "카이엔 S E-하이브리드 쿠페",
+       "from": "2024-08-06",
+       "to": "2025-01-22",
+       "count": 201
+      },
+      {
+       "name": "파나메라 GTS",
+       "from": "2024-10-29",
+       "to": "2025-06-20",
+       "count": 188
+      },
+      {
+       "name": "911 타르가 4 GTS",
+       "from": "2021-11-08",
+       "to": "2025-07-14",
+       "count": 181
+      },
+      {
+       "name": "카이엔 GTS",
+       "from": "2024-08-06",
+       "to": "2025-01-28",
+       "count": 138
+      },
+      {
+       "name": "카이엔 S E-하이브리드",
+       "from": "2024-03-25",
+       "to": "2025-05-30",
+       "count": 136
+      },
+      {
+       "name": "911 타르가 4S",
+       "from": "2020-10-20",
+       "to": "2024-09-20",
+       "count": 130
+      },
+      {
+       "name": "타이칸 4",
+       "from": "2025-04-02",
+       "to": "2025-07-31",
+       "count": 117
+      },
+      {
+       "name": "911 타르가 4",
+       "from": "2020-10-14",
+       "to": "2024-11-12",
+       "count": 99
+      },
+      {
+       "name": "타이칸 터보 크로스투리스모",
+       "from": "2022-01-25",
+       "to": "2025-09-22",
+       "count": 83
+      },
+      {
+       "name": "카이엔 터보 E-하이브리드 쿠페",
+       "from": "2024-03-25",
+       "to": "2025-05-28",
+       "count": 37
+      },
+      {
+       "name": "카이엔 터보 E-하이브리드",
+       "from": "2024-04-17",
+       "to": "2025-06-03",
+       "count": 23
+      },
+      {
+       "name": "파나메라 터보 E-하이브리드",
+       "from": "2024-05-22",
+       "to": "2025-02-12",
+       "count": 19
+      },
+      {
+       "name": "파나메라 터보 S E-하이브리드",
+       "from": "2024-10-18",
+       "to": "2025-05-23",
+       "count": 13
+      },
+      {
+       "name": "타이칸 터보 GT",
+       "from": "2024-10-07",
+       "to": "2025-03-31",
+       "count": 5
+      }
+     ],
+     "verified": false
+    }
+   ],
+   "extractedBy": "gemini-3.5-flash-lite",
+   "attempts": 2,
+   "needsRetry": false,
+   "firstSeen": "2026-01-15"
   }
  ]
 }
