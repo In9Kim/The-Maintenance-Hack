@@ -31,11 +31,13 @@ export interface Recall {
   items: RecallItem[]
   /** 우리 데이터에 처음 들어온 날 (recalls_new.json 계산용) */
   firstSeen: string
-  /** 출처. 없으면 공공데이터 연간 파일, "molit"이면 국토교통부 보도자료 */
-  source?: "molit"
+  /** 출처. 없으면 공공데이터 연간 파일, "molit"이면 국토교통부 보도자료, "carkr"이면 자동차리콜센터 게시판 */
+  source?: "molit" | "carkr"
   sourceTitle?: string
   sourceUrl?: string
-  /** 결함 장치 (보도자료) */
+  /** 중대리콜(화재위험 등) 표시 (리콜센터) */
+  serious?: boolean
+  /** 결함 장치 (보도자료·리콜센터 장치분류) */
   part?: string | null
   /** 대상 대수 합계 (보도자료) */
   count?: number | null
@@ -78,6 +80,29 @@ export interface RecallNewsItem {
 export interface RecallNewsData {
   updatedAt: string | null
   items: RecallNewsItem[]
+}
+
+/** data/recall_center.json — 자동차리콜센터 리콜현황 게시판 (scripts/fetch-recall-center.mjs) */
+export interface RecallCenterItem {
+  id: string
+  recallId: string
+  maker: string
+  makerName: string
+  makerSlug: string
+  startDate: string
+  title: string
+  serious: boolean
+  reason: string
+  fix: string | null
+  part: string | null
+  count: number | null
+  items: RecallItem[]
+  firstSeen: string
+}
+
+export interface RecallCenterData {
+  updatedAt: string | null
+  items: RecallCenterItem[]
 }
 
 export interface RecallData {

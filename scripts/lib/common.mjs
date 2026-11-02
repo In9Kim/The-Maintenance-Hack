@@ -2,7 +2,8 @@
  * 리콜 수집 스크립트 공통 도구
  *  - fetch-recalls.mjs       : 공공데이터포털 연간 데이터 → data/recalls.json
  *  - fetch-recall-news.mjs   : 국토교통부 리콜 보도자료 → data/recall_news.json
- * 둘 다 끝에 writeRecallsNew()를 불러 data/recalls_new.json(최근 7일 새 리콜)을 함께 만든다.
+ *  - fetch-recall-center.mjs : 자동차리콜센터 리콜현황 게시판 → data/recall_center.json
+ * 모두 끝에 writeRecallsNew()를 불러 data/recalls_new.json(최근 7일 새 리콜)을 함께 만든다.
  */
 import { readFile, writeFile } from "node:fs/promises"
 import { existsSync } from "node:fs"
@@ -12,6 +13,7 @@ import { fileURLToPath } from "node:url"
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 export const RECALLS_FILE = path.join(ROOT, "data/recalls.json")
 export const NEWS_FILE = path.join(ROOT, "data/recall_news.json")
+export const CENTER_FILE = path.join(ROOT, "data/recall_center.json")
 export const NEW_FILE = path.join(ROOT, "data/recalls_new.json")
 export const NEW_WINDOW_DAYS = 7
 
@@ -135,22 +137,30 @@ export function newsGroupToRecall(item, group, index) {
   }
 }
 
+/** 보도자료와 리콜센터에 같은 리콜이 둘 다 있을 때 알아보는 열쇠 (제작사 + 시정 시작일) */
+export const centerKey = (r) => `${r.makerSlug}|${r.startDate}`
+
 /**
  * data/recalls_new.json 작성: 최근 7일 안에 처음 들어온 리콜
  *  - 연간 데이터(recalls.json)의 새 리콜
- *  - 국토부 보도자료(recall_news.json)의 새 리콜
+ *  - 국토부 보도자료(recall_news.json)의 새 리콜 (리콜센터에 같은 제작사·같은 시작일 리콜이 있으면 리콜센터 쪽만)
+ *  - 자동차리콜센터 게시판(recall_center.json)의 새 리콜
  * id 목록이 바뀌었을 때만 파일을 다시 쓴다 (불필요한 커밋 방지)
  */
 export async function writeRecallsNew(today) {
   const since = addDays(today, -(NEW_WINDOW_DAYS - 1))
   const annual = await readJson(RECALLS_FILE, { dataAsOf: null, recalls: [] })
   const news = await readJson(NEWS_FILE, { items: [] })
+  const center = await readJson(CENTER_FILE, { items: [] })
 
   const fromAnnual = annual.recalls.filter((r) => r.firstSeen >= since)
+  const fromCenter = center.items.filter((r) => r.firstSeen >= since).map((r) => ({ ...r, source: "carkr" }))
+  const centerKeys = new Set(center.items.map(centerKey))
   const fromNews = news.items
     .filter((it) => it.firstSeen >= since)
     .flatMap((it) => (it.groups ?? []).map((g, i) => newsGroupToRecall(it, g, i)))
-  const fresh = [...fromNews, ...fromAnnual].sort((a, b) => b.startDate.localeCompare(a.startDate))
+    .filter((r) => !centerKeys.has(centerKey(r)))
+  const fresh = [...fromCenter, ...fromNews, ...fromAnnual].sort((a, b) => b.startDate.localeCompare(a.startDate))
 
   const prev = await readJson(NEW_FILE, { recalls: [] })
   const changed = !existsSync(NEW_FILE) || stable(prev.recalls.map((r) => r.id)) !== stable(fresh.map((r) => r.id))
@@ -160,5 +170,5 @@ export async function writeRecallsNew(today) {
   }
   const next = { generatedAt: today, windowDays: NEW_WINDOW_DAYS, since, dataAsOf: annual.dataAsOf, recalls: fresh }
   await writeFile(NEW_FILE, JSON.stringify(next, null, 1) + "\n")
-  console.log(`recalls_new.json 갱신: 최근 ${NEW_WINDOW_DAYS}일 새 리콜 ${fresh.length}건 (보도자료 ${fromNews.length} · 연간 ${fromAnnual.length})`)
+  console.log(`recalls_new.json 갱신: 최근 ${NEW_WINDOW_DAYS}일 새 리콜 ${fresh.length}건 (리콜센터 ${fromCenter.length} · 보도자료 ${fromNews.length} · 연간 ${fromAnnual.length})`)
 }

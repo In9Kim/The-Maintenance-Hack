@@ -1,8 +1,10 @@
 # 리콜 데이터 하루 1번 갱신 → 바뀐 게 있으면 커밋 → Cloudflare가 자동으로 다시 배포
 #
 #  1) 공공데이터포털 연간 리콜현황        scripts/fetch-recalls.mjs      → data/recalls.json
-#  2) 국토교통부 리콜 보도자료(최신 리콜)  scripts/fetch-recall-news.mjs  → data/recall_news.json
-#  두 단계 모두 data/recalls_new.json(최근 7일 새 리콜)을 함께 갱신
+#  2) 국토교통부 리콜 보도자료            scripts/fetch-recall-news.mjs  → data/recall_news.json
+#  3) 자동차리콜센터 리콜현황 게시판(최신)  scripts/fetch-recall-center.mjs → data/recall_center.json
+#     보도자료는 몇 주~몇 달에 한 번이라, 리콜 시작 즉시 올라오는 리콜센터 게시판이 최신 리콜의 주 출처
+#  모든 단계가 data/recalls_new.json(최근 7일 새 리콜)을 함께 갱신
 #
 # 필요한 시크릿 (저장소 Settings → Secrets and variables → Actions)
 #   RECALL_API_KEY  공공데이터포털 일반 인증키 (1단계)
@@ -55,9 +57,14 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/pdfjs" --no-audit --no-fund pdfjs-dist@6.4.299
           PDFJS_MODULE="$RUNNER_TEMP/pdfjs/node_modules/pdfjs-dist/legacy/build/pdf.mjs" node scripts/fetch-recall-news.mjs
 
+      - name: Fetch recall center board (car.go.kr)
+        id: center
+        continue-on-error: true
+        run: node scripts/fetch-recall-center.mjs
+
       - name: Commit if changed
         run: |
-          FILES="data/recalls.json data/recall_news.json data/recalls_new.json"
+          FILES="data/recalls.json data/recall_news.json data/recall_center.json data/recalls_new.json"
           if git diff --quiet -- $FILES; then
             echo "리콜 데이터 변경 없음"
             exit 0
@@ -69,7 +76,7 @@ jobs:
           git push
 
       - name: Report failures
-        if: steps.annual.outcome == 'failure' || steps.news.outcome == 'failure'
+        if: steps.annual.outcome == 'failure' || steps.news.outcome == 'failure' || steps.center.outcome == 'failure'
         run: |
-          echo "연간 데이터: ${{ steps.annual.outcome }} / 보도자료: ${{ steps.news.outcome }}"
+          echo "연간 데이터: ${{ steps.annual.outcome }} / 보도자료: ${{ steps.news.outcome }} / 리콜센터: ${{ steps.center.outcome }}"
           exit 1
