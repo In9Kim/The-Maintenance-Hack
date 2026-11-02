@@ -1,4 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
+
+/**
+ * 사용할 Gemini 모델. 구글이 옛 모델을 신규 사용자에게 막으면 여기(또는 환경변수 GEMINI_MODEL)만 바꾸면 됩니다.
+ * gemini-2.5-flash는 신규 키에서 404("no longer available to new users")가 나서 3.8 Flash로 교체.
+ */
+export const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash"
 import type { CarModel } from "@/types"
 
 export interface GenerateCarInput {
@@ -40,7 +46,7 @@ export async function generateCarMaintenanceData(input: GenerateCarInput): Promi
 
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
   const model = genAI.getGenerativeModel({
-    model: "models/gemini-2.5-flash",
+    model: GEMINI_MODEL,
     generationConfig: {
       responseMimeType: "application/json",
       temperature: 0.1,
@@ -172,7 +178,7 @@ export async function verifyCompatibility(
 
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
   const model = genAI.getGenerativeModel({
-    model: "models/gemini-2.5-flash",
+    model: GEMINI_MODEL,
     // temperature=0: 창의성 배제, 동일 입력에 항상 동일한 사실 기반 판정 출력
     generationConfig: { responseMimeType: "application/json", temperature: 0 },
   })
@@ -263,7 +269,7 @@ export async function decodeVin(vin: string): Promise<VinDecodeResult> {
 
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
   const model = genAI.getGenerativeModel({
-    model: "models/gemini-2.5-flash",
+    model: GEMINI_MODEL,
     generationConfig: { responseMimeType: "application/json", temperature: 0.1 },
   })
 
