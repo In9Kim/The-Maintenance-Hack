@@ -1,14 +1,12 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Wrench, Upload } from "lucide-react"
+import { Wrench } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
-import { Modal } from "@/components/ui/modal"
 
+// "견적서 분석"(Phase 3, 미완성)은 기능이 열릴 때까지 메뉴에서 숨김
 export function Header() {
-  const [showAnalysisModal, setShowAnalysisModal] = useState(false)
   const pathname = usePathname()
 
   const navCls = (active: boolean) =>
@@ -49,49 +47,10 @@ export function Header() {
               <Link href="/recalls" className={navCls(pathname.startsWith("/recalls"))}>
                 리콜 정보
               </Link>
-              <Separator orientation="vertical" className="mx-1 h-4" />
-              <button
-                onClick={() => setShowAnalysisModal(true)}
-                className={navCls(false)}
-              >
-                견적서 분석
-              </button>
             </nav>
           </div>
         </div>
       </header>
-
-      <Modal
-        open={showAnalysisModal}
-        onClose={() => setShowAnalysisModal(false)}
-        title="견적서 분석"
-      >
-        <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            정비소 견적서 사진을 업로드하면 AI가 항목을 분석하여 공임나라 + 쿠팡 조합 대비
-            절감 가능 금액을 알려드립니다.
-          </p>
-
-          <label className="relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-secondary/40 transition-colors hover:border-primary/40 hover:bg-primary/5">
-            <Upload className="mb-3 h-8 w-8 text-muted-foreground" />
-            <p className="text-sm font-medium">이미지를 드래그하거나 클릭해서 업로드</p>
-            <p className="mt-1 text-xs text-muted-foreground">JPG, PNG, HEIC · 최대 10MB</p>
-            <input
-              type="file"
-              accept="image/*"
-              className="absolute inset-0 cursor-pointer opacity-0"
-              disabled
-            />
-          </label>
-
-          <div className="rounded-lg border border-amber-500/25 bg-amber-500/10 px-4 py-3">
-            <p className="text-xs font-semibold text-amber-400">Phase 3 오픈 예정</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              AI 견적서 분석 기능은 Phase 3에서 오픈됩니다. 지금은 UI를 미리 확인할 수 있습니다.
-            </p>
-          </div>
-        </div>
-      </Modal>
     </>
   )
 }

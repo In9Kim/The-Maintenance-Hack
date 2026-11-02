@@ -2,8 +2,10 @@
 
 /** 리콜 대상 차명 한 줄 (같은 리콜이라도 차명·생산기간별로 여러 줄) */
 export interface RecallItem {
-  /** 원문 차명. 예: "쏘렌토(MQ4)", "Model 3" */
+  /** 차명. 예: "쏘렌토(MQ4)", "Model 3" (화면에서는 오타를 고친 표시명, 원문은 rawName) */
   name: string
+  /** 원문 차명 (표시명과 다를 때만) */
+  rawName?: string
   /** 생산기간 시작 (YYYY-MM-DD) */
   from: string
   /** 생산기간 끝 (YYYY-MM-DD) */

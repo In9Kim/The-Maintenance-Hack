@@ -156,7 +156,8 @@ function handleStats(data) {
     gongimClicks: {},      // { carId: n }
     verify: { hits: 0, misses: 0 },
     byDay: {},             // { "2026-11-01": { events: n, outbound: n } }
-    topPaths: {}
+    topPaths: {},
+    bySource: {}           // { "recall-tucson-2611": { landing, events, outbound: { coupang: n, ... }, first, last } }
   };
 
   var rows = rowsOf("events");
@@ -167,6 +168,18 @@ function handleStats(data) {
 
     var type = String(r[1]), target = String(r[2]), carId = String(r[3]), partId = String(r[4]), path = String(r[5]);
     var day = new Date(ts).toISOString().slice(0, 10);
+    var meta = {};
+    try { meta = JSON.parse(r[7] || "{}") || {}; } catch (err) {}
+
+    // 블로그 글 등 유입 꼬리표(?from=)별 집계
+    if (meta.from) {
+      var src = res.bySource[meta.from] = res.bySource[meta.from] || { landing: 0, events: 0, outbound: {}, first: day, last: day };
+      src.events++;
+      if (type === "landing") src.landing++;
+      if (type === "outbound") src.outbound[target] = (src.outbound[target] || 0) + 1;
+      if (day < src.first) src.first = day;
+      if (day > src.last) src.last = day;
+    }
 
     res.total++;
     res.byType[type] = (res.byType[type] || 0) + 1;
@@ -185,8 +198,6 @@ function handleStats(data) {
     } else if (type === "car_view" && carId) {
       res.carViews[carId] = (res.carViews[carId] || 0) + 1;
     } else if (type === "verify") {
-      var meta = {};
-      try { meta = JSON.parse(r[7] || "{}"); } catch (err) {}
       if (meta.cacheHit) res.verify.hits++; else res.verify.misses++;
     }
   }

@@ -58,14 +58,14 @@ const STEP_DELAYS  = [2400, 5000, 7800]
 
 // ─── 뱃지 설정 ────────────────────────────────────────────────────
 const BADGE_CONFIG = {
-  YES:       { label: "✅ 확정 호환",  icon: CheckCircle2, container: "border-emerald-500/30 bg-emerald-500/10", badge: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30", icon_class: "text-emerald-400" },
-  NO:        { label: "❌ 불일치",     icon: XCircle,      container: "border-red-500/30 bg-red-500/10",         badge: "bg-red-500/15 text-red-300 border border-red-500/30",         icon_class: "text-red-400"     },
+  YES:       { label: "✅ 호환 가능성 높음",  icon: CheckCircle2, container: "border-emerald-500/30 bg-emerald-500/10", badge: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30", icon_class: "text-emerald-400" },
+  NO:        { label: "❌ 맞지 않을 가능성 높음",     icon: XCircle,      container: "border-red-500/30 bg-red-500/10",         badge: "bg-red-500/15 text-red-300 border border-red-500/30",         icon_class: "text-red-400"     },
   UNCERTAIN: { label: "⚠️ 확인 필요", icon: AlertTriangle, container: "border-amber-500/30 bg-amber-500/10",    badge: "bg-amber-500/15 text-amber-300 border border-amber-500/30",  icon_class: "text-amber-400"   },
 }
 
 const VERDICT_CONFIG = {
-  YES:       { label: "확정 호환 ✅", class: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" },
-  NO:        { label: "불일치 ❌",    class: "bg-red-500/15 text-red-300 border border-red-500/30"             },
+  YES:       { label: "호환 가능성 높음 ✅", class: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" },
+  NO:        { label: "맞지 않을 가능성 높음 ❌",    class: "bg-red-500/15 text-red-300 border border-red-500/30"             },
   UNCERTAIN: { label: "확인 필요 ⚠️", class: "bg-amber-500/15 text-amber-300 border border-amber-500/30"      },
 }
 
@@ -236,6 +236,9 @@ function ResultCard({ data, onReset, userInput }: { data: ApiResponse; onReset: 
         <div className={`rounded-lg border px-4 py-3 ${cfg.container}`}>
           <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">결론</p>
           <p className="mt-1 text-sm font-medium leading-relaxed">{data.conclusion}</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            AI 판정은 참고용입니다. 구매 전 차량 설명서·품번으로 확인하세요.
+          </p>
         </div>
 
         {/* ▶ 비용 계산기 CTA */}

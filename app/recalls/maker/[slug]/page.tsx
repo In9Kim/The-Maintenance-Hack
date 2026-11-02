@@ -11,7 +11,7 @@ import {
   faqJsonLd,
   recallFaq,
 } from "@/components/recalls/RecallParts"
-import { fmtDate, recallData, recallMakers, recallsByMaker } from "@/lib/recalls/data"
+import { dataBasisText, fmtDate, recallData, recallMakers, recallsByMaker } from "@/lib/recalls/data"
 
 export const dynamicParams = false
 
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${maker.name} 리콜 정보 · 리콜 대상 조회 (${maker.count}건) | 정비핵`,
     description: `${maker.name} 자동차 리콜 ${maker.count}건을 차명·리콜 사유·생산기간별로 정리했습니다${
       latest ? `. 최근 리콜 시작일 ${fmtDate(latest.startDate)}` : ""
-    }${dataAsOf ? ` (기준일 ${fmtDate(dataAsOf)})` : ""}. 내 차 대상 여부는 자동차리콜센터에서 차대번호로 확인하세요.`,
+    }${dataAsOf ? ` (${dataBasisText()})` : ""}. 내 차 대상 여부는 자동차리콜센터에서 차대번호로 확인하세요.`,
     alternates: { canonical: `${SITE_URL}/recalls/maker/${maker.slug}` },
   }
 }

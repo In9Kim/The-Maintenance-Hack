@@ -94,7 +94,7 @@ export default async function CarPage({ params }: Props) {
               <th className="px-3 py-2 font-medium">규격</th>
               <th className="px-3 py-2 font-medium">교체 주기</th>
               <th className="px-3 py-2 text-right font-medium">공식센터</th>
-              <th className="px-3 py-2 text-right font-medium">셀프 구매</th>
+              <th className="px-3 py-2 text-right font-medium">쿠팡 부품 + 공임나라</th>
             </tr>
           </thead>
           <tbody>

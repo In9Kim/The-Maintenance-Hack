@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { TrendingUp, ShoppingCart, Wrench, Loader2, Database, Zap } from "lucide-react"
 import type { CarModel } from "@/types"
+import type { SourceStats } from "@/lib/googleSheets"
 
 interface CarStat {
   car: CarModel
@@ -34,6 +35,7 @@ export function StatsPanel({ cars }: Props) {
   const [cacheStats, setCacheStats] = useState<CacheStatsData | null>(null)
   const [outbound, setOutbound] = useState<Record<string, number>>({})
   const [byDay, setByDay] = useState<Record<string, { events: number; outbound: number }>>({})
+  const [bySource, setBySource] = useState<Record<string, SourceStats>>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -46,6 +48,7 @@ export function StatsPanel({ cars }: Props) {
         setTopParts(usageData.topParts ?? [])
         setOutbound(usageData.outbound ?? {})
         setByDay(usageData.byDay ?? {})
+        setBySource(usageData.bySource ?? {})
         setCacheStats(cacheData)
       })
       .catch(() => setStats([]))
@@ -67,6 +70,8 @@ export function StatsPanel({ cars }: Props) {
     <div className="space-y-4">
     {/* 구매·예약 사이트 이동 (1차 목표 지표) */}
     <OutboundCard outbound={outbound} byDay={byDay} />
+    {/* 블로그 글 등 유입 꼬리표별 성과 */}
+    <SourceCard bySource={bySource} />
     {/* Google Sheets 캐시 절감 통계 */}
     <CacheSavingsCard data={cacheStats} />
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -315,6 +320,66 @@ function OutboundCard({
       ) : (
         <p className="text-xs text-muted-foreground">아직 기록이 없습니다. (구글시트 연결 후 쌓이기 시작해요)</p>
       )}
+    </div>
+  )
+}
+
+/** 유입 꼬리표(?from=)별 성과: 블로그 글 하나가 몇 명을 데려와서 몇 번 구매·예약 사이트로 보냈는지 */
+function SourceCard({ bySource }: { bySource: Record<string, SourceStats> }) {
+  const rows = Object.entries(bySource)
+    .map(([from, s]) => {
+      const out = Object.values(s.outbound).reduce((a, b) => a + b, 0)
+      return { from, ...s, out, rate: s.landing ? out / s.landing : 0 }
+    })
+    .sort((a, b) => b.out - a.out || b.landing - a.landing || b.last.localeCompare(a.last))
+  const totals = rows.reduce((t, r) => ({ landing: t.landing + r.landing, out: t.out + r.out }), { landing: 0, out: 0 })
+  const cell = (n: number | undefined) => (n ? n.toLocaleString("ko-KR") : "-")
+
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <p className="mb-1 text-sm font-semibold">
+        블로그 글별 성과 (유입 {totals.landing.toLocaleString("ko-KR")}명 → 구매·예약 사이트 이동{" "}
+        {totals.out.toLocaleString("ko-KR")}회)
+      </p>
+      <p className="mb-3 text-xs text-muted-foreground">
+        글 속 정비핵 링크 끝에 <code className="rounded bg-muted px-1">?from=글이름</code> 을 붙이면 여기에 집계돼요. 예:{" "}
+        <code className="rounded bg-muted px-1">/cars/hyundai-tucson-nx4/recalls?from=recall-tucson-2611</code>
+      </p>
+      {rows.length > 0 ? (
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[560px] text-xs">
+            <thead className="text-muted-foreground">
+              <tr>
+                <th className="py-1 text-left font-medium">꼬리표(글)</th>
+                <th className="py-1 text-right font-medium">유입</th>
+                <th className="py-1 text-right font-medium">쿠팡</th>
+                <th className="py-1 text-right font-medium">공임나라</th>
+                <th className="py-1 text-right font-medium">네이버</th>
+                <th className="py-1 text-right font-medium">리콜센터</th>
+                <th className="py-1 text-right font-medium">이동률</th>
+                <th className="py-1 text-right font-medium">마지막 방문</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.from} className="border-t border-border">
+                  <td className="py-1 font-medium">{r.from}</td>
+                  <td className="py-1 text-right tabular-nums">{cell(r.landing)}</td>
+                  <td className="py-1 text-right tabular-nums">{cell(r.outbound.coupang)}</td>
+                  <td className="py-1 text-right tabular-nums">{cell(r.outbound.gongim)}</td>
+                  <td className="py-1 text-right tabular-nums">{cell(r.outbound.naver)}</td>
+                  <td className="py-1 text-right tabular-nums">{cell(r.outbound.recall_center)}</td>
+                  <td className="py-1 text-right tabular-nums">{r.landing ? `${Math.round(r.rate * 100)}%` : "-"}</td>
+                  <td className="py-1 text-right tabular-nums">{r.last}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="text-xs text-muted-foreground">아직 꼬리표를 달고 들어온 방문이 없어요.</p>
+      )}
+      <p className="mt-2 text-[11px] text-muted-foreground">이동률 = (쿠팡·공임나라·네이버·리콜센터 이동 합계) ÷ 유입</p>
     </div>
   )
 }
