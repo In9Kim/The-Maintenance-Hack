@@ -41,10 +41,30 @@ const STOP_AFTER_OLD_PAGES = 3
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const cookies = new Map()
 
-async function post(path, params) {
+/** 429·503이면 잠시 쉬었다가 다시 시도 (Retry-After 우선) */
+async function post(path, params, tries = 4) {
+  for (let t = 1; ; t++) {
+    try {
+      return await request(path, params)
+    } catch (err) {
+      const wait = err.retryAfter ?? 15 * t
+      if (!err.retryable || t >= tries) throw err
+      console.warn(`  … ${err.message} → ${wait}초 뒤 다시 시도 (${t}/${tries - 1})`)
+      await sleep(wait * 1000)
+    }
+  }
+}
+
+/** 브라우저처럼 게시판 화면을 먼저 열어 세션 쿠키를 받는다 */
+async function openSession() {
+  await request(CENTER_LIST_PATH, null)
+  console.log(`세션 열기: 쿠키 ${cookies.size}개`)
+}
+
+async function request(path, params) {
   let url = `${CENTER_BASE}${path}`
-  let body = new URLSearchParams(params).toString()
-  let method = "POST"
+  let body = params ? new URLSearchParams(params).toString() : undefined
+  let method = params ? "POST" : "GET"
   for (let hop = 0; hop < 6; hop++) {
     let res
     try {
@@ -53,8 +73,12 @@ async function post(path, params) {
         redirect: "manual",
         headers: {
           "User-Agent": UA,
+          Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
           "Accept-Language": "ko-KR,ko;q=0.9",
-          ...(method === "POST" ? { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" } : {}),
+          Referer: `${CENTER_BASE}${CENTER_LIST_PATH}`,
+          ...(method === "POST"
+            ? { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", Origin: CENTER_BASE }
+            : {}),
           ...(cookies.size ? { Cookie: [...cookies].map(([k, v]) => `${k}=${v}`).join("; ") } : {}),
         },
         body: method === "POST" ? body : undefined,
@@ -74,7 +98,16 @@ async function post(path, params) {
       method = "GET"
       continue
     }
-    if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`)
+    if (!res.ok) {
+      const text = await res.text().catch(() => "")
+      const err = new Error(
+        `HTTP ${res.status} ${url} [server=${res.headers.get("server") ?? "-"} retry-after=${res.headers.get("retry-after") ?? "-"}] ${text.replace(/\s+/g, " ").slice(0, 160)}`
+      )
+      err.retryable = res.status === 429 || res.status >= 500
+      const ra = Number(res.headers.get("retry-after"))
+      if (Number.isFinite(ra) && ra > 0) err.retryAfter = Math.min(ra, 120)
+      throw err
+    }
     return res.text()
   }
   throw new Error(`리다이렉트가 너무 많음: ${path}`)
@@ -114,6 +147,8 @@ async function main() {
   const rows = []
   let oldStreak = 0
   let total = null
+  await openSession()
+  await sleep(1500)
   for (let page = 1; page <= MAX_PAGES; page++) {
     const html = await post(CENTER_LIST_PATH, { currentPageNo: String(page), ctype: "" })
     if (page === 1) total = parseCenterTotal(html)
@@ -126,7 +161,7 @@ async function main() {
     rows.push(...fresh)
     oldStreak = fresh.length ? 0 : oldStreak + 1
     if (oldStreak >= STOP_AFTER_OLD_PAGES) break
-    await sleep(400)
+    await sleep(1200)
   }
   const unique = [...new Map(rows.map((r) => [r.recallId, r])).values()]
   console.log(`리콜센터 목록: 전체 ${total ?? "?"}건 중 ${since} 이후 시작 ${unique.length}건 (새 글 ${unique.filter((r) => !known.has(r.recallId)).length}건)`)
@@ -147,7 +182,7 @@ async function main() {
       failed++
       console.warn(`  ! ${row.recallId} ${row.title}: ${String(err?.message ?? err).slice(0, 200)}`)
     }
-    await sleep(500)
+    await sleep(1200)
   }
 
   const items = [...prev.items, ...added].sort(
