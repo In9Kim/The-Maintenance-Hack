@@ -47,7 +47,8 @@ export function RecallSource() {
       출처:{" "}
       <a href={RECALL_CENTER_LIST_URL} target="_blank" rel="noopener" className="underline hover:text-foreground">
         자동차리콜센터(car.go.kr) 리콜현황
-      </a>{" "}
+      </a>
+      (게시판 원문을 그대로 정리){" "}
       ·{" "}
       <a href={RECALL_DATASET_URL} target="_blank" rel="noopener" className="underline hover:text-foreground">
         공공데이터포털 한국교통안전공단_자동차결함 리콜현황
@@ -86,6 +87,14 @@ export function RecallList({ recalls, showMaker = true }: { recalls: Recall[]; s
               </Link>
             )}
             {r.count ? <span>대상 {r.count.toLocaleString("ko-KR")}대</span> : null}
+            {r.serious && (
+              <span className="rounded bg-red-500/15 px-1.5 py-0.5 font-semibold text-red-400">중대리콜</span>
+            )}
+            {r.source === "carkr" && (
+              <a href={RECALL_CENTER_LIST_URL} target="_blank" rel="noopener" className="rounded bg-muted px-1.5 py-0.5 hover:text-foreground">
+                자동차리콜센터 ↗
+              </a>
+            )}
             {r.source === "molit" && r.sourceUrl && (
               <a href={r.sourceUrl} target="_blank" rel="noopener" className="rounded bg-muted px-1.5 py-0.5 hover:text-foreground">
                 국토부 보도자료 ↗
@@ -163,9 +172,9 @@ export function recallFaq(carName?: string): { q: string; a: string }[] {
       q: "이 페이지의 리콜 정보는 언제 기준인가요?",
       a: `한국교통안전공단이 공공데이터포털에 공개한 '자동차결함 리콜현황'(기준일 ${
         dataAsOf ? fmtDate(dataAsOf) : "준비 중"
-      })과 국토교통부 리콜 보도자료${
-        latestNewsDate() ? `(${fmtDate(latestNewsDate())} 발표분까지)` : ""
-      }를 매일 확인해 정리합니다. 가장 정확한 최신 정보는 자동차리콜센터에서 확인하세요.`,
+      }), 자동차리콜센터 리콜현황 게시판${
+        latestNewsDate() ? `(${fmtDate(latestNewsDate())} 시작 리콜까지)` : ""
+      }, 국토교통부 리콜 보도자료를 매일 확인해 정리합니다. 가장 정확한 최신 정보는 자동차리콜센터에서 확인하세요.`,
     },
   ]
 }

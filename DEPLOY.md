@@ -32,6 +32,7 @@
 - 처음 한 번은 Actions 탭 → **Update recalls → Run workflow** 로 수동 실행
 - 차종 매칭 규칙: `lib/recalls/match.ts` (테스트 `npm test`). 새 차종을 `data/vehicles.json` 에 추가하면 여기에도 규칙을 추가해야 리콜이 붙음
 - 실시간 API(국토교통부_자동차 리콜정보, 시정 방법·상세 URL 포함)는 자동차리콜센터와 사전 협의 후 사용 가능 → 승인되면 `scripts/fetch-recalls.mjs` 의 데이터 가져오는 부분만 교체
+- **최신 리콜(자동차리콜센터 게시판, 주 출처)**: `scripts/fetch-recall-center.mjs` 가 car.go.kr 리콜현황 게시판 목록을 넘기며 새 리콜 ID를 찾고, 상세 표(제작사·차명·생산기간·시정 시작일·대수·결함·시정방법)를 AI 없이 그대로 읽어 `data/recall_center.json` 에 저장. 리콜이 시작되면 바로 올라오는 곳이라 언론의 "국토교통부 자동차리콜센터에 따르면…" 기사와 같은 출처. 같은 제작사·같은 시작일 리콜이 보도자료에도 있으면 사이트에는 리콜센터 쪽만 표시
 - **최신 리콜(국토부 보도자료)**: 같은 워크플로가 `scripts/fetch-recall-news.mjs` 로 국토교통부 리콜 보도자료를 확인 → 첨부 PDF의 표를 Gemini로 정리하고 원문과 숫자·날짜를 대조 → `data/recall_news.json`
   - 필요한 시크릿: `GEMINI_API_KEY` (무료 등급 키로 충분). 없으면 제목·링크만 저장하고 키가 생긴 뒤 다시 시도
   - 새 리콜은 `data/recalls_new.json` 에도 들어감 (블로그 리콜 글 파이프라인 입력)
