@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-02",
+ "updatedAt": "2026-11-03",
  "source": "https://www.molit.go.kr/USR/NEWS/m_71/lst.jsp",
  "items": [
   {
@@ -8,13 +8,169 @@
    "date": "2026-08-06",
    "url": "https://www.molit.go.kr/USR/NEWS/m_71/dtl.jsp?id=95092288",
    "pdfUrl": "https://www.molit.go.kr/LCMS/DWN.jsp?fold=koreaNews/mobile/file&fileName=260806%28%EC%84%9D%EA%B0%84%29_%ED%98%84%EB%8C%80%C2%B7%EA%B8%B0%EC%95%84_%EB%93%B1_%EC%9E%90%EB%B0%9C%EC%A0%81_%EC%8B%9C%EC%A0%95%EC%A1%B0%EC%B9%98%28%EC%9E%90%EB%8F%99%EC%B0%A8%EC%A0%95%EC%B1%85%EA%B3%BC%29.pdf",
-   "summary": "총 4개사 13개 차종 512,393대",
-   "groups": [],
-   "extractedBy": null,
-   "attempts": 1,
-   "needsRetry": true,
-   "firstSeen": "2026-08-06",
-   "error": "GEMINI_API_KEY 없음"
+   "summary": "총 4개사 13개 차종 512,393대 자발적 시정조치",
+   "groups": [
+    {
+     "id": "2026-07-30-molit-6fb50a",
+     "makerSlug": "hyundai",
+     "makerName": "현대자동차",
+     "maker": "현대자동차㈜",
+     "part": "전방충돌방지 보조시스템",
+     "defect": "전방충돌방지 보조시스템의 소프트웨어 설계 미흡에 따른 오작동으로 사고 발생 가능성",
+     "startDate": "2026-07-30",
+     "total": 104781,
+     "cars": [
+      {
+       "name": "투싼",
+       "from": "2023-07-24",
+       "to": "2026-03-16",
+       "count": 51016
+      },
+      {
+       "name": "투싼 하이브리드",
+       "from": "2023-11-17",
+       "to": "2026-03-16",
+       "count": 53761
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-08-12-molit-8bfea0",
+     "makerSlug": "hyundai",
+     "makerName": "현대자동차",
+     "maker": "현대자동차㈜",
+     "part": "크로스오버파이프 너트",
+     "defect": "크로스오버파이프의 너트 체결 불량으로 인해 연료가 누유되어 화재 발생 가능성",
+     "startDate": "2026-08-12",
+     "total": 127059,
+     "cars": [
+      {
+       "name": "G80",
+       "from": "2020-03-06",
+       "to": "2025-03-05",
+       "count": 37134
+      },
+      {
+       "name": "G90",
+       "from": "2021-12-08",
+       "to": "2025-03-05",
+       "count": 44787
+      },
+      {
+       "name": "GV70",
+       "from": "2020-11-11",
+       "to": "2025-04-18",
+       "count": 3930
+      },
+      {
+       "name": "GV80",
+       "from": "2020-03-16",
+       "to": "2025-08-08",
+       "count": 31962
+      },
+      {
+       "name": "그랜저",
+       "from": "2022-10-21",
+       "to": "2025-05-13",
+       "count": 9246
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-08-12-molit-bfaa28",
+     "makerSlug": "kia",
+     "makerName": "기아",
+     "maker": "기아㈜",
+     "part": "크로스오버파이프 너트",
+     "defect": "크로스오버파이프의 너트 체결 불량으로 인해 연료가 누유되어 화재 발생 가능성",
+     "startDate": "2026-08-12",
+     "total": 109237,
+     "cars": [
+      {
+       "name": "K8",
+       "from": "2021-03-08",
+       "to": "2025-04-28",
+       "count": 9348
+      },
+      {
+       "name": "카니발",
+       "from": "2020-07-23",
+       "to": "2026-01-10",
+       "count": 99889
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-08-13-molit-dfa138",
+     "makerSlug": "kia",
+     "makerName": "기아",
+     "maker": "기아㈜",
+     "part": "하이브리드 통합 제어기",
+     "defect": "하이브리드 통합 제어기 소프트웨어 설계 미흡으로 인해 내부 소자가 과열되어 화재 발생 가능성",
+     "startDate": "2026-08-13",
+     "total": 168181,
+     "cars": [
+      {
+       "name": "아반떼 개조 하이브리드",
+       "from": "2023-02-08",
+       "to": "2026-01-06",
+       "count": 26356
+      },
+      {
+       "name": "그랜저 하이브리드",
+       "from": "2022-11-21",
+       "to": "2026-01-15",
+       "count": 141825
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-08-04-molit-037535",
+     "makerSlug": "honda",
+     "makerName": "혼다",
+     "maker": "혼다코리아㈜",
+     "part": "후방카메라",
+     "defect": "후방카메라 케이스 균열부위로 수분이 유입되면 기판이 부식되어 영상이 표시되지 않을 수 있는 안전기준 부적합",
+     "startDate": "2026-08-04",
+     "total": 2424,
+     "cars": [
+      {
+       "name": "ODYSSEY",
+       "from": "2017-06-19",
+       "to": "2019-10-15",
+       "count": 2419
+      }
+     ],
+     "verified": true
+    },
+    {
+     "id": "2026-08-03-molit-27d75c",
+     "makerSlug": "stellantis",
+     "makerName": "스텔란티스(지프·푸조 등)",
+     "maker": "스텔란티스코리아(주)",
+     "part": "파워 트랜스퍼 유닛",
+     "defect": "파워 트랜스퍼 유닛 조립 불량으로 인해 기어가 손상되어 주행 중 동력상실 또는 주차 중 차량이 움직여 사고가 발생할 가능성",
+     "startDate": "2026-08-03",
+     "total": 711,
+     "cars": [
+      {
+       "name": "짚체로키",
+       "from": "2017-01-04",
+       "to": "2018-08-11",
+       "count": 711
+      }
+     ],
+     "verified": true
+    }
+   ],
+   "extractedBy": "gemini-3.6-flash",
+   "attempts": 2,
+   "needsRetry": false,
+   "firstSeen": "2026-08-06"
   },
   {
    "id": "95092178",
