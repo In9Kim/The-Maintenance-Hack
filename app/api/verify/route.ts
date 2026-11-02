@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse, after } from "next/server"
-import { verifyCompatibility } from "@/lib/gemini"
+import { verifyCompatibility, friendlyAiError } from "@/lib/gemini"
 import { lookupCache, writeCache, makeVinPrefix, logEvent, sheetsEnabled } from "@/lib/googleSheets"
 import { createHash } from "crypto"
 
@@ -156,9 +156,9 @@ export async function POST(req: NextRequest) {
       cacheHit,
     })
   } catch (err) {
-    console.error("[verify]", err)
+    console.error("[verify]", err instanceof Error ? err.message : err)
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "분석 중 오류가 발생했습니다." },
+      { error: friendlyAiError(err) },
       { status: 500 }
     )
   }

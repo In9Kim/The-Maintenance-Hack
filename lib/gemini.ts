@@ -1,10 +1,44 @@
-import { GoogleGenerativeAI } from "@google/generative-ai"
+import { GoogleGenerativeAI, type GenerationConfig } from "@google/generative-ai"
 
 /**
  * 사용할 Gemini 모델. 구글이 옛 모델을 신규 사용자에게 막으면 여기(또는 환경변수 GEMINI_MODEL)만 바꾸면 됩니다.
  * gemini-2.5-flash는 신규 키에서 404("no longer available to new users")가 나서 3.8 Flash로 교체.
  */
 export const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash"
+
+/**
+ * Gemini 3.x는 기본으로 "생각(thinking)"을 medium 수준으로 해서 응답이 수십 초~2분까지 늦어질 수 있음.
+ * 부품 호환 판정·차종 JSON 생성은 짧은 작업이라 low로 충분 (환경변수 GEMINI_THINKING_LEVEL: low | medium | high)
+ */
+const GEMINI_THINKING_LEVEL = process.env.GEMINI_THINKING_LEVEL || "low"
+/** 이 시간 안에 응답이 없으면 끊고 사용자에게 다시 시도하라고 안내 */
+const GEMINI_TIMEOUT_MS = 40_000
+
+function getModel(apiKey: string, generationConfig: GenerationConfig) {
+  const genAI = new GoogleGenerativeAI(apiKey)
+  return genAI.getGenerativeModel(
+    {
+      model: GEMINI_MODEL,
+      // SDK 타입에 아직 thinkingConfig가 없어 캐스팅 (요청 본문에는 그대로 전달됨)
+      generationConfig: {
+        ...generationConfig,
+        thinkingConfig: { thinkingLevel: GEMINI_THINKING_LEVEL },
+      } as GenerationConfig,
+    },
+    { timeout: GEMINI_TIMEOUT_MS }
+  )
+}
+
+/** 방문자에게 보여줄 에러 문구 (구글 원문 에러는 서버 로그에만 남김) */
+export function friendlyAiError(err: unknown): string {
+  const msg = err instanceof Error ? err.message : String(err)
+  if (/GEMINI_API_KEY/.test(msg)) return "AI 기능 설정이 아직 끝나지 않았습니다. 잠시 후 다시 시도해 주세요."
+  if (/\b(402|429)\b|quota|exhausted|depleted|rate.?limit/i.test(msg))
+    return "AI 검증 사용량이 많아 잠시 쉬고 있어요. 몇 분 뒤 다시 시도해 주세요."
+  if (/\b(5\d\d)\b|timeout|timed out|abort/i.test(msg))
+    return "AI 응답이 늦어지고 있어요. 잠시 후 다시 시도해 주세요."
+  return "AI 분석 중 문제가 생겼어요. 잠시 후 다시 시도해 주세요."
+}
 import type { CarModel } from "@/types"
 
 export interface GenerateCarInput {
@@ -44,13 +78,9 @@ export async function generateCarMaintenanceData(input: GenerateCarInput): Promi
     throw new Error("GEMINI_API_KEY 환경변수가 설정되지 않았습니다. .env.local 파일을 확인하세요.")
   }
 
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-  const model = genAI.getGenerativeModel({
-    model: GEMINI_MODEL,
-    generationConfig: {
-      responseMimeType: "application/json",
-      temperature: 0.1,
-    },
+  const model = getModel(process.env.GEMINI_API_KEY, {
+    responseMimeType: "application/json",
+    temperature: 0.1,
   })
 
   const isKorean = ["현대", "기아", "제네시스"].includes(input.brand)
@@ -176,12 +206,8 @@ export async function verifyCompatibility(
     throw new Error("GEMINI_API_KEY 환경변수가 설정되지 않았습니다.")
   }
 
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-  const model = genAI.getGenerativeModel({
-    model: GEMINI_MODEL,
-    // temperature=0: 창의성 배제, 동일 입력에 항상 동일한 사실 기반 판정 출력
-    generationConfig: { responseMimeType: "application/json", temperature: 0 },
-  })
+  // temperature=0: 창의성 배제, 동일 입력에 항상 동일한 사실 기반 판정 출력
+  const model = getModel(process.env.GEMINI_API_KEY, { responseMimeType: "application/json", temperature: 0 })
 
   const categoryLine = category
     ? `사용자 지정 카테고리: [${category}] ← 반드시 이 카테고리의 부품으로만 분석할 것. 다른 카테고리로 절대 오분류 금지.`
@@ -267,11 +293,7 @@ export async function decodeVin(vin: string): Promise<VinDecodeResult> {
     throw new Error("GEMINI_API_KEY 환경변수가 설정되지 않았습니다.")
   }
 
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-  const model = genAI.getGenerativeModel({
-    model: GEMINI_MODEL,
-    generationConfig: { responseMimeType: "application/json", temperature: 0.1 },
-  })
+  const model = getModel(process.env.GEMINI_API_KEY, { responseMimeType: "application/json", temperature: 0.1 })
 
   const prompt = `
 차대번호(VIN)를 분석하여 정확한 차량 정보를 JSON으로 반환하세요.
