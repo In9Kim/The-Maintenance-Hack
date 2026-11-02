@@ -32,3 +32,10 @@
 - 처음 한 번은 Actions 탭 → **Update recalls → Run workflow** 로 수동 실행
 - 차종 매칭 규칙: `lib/recalls/match.ts` (테스트 `npm test`). 새 차종을 `data/vehicles.json` 에 추가하면 여기에도 규칙을 추가해야 리콜이 붙음
 - 실시간 API(국토교통부_자동차 리콜정보, 시정 방법·상세 URL 포함)는 자동차리콜센터와 사전 협의 후 사용 가능 → 승인되면 `scripts/fetch-recalls.mjs` 의 데이터 가져오는 부분만 교체
+- **최신 리콜(국토부 보도자료)**: 같은 워크플로가 `scripts/fetch-recall-news.mjs` 로 국토교통부 리콜 보도자료를 확인 → 첨부 PDF의 표를 Gemini로 정리하고 원문과 숫자·날짜를 대조 → `data/recall_news.json`
+  - 필요한 시크릿: `GEMINI_API_KEY` (무료 등급 키로 충분). 없으면 제목·링크만 저장하고 키가 생긴 뒤 다시 시도
+  - 새 리콜은 `data/recalls_new.json` 에도 들어감 (블로그 리콜 글 파이프라인 입력)
+
+## 블로그 글별 유입 확인
+- 블로그 글의 정비핵 링크 끝에 `?from=꼬리표` 를 붙이기 (영문·숫자·-·_ , 60자 이내). 예: `https://.../cars/hyundai-tucson-nx4/recalls?from=recall-tucson-2611`
+- 구글시트 `events` 탭: `type=landing` 행 = 그 꼬리표로 들어온 방문, 같은 방문의 쿠팡·공임나라 클릭(`type=outbound`)은 `meta` 열에 `"from":"꼬리표"` 가 함께 남음

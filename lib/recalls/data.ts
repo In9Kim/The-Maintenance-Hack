@@ -1,12 +1,60 @@
 import recallsJson from "@/data/recalls.json"
+import newsJson from "@/data/recall_news.json"
 import { matchRecallsForCar } from "./match"
-import type { Recall, RecallData } from "./types"
+import type { Recall, RecallData, RecallNewsData, RecallNewsItem } from "./types"
 
 /**
- * 리콜 데이터는 GitHub Actions가 하루 1번 data/recalls.json으로 갱신합니다 (scripts/fetch-recalls.mjs).
- * 사이트는 빌드 때 이 파일만 읽으므로 방문자 요청마다 외부 API를 부르지 않습니다.
+ * 리콜 데이터는 GitHub Actions가 하루 1번 갱신합니다.
+ *  - data/recalls.json      공공데이터포털 연간 리콜현황 (scripts/fetch-recalls.mjs)
+ *  - data/recall_news.json  국토교통부 리콜 보도자료 (scripts/fetch-recall-news.mjs) — 최신 리콜
+ * 사이트는 빌드 때 이 파일들만 읽으므로 방문자 요청마다 외부 API를 부르지 않습니다.
  */
-const DATA = recallsJson as unknown as RecallData
+const ANNUAL = recallsJson as unknown as RecallData
+const NEWS = newsJson as unknown as RecallNewsData
+
+/** 보도자료의 리콜 묶음 → 공통 Recall 형식. 연간 데이터 기준일 이후 시작한 리콜만 (중복 방지) */
+function newsRecalls(): Recall[] {
+  const after = ANNUAL.dataAsOf ?? ""
+  const out: Recall[] = []
+  for (const item of NEWS.items) {
+    for (const g of item.groups ?? []) {
+      const startDate = g.startDate || item.date || ""
+      if (!startDate || startDate <= after) continue
+      out.push({
+        id: g.id,
+        maker: g.maker,
+        makerName: g.makerName,
+        makerSlug: g.makerSlug,
+        startDate,
+        reason: g.defect,
+        fix: null,
+        items: g.cars.map((c) => ({ name: c.name, from: c.from, to: c.to })),
+        firstSeen: item.firstSeen,
+        source: "molit",
+        sourceTitle: item.title,
+        sourceUrl: item.url,
+        part: g.part,
+        count: g.total,
+      })
+    }
+  }
+  return out
+}
+
+const ALL: Recall[] = [...newsRecalls(), ...ANNUAL.recalls].sort(
+  (a, b) => b.startDate.localeCompare(a.startDate) || a.makerName.localeCompare(b.makerName, "ko")
+)
+const DATA: RecallData = { ...ANNUAL, recalls: ALL }
+
+/** 최근 국토부 리콜 보도자료 (표를 정리하지 못한 글도 제목·링크는 보여줌) */
+export function recallNews(limit = 6): RecallNewsItem[] {
+  return NEWS.items.slice(0, limit)
+}
+
+/** 보도자료까지 포함한 가장 최근 반영일 */
+export function latestNewsDate(): string | null {
+  return NEWS.items[0]?.date ?? null
+}
 
 /** 자동차리콜센터 — 차대번호·차량번호로 내 차 리콜 대상 여부 조회 (메인 화면) */
 export const RECALL_CENTER_LOOKUP_URL = "https://www.car.go.kr/home/main.do"

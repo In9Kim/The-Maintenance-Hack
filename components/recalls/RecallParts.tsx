@@ -7,12 +7,15 @@ import {
   RECALL_CENTER_LOOKUP_URL,
   RECALL_DATASET_URL,
   fmtDate,
+  latestNewsDate,
   recallData,
 } from "@/lib/recalls/data"
+import type { RecallNewsItem } from "@/lib/recalls/types"
 
 /** 모든 리콜 페이지 상단: 데이터 기준일 + 차대번호 조회 안내 */
 export function RecallNotice({ carId }: { carId?: string }) {
   const { dataAsOf } = recallData()
+  const newsDate = latestNewsDate()
   return (
     <div className="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm">
       <div className="flex items-start gap-2">
@@ -24,8 +27,15 @@ export function RecallNotice({ carId }: { carId?: string }) {
             참고 자료입니다.
           </p>
           <p className="text-xs text-muted-foreground">
-            데이터 기준일: <strong className="text-foreground">{dataAsOf ? fmtDate(dataAsOf) : "준비 중"}</strong>{" "}
-            (원본은 연 1회 공개되어 최근 리콜이 아직 반영되지 않았을 수 있습니다)
+            데이터 기준일: <strong className="text-foreground">{dataAsOf ? fmtDate(dataAsOf) : "준비 중"}</strong>
+            {newsDate ? (
+              <>
+                {" "}
+                · 국토교통부 보도자료 <strong className="text-foreground">{fmtDate(newsDate)}</strong>까지 반영
+              </>
+            ) : (
+              " (원본은 연 1회 공개되어 최근 리콜이 아직 반영되지 않았을 수 있습니다)"
+            )}
           </p>
           <OutboundLink
             href={RECALL_CENTER_LOOKUP_URL}
@@ -54,8 +64,12 @@ export function RecallSource() {
       <a href={RECALL_DATASET_URL} target="_blank" rel="noopener" className="underline hover:text-foreground">
         공공데이터포털 한국교통안전공단_자동차결함 리콜현황
       </a>
-      {dataAsOf ? ` (기준일 ${fmtDate(dataAsOf)})` : ""}. 리콜 상세 내용과 시정 방법은 자동차리콜센터 원문을
-      확인하세요. 정비핵은 데이터 오류나 누락에 대해 책임지지 않습니다.
+      {dataAsOf ? ` (기준일 ${fmtDate(dataAsOf)})` : ""} ·{" "}
+      <a href="https://www.molit.go.kr/USR/NEWS/m_71/lst.jsp" target="_blank" rel="noopener" className="underline hover:text-foreground">
+        국토교통부 리콜 보도자료
+      </a>
+      (표 내용은 AI로 정리 후 원문과 대조). 리콜 상세 내용과 시정 방법은 자동차리콜센터 원문을 확인하세요. 정비핵은
+      데이터 오류나 누락에 대해 책임지지 않습니다.
     </p>
   )
 }
@@ -83,6 +97,12 @@ export function RecallList({ recalls, showMaker = true }: { recalls: Recall[]; s
                 {r.makerName}
               </Link>
             )}
+            {r.count ? <span>대상 {r.count.toLocaleString("ko-KR")}대</span> : null}
+            {r.source === "molit" && r.sourceUrl && (
+              <a href={r.sourceUrl} target="_blank" rel="noopener" className="rounded bg-muted px-1.5 py-0.5 hover:text-foreground">
+                국토부 보도자료 ↗
+              </a>
+            )}
           </div>
 
           <div className="mb-2 text-sm font-semibold leading-snug">
@@ -91,6 +111,12 @@ export function RecallList({ recalls, showMaker = true }: { recalls: Recall[]; s
           </div>
 
           <dl className="space-y-1.5 text-sm">
+            {r.part && (
+              <div>
+                <dt className="inline text-muted-foreground">결함 장치 · </dt>
+                <dd className="inline">{r.part}</dd>
+              </div>
+            )}
             <div>
               <dt className="inline text-muted-foreground">리콜 사유 · </dt>
               <dd className="inline leading-relaxed">{r.reason}</dd>
@@ -147,9 +173,11 @@ export function recallFaq(carName?: string): { q: string; a: string }[] {
     },
     {
       q: "이 페이지의 리콜 정보는 언제 기준인가요?",
-      a: `한국교통안전공단이 공공데이터포털에 공개한 '자동차결함 리콜현황' 자료를 정리했습니다. 데이터 기준일은 ${
+      a: `한국교통안전공단이 공공데이터포털에 공개한 '자동차결함 리콜현황'(기준일 ${
         dataAsOf ? fmtDate(dataAsOf) : "준비 중"
-      }이며, 원본이 연 1회 공개되어 최근 리콜은 빠져 있을 수 있습니다. 최신 정보는 자동차리콜센터에서 확인하세요.`,
+      })과 국토교통부 리콜 보도자료${
+        latestNewsDate() ? `(${fmtDate(latestNewsDate())} 발표분까지)` : ""
+      }를 매일 확인해 정리합니다. 가장 정확한 최신 정보는 자동차리콜센터에서 확인하세요.`,
     },
   ]
 }
@@ -180,4 +208,30 @@ export function faqJsonLd(items: { q: string; a: string }[]) {
       acceptedAnswer: { "@type": "Answer", text: f.a },
     })),
   }
+}
+
+/** 최근 국토교통부 리콜 보도자료 목록 */
+export function RecallNewsList({ items }: { items: RecallNewsItem[] }) {
+  return (
+    <ul className="space-y-2">
+      {items.map((it) => {
+        const cars = [...new Set(it.groups.flatMap((g) => g.cars.map((c) => c.name)))]
+        return (
+          <li key={it.id} className="rounded-xl border border-border bg-card p-4">
+            <div className="mb-1 text-xs text-muted-foreground">{fmtDate(it.date)} · 국토교통부</div>
+            <a href={it.url} target="_blank" rel="noopener" className="text-sm font-semibold hover:text-primary hover:underline">
+              {it.title} ↗
+            </a>
+            {it.summary && <p className="mt-1 text-xs text-muted-foreground">{it.summary}</p>}
+            {cars.length > 0 && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                대상 차명: {cars.slice(0, 10).join(", ")}
+                {cars.length > 10 && ` 외 ${cars.length - 10}개`}
+              </p>
+            )}
+          </li>
+        )
+      })}
+    </ul>
+  )
 }
