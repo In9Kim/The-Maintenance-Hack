@@ -31,6 +31,7 @@ export async function GET(req: NextRequest) {
     topParts,
     outbound: stats.outbound,
     byDay: stats.byDay,
+    bySource: stats.bySource ?? {},
     raw: stats,
   })
 }

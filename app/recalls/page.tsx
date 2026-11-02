@@ -12,7 +12,7 @@ import {
   faqJsonLd,
   recallFaq,
 } from "@/components/recalls/RecallParts"
-import { allRecalls, fmtDate, recallData, recallMakers, recallNews, recallsForCar, recentRecalls } from "@/lib/recalls/data"
+import { dataBasisText, allRecalls, fmtDate, recallData, recallMakers, recallNews, recallsForCar, recentRecalls } from "@/lib/recalls/data"
 
 export function generateMetadata(): Metadata {
   const { dataAsOf } = recallData()
@@ -20,7 +20,7 @@ export function generateMetadata(): Metadata {
   return {
     title: "자동차 리콜 정보 · 리콜 대상 조회 (제작사별 최근 리콜 목록) | 정비핵",
     description: `현대·기아·테슬라·BMW 등 제작사별 최근 자동차 리콜 ${total ? `${total}건` : ""}을 리콜 사유와 생산기간으로 정리했습니다${
-      dataAsOf ? ` (기준일 ${fmtDate(dataAsOf)})` : ""
+      dataAsOf ? ` (${dataBasisText()})` : ""
     }. 내 차 리콜 대상 여부는 자동차리콜센터에서 차대번호로 조회하세요.`,
     alternates: { canonical: `${SITE_URL}/recalls` },
   }

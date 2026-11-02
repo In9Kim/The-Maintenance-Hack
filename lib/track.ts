@@ -3,7 +3,7 @@
  * 페이지를 떠나는 클릭도 놓치지 않도록 sendBeacon을 우선 사용합니다.
  */
 export interface ClientEvent {
-  type: "outbound" | "car_view" | "calc_use" | "report" | "landing"
+  type: "outbound" | "car_view" | "calc_use" | "report" | "landing" | "nav"
   target?: "coupang" | "naver" | "gongim" | "recall_center" | "other"
   carId?: string
   partId?: string

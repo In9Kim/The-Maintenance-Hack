@@ -91,3 +91,8 @@ test("국토부 보도자료처럼 세대 코드 없는 현대·기아 차명은
   // 아반떼 하이브리드 '23.02.08.~ → CN7
   assert.equal(hit("hyundai-avante-cn7", "현대자동차㈜", "아반떼 하이브리드", "2023-02-08", "2026-01-06"), true)
 })
+
+test("세대 코드가 HEV와 붙어 있어도 읽는다", () => {
+  assert.deepEqual(splitRecallName("그랜저하이브리드(GN7HEV)"), { base: "그랜저하이브리드", code: "GN7" })
+  assert.equal(hit("hyundai-grandeur-gn7", HMC, "그랜저하이브리드(GN7HEV)"), true)
+})

@@ -14,6 +14,8 @@ on:
   schedule:
     # 매일 06:17 (한국시간) = 21:17 UTC
     - cron: "17 21 * * *"
+    # 예비 실행 18:47 (한국시간). GitHub 예약 실행은 지연·누락될 수 있어 하루 두 번 (변경 없으면 커밋 안 함)
+    - cron: "47 9 * * *"
   workflow_dispatch: {}
 
 permissions:

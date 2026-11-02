@@ -41,6 +41,8 @@ const MAKER_SLUGS = [
   [/^메르세데스|^벤츠/, "mercedes-benz", "메르세데스-벤츠"],
   [/^한국지엠|^한국GM|^지엠/i, "gm-korea", "한국GM"],
   [/^르노/, "renault-korea", "르노코리아"],
+  [/^GS글로벌|^지에스글로벌/i, "gs-global", "GS글로벌"],
+  [/^에프엘오토/, "fl-auto", "에프엘오토코리아"],
   [/^케이지모빌리티|^KG/i, "kg-mobility", "KG모빌리티"],
   [/^쌍용/, "ssangyong", "쌍용자동차"],
   [/^폭스바겐/, "volkswagen", "폭스바겐"],
@@ -67,7 +69,7 @@ const MAKER_SLUGS = [
 
 export function cleanMakerName(maker) {
   return maker
-    .replace(/\(주\)|㈜|주식회사|유한회사|유한책임회사|\(유\)/g, "")
+    .replace(/\(주\)|㈜|\(유\)|주식회사|유한책임회사|유한회사/g, " ")
     .replace(/\s*\(.*?\)\s*/g, " ")
     .replace(/\s+/g, " ")
     .trim()
@@ -84,13 +86,15 @@ export function hash(s) {
 }
 
 export function makerInfo(maker) {
+  // "(주)볼보자동차코리아"처럼 회사 표기가 앞에 붙어도 같은 제작사로 보도록 정리한 이름으로 비교
+  // (사이트 표시는 lib/recalls/display.ts가 같은 규칙으로 다시 정규화함)
+  const clean = cleanMakerName(maker) || maker
   for (const [re, slug, name] of MAKER_SLUGS) {
     // 볼보트럭이 볼보로 잡히지 않도록 더 구체적인 패턴을 먼저 확인
-    if (slug === "volvo" && /^볼보(트럭|그룹)/.test(maker)) continue
-    if (re.test(maker)) return { makerSlug: slug, makerName: name }
+    if (slug === "volvo" && /^볼보(트럭|그룹)/.test(clean)) continue
+    if (re.test(clean)) return { makerSlug: slug, makerName: name }
   }
-  const name = cleanMakerName(maker) || maker
-  return { makerSlug: `maker-${hash(maker)}`, makerName: name }
+  return { makerSlug: `maker-${hash(clean)}`, makerName: clean }
 }
 
 

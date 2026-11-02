@@ -2,6 +2,7 @@ import { NextRequest, NextResponse, after } from "next/server"
 import { verifyCompatibility, friendlyAiError } from "@/lib/gemini"
 import { lookupCache, writeCache, makeVinPrefix, logEvent, sheetsEnabled, lookupVehicleSpec } from "@/lib/googleSheets"
 import { getFixedVehicleSpec } from "@/lib/vehicle-spec"
+import { softenResult } from "@/lib/compat-wording"
 import { createHash } from "crypto"
 
 const VIN_REGEX = /^[A-HJ-NPR-Z0-9]{17}$/i
@@ -159,6 +160,9 @@ export async function POST(req: NextRequest) {
       saveVehicle = fixed?.save
       result = await verifyCompatibility(normalizedVin, productInfo, safeCategory, fixed?.spec)
     }
+
+    // 단정 표현 순화 + 결론에 확인 안내 (예전 캐시 결과에도 적용)
+    result = softenResult(result)
 
     // 응답 후 백그라운드 저장: 캐시(미스일 때) + 행동 기록 (VIN은 해시만 — 개인정보 미저장)
     const vinHash = createHash("sha256").update(normalizedVin).digest("hex").slice(0, 16)

@@ -23,7 +23,7 @@ export default function Home() {
         <p className="mb-10 max-w-sm text-center text-sm leading-relaxed text-muted-foreground sm:max-w-md sm:text-base">
           차대번호와 상품 링크만 넣으면
           <br className="hidden sm:block" />{" "}
-          전문가 AI가 호환성을 즉시 판정합니다
+          전문가 AI가 호환 가능성을 바로 알려드립니다
         </p>
 
         {/* 메인 카드 — 글로우 효과 포함 */}

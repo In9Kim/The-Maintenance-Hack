@@ -64,7 +64,9 @@ const norm = (s: string) => s.toLowerCase().replace(/[\s·\-_]/g, "")
 export function splitRecallName(name: string): { base: string; code: string | null } {
   const m = name.match(/[(（]\s*([^)）]*)[)）]/)
   const inside = m ? m[1].trim() : ""
-  const code = inside ? inside.split(/\s+/)[0].toUpperCase() : null
+  // "GN7 HEV" → GN7, 공백 없이 붙은 "GN7HEV" → GN7 (영문 1~3자 + 숫자 1~2자리가 세대 코드)
+  const first = inside ? inside.split(/\s+/)[0].toUpperCase() : ""
+  const code = first ? (first.match(/^[A-Z]{1,3}\d{1,2}/)?.[0] ?? first) : null
   const base = norm(name.replace(/[(（][^)）]*[)）]/g, ""))
   return { base, code: code || null }
 }

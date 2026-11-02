@@ -188,6 +188,16 @@ export interface EventStats {
   verify: { hits: number; misses: number }
   byDay: Record<string, { events: number; outbound: number }>
   topPaths: Record<string, number>
+  /** 유입 꼬리표(?from=)별: 방문, 전체 행동, 구매·예약 사이트 이동. Apps Script 새 버전부터 제공 */
+  bySource?: Record<string, SourceStats>
+}
+
+export interface SourceStats {
+  landing: number
+  events: number
+  outbound: Record<string, number>
+  first: string
+  last: string
 }
 
 export const EMPTY_STATS: EventStats = {
@@ -200,6 +210,7 @@ export const EMPTY_STATS: EventStats = {
   verify: { hits: 0, misses: 0 },
   byDay: {},
   topPaths: {},
+  bySource: {},
 }
 
 export async function getEventStats(days?: number): Promise<EventStats> {

@@ -1,6 +1,7 @@
 import recallsJson from "@/data/recalls.json"
 import newsJson from "@/data/recall_news.json"
 import { matchRecallsForCar } from "./match"
+import { displayCarName, displayMaker } from "./display"
 import type { Recall, RecallData, RecallNewsData, RecallNewsItem } from "./types"
 
 /**
@@ -41,7 +42,19 @@ function newsRecalls(): Recall[] {
   return out
 }
 
-const ALL: Recall[] = [...newsRecalls(), ...ANNUAL.recalls].sort(
+/** 화면·매칭용 정규화 (원본 제작자명 maker, 원문 차명 rawName은 그대로 둔다) */
+function normalize(r: Recall): Recall {
+  return {
+    ...r,
+    ...displayMaker(r.maker),
+    items: r.items.map((it) => {
+      const name = displayCarName(it.name)
+      return name === it.name ? it : { ...it, name, rawName: it.name }
+    }),
+  }
+}
+
+const ALL: Recall[] = [...newsRecalls(), ...ANNUAL.recalls].map(normalize).sort(
   (a, b) => b.startDate.localeCompare(a.startDate) || a.makerName.localeCompare(b.makerName, "ko")
 )
 const DATA: RecallData = { ...ANNUAL, recalls: ALL }
@@ -49,6 +62,13 @@ const DATA: RecallData = { ...ANNUAL, recalls: ALL }
 /** 최근 국토부 리콜 보도자료 (표를 정리하지 못한 글도 제목·링크는 보여줌) */
 export function recallNews(limit = 6): RecallNewsItem[] {
   return NEWS.items.slice(0, limit)
+}
+
+/** 모든 리콜 페이지 공통 기준일 문구: "공공데이터 기준 2025.12.31 · 국토부 발표 2026.08.06까지 반영" */
+export function dataBasisText(): string {
+  const annual = ANNUAL.dataAsOf ? `공공데이터 기준 ${fmtDate(ANNUAL.dataAsOf)}` : "공공데이터 준비 중"
+  const news = NEWS.items[0]?.date
+  return news ? `${annual} · 국토부 발표 ${fmtDate(news)}까지 반영` : annual
 }
 
 /** 보도자료까지 포함한 가장 최근 반영일 */

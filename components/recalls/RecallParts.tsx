@@ -6,6 +6,7 @@ import {
   RECALL_CENTER_LIST_URL,
   RECALL_CENTER_LOOKUP_URL,
   RECALL_DATASET_URL,
+  dataBasisText,
   fmtDate,
   latestNewsDate,
   recallData,
@@ -14,8 +15,6 @@ import type { RecallNewsItem } from "@/lib/recalls/types"
 
 /** 모든 리콜 페이지 상단: 데이터 기준일 + 차대번호 조회 안내 */
 export function RecallNotice({ carId }: { carId?: string }) {
-  const { dataAsOf } = recallData()
-  const newsDate = latestNewsDate()
   return (
     <div className="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm">
       <div className="flex items-start gap-2">
@@ -26,17 +25,7 @@ export function RecallNotice({ carId }: { carId?: string }) {
             같은 차종이라도 생산 시기·사양에 따라 리콜 대상이 아닐 수 있습니다. 이 페이지는 공개 데이터를 정리한
             참고 자료입니다.
           </p>
-          <p className="text-xs text-muted-foreground">
-            데이터 기준일: <strong className="text-foreground">{dataAsOf ? fmtDate(dataAsOf) : "준비 중"}</strong>
-            {newsDate ? (
-              <>
-                {" "}
-                · 국토교통부 보도자료 <strong className="text-foreground">{fmtDate(newsDate)}</strong>까지 반영
-              </>
-            ) : (
-              " (원본은 연 1회 공개되어 최근 리콜이 아직 반영되지 않았을 수 있습니다)"
-            )}
-          </p>
+          <p className="text-xs font-medium text-foreground/80">{dataBasisText()}</p>
           <OutboundLink
             href={RECALL_CENTER_LOOKUP_URL}
             target="recall_center"
@@ -53,7 +42,6 @@ export function RecallNotice({ carId }: { carId?: string }) {
 
 /** 페이지 하단 출처 */
 export function RecallSource() {
-  const { dataAsOf } = recallData()
   return (
     <p className="mt-10 rounded-lg border border-border bg-muted/30 p-3 text-xs leading-relaxed text-muted-foreground">
       출처:{" "}
@@ -63,12 +51,12 @@ export function RecallSource() {
       ·{" "}
       <a href={RECALL_DATASET_URL} target="_blank" rel="noopener" className="underline hover:text-foreground">
         공공데이터포털 한국교통안전공단_자동차결함 리콜현황
-      </a>
-      {dataAsOf ? ` (기준일 ${fmtDate(dataAsOf)})` : ""} ·{" "}
+      </a>{" "}
+      ·{" "}
       <a href="https://www.molit.go.kr/USR/NEWS/m_71/lst.jsp" target="_blank" rel="noopener" className="underline hover:text-foreground">
         국토교통부 리콜 보도자료
       </a>
-      (표 내용은 AI로 정리 후 원문과 대조). 리콜 상세 내용과 시정 방법은 자동차리콜센터 원문을 확인하세요. 정비핵은
+      (표 내용은 AI로 정리 후 원문과 대조) — {dataBasisText()}. 리콜 상세 내용과 시정 방법은 자동차리콜센터 원문을 확인하세요. 정비핵은
       데이터 오류나 누락에 대해 책임지지 않습니다.
     </p>
   )

@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = partTitleName(part)
   const c = partCost(part)
   return {
-    title: `${name} ${title} 교체 비용 · 규격 | 공식센터 vs 셀프 ${formatPrice(c.savings)} 절약 | 정비핵`,
+    title: `${name} ${title} 교체 비용 · 규격 | 공식센터 vs 쿠팡+공임나라 ${formatPrice(c.savings)} 절약 | 정비핵`,
     description: `${name} ${title} 규격은 ${part.spec}. 공식센터 예상 ${formatPrice(c.dealer)}, 쿠팡 부품+공임나라 공임 ${formatPrice(c.self)}으로 약 ${c.savingsPercent}% 절약할 수 있습니다.${intervalText(part) ? ` 교체 주기 ${intervalText(part)}.` : ""}`,
     alternates: { canonical: `${SITE_URL}/cars/${car.id}/${partSlug(car, part)}` },
   }
