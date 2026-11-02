@@ -4,7 +4,7 @@
  */
 export interface ClientEvent {
   type: "outbound" | "car_view" | "calc_use" | "report"
-  target?: "coupang" | "naver" | "gongim" | "other"
+  target?: "coupang" | "naver" | "gongim" | "recall_center" | "other"
   carId?: string
   partId?: string
   meta?: Record<string, unknown>

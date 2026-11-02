@@ -22,3 +22,13 @@
 - Cloudflare에서는 파일 쓰기가 안 됨 → 모든 저장은 구글시트로.
 - 기본 차종은 `data/vehicles.json` (읽기 전용). 관리자 화면에서 검증한 AI 생성 차종을 기본 차종으로 올리려면 이 파일에 옮겨 담아 배포.
 - 무료 플랜 워커 크기 한도 3 MiB(gzip). 현재 약 1.1 MiB.
+
+## 리콜 정보 (/recalls)
+- 원본: 공공데이터포털 [한국교통안전공단_자동차결함 리콜현황](https://www.data.go.kr/data/3048950/fileData.do) (오픈API 자동변환, 연 1회 갱신)
+- `.github/workflows/recalls.yml` 이 매일 06:17(한국시간) `scripts/fetch-recalls.mjs` 실행 → `data/recalls.json`, `data/recalls_new.json` 이 바뀌었을 때만 main에 커밋 → Cloudflare가 자동 재배포
+- 필요한 시크릿: GitHub 저장소 **Settings → Secrets and variables → Actions** 에 `RECALL_API_KEY` (공공데이터포털 일반 인증키)
+  - 사이트는 빌드된 JSON만 읽으므로 Cloudflare 변수에는 넣지 않아도 됨
+  - 로컬에서 돌려보려면 `.env.local` 에 `RECALL_API_KEY=...` 넣고 `npm run recalls:fetch` (`.env*` 는 git에 안 올라감)
+- 처음 한 번은 Actions 탭 → **Update recalls → Run workflow** 로 수동 실행
+- 차종 매칭 규칙: `lib/recalls/match.ts` (테스트 `npm test`). 새 차종을 `data/vehicles.json` 에 추가하면 여기에도 규칙을 추가해야 리콜이 붙음
+- 실시간 API(국토교통부_자동차 리콜정보, 시정 방법·상세 URL 포함)는 자동차리콜센터와 사전 협의 후 사용 가능 → 승인되면 `scripts/fetch-recalls.mjs` 의 데이터 가져오는 부분만 교체

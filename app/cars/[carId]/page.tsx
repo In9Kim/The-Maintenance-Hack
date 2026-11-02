@@ -14,6 +14,7 @@ import {
 } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
 import { Breadcrumbs, JsonLd, PartnersDisclosure } from "@/components/seo/Shared"
+import { recallsForCar } from "@/lib/recalls/data"
 
 export const dynamicParams = false
 
@@ -39,6 +40,7 @@ export default async function CarPage({ params }: Props) {
   if (!car) notFound()
 
   const name = carShortName(car)
+  const recallCount = recallsForCar(car.id).length
   const totals = car.parts.reduce(
     (acc, p) => {
       const c = partCost(p)
@@ -58,9 +60,15 @@ export default async function CarPage({ params }: Props) {
       />
 
       <h1 className="mb-2 text-2xl font-extrabold tracking-tight sm:text-3xl">{name} 소모품 교체 비용</h1>
-      <p className="mb-6 text-sm text-muted-foreground">
+      <p className="mb-3 text-sm text-muted-foreground">
         {car.generation} · {car.yearRange} · {car.engineTypes.join(" / ")}
       </p>
+      <Link
+        href={`/cars/${car.id}/recalls`}
+        className="mb-6 inline-flex items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-300 hover:bg-amber-500/20"
+      >
+        {recallCount > 0 ? `리콜 ${recallCount}건 →` : "리콜 정보 →"}
+      </Link>
 
       <div className="mb-8 grid gap-3 sm:grid-cols-3">
         <div className="rounded-xl border border-border bg-card p-4">

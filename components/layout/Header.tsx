@@ -22,7 +22,7 @@ export function Header() {
         <div className="container mx-auto max-w-7xl px-4">
           <div className="flex h-14 items-center justify-between">
             {/* 로고 */}
-            <Link href="/" className="flex items-center gap-2.5">
+            <Link href="/" className="flex shrink-0 items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                 <Wrench className="h-4 w-4 text-primary-foreground" />
               </div>
@@ -33,7 +33,7 @@ export function Header() {
             </Link>
 
             {/* 네비게이션 */}
-            <nav className="flex items-center gap-1 text-sm">
+            <nav className="ml-2 flex min-w-0 items-center gap-1 overflow-x-auto whitespace-nowrap text-sm">
               <Link href="/" className={navCls(pathname === "/")}>
                 호환성 검증
               </Link>
@@ -44,6 +44,10 @@ export function Header() {
               <Separator orientation="vertical" className="mx-1 h-4" />
               <Link href="/cars" className={navCls(pathname.startsWith("/cars"))}>
                 차종별 비용
+              </Link>
+              <Separator orientation="vertical" className="mx-1 h-4" />
+              <Link href="/recalls" className={navCls(pathname.startsWith("/recalls"))}>
+                리콜 정보
               </Link>
               <Separator orientation="vertical" className="mx-1 h-4" />
               <button
