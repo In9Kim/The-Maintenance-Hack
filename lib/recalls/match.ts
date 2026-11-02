@@ -8,7 +8,7 @@
  *     표기 정도이고, "아반떼N"처럼 다른 파생 모델이 되는 글자가 붙으면 매칭하지 않는다.
  *  3) 세대 확인
  *     - 차명 괄호 안에 세대 코드가 있으면 그것만 본다. "쏘렌토(MQ4)" → MQ4 이면 매칭, "쏘렌토(XM)" → 불일치
- *     - 세대 코드가 없으면(테슬라 등) 생산기간 시작일이 그 세대 양산 시작일(sop) 이후일 때만 매칭.
+ *     - 세대 코드가 없으면(테슬라, 국토부 보도자료 표 등) 생산기간 시작일이 그 세대 양산 시작일(sop) 이후일 때만 매칭.
  *       이전 세대와 생산기간이 겹치면(예: 2021~2024 생산분) 해당 세대 포함 여부가 불확실하므로 매칭하지 않는다.
  *       sop가 없는 차종은 코드 없는 차명을 매칭하지 않는다.
  *
@@ -42,13 +42,15 @@ const ALLOWED_EXTRA = new Set([
 ])
 
 export const RECALL_MATCH_RULES: Record<string, RecallMatchRule> = {
-  "kia-sorento-mq4": { maker: /^기아/, names: ["쏘렌토", "sorento"], genCode: "MQ4" },
-  "kia-carnival-ka4": { maker: /^기아/, names: ["카니발", "carnival"], genCode: "KA4" },
-  "kia-k5-dl3": { maker: /^기아/, names: ["k5"], genCode: "DL3" },
-  "hyundai-tucson-nx4": { maker: /^현대자동차/, names: ["투싼", "tucson"], genCode: "NX4" },
-  "hyundai-avante-cn7": { maker: /^현대자동차/, names: ["아반떼", "avante", "elantra"], genCode: "CN7" },
-  "hyundai-grandeur-gn7": { maker: /^현대자동차/, names: ["그랜저", "grandeur"], genCode: "GN7" },
-  "hyundai-santafe-mx5": { maker: /^현대자동차/, names: ["싼타페", "santafe"], genCode: "MX5" },
+  // sop: 세대 코드 없이 차명만 나오는 경우(국토부 보도자료 표 등)를 위한 양산 시작일.
+  //      이전 세대 생산이 확실히 끝난 뒤로 보수적으로 잡음 → 이 날짜 이후 생산분만 매칭
+  "kia-sorento-mq4": { maker: /^기아/, names: ["쏘렌토", "sorento"], genCode: "MQ4", sop: "2020-04-01" },
+  "kia-carnival-ka4": { maker: /^기아/, names: ["카니발", "carnival"], genCode: "KA4", sop: "2020-09-01" },
+  "kia-k5-dl3": { maker: /^기아/, names: ["k5"], genCode: "DL3", sop: "2020-01-01" },
+  "hyundai-tucson-nx4": { maker: /^현대자동차/, names: ["투싼", "tucson"], genCode: "NX4", sop: "2020-10-01" },
+  "hyundai-avante-cn7": { maker: /^현대자동차/, names: ["아반떼", "avante", "elantra"], genCode: "CN7", sop: "2020-05-01" },
+  "hyundai-grandeur-gn7": { maker: /^현대자동차/, names: ["그랜저", "grandeur"], genCode: "GN7", sop: "2022-12-01" },
+  "hyundai-santafe-mx5": { maker: /^현대자동차/, names: ["싼타페", "santafe"], genCode: "MX5", sop: "2023-08-01" },
   // 테슬라 리콜 차명에는 세대 표기가 없어서 생산 시작일로만 판단
   // Model 3 하이랜드: 상하이 양산 2023년 9월 → 2023-10-01 이후 생산분만
   "tesla-model3-highland": { maker: /^테슬라/, names: ["model3", "모델3"], sop: "2023-10-01" },

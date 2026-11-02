@@ -21,32 +21,13 @@
  * 리콜 내용이 바뀌지 않으면 파일을 건드리지 않습니다 → 커밋·재배포가 생기지 않음.
  */
 import { readFile, writeFile } from "node:fs/promises"
-import { existsSync } from "node:fs"
 import path from "node:path"
-import { fileURLToPath } from "node:url"
-
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
-const RECALLS_FILE = path.join(ROOT, "data/recalls.json")
-const NEW_FILE = path.join(ROOT, "data/recalls_new.json")
+import { RECALLS_FILE, addDays, hash, makerInfo, readJson, stable, todayKst, writeRecallsNew } from "./lib/common.mjs"
 
 const NAMESPACE = "3048950/v1"
 const DOCS_URL = `https://infuser.odcloud.kr/oas/docs?namespace=${NAMESPACE}`
 const API_BASE = "https://api.odcloud.kr/api"
 const YEARS = Math.max(1, parseInt(process.env.RECALL_YEARS ?? "3", 10) || 3)
-const NEW_WINDOW_DAYS = 7
-
-// ── 날짜 ─────────────────────────────────────────────────────────────────────
-
-/** 한국 시간 기준 오늘 (YYYY-MM-DD) */
-function todayKst() {
-  return new Date(Date.now() + 9 * 3600_000).toISOString().slice(0, 10)
-}
-
-function addDays(ymd, days) {
-  const d = new Date(`${ymd}T00:00:00Z`)
-  d.setUTCDate(d.getUTCDate() + days)
-  return d.toISOString().slice(0, 10)
-}
 
 /** "2025-01-02" / "20250102" / "2025.1.2" → "2025-01-02" (알 수 없으면 원문) */
 function normDate(v) {
@@ -55,70 +36,6 @@ function normDate(v) {
   if (m && s.length >= 8) return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`
   m = s.match(/^(\d{4})(\d{2})(\d{2})$/)
   return m ? `${m[1]}-${m[2]}-${m[3]}` : s
-}
-
-// ── 제작사 이름·주소 ─────────────────────────────────────────────────────────
-
-/** 자주 나오는 제작사는 읽기 쉬운 영문 주소를 준다 (원문 제작자명 앞부분 기준) */
-const MAKER_SLUGS = [
-  [/^현대자동차/, "hyundai", "현대자동차"],
-  [/^기아/, "kia", "기아"],
-  [/^제네시스/, "genesis", "제네시스"],
-  [/^테슬라/, "tesla", "테슬라"],
-  [/^비엠더블유|^BMW/i, "bmw", "BMW"],
-  [/^메르세데스|^벤츠/, "mercedes-benz", "메르세데스-벤츠"],
-  [/^한국지엠|^한국GM|^지엠/i, "gm-korea", "한국GM"],
-  [/^르노/, "renault-korea", "르노코리아"],
-  [/^케이지모빌리티|^KG/i, "kg-mobility", "KG모빌리티"],
-  [/^쌍용/, "ssangyong", "쌍용자동차"],
-  [/^폭스바겐/, "volkswagen", "폭스바겐"],
-  [/^아우디/, "audi", "아우디"],
-  [/^볼보/, "volvo", "볼보"],
-  [/^포르쉐/, "porsche", "포르쉐"],
-  [/^한국토요타|^토요타/, "toyota", "토요타·렉서스"],
-  [/^혼다/, "honda", "혼다"],
-  [/^한국닛산|^닛산/, "nissan", "닛산"],
-  [/^스텔란티스|^FCA/i, "stellantis", "스텔란티스(지프·푸조 등)"],
-  [/^재규어|^JLR/i, "jaguar-land-rover", "재규어·랜드로버"],
-  [/^포드/, "ford", "포드"],
-  [/^링컨/, "lincoln", "링컨"],
-  [/^미니/, "mini", "MINI"],
-  [/^스카니아/, "scania", "스카니아"],
-  [/^만트럭/, "man-truck", "만트럭버스"],
-  [/^다임러트럭/, "daimler-truck", "다임러트럭"],
-  [/^볼보트럭|^볼보그룹/, "volvo-trucks", "볼보트럭"],
-  [/^할리데이비슨/, "harley-davidson", "할리데이비슨"],
-  [/^비와이디|^BYD/i, "byd", "BYD"],
-  [/^폴스타/, "polestar", "폴스타"],
-  [/^캐딜락/, "cadillac", "캐딜락"],
-]
-
-function cleanMakerName(maker) {
-  return maker
-    .replace(/\(주\)|㈜|주식회사|유한회사|유한책임회사|\(유\)/g, "")
-    .replace(/\s*\(.*?\)\s*/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-}
-
-function hash(s) {
-  // FNV-1a 32bit → 6자리 16진수 (ID가 매번 같게 나오도록)
-  let h = 0x811c9dc5
-  for (const ch of s) {
-    h ^= ch.codePointAt(0)
-    h = Math.imul(h, 0x01000193) >>> 0
-  }
-  return h.toString(16).padStart(8, "0").slice(0, 6)
-}
-
-function makerInfo(maker) {
-  for (const [re, slug, name] of MAKER_SLUGS) {
-    // 볼보트럭이 볼보로 잡히지 않도록 더 구체적인 패턴을 먼저 확인
-    if (slug === "volvo" && /^볼보(트럭|그룹)/.test(maker)) continue
-    if (re.test(maker)) return { makerSlug: slug, makerName: name }
-  }
-  const name = cleanMakerName(maker) || maker
-  return { makerSlug: `maker-${hash(maker)}`, makerName: name }
 }
 
 // ── 원본 가져오기 ────────────────────────────────────────────────────────────
@@ -227,17 +144,6 @@ function groupRecalls(rawRows) {
 
 // ── 실행 ─────────────────────────────────────────────────────────────────────
 
-async function readJson(file, fallback) {
-  if (!existsSync(file)) return fallback
-  try {
-    return JSON.parse(await readFile(file, "utf8"))
-  } catch {
-    return fallback
-  }
-}
-
-const stable = (o) => JSON.stringify(o)
-
 async function main() {
   const csvFiles = process.argv.flatMap((a, i, arr) => (a === "--csv" && arr[i + 1] ? [arr[i + 1]] : []))
   const today = todayKst()
@@ -288,19 +194,8 @@ async function main() {
     console.log(`recalls.json 변경 없음: ${recalls.length}건`)
   }
 
-  // 최근 7일 새 리콜
-  const since = addDays(today, -(NEW_WINDOW_DAYS - 1))
-  const fresh = recalls.filter((r) => r.firstSeen >= since)
-  const prevNew = await readJson(NEW_FILE, { generatedAt: null, windowDays: NEW_WINDOW_DAYS, since: null, recalls: [] })
-  const nextNew = { generatedAt: today, windowDays: NEW_WINDOW_DAYS, since, dataAsOf: next.dataAsOf, recalls: fresh }
-  const newChanged =
-    stable(prevNew.recalls.map((r) => r.id)) !== stable(fresh.map((r) => r.id)) || !existsSync(NEW_FILE)
-  if (newChanged) {
-    await writeFile(NEW_FILE, JSON.stringify(nextNew, null, 1) + "\n")
-    console.log(`recalls_new.json 갱신: 최근 ${NEW_WINDOW_DAYS}일 새 리콜 ${fresh.length}건`)
-  } else {
-    console.log(`recalls_new.json 변경 없음: ${fresh.length}건`)
-  }
+  // 최근 7일 새 리콜 (국토부 보도자료 수집분과 합쳐서)
+  await writeRecallsNew(today)
 }
 
 main().catch((err) => {

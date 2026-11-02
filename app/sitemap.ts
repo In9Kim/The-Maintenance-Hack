@@ -1,12 +1,13 @@
 import type { MetadataRoute } from "next"
 import { seoCars, partSlug, SITE_URL } from "@/lib/seo"
-import { recallData, recallMakers, recallsForCar } from "@/lib/recalls/data"
+import { latestNewsDate, recallData, recallMakers, recallsForCar } from "@/lib/recalls/data"
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()
   const cars = seoCars()
   const { updatedAt } = recallData()
-  const recallUpdated = updatedAt ? new Date(`${updatedAt}T00:00:00+09:00`) : now
+  const latest = [updatedAt, latestNewsDate()].filter(Boolean).sort().pop()
+  const recallUpdated = latest ? new Date(`${latest}T00:00:00+09:00`) : now
   return [
     { url: `${SITE_URL}/`, lastModified: now, priority: 1 },
     { url: `${SITE_URL}/calculator`, lastModified: now, priority: 0.8 },

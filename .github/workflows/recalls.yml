@@ -1,7 +1,13 @@
 # 리콜 데이터 하루 1번 갱신 → 바뀐 게 있으면 커밋 → Cloudflare가 자동으로 다시 배포
 #
-# 필요한 시크릿: RECALL_API_KEY (공공데이터포털 일반 인증키)
-#   저장소 Settings → Secrets and variables → Actions → New repository secret
+#  1) 공공데이터포털 연간 리콜현황        scripts/fetch-recalls.mjs      → data/recalls.json
+#  2) 국토교통부 리콜 보도자료(최신 리콜)  scripts/fetch-recall-news.mjs  → data/recall_news.json
+#  두 단계 모두 data/recalls_new.json(최근 7일 새 리콜)을 함께 갱신
+#
+# 필요한 시크릿 (저장소 Settings → Secrets and variables → Actions)
+#   RECALL_API_KEY  공공데이터포털 일반 인증키 (1단계)
+#   GEMINI_API_KEY  보도자료 표를 정리할 Gemini 키 (2단계, 무료 등급 키로 충분)
+#                   없으면 보도자료 제목·링크만 저장하고 표 정리는 키가 생긴 뒤 다시 시도
 name: Update recalls
 
 on:
@@ -20,7 +26,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -28,20 +34,40 @@ jobs:
         with:
           node-version: 22
 
-      - name: Fetch recalls
+      # 한 단계가 실패해도 다른 단계 결과는 커밋하고, 마지막에 실패로 표시해서 알 수 있게 함
+      - name: Fetch annual recalls (data.go.kr)
+        id: annual
+        continue-on-error: true
         env:
           RECALL_API_KEY: ${{ secrets.RECALL_API_KEY }}
           RECALL_YEARS: "3"
         run: node scripts/fetch-recalls.mjs
 
+      - name: Fetch recall press releases (molit.go.kr)
+        id: news
+        continue-on-error: true
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          # 프로젝트 전체 대신 PDF 읽기 도구만 임시 폴더에 설치
+          npm install --prefix "$RUNNER_TEMP/pdfjs" --no-audit --no-fund pdfjs-dist@6.4.299
+          PDFJS_MODULE="$RUNNER_TEMP/pdfjs/node_modules/pdfjs-dist/legacy/build/pdf.mjs" node scripts/fetch-recall-news.mjs
+
       - name: Commit if changed
         run: |
-          if git diff --quiet -- data/recalls.json data/recalls_new.json; then
+          FILES="data/recalls.json data/recall_news.json data/recalls_new.json"
+          if git diff --quiet -- $FILES; then
             echo "리콜 데이터 변경 없음"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/recalls.json data/recalls_new.json
+          git add $FILES
           git commit -m "chore(data): 리콜 데이터 갱신 $(TZ=Asia/Seoul date +%F)"
           git push
+
+      - name: Report failures
+        if: steps.annual.outcome == 'failure' || steps.news.outcome == 'failure'
+        run: |
+          echo "연간 데이터: ${{ steps.annual.outcome }} / 보도자료: ${{ steps.news.outcome }}"
+          exit 1

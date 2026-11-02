@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { Header } from "@/components/layout/Header"
+import { TrackFrom } from "@/components/seo/TrackFrom"
 import "./globals.css"
 import { SITE_URL } from "@/lib/seo"
 
@@ -30,6 +31,7 @@ export default function RootLayout({
     <html lang="ko" className="dark">
       <body className={inter.className}>
         <Header />
+        <TrackFrom />
         <main className="min-h-[calc(100vh-3.5rem)]">{children}</main>
         <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
           <p>

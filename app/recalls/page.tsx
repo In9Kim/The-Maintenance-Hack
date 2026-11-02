@@ -6,12 +6,13 @@ import {
   RecallEmpty,
   RecallFaq,
   RecallList,
+  RecallNewsList,
   RecallNotice,
   RecallSource,
   faqJsonLd,
   recallFaq,
 } from "@/components/recalls/RecallParts"
-import { allRecalls, fmtDate, recallData, recallMakers, recallsForCar, recentRecalls } from "@/lib/recalls/data"
+import { allRecalls, fmtDate, recallData, recallMakers, recallNews, recallsForCar, recentRecalls } from "@/lib/recalls/data"
 
 export function generateMetadata(): Metadata {
   const { dataAsOf } = recallData()
@@ -33,6 +34,7 @@ export default function RecallsPage() {
     .map((car) => ({ car, count: recallsForCar(car.id).length }))
     .filter((c) => c.count > 0)
   const faq = recallFaq()
+  const news = recallNews()
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-10">
@@ -45,6 +47,13 @@ export default function RecallsPage() {
       </p>
 
       <RecallNotice />
+
+      {news.length > 0 && (
+        <section className="mb-8">
+          <h2 className="mb-3 text-lg font-bold">최근 리콜 소식 (국토교통부 발표)</h2>
+          <RecallNewsList items={news} />
+        </section>
+      )}
 
       {makers.length > 0 && (
         <section className="mb-8">

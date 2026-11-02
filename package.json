@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --test 'lib/**/*.test.ts'",
+    "test": "node --test 'lib/**/*.test.ts' 'scripts/**/*.test.mjs'",
     "recalls:fetch": "node --env-file-if-exists=.env.local scripts/fetch-recalls.mjs",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",

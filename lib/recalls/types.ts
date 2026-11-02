@@ -29,6 +29,53 @@ export interface Recall {
   items: RecallItem[]
   /** 우리 데이터에 처음 들어온 날 (recalls_new.json 계산용) */
   firstSeen: string
+  /** 출처. 없으면 공공데이터 연간 파일, "molit"이면 국토교통부 보도자료 */
+  source?: "molit"
+  sourceTitle?: string
+  sourceUrl?: string
+  /** 결함 장치 (보도자료) */
+  part?: string | null
+  /** 대상 대수 합계 (보도자료) */
+  count?: number | null
+}
+
+/** data/recall_news.json — 국토교통부 리콜 보도자료 (scripts/fetch-recall-news.mjs) */
+export interface RecallNewsCar {
+  name: string
+  from: string
+  to: string
+  count: number | null
+}
+
+export interface RecallNewsGroup {
+  /** 리콜 고정 ID (recalls_new.json과 같은 값) */
+  id: string
+  maker: string
+  makerName: string
+  makerSlug: string
+  part: string | null
+  defect: string
+  startDate: string | null
+  total: number | null
+  cars: RecallNewsCar[]
+  /** 모든 값이 원문과 일치했는지 (아니면 일치하지 않은 값은 비워 둠) */
+  verified: boolean
+}
+
+export interface RecallNewsItem {
+  id: string
+  title: string
+  date: string | null
+  url: string
+  pdfUrl: string | null
+  summary: string | null
+  groups: RecallNewsGroup[]
+  firstSeen: string
+}
+
+export interface RecallNewsData {
+  updatedAt: string | null
+  items: RecallNewsItem[]
 }
 
 export interface RecallData {
