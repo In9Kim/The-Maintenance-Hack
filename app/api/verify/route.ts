@@ -7,6 +7,21 @@ const VIN_REGEX = /^[A-HJ-NPR-Z0-9]{17}$/i
 // Block SSRF to private/loopback ranges
 const BLOCKED_HOSTNAMES = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.)/
 
+/**
+ * 쇼핑몰 공통 제목(상품명이 아님). 네이버 스마트스토어·쿠팡 등은 서버에서 열면 상품명이 아니라
+ * "네이버+ 스토어" 같은 껍데기 제목만 돌려줘서, 이걸 상품 정보로 쓰면 엉터리 판정이 나고 캐시까지 오염됨.
+ */
+const GENERIC_TITLES =
+  /^(네이버\+?\s*스토어|네이버\s*(쇼핑|스마트스토어)?|스마트스토어|naver|쿠팡!?|coupang|11번가|g마켓|gmarket|옥션|auction|ssg\.?com|롯데온|위메프|티몬|access denied|로그인|login|error|에러|오류|페이지를 찾을 수 없습니다|just a moment\.*|attention required.*)$/i
+
+/** 상품 정보로 쓸 만한 문자열인지 (너무 짧거나 쇼핑몰 공통 제목이면 false) */
+function isUsefulProductInfo(text: string | null | undefined): text is string {
+  if (!text) return false
+  const t = text.replace(/\s*[:|\-–]\s*(네이버\+?\s*스토어|스마트스토어|쿠팡!?|coupang|11번가|g마켓|옥션)\s*$/i, "").trim()
+  if (t.length < 4) return false
+  return !GENERIC_TITLES.test(t)
+}
+
 async function extractProductInfoFromUrl(url: string): Promise<string | null> {
   try {
     const controller = new AbortController()
@@ -44,8 +59,11 @@ async function extractProductInfoFromUrl(url: string): Promise<string | null> {
 
     const title = html.match(/<title[^>]*>([^<]{1,300})<\/title>/i)?.[1]
 
-    const raw = ogTitle || title || null
-    return raw ? raw.replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim() : null
+    const clean = (v?: string) =>
+      v?.replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim()
+    // og:title이 껍데기면 <title>도 확인하고, 둘 다 쓸모없으면 실패 처리 → 사용자에게 직접 입력 요청
+    const candidate = [clean(ogTitle), clean(title)].find((v) => isUsefulProductInfo(v))
+    return candidate ?? null
   } catch {
     return null
   }
@@ -97,10 +115,12 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    if (!productInfo) {
+    if (!isUsefulProductInfo(productInfo)) {
       return NextResponse.json(
         {
-          error: "상품 정보를 가져올 수 없습니다. 상품명이나 품번을 직접 입력해주세요.",
+          error: urlExtracted || productUrl
+            ? "이 쇼핑몰 링크는 상품명을 자동으로 읽을 수 없어요. 상품명이나 품번을 직접 입력해주세요."
+            : "상품 정보를 가져올 수 없습니다. 상품명이나 품번을 직접 입력해주세요.",
           needsManualInput: true,
         },
         { status: 422 }
@@ -119,7 +139,8 @@ export async function POST(req: NextRequest) {
 
     if (useSheets) {
       const cached = await lookupCache(vinPrefix, productInfo)
-      if (cached) {
+      // 예전에 저장된 판정 불가 캐시는 쓰지 않고 다시 판정
+      if (cached && cached.compatibility !== "UNCERTAIN") {
         result = cached
         cacheHit = true
       }
@@ -134,7 +155,10 @@ export async function POST(req: NextRequest) {
     const vinHash = createHash("sha256").update(normalizedVin).digest("hex").slice(0, 16)
     const finalResult = result
     after(async () => {
-      if (useSheets && !cacheHit) await writeCache(vinPrefix, productInfo, finalResult)
+      // 판정 불가(UNCERTAIN) 결과는 캐시하지 않음 → 다음 조회 때 다시 판정할 기회를 줌
+      if (useSheets && !cacheHit && finalResult.compatibility !== "UNCERTAIN") {
+        await writeCache(vinPrefix, productInfo, finalResult)
+      }
       await logEvent({
         type: "verify",
         meta: {

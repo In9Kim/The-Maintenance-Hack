@@ -389,7 +389,7 @@ export function CompatibilityChecker({ heroMode = false }: CompatibilityCheckerP
         if (data.needsManualInput) {
           setInputMode("manual")
           setPageState("idle")
-          setErrorMsg("URL에서 상품 정보를 자동으로 가져오지 못했습니다. 상품명 또는 품번을 직접 입력해주세요.")
+          setErrorMsg(data.error ?? "URL에서 상품 정보를 자동으로 가져오지 못했습니다. 상품명 또는 품번을 직접 입력해주세요.")
           return
         }
         throw new Error(data.error ?? "알 수 없는 오류")
