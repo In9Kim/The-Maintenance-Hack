@@ -236,10 +236,68 @@ export interface CompatibilityResult {
   conclusion: string
 }
 
+/**
+ * 차량 정보만 먼저 해석 (부품 판정과 분리).
+ * 코드로 확정한 브랜드·연식(lib/vin.ts)은 AI가 바꾸지 못하게 프롬프트에 박고, 결과에도 덮어쓴다.
+ * 이 결과는 구글시트에 저장해서 같은 차량은 항상 같은 정보로 판정한다 (lib/vehicle-spec.ts).
+ */
+export async function decodeVehicleSpec(
+  vin: string,
+  facts: { brand: string | null; modelYear: number | null }
+): Promise<VehicleSpec> {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error("GEMINI_API_KEY 환경변수가 설정되지 않았습니다.")
+  }
+  const model = getModel(process.env.GEMINI_API_KEY, { responseMimeType: "application/json", temperature: 0 })
+
+  const fixedLines = [
+    facts.brand ? `- 제조사: ${facts.brand} (차대번호 1~3번째 자리로 확정 — 변경 금지)` : null,
+    facts.modelYear ? `- 연식: ${facts.modelYear}년식 (차대번호 10번째 자리로 확정 — 변경 금지)` : null,
+  ].filter(Boolean)
+
+  const prompt = `
+너는 자동차 제원 전문가다. 아래 차대번호(VIN)의 차량 정보만 JSON으로 답하라. 부품 이야기는 하지 마라.
+
+차대번호: ${vin}
+${fixedLines.length ? `[이미 확정된 값]\n${fixedLines.join("\n")}` : ""}
+
+[규칙]
+- 4~8번째 자리(VDS)로 모델·세대·엔진을 판단한다.
+- 엔진은 그 연식·국내 판매 사양 기준으로 가장 대표적인 것을 적되, 연식 안에 여러 엔진이 있어 VIN만으로 확정이 어려우면
+  "1.6 가솔린 (세부 엔진 형식 확인 필요)"처럼 확실한 부분까지만 적어라. 모르는 내용을 지어내지 마라.
+- 모델을 판단할 수 없으면 manufacturer_model에 "확인 필요"라고 적어라.
+
+[출력 — JSON만]
+{
+  "manufacturer_model": "브랜드 + 모델명 + 세대 코드 (예: 기아 올 뉴 K3 BD 3세대)",
+  "production_year": "예: 2019년식",
+  "engine_spec": "엔진 형식 + 배기량 + 연료 + 구동방식 (예: 1.6 가솔린, 전륜구동(FF))"
+}
+`
+  const result = await model.generateContent(prompt)
+  const text = result.response.text().trim()
+  let spec: VehicleSpec
+  try {
+    spec = JSON.parse(text) as VehicleSpec
+  } catch {
+    const match = text.match(/\{[\s\S]*\}/)
+    if (!match) throw new Error("차량 정보 해석 결과를 파싱할 수 없습니다.")
+    spec = JSON.parse(match[0]) as VehicleSpec
+  }
+  // 코드로 확정한 값은 AI 답과 상관없이 덮어쓴다
+  if (facts.modelYear) spec.production_year = `${facts.modelYear}년식`
+  if (facts.brand && spec.manufacturer_model && !spec.manufacturer_model.startsWith(facts.brand)) {
+    spec.manufacturer_model = `${facts.brand} ${spec.manufacturer_model.replace(/^(기아|현대|제네시스|테슬라)\s*/, "")}`
+  }
+  return spec
+}
+
 export async function verifyCompatibility(
   vin: string,
   productInfo: string,
-  category?: string
+  category?: string,
+  /** 확정된 차량 정보. 있으면 AI가 차량을 다시 해석하지 않고 이 정보로만 판정 */
+  fixedSpec?: VehicleSpec
 ): Promise<CompatibilityResult> {
   if (!process.env.GEMINI_API_KEY) {
     throw new Error("GEMINI_API_KEY 환경변수가 설정되지 않았습니다.")
@@ -276,7 +334,7 @@ export async function verifyCompatibility(
 
 [VIN 정확도 보정 — Few-Shot 예시]
 VIN: KNAF241BEKA856318
-→ WMI KNA = 기아 대한민국, 10번째 자리 K = 2019년식, VDS F241B = 올 뉴 K3 BD 3세대 1.6 GDi 가솔린
+→ WMI KNA = 기아 대한민국, 10번째 자리 K = 2019년식, VDS = 올 뉴 K3 BD 3세대 1.6 가솔린
 → 정답: 2019년형 기아 올 뉴 K3 (BD, 3세대)
 (주의: KNA WMI를 쏘렌토·스포티지 등으로 잘못 분류하면 심각한 오류임)
 
@@ -287,6 +345,14 @@ VIN: KNAF241BEKA856318
 
 [입력 데이터]
 차대번호(VIN): ${vin}
+${
+  fixedSpec
+    ? `[확정 차량 정보 — 차대번호를 다시 해석하지 말고 이 정보를 그대로 사용할 것. vehicle_spec에도 그대로 적을 것]
+- 모델: ${fixedSpec.manufacturer_model}
+- 연식: ${fixedSpec.production_year}
+- 엔진: ${fixedSpec.engine_spec}`
+    : ""
+}
 ${categoryLine}
 상품 정보: ${productInfo}
 
@@ -318,13 +384,16 @@ ${categoryLine}
   const result = await model.generateContent(prompt)
   const text = result.response.text().trim()
 
+  let parsed: CompatibilityResult
   try {
-    return JSON.parse(text) as CompatibilityResult
+    parsed = JSON.parse(text) as CompatibilityResult
   } catch {
     const match = text.match(/\{[\s\S]*\}/)
-    if (match) return JSON.parse(match[0]) as CompatibilityResult
-    throw new Error("호환성 분석 결과를 파싱할 수 없습니다.")
+    if (!match) throw new Error("호환성 분석 결과를 파싱할 수 없습니다.")
+    parsed = JSON.parse(match[0]) as CompatibilityResult
   }
+  if (fixedSpec) parsed.vehicle_spec = fixedSpec
+  return parsed
 }
 
 export async function decodeVin(vin: string): Promise<VinDecodeResult> {
