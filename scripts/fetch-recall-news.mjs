@@ -42,7 +42,17 @@ const MAX_ATTEMPTS = 3
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 async function get(url, as = "text") {
-  const res = await fetch(url, { headers: { "User-Agent": UA, "Accept-Language": "ko-KR,ko;q=0.9" } })
+  let res
+  try {
+    res = await fetch(url, {
+      headers: { "User-Agent": UA, "Accept-Language": "ko-KR,ko;q=0.9" },
+      signal: AbortSignal.timeout(30_000),
+    })
+  } catch (err) {
+    // "fetch failed"만으로는 원인을 알 수 없어 실제 원인(인증서·연결 거부·시간 초과 등)을 같이 남김
+    const cause = err?.cause ? ` (${err.cause.code ?? ""} ${err.cause.message ?? err.cause})` : ""
+    throw new Error(`접속 실패: ${url.slice(0, 80)} — ${err?.message ?? err}${cause}`)
+  }
   if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`)
   return as === "buffer" ? new Uint8Array(await res.arrayBuffer()) : res.text()
 }
