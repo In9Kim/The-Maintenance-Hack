@@ -41,20 +41,48 @@ const MAX_ATTEMPTS = 3
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
-async function get(url, as = "text") {
-  let res
-  try {
-    res = await fetch(url, {
-      headers: { "User-Agent": UA, "Accept-Language": "ko-KR,ko;q=0.9" },
-      signal: AbortSignal.timeout(30_000),
-    })
-  } catch (err) {
-    // "fetch failed"만으로는 원인을 알 수 없어 실제 원인(인증서·연결 거부·시간 초과 등)을 같이 남김
-    const cause = err?.cause ? ` (${err.cause.code ?? ""} ${err.cause.message ?? err.cause})` : ""
-    throw new Error(`접속 실패: ${url.slice(0, 80)} — ${err?.message ?? err}${cause}`)
+// 국토부 사이트는 세션 쿠키를 심고 같은 주소로 다시 보내는 방식이라, 쿠키를 기억하지 않으면 무한 리다이렉트가 됨
+const cookies = new Map()
+
+function rememberCookies(res) {
+  const list = typeof res.headers.getSetCookie === "function" ? res.headers.getSetCookie() : []
+  for (const c of list) {
+    const [pair] = c.split(";")
+    const i = pair.indexOf("=")
+    if (i > 0) cookies.set(pair.slice(0, i).trim(), pair.slice(i + 1).trim())
   }
-  if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`)
-  return as === "buffer" ? new Uint8Array(await res.arrayBuffer()) : res.text()
+}
+
+const cookieHeader = () => [...cookies].map(([k, v]) => `${k}=${v}`).join("; ")
+
+async function get(url, as = "text") {
+  let current = url
+  for (let hop = 0; hop < 10; hop++) {
+    let res
+    try {
+      res = await fetch(current, {
+        redirect: "manual",
+        headers: {
+          "User-Agent": UA,
+          "Accept-Language": "ko-KR,ko;q=0.9",
+          ...(cookies.size ? { Cookie: cookieHeader() } : {}),
+        },
+        signal: AbortSignal.timeout(30_000),
+      })
+    } catch (err) {
+      // "fetch failed"만으로는 원인을 알 수 없어 실제 원인(인증서·연결 거부·시간 초과 등)을 같이 남김
+      const cause = err?.cause ? ` (${err.cause.code ?? ""} ${err.cause.message ?? err.cause})` : ""
+      throw new Error(`접속 실패: ${current.slice(0, 80)} — ${err?.message ?? err}${cause}`)
+    }
+    rememberCookies(res)
+    if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
+      current = new URL(res.headers.get("location"), current).href
+      continue
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status} ${current}`)
+    return as === "buffer" ? new Uint8Array(await res.arrayBuffer()) : res.text()
+  }
+  throw new Error(`리다이렉트가 너무 많음: ${url}`)
 }
 
 async function pdfText(data) {
