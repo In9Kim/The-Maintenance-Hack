@@ -1,32 +1,71 @@
 import { GoogleGenerativeAI, type GenerationConfig } from "@google/generative-ai"
 
 /**
- * 사용할 Gemini 모델. 구글이 옛 모델을 신규 사용자에게 막으면 여기(또는 환경변수 GEMINI_MODEL)만 바꾸면 됩니다.
- * gemini-2.5-flash는 신규 키에서 404("no longer available to new users")가 나서 3.8 Flash로 교체.
+ * 사용할 Gemini 모델 (앞에서부터 시도).
+ * 무료 등급은 새 모델에 사람이 몰리면 503("high demand")이나 지연이 잦아서,
+ * 실패하면 다음 모델로 넘어갑니다. 모두 무료 등급에서 쓸 수 있는 모델입니다.
+ *   - 환경변수 GEMINI_MODEL 을 넣으면 그 모델을 맨 앞에 시도
+ *   - 환경변수 GEMINI_MODELS="a,b,c" 로 전체 순서를 바꿀 수 있음
+ * gemini-2.5-flash는 신규 키에서 404("no longer available to new users")라 제외.
  */
-export const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash"
+const DEFAULT_MODELS = ["gemini-3.8-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite"]
+export const GEMINI_MODELS: string[] = (() => {
+  const list = process.env.GEMINI_MODELS
+    ? process.env.GEMINI_MODELS.split(",").map((m) => m.trim()).filter(Boolean)
+    : DEFAULT_MODELS
+  const first = process.env.GEMINI_MODEL?.trim()
+  return first ? [first, ...list.filter((m) => m !== first)] : list
+})()
+export const GEMINI_MODEL = GEMINI_MODELS[0]
 
 /**
- * Gemini 3.x는 기본으로 "생각(thinking)"을 medium 수준으로 해서 응답이 수십 초~2분까지 늦어질 수 있음.
+ * Gemini 3.x는 기본으로 "생각(thinking)"을 medium 수준으로 해서 응답이 크게 늦어질 수 있음.
  * 부품 호환 판정·차종 JSON 생성은 짧은 작업이라 low로 충분 (환경변수 GEMINI_THINKING_LEVEL: low | medium | high)
  */
 const GEMINI_THINKING_LEVEL = process.env.GEMINI_THINKING_LEVEL || "low"
-/** 이 시간 안에 응답이 없으면 끊고 사용자에게 다시 시도하라고 안내 */
-const GEMINI_TIMEOUT_MS = 40_000
+/** 모델 하나당 기다리는 시간. 넘으면 다음 모델로 */
+const GEMINI_TIMEOUT_MS = 20_000
 
+/** 키가 잘못된 경우처럼 다른 모델로 바꿔도 소용없는 에러 */
+function isFatal(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err)
+  return /\b(401|403)\b|API key not valid|PERMISSION_DENIED/i.test(msg)
+}
+
+/**
+ * 모델 목록을 차례로 시도하는 generateContent.
+ * 기존 코드의 `model.generateContent(prompt)` 사용법을 그대로 유지합니다.
+ */
 function getModel(apiKey: string, generationConfig: GenerationConfig) {
   const genAI = new GoogleGenerativeAI(apiKey)
-  return genAI.getGenerativeModel(
-    {
-      model: GEMINI_MODEL,
-      // SDK 타입에 아직 thinkingConfig가 없어 캐스팅 (요청 본문에는 그대로 전달됨)
-      generationConfig: {
-        ...generationConfig,
-        thinkingConfig: { thinkingLevel: GEMINI_THINKING_LEVEL },
-      } as GenerationConfig,
+  const modelFor = (name: string) =>
+    genAI.getGenerativeModel(
+      {
+        model: name,
+        // SDK 타입에 아직 thinkingConfig가 없어 캐스팅 (요청 본문에는 그대로 전달됨)
+        generationConfig: {
+          ...generationConfig,
+          thinkingConfig: { thinkingLevel: GEMINI_THINKING_LEVEL },
+        } as GenerationConfig,
+      },
+      { timeout: GEMINI_TIMEOUT_MS }
+    )
+
+  return {
+    async generateContent(prompt: string) {
+      let lastErr: unknown
+      for (const name of GEMINI_MODELS) {
+        try {
+          return await modelFor(name).generateContent(prompt)
+        } catch (err) {
+          lastErr = err
+          console.warn(`[gemini] ${name} 실패 → 다음 모델 시도:`, err instanceof Error ? err.message : err)
+          if (isFatal(err)) break
+        }
+      }
+      throw lastErr
     },
-    { timeout: GEMINI_TIMEOUT_MS }
-  )
+  }
 }
 
 /** 방문자에게 보여줄 에러 문구 (구글 원문 에러는 서버 로그에만 남김) */
