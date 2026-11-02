@@ -1,0 +1,47 @@
+# 리콜 데이터 하루 1번 갱신 → 바뀐 게 있으면 커밋 → Cloudflare가 자동으로 다시 배포
+#
+# 필요한 시크릿: RECALL_API_KEY (공공데이터포털 일반 인증키)
+#   저장소 Settings → Secrets and variables → Actions → New repository secret
+name: Update recalls
+
+on:
+  schedule:
+    # 매일 06:17 (한국시간) = 21:17 UTC
+    - cron: "17 21 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-recalls
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch recalls
+        env:
+          RECALL_API_KEY: ${{ secrets.RECALL_API_KEY }}
+          RECALL_YEARS: "3"
+        run: node scripts/fetch-recalls.mjs
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- data/recalls.json data/recalls_new.json; then
+            echo "리콜 데이터 변경 없음"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/recalls.json data/recalls_new.json
+          git commit -m "chore(data): 리콜 데이터 갱신 $(TZ=Asia/Seoul date +%F)"
+          git push

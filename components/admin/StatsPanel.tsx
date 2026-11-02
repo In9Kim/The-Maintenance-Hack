@@ -270,7 +270,7 @@ function StatRow({
   )
 }
 
-const OUTBOUND_LABELS: Record<string, string> = { coupang: "쿠팡", naver: "네이버", gongim: "공임나라", other: "기타" }
+const OUTBOUND_LABELS: Record<string, string> = { coupang: "쿠팡", naver: "네이버", gongim: "공임나라", recall_center: "리콜센터 조회", other: "기타" }
 
 function OutboundCard({
   outbound,
