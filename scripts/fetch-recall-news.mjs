@@ -181,8 +181,10 @@ async function processItem(row, prevItem, firstSeen) {
     const unverified = checked.groups.filter((g) => !g.verified).length
     console.log(`  ✓ 묶음 ${checked.groups.length}개 · 차명 ${cars}개${unverified ? ` (원문과 다른 값 있던 묶음 ${unverified}개 — 해당 값은 비움)` : ""}`)
   } catch (err) {
-    item.needsRetry = item.attempts < MAX_ATTEMPTS
     item.error = String(err?.message ?? err).slice(0, 300)
+    // 키가 아직 없는 건 설정 문제라 재시도 횟수를 쓰지 않는다 (키를 넣으면 다음 실행 때 정리됨)
+    if (/GEMINI_API_KEY 없음/.test(item.error)) item.attempts -= 1
+    item.needsRetry = item.attempts < MAX_ATTEMPTS
     console.warn(`  ! ${item.error}${item.needsRetry ? " → 다음 실행 때 다시 시도" : ""}`)
   }
   return item
