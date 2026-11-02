@@ -207,6 +207,36 @@ export function faqJsonLd(items: { q: string; a: string }[]) {
   }
 }
 
+/** 최근 시작된 리콜 요약 (자동차리콜센터) — 아래 전체 목록의 해당 리콜로 이동 */
+export function LatestRecallList({ recalls }: { recalls: Recall[] }) {
+  return (
+    <ul className="space-y-2">
+      {recalls.map((r) => (
+        <li key={r.id}>
+          <a
+            href={`#${r.id}`}
+            className="block rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/50"
+          >
+            <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+              <span>
+                리콜 시작 <strong className="text-foreground">{fmtDate(r.startDate)}</strong>
+              </span>
+              <span>· {r.makerName}</span>
+              {r.count ? <span>· {r.count.toLocaleString("ko-KR")}대</span> : null}
+              {r.serious && (
+                <span className="rounded bg-red-500/15 px-1.5 py-0.5 font-semibold text-red-400">중대리콜</span>
+              )}
+            </div>
+            <div className="text-sm font-semibold leading-snug">
+              {r.sourceTitle ?? [...new Set(r.items.map((i) => i.name))].slice(0, 3).join(", ")}
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 /** 최근 국토교통부 리콜 보도자료 목록 */
 export function RecallNewsList({ items }: { items: RecallNewsItem[] }) {
   return (
