@@ -7,12 +7,23 @@ import {
   RecallFaq,
   RecallList,
   RecallNewsList,
+  LatestRecallList,
   RecallNotice,
   RecallSource,
   faqJsonLd,
   recallFaq,
 } from "@/components/recalls/RecallParts"
-import { dataBasisText, allRecalls, fmtDate, recallData, recallMakers, recallNews, recallsForCar, recentRecalls } from "@/lib/recalls/data"
+import {
+  dataBasisText,
+  allRecalls,
+  fmtDate,
+  latestCenterRecalls,
+  recallData,
+  recallMakers,
+  recallNews,
+  recallsForCar,
+  recentRecalls,
+} from "@/lib/recalls/data"
 
 export function generateMetadata(): Metadata {
   const { dataAsOf } = recallData()
@@ -34,7 +45,8 @@ export default function RecallsPage() {
     .map((car) => ({ car, count: recallsForCar(car.id).length }))
     .filter((c) => c.count > 0)
   const faq = recallFaq()
-  const news = recallNews()
+  const news = recallNews(3)
+  const latest = latestCenterRecalls(6)
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-10">
@@ -48,10 +60,13 @@ export default function RecallsPage() {
 
       <RecallNotice />
 
-      {news.length > 0 && (
+      {latest.length > 0 && (
         <section className="mb-8">
-          <h2 className="mb-3 text-lg font-bold">최근 리콜 소식 (국토교통부 발표)</h2>
-          <RecallNewsList items={news} />
+          <h2 className="mb-1 text-lg font-bold">최근 시작된 리콜</h2>
+          <p className="mb-3 text-xs text-muted-foreground">
+            국토교통부 자동차리콜센터에 리콜이 시작될 때마다 올라오는 내용을 하루 두 번 확인해 정리합니다.
+          </p>
+          <LatestRecallList recalls={latest} />
         </section>
       )}
 
@@ -100,6 +115,16 @@ export default function RecallsPage() {
           <RecallEmpty>리콜 데이터를 준비하고 있습니다. 그동안 자동차리콜센터에서 직접 조회해 주세요.</RecallEmpty>
         )}
       </section>
+
+      {news.length > 0 && (
+        <section className="mt-10">
+          <h2 className="mb-1 text-lg font-bold">국토교통부 리콜 보도자료</h2>
+          <p className="mb-3 text-xs text-muted-foreground">
+            여러 제작사 리콜을 모아 몇 주~몇 달에 한 번 발표하는 보도자료입니다. 최신 리콜은 위 목록을 확인하세요.
+          </p>
+          <RecallNewsList items={news} />
+        </section>
+      )}
 
       <RecallFaq items={faq} />
       <RecallSource />

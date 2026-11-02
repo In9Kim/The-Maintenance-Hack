@@ -92,6 +92,12 @@ const ALL: Recall[] = [...CENTER_RECALLS, ...NEWS_RECALLS, ...ANNUAL.recalls].ma
 )
 const DATA: RecallData = { ...ANNUAL, recalls: ALL }
 
+/** 자동차리콜센터에서 가져온 리콜 중 이미 시작된 최근 리콜 (시작 예정 리콜은 제외) */
+export function latestCenterRecalls(limit = 6): Recall[] {
+  const today = todayKst()
+  return ALL.filter((r) => r.source === "carkr" && r.startDate <= today).slice(0, limit)
+}
+
 /** 최근 국토부 리콜 보도자료 (표를 정리하지 못한 글도 제목·링크는 보여줌) */
 export function recallNews(limit = 6): RecallNewsItem[] {
   return NEWS.items.slice(0, limit)
