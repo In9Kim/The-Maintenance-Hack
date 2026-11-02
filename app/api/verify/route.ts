@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse, after } from "next/server"
 import { verifyCompatibility, friendlyAiError } from "@/lib/gemini"
-import { lookupCache, writeCache, makeVinPrefix, logEvent, sheetsEnabled } from "@/lib/googleSheets"
+import { lookupCache, writeCache, makeVinPrefix, logEvent, sheetsEnabled, lookupVehicleSpec } from "@/lib/googleSheets"
+import { getFixedVehicleSpec } from "@/lib/vehicle-spec"
 import { createHash } from "crypto"
 
 const VIN_REGEX = /^[A-HJ-NPR-Z0-9]{17}$/i
@@ -146,15 +147,24 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    if (!result) {
-      // 캐시 미스 → Gemini API 호출
-      result = await verifyCompatibility(normalizedVin, productInfo, safeCategory)
+    // 차량 정보 고정: 같은 차대번호(앞 11자리)는 항상 같은 차량 정보로 판정·표시
+    let saveVehicle: (() => Promise<void>) | undefined
+    if (result) {
+      // 캐시 적중: 저장된 차량 정보가 있으면 표시만 맞춘다 (AI 호출 없음)
+      const saved = useSheets ? await lookupVehicleSpec(vinPrefix) : null
+      if (saved) result = { ...result, vehicle_spec: saved }
+    } else {
+      // 캐시 미스: 차량 정보 확정(저장본 또는 새로 해석) → 그 정보로 부품만 판정
+      const fixed = await getFixedVehicleSpec(normalizedVin)
+      saveVehicle = fixed?.save
+      result = await verifyCompatibility(normalizedVin, productInfo, safeCategory, fixed?.spec)
     }
 
     // 응답 후 백그라운드 저장: 캐시(미스일 때) + 행동 기록 (VIN은 해시만 — 개인정보 미저장)
     const vinHash = createHash("sha256").update(normalizedVin).digest("hex").slice(0, 16)
     const finalResult = result
     after(async () => {
+      if (saveVehicle) await saveVehicle()
       // 판정 불가(UNCERTAIN) 결과는 캐시하지 않음 → 다음 조회 때 다시 판정할 기회를 줌
       if (useSheets && !cacheHit && finalResult.compatibility !== "UNCERTAIN") {
         await writeCache(vinPrefix, productInfo, finalResult)

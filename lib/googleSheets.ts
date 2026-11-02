@@ -1,4 +1,4 @@
-import type { CompatibilityResult } from "./gemini"
+import type { CompatibilityResult, VehicleSpec } from "./gemini"
 import type { CarModel } from "@/types"
 
 // Gemini 2.5 Flash 비용 추정: 호출당 ~2500 input + ~600 output tokens
@@ -107,6 +107,36 @@ export async function writeCache(
     inputPart: normalizePartName(inputPart),
     specs,
     resultJson: JSON.stringify(result), // 객체를 미리 직렬화 — GAS가 문자열로 받아 시트에 기록
+  })
+}
+
+// ── 차량 정보 고정 (verify_cache 탭에 inputPart="__vehicle__" 행으로 저장) ──
+// 같은 차대번호 앞 11자리는 항상 같은 차량 정보로 판정하도록, 처음 해석한 결과를 저장해 재사용.
+// 잘못 해석됐으면 시트에서 그 행의 resultJson(D열)을 직접 고치면 다음 조회부터 반영됨.
+export const VEHICLE_KEY = "__vehicle__"
+
+export async function lookupVehicleSpec(vinPrefix: string): Promise<VehicleSpec | null> {
+  try {
+    const res = await callGas<{ found: boolean; data?: VehicleSpec }>({
+      action: "lookup",
+      vinMasked: vinPrefix + "******",
+      inputPart: VEHICLE_KEY,
+    })
+    const d = res.found ? res.data : null
+    return d && typeof d === "object" && d.manufacturer_model ? d : null
+  } catch (err) {
+    console.error("[gas:lookup-vehicle]", err)
+    return null
+  }
+}
+
+export async function writeVehicleSpec(vinPrefix: string, spec: VehicleSpec): Promise<void> {
+  await sendGas({
+    action: "save",
+    vinMasked: vinPrefix + "******",
+    inputPart: VEHICLE_KEY,
+    specs: [spec.manufacturer_model, spec.production_year, spec.engine_spec].filter(Boolean).join(" / "),
+    resultJson: JSON.stringify(spec),
   })
 }
 
