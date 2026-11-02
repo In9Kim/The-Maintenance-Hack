@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse, after } from "next/server"
-import { generateCarMaintenanceData, decodeVin, type GenerateCarInput } from "@/lib/gemini"
+import { generateCarMaintenanceData, decodeVin, friendlyAiError, type GenerateCarInput } from "@/lib/gemini"
 import type { CarModel } from "@/types"
 import { getAllCars } from "@/lib/data/all-cars"
 import { saveGeneratedCar } from "@/lib/googleSheets"
@@ -89,8 +89,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ car: carData })
   } catch (err) {
-    const message = err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다."
-    console.error("[generate-car-data]", message)
-    return NextResponse.json({ error: message }, { status: 500 })
+    console.error("[generate-car-data]", err instanceof Error ? err.message : err)
+    return NextResponse.json({ error: friendlyAiError(err) }, { status: 500 })
   }
 }
