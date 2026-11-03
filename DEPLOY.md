@@ -6,7 +6,7 @@
    - Build command: `npx opennextjs-cloudflare build`
    - Deploy command: `npx opennextjs-cloudflare deploy`
 3. 변수 (Settings → Variables and Secrets)
-   - **런타임 (Secret)**: `GEMINI_API_KEY`, `APPS_SCRIPT_URL`, `APPS_SCRIPT_SECRET`, `ADMIN_PASSWORD`, `COUPANG_ACCESS_KEY`, `COUPANG_SECRET_KEY`
+   - **런타임 (Secret)**: `ANTHROPIC_API_KEY`(Claude, 기본 — Max 플랜 월 API 크레딧), `GEMINI_API_KEY`(Claude 실패·크레딧 소진 시 대체), `APPS_SCRIPT_URL`, `APPS_SCRIPT_SECRET`, `ADMIN_PASSWORD`, `COUPANG_ACCESS_KEY`, `COUPANG_SECRET_KEY`
    - **빌드 변수 (Build → Variables)**: `NEXT_PUBLIC_SITE_URL`, `GOOGLE_SITE_VERIFICATION`, `NAVER_SITE_VERIFICATION`
      (정적 페이지에 빌드 때 박히는 값이라 바꾸면 다시 배포해야 반영됨)
 
