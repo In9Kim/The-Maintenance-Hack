@@ -29,17 +29,74 @@ const GEMINI_TIMEOUT_MS = 20_000
 /** 키가 잘못된 경우처럼 다른 모델로 바꿔도 소용없는 에러 */
 function isFatal(err: unknown): boolean {
   const msg = err instanceof Error ? err.message : String(err)
-  return /\b(401|403)\b|API key not valid|PERMISSION_DENIED/i.test(msg)
+  return /\b(401|403)\b|API key not valid|PERMISSION_DENIED|credit balance/i.test(msg)
+}
+
+// ── Claude (기본) ────────────────────────────────────────────────────────────
+/**
+ * Max 플랜 월 API 크레딧으로 Claude를 먼저 쓰고, 키가 없거나 실패하면 Gemini로 넘어간다.
+ *   - 환경변수 ANTHROPIC_API_KEY 가 없으면 Claude는 건너뜀
+ *   - 환경변수 CLAUDE_MODELS="a,b" 로 모델 순서를 바꿀 수 있음 (기본: 가볍고 저렴한 Haiku)
+ * 크레딧이 떨어지면 API가 멈추므로(플랜 요금으로 청구되지 않음) 그때는 자동으로 Gemini가 받는다.
+ */
+export const CLAUDE_MODELS: string[] = (process.env.CLAUDE_MODELS || "claude-haiku-5-5")
+  .split(",")
+  .map((m) => m.trim())
+  .filter(Boolean)
+const CLAUDE_TIMEOUT_MS = 25_000
+const CLAUDE_MAX_TOKENS = 4096
+
+interface AiConfig {
+  temperature?: number
+}
+
+/** Gemini SDK의 result.response.text() 모양에 맞춰 돌려준다 (호출부 코드를 그대로 두기 위해) */
+type AiResult = { response: { text(): string } }
+
+async function claudeGenerate(model: string, prompt: string, config: AiConfig): Promise<AiResult> {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": process.env.ANTHROPIC_API_KEY as string,
+      "anthropic-version": "2023-06-01",
+    },
+    signal: AbortSignal.timeout(CLAUDE_TIMEOUT_MS),
+    body: JSON.stringify({
+      model,
+      max_tokens: CLAUDE_MAX_TOKENS,
+      temperature: config.temperature ?? 0,
+      system: "요청한 JSON 객체 하나만 출력한다. 코드블록·설명 문장은 쓰지 않는다.",
+      messages: [{ role: "user", content: prompt }],
+    }),
+  })
+  if (!res.ok) {
+    const body = await res.text().catch(() => "")
+    throw new Error(`[claude ${model}] HTTP ${res.status} ${body.slice(0, 300)}`)
+  }
+  const data = (await res.json()) as { content?: { type: string; text?: string }[] }
+  const text = (data.content ?? []).filter((c) => c.type === "text").map((c) => c.text ?? "").join("")
+  if (!text.trim()) throw new Error(`[claude ${model}] 빈 응답`)
+  return { response: { text: () => text } }
+}
+
+/** Claude·Gemini 키 중 하나라도 있어야 AI 기능을 쓸 수 있음 */
+function requireAiKey() {
+  if (!process.env.ANTHROPIC_API_KEY && !process.env.GEMINI_API_KEY) {
+    throw new Error("AI 키(ANTHROPIC_API_KEY 또는 GEMINI_API_KEY)가 설정되지 않았습니다.")
+  }
 }
 
 /**
- * 모델 목록을 차례로 시도하는 generateContent.
- * 기존 코드의 `model.generateContent(prompt)` 사용법을 그대로 유지합니다.
+ * Claude 모델 → Gemini 모델 순서로 시도하는 generateContent.
+ * 기존 코드의 `model.generateContent(prompt)` → `result.response.text()` 사용법을 그대로 유지합니다.
  */
-function getModel(apiKey: string, generationConfig: GenerationConfig) {
-  const genAI = new GoogleGenerativeAI(apiKey)
+function getModel(generationConfig: GenerationConfig) {
+  requireAiKey()
+  const geminiKey = process.env.GEMINI_API_KEY
+  const genAI = geminiKey ? new GoogleGenerativeAI(geminiKey) : null
   const modelFor = (name: string) =>
-    genAI.getGenerativeModel(
+    genAI!.getGenerativeModel(
       {
         model: name,
         // SDK 타입에 아직 thinkingConfig가 없어 캐스팅 (요청 본문에는 그대로 전달됨)
@@ -52,15 +109,28 @@ function getModel(apiKey: string, generationConfig: GenerationConfig) {
     )
 
   return {
-    async generateContent(prompt: string) {
+    async generateContent(prompt: string): Promise<AiResult> {
       let lastErr: unknown
-      for (const name of GEMINI_MODELS) {
-        try {
-          return await modelFor(name).generateContent(prompt)
-        } catch (err) {
-          lastErr = err
-          console.warn(`[gemini] ${name} 실패 → 다음 모델 시도:`, err instanceof Error ? err.message : err)
-          if (isFatal(err)) break
+      if (process.env.ANTHROPIC_API_KEY) {
+        for (const name of CLAUDE_MODELS) {
+          try {
+            return await claudeGenerate(name, prompt, { temperature: generationConfig.temperature })
+          } catch (err) {
+            lastErr = err
+            console.warn(`[claude] ${name} 실패 → 다음 모델 시도:`, err instanceof Error ? err.message : err)
+            if (isFatal(err)) break
+          }
+        }
+      }
+      if (genAI) {
+        for (const name of GEMINI_MODELS) {
+          try {
+            return await modelFor(name).generateContent(prompt)
+          } catch (err) {
+            lastErr = err
+            console.warn(`[gemini] ${name} 실패 → 다음 모델 시도:`, err instanceof Error ? err.message : err)
+            if (isFatal(err)) break
+          }
         }
       }
       throw lastErr
@@ -71,7 +141,7 @@ function getModel(apiKey: string, generationConfig: GenerationConfig) {
 /** 방문자에게 보여줄 에러 문구 (구글 원문 에러는 서버 로그에만 남김) */
 export function friendlyAiError(err: unknown): string {
   const msg = err instanceof Error ? err.message : String(err)
-  if (/GEMINI_API_KEY/.test(msg)) return "AI 기능 설정이 아직 끝나지 않았습니다. 잠시 후 다시 시도해 주세요."
+  if (/GEMINI_API_KEY|ANTHROPIC_API_KEY/.test(msg)) return "AI 기능 설정이 아직 끝나지 않았습니다. 잠시 후 다시 시도해 주세요."
   if (/\b(402|429)\b|quota|exhausted|depleted|rate.?limit/i.test(msg))
     return "AI 검증 사용량이 많아 잠시 쉬고 있어요. 몇 분 뒤 다시 시도해 주세요."
   if (/\b(5\d\d)\b|timeout|timed out|abort/i.test(msg))
@@ -113,11 +183,7 @@ const GONGIM_LABOR_REFERENCE = `
 `
 
 export async function generateCarMaintenanceData(input: GenerateCarInput): Promise<CarModel> {
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY 환경변수가 설정되지 않았습니다. .env.local 파일을 확인하세요.")
-  }
-
-  const model = getModel(process.env.GEMINI_API_KEY, {
+  const model = getModel({
     responseMimeType: "application/json",
     temperature: 0.1,
   })
@@ -245,10 +311,7 @@ export async function decodeVehicleSpec(
   vin: string,
   facts: { brand: string | null; modelYear: number | null }
 ): Promise<VehicleSpec> {
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY 환경변수가 설정되지 않았습니다.")
-  }
-  const model = getModel(process.env.GEMINI_API_KEY, { responseMimeType: "application/json", temperature: 0 })
+  const model = getModel({ responseMimeType: "application/json", temperature: 0 })
 
   const fixedLines = [
     facts.brand ? `- 제조사: ${facts.brand} (차대번호 1~3번째 자리로 확정 — 변경 금지)` : null,
@@ -299,12 +362,8 @@ export async function verifyCompatibility(
   /** 확정된 차량 정보. 있으면 AI가 차량을 다시 해석하지 않고 이 정보로만 판정 */
   fixedSpec?: VehicleSpec
 ): Promise<CompatibilityResult> {
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY 환경변수가 설정되지 않았습니다.")
-  }
-
   // temperature=0: 창의성 배제, 동일 입력에 항상 동일한 사실 기반 판정 출력
-  const model = getModel(process.env.GEMINI_API_KEY, { responseMimeType: "application/json", temperature: 0 })
+  const model = getModel({ responseMimeType: "application/json", temperature: 0 })
 
   const categoryLine = category
     ? `사용자 지정 카테고리: [${category}] ← 반드시 이 카테고리의 부품으로만 분석할 것. 다른 카테고리로 절대 오분류 금지.`
@@ -403,11 +462,7 @@ ${categoryLine}
 }
 
 export async function decodeVin(vin: string): Promise<VinDecodeResult> {
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY 환경변수가 설정되지 않았습니다.")
-  }
-
-  const model = getModel(process.env.GEMINI_API_KEY, { responseMimeType: "application/json", temperature: 0.1 })
+  const model = getModel({ responseMimeType: "application/json", temperature: 0.1 })
 
   const prompt = `
 차대번호(VIN)를 분석하여 정확한 차량 정보를 JSON으로 반환하세요.
