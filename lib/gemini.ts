@@ -46,14 +46,10 @@ export const CLAUDE_MODELS: string[] = (process.env.CLAUDE_MODELS || "claude-hai
 const CLAUDE_TIMEOUT_MS = 25_000
 const CLAUDE_MAX_TOKENS = 4096
 
-interface AiConfig {
-  temperature?: number
-}
-
 /** Gemini SDK의 result.response.text() 모양에 맞춰 돌려준다 (호출부 코드를 그대로 두기 위해) */
 type AiResult = { response: { text(): string } }
 
-async function claudeGenerate(model: string, prompt: string, config: AiConfig): Promise<AiResult> {
+async function claudeGenerate(model: string, prompt: string): Promise<AiResult> {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -65,7 +61,8 @@ async function claudeGenerate(model: string, prompt: string, config: AiConfig): 
     body: JSON.stringify({
       model,
       max_tokens: CLAUDE_MAX_TOKENS,
-      temperature: config.temperature ?? 0,
+      // 최신 Claude 모델은 temperature를 받지 않음(400 "temperature is deprecated") → 보내지 않는다.
+      // 같은 차량 판정 일관성은 고정 차량 정보(lib/vehicle-spec.ts)와 결과 캐시로 지킨다.
       system: "요청한 JSON 객체 하나만 출력한다. 코드블록·설명 문장은 쓰지 않는다.",
       messages: [{ role: "user", content: prompt }],
     }),
@@ -114,7 +111,7 @@ function getModel(generationConfig: GenerationConfig) {
       if (process.env.ANTHROPIC_API_KEY) {
         for (const name of CLAUDE_MODELS) {
           try {
-            return await claudeGenerate(name, prompt, { temperature: generationConfig.temperature })
+            return await claudeGenerate(name, prompt)
           } catch (err) {
             lastErr = err
             console.warn(`[claude] ${name} 실패 → 다음 모델 시도:`, err instanceof Error ? err.message : err)

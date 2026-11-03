@@ -10,10 +10,14 @@ beforeEach(() => {
   calls.length = 0
   process.env.ANTHROPIC_API_KEY = "test-anthropic"
   process.env.GEMINI_API_KEY = "test-gemini"
-  globalThis.fetch = (async (input: RequestInfo | URL) => {
+  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input instanceof Request ? input.url : input)
     if (url.includes("api.anthropic.com")) {
       calls.push("claude")
+      // 실제 API처럼: 최신 모델은 temperature를 보내면 400
+      if ("temperature" in JSON.parse(String(init?.body ?? "{}"))) {
+        return new Response('{"error":{"message":"`temperature` is deprecated for this model."}}', { status: 400 })
+      }
       if (claudeStatus !== 200) return new Response('{"error":{"message":"credit balance is too low"}}', { status: claudeStatus })
       return Response.json({ content: [{ type: "text", text: '{"from":"claude"}' }] })
     }
