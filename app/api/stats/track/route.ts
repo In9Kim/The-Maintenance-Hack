@@ -3,7 +3,7 @@ import { logEvent } from "@/lib/googleSheets"
 
 // 허용하는 행동 유형과 이동 대상
 const TYPES = new Set(["outbound", "car_view", "calc_use", "report", "landing", "nav"])
-const TARGETS = new Set(["coupang", "naver", "gongim", "recall_center", "other", ""])
+const TARGETS = new Set(["coupang", "naver", "gongim", "recall_center", "blog", "other", ""])
 
 // 예전 계산기 코드 호환: part_click → 쿠팡 이동, gongim_click → 공임나라 이동
 const LEGACY: Record<string, { type: string; target: string }> = {

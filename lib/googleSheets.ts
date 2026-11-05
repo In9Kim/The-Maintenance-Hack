@@ -198,6 +198,10 @@ export interface SourceStats {
   outbound: Record<string, number>
   first: string
   last: string
+  /** 유입 페이지별 방문 수 { "/cars/kia-sorento-mq4": 3 } (Apps Script 새 버전부터) */
+  pages?: Record<string, number>
+  /** 날짜별(한국 시간) 유입 페이지 방문 수 { "2026-11-05": { "/cars/kia-sorento-mq4": 2 } } */
+  days?: Record<string, Record<string, number>>
 }
 
 export const EMPTY_STATS: EventStats = {

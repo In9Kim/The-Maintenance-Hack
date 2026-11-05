@@ -47,6 +47,10 @@ export interface MaintenancePart {
   intervalKm?: number
   intervalMonths?: number
   coupangKeyword: string
+  /** 엔진마다 규격이 다른 소모품이면 해당 엔진 (CarModel.engineTypes 중 하나). 없으면 모든 엔진 공통 */
+  engine?: string
+  /** 규격 출처 (제조사 공식 자료) */
+  source?: string
 }
 
 export interface CarModel {

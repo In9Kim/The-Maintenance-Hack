@@ -157,7 +157,7 @@ function handleStats(data) {
     verify: { hits: 0, misses: 0 },
     byDay: {},             // { "2026-11-01": { events: n, outbound: n } }
     topPaths: {},
-    bySource: {}           // { "recall-tucson-2611": { landing, events, outbound: { coupang: n, ... }, first, last } }
+    bySource: {}           // { "blog": { landing, events, outbound: { coupang: n, ... }, first, last, pages: { path: n }, days: { "2026-11-05": { path: n } } } }
   };
 
   var rows = rowsOf("events");
@@ -167,15 +167,23 @@ function handleStats(data) {
     if (since && ts < since) continue;
 
     var type = String(r[1]), target = String(r[2]), carId = String(r[3]), partId = String(r[4]), path = String(r[5]);
-    var day = new Date(ts).toISOString().slice(0, 10);
+    // 날짜는 한국 시간 기준 (자정~오전 9시 방문이 전날로 잡히지 않게)
+    var day = Utilities.formatDate(new Date(ts), "Asia/Seoul", "yyyy-MM-dd");
     var meta = {};
     try { meta = JSON.parse(r[7] || "{}") || {}; } catch (err) {}
 
     // 블로그 글 등 유입 꼬리표(?from=)별 집계
     if (meta.from) {
-      var src = res.bySource[meta.from] = res.bySource[meta.from] || { landing: 0, events: 0, outbound: {}, first: day, last: day };
+      var src = res.bySource[meta.from] = res.bySource[meta.from] || { landing: 0, events: 0, outbound: {}, first: day, last: day, pages: {}, days: {} };
       src.events++;
-      if (type === "landing") src.landing++;
+      if (type === "landing") {
+        // 어느 페이지로 몇 번 들어왔는지 (전체 + 날짜별). 같은 방문에서 같은 꼬리표는 한 번만 기록됨
+        var landPath = path || "(알 수 없음)";
+        src.landing++;
+        src.pages[landPath] = (src.pages[landPath] || 0) + 1;
+        src.days[day] = src.days[day] || {};
+        src.days[day][landPath] = (src.days[day][landPath] || 0) + 1;
+      }
       if (type === "outbound") src.outbound[target] = (src.outbound[target] || 0) + 1;
       if (day < src.first) src.first = day;
       if (day > src.last) src.last = day;

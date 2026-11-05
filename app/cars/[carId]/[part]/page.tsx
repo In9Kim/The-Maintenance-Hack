@@ -16,6 +16,7 @@ import {
 import { formatPrice } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
 import { CoupangLink } from "@/components/seo/CoupangLink"
+import { coupangLinksFor } from "@/lib/coupang-links"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { Breadcrumbs, JsonLd, PartnersDisclosure } from "@/components/seo/Shared"
 
@@ -58,7 +59,9 @@ export default async function PartPage({ params }: Props) {
   const title = partTitleName(part)
   const c = partCost(part)
   const interval = intervalText(part)
-  const otherParts = car.parts.filter((p) => p.id !== part.id)
+  // 엔진별 소모품이면 같은 엔진(+공통) 소모품만 "다른 소모품"으로
+  const otherParts = car.parts.filter((p) => p.id !== part.id && (!part.engine || !p.engine || p.engine === part.engine))
+  const specLinks = coupangLinksFor(part)
   const slug = partSlug(car, part)
   const sameOnOtherCars = seoCars()
     .filter((oc) => oc.id !== car.id)
@@ -133,6 +136,12 @@ export default async function PartPage({ params }: Props) {
               <dd className="text-right font-medium">{part.partNumber}</dd>
             </div>
           )}
+          {part.engine && (
+            <div className="flex justify-between gap-4 px-4 py-3">
+              <dt className="text-muted-foreground">해당 엔진</dt>
+              <dd className="text-right font-medium">{part.engine}</dd>
+            </div>
+          )}
           {interval && (
             <div className="flex justify-between gap-4 px-4 py-3">
               <dt className="text-muted-foreground">교체 주기</dt>
@@ -144,11 +153,29 @@ export default async function PartPage({ params }: Props) {
             <dd className="text-right font-medium">{car.yearRange}</dd>
           </div>
         </dl>
+        {part.source && <p className="mt-2 text-xs text-muted-foreground">출처: {part.source}</p>}
       </section>
 
       {/* 행동 버튼 */}
       <section className="mb-10 flex flex-wrap gap-3">
-        <CoupangLink keyword={part.coupangKeyword} label={`${title} 쿠팡 최저가 보기`} carId={car.id} partId={part.id} />
+        {specLinks.length ? (
+          // 규격이 정확히 맞는 상품을 넣어 둔 소모품은 검색 대신 그 상품으로
+          specLinks.map((l) => (
+            <OutboundLink
+              key={l.url}
+              href={l.url}
+              target="coupang"
+              carId={car.id}
+              partId={part.id}
+              sponsored
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              이 규격 제품 보기 · {l.product}
+            </OutboundLink>
+          ))
+        ) : (
+          <CoupangLink keyword={part.coupangKeyword} label={`${title} 쿠팡 최저가 보기`} carId={car.id} partId={part.id} />
+        )}
         <OutboundLink
           href={GONGIM_RESERVATION_URL}
           target="gongim"

@@ -6,124 +6,140 @@
       "model": "쏘렌토",
       "generation": "MQ4 (4세대)",
       "yearRange": "2020~현재",
-      "engineTypes": ["2.5T-GDI (가솔린)", "2.2 CRDi (디젤)"],
+      "engineTypes": [
+        "G2.5 T-GDi 가솔린",
+        "D2.2 디젤"
+      ],
       "parts": [
         {
           "id": "kia-sorento-mq4-engine-oil",
-          "name": "엔진오일 + 오일필터",
+          "name": "엔진오일 + 오일필터 (가솔린)",
           "category": "oil",
-          "spec": "0W-30 SN/CF, 5.5L + 필터",
-          "partNumber": "05100-00611 호환",
+          "spec": "SAE 0W-30 · API SN PLUS/SP 또는 ILSAC GF-6 · 5.8L (오일필터 교환 포함)",
           "coupangPrice": 55000,
           "laborCost": 15000,
           "dealerPartPrice": 92000,
           "dealerLaborCost": 28000,
           "intervalKm": 10000,
           "intervalMonths": 12,
-          "coupangKeyword": "쏘렌토 MQ4 엔진오일 0W-30 5L"
+          "coupangKeyword": "엔진오일 0W-30 API SP 합성유",
+          "engine": "G2.5 T-GDi 가솔린",
+          "source": "기아 쏘렌토(MQ4) 취급설명서 '추천 오일 및 용량'·'정기 점검'"
+        },
+        {
+          "id": "kia-sorento-mq4-engine-oil-diesel",
+          "name": "엔진오일 + 오일필터 (디젤)",
+          "category": "oil",
+          "spec": "ACEA C5, C2 또는 C3 등급 · 5.6L (오일필터 교환 포함)",
+          "coupangPrice": 55000,
+          "laborCost": 15000,
+          "dealerPartPrice": 92000,
+          "dealerLaborCost": 28000,
+          "intervalKm": 20000,
+          "intervalMonths": 12,
+          "coupangKeyword": "디젤 엔진오일 ACEA C5",
+          "engine": "D2.2 디젤",
+          "source": "기아 쏘렌토(MQ4) 취급설명서 '추천 오일 및 용량'·'정기 점검'"
         },
         {
           "id": "kia-sorento-mq4-air-filter",
           "name": "에어클리너 필터",
           "category": "filter",
-          "spec": "건식 패널 타입",
-          "partNumber": "281133D100 호환",
+          "spec": "차종 전용 (구매 전 순정 품번 확인)",
           "coupangPrice": 16000,
           "laborCost": 5000,
           "dealerPartPrice": 38000,
           "dealerLaborCost": 12000,
-          "intervalKm": 30000,
-          "intervalMonths": 24,
-          "coupangKeyword": "쏘렌토 MQ4 에어클리너 에어필터"
+          "intervalKm": 40000,
+          "coupangKeyword": "쏘렌토 MQ4 에어클리너 에어필터",
+          "source": "기아 쏘렌토(MQ4) 취급설명서 '정기 점검' (1만 km마다 점검, 4만 km 교체)"
         },
         {
           "id": "kia-sorento-mq4-cabin-filter",
           "name": "에어컨 필터 (캐빈)",
           "category": "filter",
-          "spec": "활성탄 2중 필터",
-          "partNumber": "97133C5000 호환",
+          "spec": "차종 전용 (구매 전 순정 품번 확인)",
           "coupangPrice": 12000,
           "laborCost": 5000,
           "dealerPartPrice": 28000,
           "dealerLaborCost": 10000,
           "intervalKm": 15000,
           "intervalMonths": 12,
-          "coupangKeyword": "쏘렌토 MQ4 에어컨필터 캐빈필터"
+          "coupangKeyword": "쏘렌토 MQ4 에어컨필터 캐빈필터",
+          "source": "기아 쏘렌토(MQ4) 취급설명서 '정기 점검'"
         },
         {
           "id": "kia-sorento-mq4-brake-pad-front",
           "name": "브레이크 패드 (전)",
           "category": "brake",
           "spec": "전륜 좌우 세트",
-          "partNumber": "58101S2A00 호환",
           "coupangPrice": 48000,
           "laborCost": 35000,
           "dealerPartPrice": 126000,
           "dealerLaborCost": 68000,
-          "intervalKm": 40000,
-          "coupangKeyword": "쏘렌토 MQ4 브레이크패드 전 앞"
+          "coupangKeyword": "쏘렌토 MQ4 브레이크패드 전 앞",
+          "source": "기아 쏘렌토(MQ4) 취급설명서 '정기 점검' (교체 주기 없이 1만 km마다 점검)"
         },
         {
           "id": "kia-sorento-mq4-brake-pad-rear",
           "name": "브레이크 패드 (후)",
           "category": "brake",
           "spec": "후륜 좌우 세트",
-          "partNumber": "58301S2A00 호환",
           "coupangPrice": 44000,
           "laborCost": 35000,
           "dealerPartPrice": 112000,
           "dealerLaborCost": 65000,
-          "intervalKm": 50000,
-          "coupangKeyword": "쏘렌토 MQ4 브레이크패드 후 뒤"
+          "coupangKeyword": "쏘렌토 MQ4 브레이크패드 후 뒤",
+          "source": "기아 쏘렌토(MQ4) 취급설명서 '정기 점검' (교체 주기 없이 1만 km마다 점검)"
         },
         {
           "id": "kia-sorento-mq4-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "운전석 680mm / 조수석 450mm",
+          "spec": "차종 전용 (기존 블레이드 길이 확인)",
           "coupangPrice": 24000,
           "laborCost": 0,
           "dealerPartPrice": 46000,
           "dealerLaborCost": 10000,
-          "intervalMonths": 12,
           "coupangKeyword": "쏘렌토 MQ4 와이퍼 블레이드"
         },
         {
           "id": "kia-sorento-mq4-spark-plug",
-          "name": "점화플러그 (4개)",
+          "name": "점화플러그 (4개, 가솔린)",
           "category": "spark",
-          "spec": "이리듐 플러그, 4개 세트",
-          "partNumber": "NGK ILZKR7B11 호환",
+          "spec": "4개 (G2.5 T-GDi)",
           "coupangPrice": 42000,
           "laborCost": 25000,
           "dealerPartPrice": 88000,
           "dealerLaborCost": 48000,
-          "intervalKm": 60000,
-          "coupangKeyword": "쏘렌토 2.5T 이리듐 점화플러그"
+          "intervalKm": 70000,
+          "coupangKeyword": "쏘렌토 MQ4 2.5 점화플러그",
+          "engine": "G2.5 T-GDi 가솔린",
+          "source": "기아 쏘렌토(MQ4) 취급설명서 '정기 점검'"
         },
         {
           "id": "kia-sorento-mq4-battery",
-          "name": "배터리 (AGM)",
+          "name": "배터리",
           "category": "battery",
-          "spec": "AGM 80Ah (ISS 차량용)",
-          "partNumber": "AGM80 호환",
+          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
           "coupangPrice": 98000,
           "laborCost": 15000,
           "dealerPartPrice": 192000,
           "dealerLaborCost": 28000,
-          "intervalMonths": 48,
-          "coupangKeyword": "쏘렌토 AGM 배터리 80ah"
+          "coupangKeyword": "쏘렌토 MQ4 배터리"
         }
       ]
     },
-
     {
       "id": "kia-carnival-ka4",
       "brand": "기아",
       "model": "카니발",
       "generation": "KA4 (4세대)",
       "yearRange": "2020~현재",
-      "engineTypes": ["3.5 GDI (가솔린)", "2.2 CRDi (디젤)"],
+      "engineTypes": [
+        "3.5 GDI (가솔린)",
+        "2.2 CRDi (디젤)"
+      ],
       "parts": [
         {
           "id": "kia-carnival-ka4-engine-oil",
@@ -203,14 +219,16 @@
         }
       ]
     },
-
     {
       "id": "kia-k5-dl3",
       "brand": "기아",
       "model": "K5",
       "generation": "DL3 (3세대)",
       "yearRange": "2020~현재",
-      "engineTypes": ["2.0 MPI (가솔린)", "1.6 T-GDi (터보)"],
+      "engineTypes": [
+        "2.0 MPI (가솔린)",
+        "1.6 T-GDi (터보)"
+      ],
       "parts": [
         {
           "id": "kia-k5-dl3-engine-oil",
@@ -302,14 +320,16 @@
         }
       ]
     },
-
     {
       "id": "hyundai-tucson-nx4",
       "brand": "현대",
       "model": "투싼",
       "generation": "NX4 (4세대)",
       "yearRange": "2021~현재",
-      "engineTypes": ["2.5 MPI (가솔린)", "1.6 T-GDi (터보)"],
+      "engineTypes": [
+        "2.5 MPI (가솔린)",
+        "1.6 T-GDi (터보)"
+      ],
       "parts": [
         {
           "id": "hyundai-tucson-nx4-engine-oil",
@@ -401,14 +421,16 @@
         }
       ]
     },
-
     {
       "id": "hyundai-avante-cn7",
       "brand": "현대",
       "model": "아반떼",
       "generation": "CN7 (7세대)",
       "yearRange": "2020~현재",
-      "engineTypes": ["1.6 MPI (가솔린)", "1.6 T-GDi (터보)"],
+      "engineTypes": [
+        "1.6 MPI (가솔린)",
+        "1.6 T-GDi (터보)"
+      ],
       "parts": [
         {
           "id": "hyundai-avante-cn7-engine-oil",
@@ -500,14 +522,16 @@
         }
       ]
     },
-
     {
       "id": "hyundai-grandeur-gn7",
       "brand": "현대",
       "model": "그랜저",
       "generation": "GN7 (7세대)",
       "yearRange": "2022~현재",
-      "engineTypes": ["2.5 T-GDi (터보)", "3.5 GDI (가솔린)"],
+      "engineTypes": [
+        "2.5 T-GDi (터보)",
+        "3.5 GDI (가솔린)"
+      ],
       "parts": [
         {
           "id": "hyundai-grandeur-gn7-engine-oil",
@@ -612,14 +636,183 @@
         }
       ]
     },
-
+    {
+      "id": "hyundai-santafe-tm",
+      "brand": "현대",
+      "model": "싼타페",
+      "generation": "TM PE (4세대 부분변경)",
+      "yearRange": "2020~2023",
+      "engineTypes": [
+        "G2.5 T-GDi 가솔린",
+        "D2.2 디젤",
+        "G1.6 T-GDi 하이브리드"
+      ],
+      "parts": [
+        {
+          "id": "hyundai-santafe-tm-engine-oil",
+          "name": "엔진오일 + 오일필터 (가솔린)",
+          "category": "oil",
+          "spec": "SAE 0W-30 · API SN PLUS/SP 또는 ILSAC GF-6 · 5.8L",
+          "coupangPrice": 58000,
+          "laborCost": 16000,
+          "dealerPartPrice": 98000,
+          "dealerLaborCost": 30000,
+          "coupangKeyword": "엔진오일 0W-30 API SP 합성유",
+          "engine": "G2.5 T-GDi 가솔린",
+          "intervalKm": 10000,
+          "intervalMonths": 12,
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (가혹 조건 5,000km 또는 6개월)"
+        },
+        {
+          "id": "hyundai-santafe-tm-engine-oil-diesel",
+          "name": "엔진오일 + 오일필터 (디젤)",
+          "category": "oil",
+          "spec": "ACEA C2 또는 C3 · SAE 5W-30 또는 0W-30·0W-20 · 5.6L (DPF 차량)",
+          "coupangPrice": 58000,
+          "laborCost": 16000,
+          "dealerPartPrice": 98000,
+          "dealerLaborCost": 30000,
+          "coupangKeyword": "디젤 엔진오일 ACEA C3 5W-30",
+          "engine": "D2.2 디젤",
+          "intervalKm": 20000,
+          "intervalMonths": 12,
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (가혹 조건 10,000km 또는 6개월)"
+        },
+        {
+          "id": "hyundai-santafe-tm-engine-oil-hybrid",
+          "name": "엔진오일 + 오일필터 (하이브리드)",
+          "category": "oil",
+          "spec": "SAE 0W-20 · API SN PLUS/SP 또는 ILSAC GF-6 · 4.8L (오일필터 포함)",
+          "coupangPrice": 52000,
+          "laborCost": 16000,
+          "dealerPartPrice": 90000,
+          "dealerLaborCost": 30000,
+          "coupangKeyword": "엔진오일 0W-20 API SP 합성유",
+          "engine": "G1.6 T-GDi 하이브리드",
+          "partNumber": "오일필터 26350-2M000",
+          "intervalKm": 10000,
+          "intervalMonths": 12,
+          "source": "현대 싼타페 하이브리드(TM HEV) 취급설명서 '용량 및 규격'·'정기 점검' · 현대모비스 순정부품 검색 (가혹 조건 5,000km 또는 6개월)"
+        },
+        {
+          "id": "hyundai-santafe-tm-air-filter",
+          "name": "에어클리너 필터",
+          "category": "filter",
+          "spec": "엔진 전용 (구매 전 순정 품번 확인 · 하이브리드 28113-L5100)",
+          "coupangPrice": 16000,
+          "laborCost": 5000,
+          "dealerPartPrice": 38000,
+          "dealerLaborCost": 12000,
+          "coupangKeyword": "싼타페 TM 에어클리너 필터",
+          "intervalKm": 40000,
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (1만 km마다 점검, 4만 km 교체) · 현대모비스 순정부품 검색"
+        },
+        {
+          "id": "hyundai-santafe-tm-cabin-filter",
+          "name": "에어컨 필터 (캐빈)",
+          "category": "filter",
+          "spec": "전 엔진 공통",
+          "coupangPrice": 13000,
+          "laborCost": 5000,
+          "dealerPartPrice": 37510,
+          "dealerLaborCost": 10000,
+          "coupangKeyword": "97133-L1100",
+          "partNumber": "97133-L1100",
+          "intervalKm": 15000,
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' · 현대모비스 순정부품 검색 (7인승 2열 에어컨 차량은 화물칸 필터도 함께)"
+        },
+        {
+          "id": "hyundai-santafe-tm-brake-pad-front",
+          "name": "브레이크 패드 (전)",
+          "category": "brake",
+          "spec": "전륜 좌우 세트 · 전 엔진 공통",
+          "coupangPrice": 50000,
+          "laborCost": 36000,
+          "dealerPartPrice": 60830,
+          "dealerLaborCost": 70000,
+          "coupangKeyword": "싼타페 TM 브레이크패드 앞",
+          "partNumber": "58101-P2A00 또는 58101-P2A05 (차대번호로 확인)",
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (교체 주기 없이 1만 km마다 점검) · 현대모비스 순정부품 검색"
+        },
+        {
+          "id": "hyundai-santafe-tm-brake-pad-rear",
+          "name": "브레이크 패드 (후)",
+          "category": "brake",
+          "spec": "후륜 좌우 세트",
+          "coupangPrice": 45000,
+          "laborCost": 35000,
+          "dealerPartPrice": 42790,
+          "dealerLaborCost": 65000,
+          "coupangKeyword": "싼타페 TM 브레이크패드 뒤",
+          "partNumber": "가솔린·디젤 58302-P2A30 / 하이브리드 58302-P2A31",
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (교체 주기 없이 1만 km마다 점검) · 현대모비스 순정부품 검색"
+        },
+        {
+          "id": "hyundai-santafe-tm-wiper",
+          "name": "와이퍼 블레이드",
+          "category": "wiper",
+          "spec": "전 엔진 공통 (길이는 기존 블레이드로 확인)",
+          "coupangPrice": 24000,
+          "laborCost": 0,
+          "dealerPartPrice": 46000,
+          "dealerLaborCost": 10000,
+          "coupangKeyword": "싼타페 TM 와이퍼",
+          "partNumber": "운전석 98350-S1000 · 조수석 98360-S1000 · 후면 98850-C5100",
+          "source": "현대모비스 순정부품 검색"
+        },
+        {
+          "id": "hyundai-santafe-tm-spark-plug",
+          "name": "점화플러그 (4개, 가솔린)",
+          "category": "spark",
+          "spec": "4개 (G2.5 T-GDi)",
+          "coupangPrice": 40000,
+          "laborCost": 25000,
+          "dealerPartPrice": 38720,
+          "dealerLaborCost": 48000,
+          "coupangKeyword": "18875-09085",
+          "engine": "G2.5 T-GDi 가솔린",
+          "partNumber": "18875-09085",
+          "intervalKm": 75000,
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' · 현대모비스 순정부품 검색"
+        },
+        {
+          "id": "hyundai-santafe-tm-spark-plug-hybrid",
+          "name": "점화플러그 (4개, 하이브리드)",
+          "category": "spark",
+          "spec": "4개 (G1.6 T-GDi)",
+          "coupangPrice": 40000,
+          "laborCost": 25000,
+          "dealerPartPrice": 37400,
+          "dealerLaborCost": 48000,
+          "coupangKeyword": "18875-08085",
+          "engine": "G1.6 T-GDi 하이브리드",
+          "partNumber": "18875-08085",
+          "intervalKm": 75000,
+          "source": "현대 싼타페 하이브리드(TM HEV) 취급설명서 '용량 및 규격'·'정기 점검' · 현대모비스 순정부품 검색"
+        },
+        {
+          "id": "hyundai-santafe-tm-battery",
+          "name": "배터리 (12V)",
+          "category": "battery",
+          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "coupangPrice": 95000,
+          "laborCost": 15000,
+          "dealerPartPrice": 185000,
+          "dealerLaborCost": 28000,
+          "coupangKeyword": "싼타페 TM 배터리"
+        }
+      ]
+    },
     {
       "id": "hyundai-santafe-mx5",
       "brand": "현대",
       "model": "싼타페",
       "generation": "MX5 (5세대)",
       "yearRange": "2023~현재",
-      "engineTypes": ["2.5 T-GDi (터보)", "1.6 T-HEV (하이브리드)"],
+      "engineTypes": [
+        "2.5 T-GDi (터보)",
+        "1.6 T-HEV (하이브리드)"
+      ],
       "parts": [
         {
           "id": "hyundai-santafe-mx5-engine-oil",
@@ -710,14 +903,16 @@
         }
       ]
     },
-
     {
       "id": "tesla-model3-highland",
       "brand": "테슬라",
       "model": "Model 3",
       "generation": "Highland (페이스리프트)",
       "yearRange": "2023~현재",
-      "engineTypes": ["RWD (후륜)", "Long Range AWD (사륜)"],
+      "engineTypes": [
+        "RWD (후륜)",
+        "Long Range AWD (사륜)"
+      ],
       "parts": [
         {
           "id": "tesla-model3-highland-cabin-filter",
@@ -793,14 +988,17 @@
         }
       ]
     },
-
     {
       "id": "tesla-modely",
       "brand": "테슬라",
       "model": "Model Y",
       "generation": "Juniper (페이스리프트)",
       "yearRange": "2024~현재",
-      "engineTypes": ["RWD (후륜)", "Long Range AWD (사륜)", "Performance AWD (사륜)"],
+      "engineTypes": [
+        "RWD (후륜)",
+        "Long Range AWD (사륜)",
+        "Performance AWD (사륜)"
+      ],
       "parts": [
         {
           "id": "tesla-modely-cabin-filter",

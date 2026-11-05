@@ -40,3 +40,30 @@
 ## 블로그 글별 유입 확인
 - 블로그 글의 정비핵 링크 끝에 `?from=꼬리표` 를 붙이기 (영문·숫자·-·_ , 60자 이내). 예: `https://.../cars/hyundai-tucson-nx4/recalls?from=recall-tucson-2611`
 - 구글시트 `events` 탭: `type=landing` 행 = 그 꼬리표로 들어온 방문, 같은 방문의 쿠팡·공임나라 클릭(`type=outbound`)은 `meta` 열에 `"from":"꼬리표"` 가 함께 남음
+
+## 블로그 연동
+
+### 블로그 유입 (`?from=blog`)
+- 블로그 글 속 정비핵 링크 끝에 `?from=blog` (글별로 보려면 `?from=sorento-recall-2611` 같은 이름)
+- 숫자 보는 곳: 사이트 `/admin` → 통계 → **블로그 글별 성과** 표 (유입·쿠팡·공임나라 이동) 아래 **`blog` 페이지·날짜별 유입** 표 (한국 시간 기준 날짜 × 유입 페이지)
+- 원본: 구글시트 `events` 탭, `type=landing` 행의 `meta`에 `"from":"blog"`, `path`가 들어온 페이지
+- 페이지·날짜별 표는 `gas/Code.gs` 를 Apps Script에 붙여 넣고 **새 버전으로 배포**해야 나옴 (주소는 그대로)
+
+### 쿠팡 파트너스 "이 규격 제품 보기" (`data/coupang-links.json`)
+원칙: 차종·연식·엔진 규격이 **정확히** 맞는 상품만. 애매하면 넣지 않는다.
+1. 쿠팡 파트너스 → 링크 생성에서 상품 링크(`https://link.coupang.com/a/...`)를 만든다
+2. GitHub에서 `data/coupang-links.json` 을 열어 `links` 안에 소모품 ID별로 추가 → 커밋하면 자동 배포
+```json
+"links": {
+  "kia-sorento-mq4-engine-oil": [
+    { "url": "https://link.coupang.com/a/xxxx", "product": "상품 이름 (용량·규격 포함)", "matches": ["0W-30", "API SP"], "engine": "G2.5 T-GDi 가솔린" }
+  ]
+}
+```
+- `matches`: 이 상품이 맞는 근거. 소모품 규격(spec)·순정 품번에 **그대로 있는 값**이어야 하고, 상품 상세에도 그 값이 적혀 있어야 함
+- `engine`: 엔진별 소모품이면 차종 데이터의 `engine` 값과 똑같이 (공통 소모품이면 생략)
+- `npm test` 가 위 조건(파트너스 주소·근거·엔진)을 검사해서 틀리면 실패 → PR에서 걸러짐
+- 링크가 있는 소모품은 차종 표의 규격 옆과 소모품 상세 페이지에 표시되고, 페이지 아래에 파트너스 고지 문구가 항상 붙음
+
+### 리콜 → 블로그 글 (`lib/recalls/blog.ts`)
+리콜 ID(리콜 목록 항목 주소의 `#` 뒤 값) → 글 주소를 한 줄 추가하면 그 리콜 항목에 "조회·무상 수리 예약 방법 정리 → 블로그 글" 링크가 붙는다.

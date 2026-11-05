@@ -7,6 +7,7 @@ import { CostDashboard } from "./CostDashboard"
 import { CAR_DATA } from "@/lib/data/cars"
 import type { CarModel, CostSummary, PartCategory } from "@/types"
 import type { GenerateCarInput } from "@/lib/gemini"
+import { carEngines, partsForEngine } from "@/lib/engines"
 
 interface CalculatorPageProps {
   initialCarId?: string
@@ -54,9 +55,15 @@ export function CalculatorPage({
 
   const allCars = useMemo(() => [...CAR_DATA, ...dynamicCars], [dynamicCars])
 
+  const baseCar = useMemo(() => allCars.find((c) => c.id === selectedCarId), [allCars, selectedCarId])
+
+  // 엔진마다 소모품 규격이 다른 차종(싼타페 TM 등)은 엔진을 골라야 합계가 겹치지 않음
+  const engines = useMemo(() => (baseCar ? carEngines(baseCar) : []), [baseCar])
+  const [selectedEngine, setSelectedEngine] = useState<string | null>(null)
+  const activeEngine = engines.length ? (selectedEngine && engines.includes(selectedEngine) ? selectedEngine : engines[0]) : null
   const selectedCar = useMemo(
-    () => allCars.find((c) => c.id === selectedCarId),
-    [allCars, selectedCarId]
+    () => (baseCar && activeEngine ? { ...baseCar, parts: partsForEngine(baseCar, activeEngine) } : baseCar),
+    [baseCar, activeEngine]
   )
 
   const didPreCheck = useRef(false)
@@ -101,6 +108,7 @@ export function CalculatorPage({
 
   function handleCarChange(carId: string) {
     setSelectedCarId(carId)
+    setSelectedEngine(null)
     setSelectedParts(new Set())
     didPreCheck.current = false
   }
@@ -236,6 +244,28 @@ export function CalculatorPage({
 
           {selectedCar ? (
             <div className="rounded-xl border border-border bg-card p-5">
+              {engines.length > 1 && (
+                <div className="mb-4">
+                  <p className="mb-2 text-xs font-semibold text-muted-foreground">엔진 선택 (엔진마다 소모품 규격이 달라요)</p>
+                  <div className="flex flex-wrap gap-2">
+                    {engines.map((e) => (
+                      <button
+                        key={e}
+                        type="button"
+                        onClick={() => {
+                          setSelectedEngine(e)
+                          setSelectedParts(new Set())
+                        }}
+                        className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+                          e === activeEngine ? "border-primary bg-primary/15 text-primary" : "border-border hover:border-primary/50"
+                        }`}
+                      >
+                        {e}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <MaintenanceChecklist
                 car={selectedCar}
                 selectedParts={selectedParts}

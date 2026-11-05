@@ -96,3 +96,17 @@ test("세대 코드가 HEV와 붙어 있어도 읽는다", () => {
   assert.deepEqual(splitRecallName("그랜저하이브리드(GN7HEV)"), { base: "그랜저하이브리드", code: "GN7" })
   assert.equal(hit("hyundai-grandeur-gn7", HMC, "그랜저하이브리드(GN7HEV)"), true)
 })
+
+test("싼타페 TM 부분변경만 매칭 (변경 전 TM·MX5 제외)", () => {
+  const rule = RECALL_MATCH_RULES["hyundai-santafe-tm"]
+  const hy = "현대자동차(주)"
+  const it = (name: string, from = "2020-06-08", to = "2023-07-15") => itemMatchesCar(hy, { name, from, to }, rule)
+  assert.equal(it("싼타페 (TM PE)"), true)
+  assert.equal(it("싼타페 하이브리드(TM PE HEV)"), true)
+  assert.equal(it("싼타페(TM)", "2018-02-01", "2020-05-31"), false)
+  assert.equal(it("싼타페(MX5)"), false)
+  // 세대 표기 없는 차명: 생산기간이 부분변경 기간 안일 때만
+  assert.equal(it("싼타페", "2021-01-04", "2022-12-30"), true)
+  assert.equal(it("싼타페", "2019-01-01", "2021-01-01"), false)
+  assert.equal(it("싼타페", "2022-01-01", "2024-03-01"), false)
+})
