@@ -3,6 +3,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { seoCars, getSeoCar, carShortName, partCost, SITE_URL } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
+import { engineGroups } from "@/lib/engines"
 import { TrackedLink } from "@/components/seo/TrackedLink"
 import { Breadcrumbs, JsonLd } from "@/components/seo/Shared"
 import {
@@ -48,7 +49,8 @@ export default async function CarRecallsPage({ params }: Props) {
   const { dataAsOf } = recallData()
   const faq = recallFaq(name)
   // 차종 페이지와 같은 계산: 공식센터(부품+공임) − 쿠팡 부품+공임나라, 전체 소모품 합계
-  const totals = car.parts.reduce(
+  // 엔진이 나뉜 차종은 첫 엔진 기준 (차종 페이지 위 합계와 같은 값)
+  const totals = engineGroups(car)[0].parts.reduce(
     (acc, p) => {
       const c = partCost(p)
       return { self: acc.self + c.self, dealer: acc.dealer + c.dealer }

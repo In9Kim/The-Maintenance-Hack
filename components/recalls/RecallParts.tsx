@@ -12,6 +12,7 @@ import {
   recallData,
 } from "@/lib/recalls/data"
 import type { RecallNewsItem } from "@/lib/recalls/types"
+import { recallBlogPost } from "@/lib/recalls/blog"
 
 /** 모든 리콜 페이지 상단: 데이터 기준일 + 차대번호 조회 안내 */
 export function RecallNotice({ carId }: { carId?: string }) {
@@ -132,6 +133,16 @@ export function RecallList({ recalls, showMaker = true }: { recalls: Recall[]; s
               </dd>
             </div>
           </dl>
+
+          {recallBlogPost(r.id) && (
+            <OutboundLink
+              href={recallBlogPost(r.id)!.url}
+              target="blog"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/15"
+            >
+              {recallBlogPost(r.id)!.label} <ExternalLink className="h-3 w-3" />
+            </OutboundLink>
+          )}
 
           <details className="mt-2 text-xs text-muted-foreground">
             <summary className="cursor-pointer select-none hover:text-foreground">

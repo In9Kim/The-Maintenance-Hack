@@ -343,7 +343,7 @@ function SourceCard({ bySource }: { bySource: Record<string, SourceStats> }) {
       </p>
       <p className="mb-3 text-xs text-muted-foreground">
         글 속 정비핵 링크 끝에 <code className="rounded bg-muted px-1">?from=글이름</code> 을 붙이면 여기에 집계돼요. 예:{" "}
-        <code className="rounded bg-muted px-1">/cars/hyundai-tucson-nx4/recalls?from=recall-tucson-2611</code>
+        <code className="rounded bg-muted px-1">/cars/kia-sorento-mq4?from=blog</code>
       </p>
       {rows.length > 0 ? (
         <div className="overflow-x-auto">
@@ -356,6 +356,7 @@ function SourceCard({ bySource }: { bySource: Record<string, SourceStats> }) {
                 <th className="py-1 text-right font-medium">공임나라</th>
                 <th className="py-1 text-right font-medium">네이버</th>
                 <th className="py-1 text-right font-medium">리콜센터</th>
+                <th className="py-1 text-right font-medium">블로그</th>
                 <th className="py-1 text-right font-medium">이동률</th>
                 <th className="py-1 text-right font-medium">마지막 방문</th>
               </tr>
@@ -369,6 +370,7 @@ function SourceCard({ bySource }: { bySource: Record<string, SourceStats> }) {
                   <td className="py-1 text-right tabular-nums">{cell(r.outbound.gongim)}</td>
                   <td className="py-1 text-right tabular-nums">{cell(r.outbound.naver)}</td>
                   <td className="py-1 text-right tabular-nums">{cell(r.outbound.recall_center)}</td>
+                  <td className="py-1 text-right tabular-nums">{cell(r.outbound.blog)}</td>
                   <td className="py-1 text-right tabular-nums">{r.landing ? `${Math.round(r.rate * 100)}%` : "-"}</td>
                   <td className="py-1 text-right tabular-nums">{r.last}</td>
                 </tr>
@@ -380,6 +382,83 @@ function SourceCard({ bySource }: { bySource: Record<string, SourceStats> }) {
         <p className="text-xs text-muted-foreground">아직 꼬리표를 달고 들어온 방문이 없어요.</p>
       )}
       <p className="mt-2 text-[11px] text-muted-foreground">이동률 = (쿠팡·공임나라·네이버·리콜센터 이동 합계) ÷ 유입</p>
+
+      {rows.some((r) => r.days && Object.keys(r.days).length) && (
+        <div className="mt-4 space-y-2">
+          {rows
+            .filter((r) => r.days && Object.keys(r.days).length)
+            .map((r) => (
+              <SourcePagesByDay key={r.from} from={r.from} pages={r.pages ?? {}} days={r.days ?? {}} />
+            ))}
+        </div>
+      )}
     </div>
+  )
+}
+
+/** 꼬리표 하나: 날짜(한국 시간) × 유입 페이지 방문 수 */
+function SourcePagesByDay({
+  from,
+  pages,
+  days,
+}: {
+  from: string
+  pages: Record<string, number>
+  days: Record<string, Record<string, number>>
+}) {
+  const paths = Object.entries(pages)
+    .sort((a, b) => b[1] - a[1])
+    .map(([p]) => p)
+  const dates = Object.keys(days).sort().reverse()
+  const label = (p: string) => p.replace(/^\/cars\//, "").replace(/^\/$/, "홈") || p
+  return (
+    <details className="rounded-lg border border-border p-3" open={from === "blog"}>
+      <summary className="cursor-pointer select-none text-xs font-semibold">
+        <code className="rounded bg-muted px-1">{from}</code> 페이지·날짜별 유입
+      </summary>
+      <div className="mt-2 overflow-x-auto">
+        <table className="w-full text-xs">
+          <thead className="text-muted-foreground">
+            <tr>
+              <th className="py-1 pr-3 text-left font-medium">날짜</th>
+              {paths.map((p) => (
+                <th key={p} className="py-1 px-2 text-right font-medium" title={p}>
+                  {label(p)}
+                </th>
+              ))}
+              <th className="py-1 pl-2 text-right font-medium">합계</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dates.map((d) => {
+              const row = days[d] ?? {}
+              const sum = Object.values(row).reduce((a, b) => a + b, 0)
+              return (
+                <tr key={d} className="border-t border-border">
+                  <td className="py-1 pr-3 tabular-nums">{d}</td>
+                  {paths.map((p) => (
+                    <td key={p} className="py-1 px-2 text-right tabular-nums">
+                      {row[p] ? row[p].toLocaleString("ko-KR") : "-"}
+                    </td>
+                  ))}
+                  <td className="py-1 pl-2 text-right font-semibold tabular-nums">{sum.toLocaleString("ko-KR")}</td>
+                </tr>
+              )
+            })}
+            <tr className="border-t border-border font-semibold">
+              <td className="py-1 pr-3">전체</td>
+              {paths.map((p) => (
+                <td key={p} className="py-1 px-2 text-right tabular-nums">
+                  {pages[p].toLocaleString("ko-KR")}
+                </td>
+              ))}
+              <td className="py-1 pl-2 text-right tabular-nums">
+                {Object.values(pages).reduce((a, b) => a + b, 0).toLocaleString("ko-KR")}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
   )
 }

@@ -25,6 +25,10 @@ export interface RecallMatchRule {
   genCode?: string
   /** 세대 코드가 없는 차명을 위한 양산 시작일 (보수적으로 실제보다 약간 늦게 잡음) */
   sop?: string
+  /** 세대 코드가 없는 차명을 위한 생산 종료일 — 생산기간 끝이 이 날 이후면(다음 세대와 겹치면) 매칭 안 함 */
+  eop?: string
+  /** 괄호 안 전체에 대한 추가 조건 (예: 부분변경 "TM PE"만, 변경 전 "TM"은 제외) */
+  codeRe?: RegExp
 }
 
 /** 차명에서 차종 이름 앞뒤로 붙어도 같은 차로 보는 말 */
@@ -50,6 +54,15 @@ export const RECALL_MATCH_RULES: Record<string, RecallMatchRule> = {
   "hyundai-tucson-nx4": { maker: /^현대자동차/, names: ["투싼", "tucson"], genCode: "NX4", sop: "2020-10-01" },
   "hyundai-avante-cn7": { maker: /^현대자동차/, names: ["아반떼", "avante", "elantra"], genCode: "CN7", sop: "2020-05-01" },
   "hyundai-grandeur-gn7": { maker: /^현대자동차/, names: ["그랜저", "grandeur"], genCode: "GN7", sop: "2022-12-01" },
+  // 싼타페 TM 부분변경(더 뉴 싼타페, 2020.06~2023.07). 변경 전 TM(2018~2020)은 엔진·규격이 달라 제외
+  "hyundai-santafe-tm": {
+    maker: /^현대자동차/,
+    names: ["싼타페", "santafe"],
+    genCode: "TM",
+    codeRe: /^TM\s*PE\b/i,
+    sop: "2020-06-01",
+    eop: "2023-07-31",
+  },
   "hyundai-santafe-mx5": { maker: /^현대자동차/, names: ["싼타페", "santafe"], genCode: "MX5", sop: "2023-08-01" },
   // 테슬라 리콜 차명에는 세대 표기가 없어서 생산 시작일로만 판단
   // Model 3 하이랜드: 상하이 양산 2023년 9월 → 2023-10-01 이후 생산분만
@@ -85,14 +98,16 @@ function nameMatches(base: string, names: string[]): boolean {
 export function itemMatchesCar(maker: string, item: RecallItem, rule: RecallMatchRule): boolean {
   if (!rule.maker.test(maker)) return false
   const { base, code } = splitRecallName(item.name)
+  const inside = item.name.match(/[(（]\s*([^)）]*)[)）]/)?.[1].trim() ?? ""
   if (!nameMatches(base, rule.names)) return false
 
   if (code) {
     // 세대 코드가 적혀 있으면 그것으로만 판단 (다른 세대면 불일치)
-    return !!rule.genCode && code === rule.genCode
+    return !!rule.genCode && code === rule.genCode && (!rule.codeRe || rule.codeRe.test(inside))
   }
-  // 세대 코드가 없으면 생산 시작일이 양산 시작일 이후일 때만
+  // 세대 코드가 없으면 생산기간이 이 세대 양산 기간 안일 때만
   if (!rule.sop || !/^\d{4}-\d{2}-\d{2}$/.test(item.from)) return false
+  if (rule.eop && !(/^\d{4}-\d{2}-\d{2}$/.test(item.to) && item.to <= rule.eop)) return false
   return item.from >= rule.sop
 }
 
