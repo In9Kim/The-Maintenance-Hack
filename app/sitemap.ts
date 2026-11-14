@@ -1,27 +1,44 @@
 import type { MetadataRoute } from "next"
 import { seoCars, partSlug, SITE_URL } from "@/lib/seo"
-import { latestNewsDate, recallData, recallMakers, recallsForCar } from "@/lib/recalls/data"
+import { isIndexableMaker, latestDate } from "@/lib/indexing"
+import {
+  recallMakers,
+  recallsByMaker,
+  recallsForCar,
+  recallsIndexUpdatedDate,
+  recallsUpdatedDate,
+} from "@/lib/recalls/data"
 
+/**
+ * lastModified는 빌드·요청 시각이 아니라 그 페이지 데이터가 실제로 바뀐 날 (YYYY-MM-DD).
+ *  - 차종·소모품 페이지: data/vehicles.json 각 차종의 updatedAt
+ *  - 리콜 페이지: 그 페이지에 나오는 리콜이 데이터에 처음 들어온 날(firstSeen) 중 가장 최근
+ * 알 수 없으면 lastmod를 생략한다 (매번 바뀌는 값은 구글이 무시함).
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date()
   const cars = seoCars()
-  const { updatedAt } = recallData()
-  const latest = [updatedAt, latestNewsDate()].filter(Boolean).sort().pop()
-  const recallUpdated = latest ? new Date(`${latest}T00:00:00+09:00`) : now
+  const carsUpdated = latestDate(cars.map((c) => c.updatedAt))
+  const entry = (path: string, lastModified: string | undefined, priority: number) => ({
+    url: `${SITE_URL}${path}`,
+    ...(lastModified ? { lastModified } : {}),
+    priority,
+  })
+
   return [
-    { url: `${SITE_URL}/`, lastModified: now, priority: 1 },
-    { url: `${SITE_URL}/calculator`, lastModified: now, priority: 0.8 },
-    { url: `${SITE_URL}/cars`, lastModified: now, priority: 0.9 },
-    ...cars.map((car) => ({ url: `${SITE_URL}/cars/${car.id}`, lastModified: now, priority: 0.8 })),
-    // 리콜 정보: 데이터가 바뀐 날을 lastModified로
-    { url: `${SITE_URL}/recalls`, lastModified: recallUpdated, priority: 0.8 },
-    ...recallMakers().map((m) => ({ url: `${SITE_URL}/recalls/maker/${m.slug}`, lastModified: recallUpdated, priority: 0.6 })),
+    entry("/", undefined, 1),
+    entry("/calculator", carsUpdated, 0.8),
+    entry("/cars", carsUpdated, 0.9),
+    ...cars.map((car) => entry(`/cars/${car.id}`, car.updatedAt, 0.8)),
+    entry("/recalls", recallsIndexUpdatedDate(), 0.8),
+    // 리콜이 적거나 해시 주소(maker-xxxxxx)인 제작사는 제외 (페이지는 noindex)
+    ...recallMakers()
+      .filter(isIndexableMaker)
+      .map((m) => entry(`/recalls/maker/${m.slug}`, recallsUpdatedDate(recallsByMaker(m.slug)), 0.6)),
     // 매칭된 리콜이 있는 차종만 (빈 페이지는 사이트맵에서 제외)
-    ...cars
-      .filter((car) => recallsForCar(car.id).length > 0)
-      .map((car) => ({ url: `${SITE_URL}/cars/${car.id}/recalls`, lastModified: recallUpdated, priority: 0.7 })),
-    ...cars.flatMap((car) =>
-      car.parts.map((p) => ({ url: `${SITE_URL}/cars/${car.id}/${partSlug(car, p)}`, lastModified: now, priority: 0.7 }))
-    ),
+    ...cars.flatMap((car) => {
+      const recalls = recallsForCar(car.id)
+      return recalls.length ? [entry(`/cars/${car.id}/recalls`, recallsUpdatedDate(recalls), 0.7)] : []
+    }),
+    ...cars.flatMap((car) => car.parts.map((p) => entry(`/cars/${car.id}/${partSlug(car, p)}`, car.updatedAt, 0.7))),
   ]
 }

@@ -3,6 +3,7 @@ import newsJson from "@/data/recall_news.json"
 import centerJson from "@/data/recall_center.json"
 import { matchRecallsForCar } from "./match"
 import { displayCarName, displayMaker } from "./display"
+import { latestDate } from "@/lib/indexing"
 import type { Recall, RecallCenterData, RecallData, RecallNewsData, RecallNewsItem } from "./types"
 
 /**
@@ -169,6 +170,19 @@ export function recallsByMaker(slug: string): Recall[] {
 
 export function recallsForCar(carId: string): Recall[] {
   return matchRecallsForCar(carId, DATA.recalls)
+}
+
+/**
+ * 리콜 목록 페이지 내용이 마지막으로 바뀐 날 = 그 리콜들이 우리 데이터에 처음 들어온 날(firstSeen) 중 가장 최근.
+ * (매일 바뀌는 "확인일" 문구는 빼고, 리콜이 새로 붙은 날만 본다 → 사이트맵 lastmod)
+ */
+export function recallsUpdatedDate(recalls: Recall[]): string | undefined {
+  return latestDate(recalls.map((r) => r.firstSeen))
+}
+
+/** /recalls 첫 화면: 리콜 + 표를 정리하지 못해 제목만 보여 주는 보도자료까지 */
+export function recallsIndexUpdatedDate(): string | undefined {
+  return latestDate([...ALL.map((r) => r.firstSeen), ...NEWS.items.map((it) => it.firstSeen)])
 }
 
 /** "2025-01-24" → "2025.01.24" */

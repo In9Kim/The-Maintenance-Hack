@@ -6,6 +6,7 @@
       "model": "쏘렌토",
       "generation": "MQ4 (4세대)",
       "yearRange": "2020~현재",
+      "updatedAt": "2026-11-05",
       "engineTypes": [
         "G2.5 T-GDi 가솔린",
         "D2.2 디젤"
@@ -136,6 +137,7 @@
       "model": "카니발",
       "generation": "KA4 (4세대)",
       "yearRange": "2020~현재",
+      "updatedAt": "2026-11-05",
       "engineTypes": [
         "3.5 GDI (가솔린)",
         "2.2 CRDi (디젤)"
@@ -225,6 +227,7 @@
       "model": "K5",
       "generation": "DL3 (3세대)",
       "yearRange": "2020~현재",
+      "updatedAt": "2026-11-05",
       "engineTypes": [
         "2.0 MPI (가솔린)",
         "1.6 T-GDi (터보)"
@@ -326,6 +329,7 @@
       "model": "투싼",
       "generation": "NX4 (4세대)",
       "yearRange": "2021~현재",
+      "updatedAt": "2026-11-05",
       "engineTypes": [
         "2.5 MPI (가솔린)",
         "1.6 T-GDi (터보)"
@@ -427,6 +431,7 @@
       "model": "아반떼",
       "generation": "CN7 (7세대)",
       "yearRange": "2020~현재",
+      "updatedAt": "2026-11-05",
       "engineTypes": [
         "1.6 MPI (가솔린)",
         "1.6 T-GDi (터보)"
@@ -528,6 +533,7 @@
       "model": "그랜저",
       "generation": "GN7 (7세대)",
       "yearRange": "2022~현재",
+      "updatedAt": "2026-11-05",
       "engineTypes": [
         "2.5 T-GDi (터보)",
         "3.5 GDI (가솔린)"
@@ -642,6 +648,7 @@
       "model": "싼타페",
       "generation": "TM PE (4세대 부분변경)",
       "yearRange": "2020~2023",
+      "updatedAt": "2026-11-05",
       "engineTypes": [
         "G2.5 T-GDi 가솔린",
         "D2.2 디젤",
@@ -809,6 +816,7 @@
       "model": "싼타페",
       "generation": "MX5 (5세대)",
       "yearRange": "2023~현재",
+      "updatedAt": "2026-11-05",
       "engineTypes": [
         "2.5 T-GDi (터보)",
         "1.6 T-HEV (하이브리드)"
@@ -909,6 +917,7 @@
       "model": "Model 3",
       "generation": "Highland (페이스리프트)",
       "yearRange": "2023~현재",
+      "updatedAt": "2026-11-05",
       "engineTypes": [
         "RWD (후륜)",
         "Long Range AWD (사륜)"
@@ -994,6 +1003,7 @@
       "model": "Model Y",
       "generation": "Juniper (페이스리프트)",
       "yearRange": "2024~현재",
+      "updatedAt": "2026-11-05",
       "engineTypes": [
         "RWD (후륜)",
         "Long Range AWD (사륜)",

@@ -59,6 +59,11 @@ export interface CarModel {
   model: string
   generation: string
   yearRange: string
+  /**
+   * 이 차종의 데이터(규격·가격·쿠팡 링크)를 마지막으로 고친 날 (YYYY-MM-DD).
+   * 사이트맵 lastmod로 쓰이므로 차종·소모품·쿠팡 링크를 고치면 함께 바꾼다.
+   */
+  updatedAt?: string
   engineTypes: string[]
   parts: MaintenancePart[]
   /** undefined = 기존 검증 차종(true 취급), false = AI 생성 후 미검증 */

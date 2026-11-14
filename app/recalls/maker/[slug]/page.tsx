@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { SITE_URL } from "@/lib/seo"
+import { isIndexableMaker } from "@/lib/indexing"
 import { Breadcrumbs, JsonLd } from "@/components/seo/Shared"
 import {
   RecallFaq,
@@ -36,6 +37,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       latest ? `. 최근 리콜 시작일 ${fmtDate(latest.startDate)}` : ""
     }${dataAsOf ? ` (${dataBasisText()})` : ""}. 내 차 대상 여부는 자동차리콜센터에서 차대번호로 확인하세요.`,
     alternates: { canonical: `${SITE_URL}/recalls/maker/${maker.slug}` },
+    // 리콜이 적거나 이름 주소가 없는 제작사는 얇은 페이지라 색인하지 않음 (링크는 따라가도록 follow)
+    ...(isIndexableMaker(maker) ? {} : { robots: { index: false, follow: true } }),
   }
 }
 

@@ -47,6 +47,23 @@ const MAKERS: [RegExp, string, string][] = [
   [/^폴스타/, "polestar", "폴스타"],
   [/^캐딜락/, "cadillac", "캐딜락"],
   [/^에프엘오토/, "fl-auto", "에프엘오토코리아"],
+  // 리콜이 많은데 표에 없어 maker-xxxxxx 주소가 나오던 제작사 (2026-11-14 기준 5건 이상)
+  [/^이비온/, "ibion", "이비온"],
+  [/^기흥모터스/, "giheung-motors", "기흥모터스"],
+  [/^범한자동차/, "beomhan-motors", "범한자동차"],
+  [/^브리타니아오토/, "britannia-auto", "브리타니아오토"],
+  [/^바이크코리아/, "bike-korea", "바이크코리아"],
+  [/^피라인모터스/, "pline-motors", "피라인모터스"],
+  [/^모토로싸/, "motorossa", "모토로싸"],
+  [/^바이크원/, "bike-one", "바이크원"],
+  [/^모빌리티네트웍스/, "mobility-networks", "모빌리티네트웍스"],
+  [/^에프엠케이/, "fmk", "에프엠케이"],
+  [/^한국모터트레이딩/, "korea-motor-trading", "한국모터트레이딩"],
+  [/^스즈키씨엠씨/, "suzuki-cmc", "스즈키씨엠씨"],
+  [/^이누리/, "inuri", "이누리"],
+  [/^대전기계공업/, "daejeon-machinery", "대전기계공업"],
+  [/^화창상사/, "hwachang", "화창상사"],
+  [/^한솜바이크/, "hansom-bike", "한솜바이크"],
 ]
 
 function hash6(s: string): string {
