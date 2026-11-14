@@ -30,6 +30,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className="dark">
+      <head>
+        {/* metadata.alternates는 페이지별 canonical 설정이 덮어써서 RSS 링크는 여기 직접 둔다 */}
+        <link rel="alternate" type="application/rss+xml" title="정비핵 최근 리콜·차종 정보" href={`${SITE_URL}/rss.xml`} />
+      </head>
       <body className={inter.className}>
         <Header />
         <TrackFrom />
