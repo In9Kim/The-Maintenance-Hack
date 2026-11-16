@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-11-16",
+ "generatedAt": "2026-11-17",
  "windowDays": 7,
- "since": "2026-11-10",
+ "since": "2026-11-11",
  "dataAsOf": "2025-12-31",
  "recalls": [
   {
@@ -213,29 +213,6 @@
     }
    ],
    "firstSeen": "2026-11-11",
-   "source": "carkr"
-  },
-  {
-   "id": "2026-11-10-carkr-6432",
-   "recallId": "6432",
-   "maker": "현대자동차(주)",
-   "makerSlug": "hyundai",
-   "makerName": "현대자동차",
-   "startDate": "2026-11-10",
-   "title": "[현대] 아반떼 - 전방 스트럿-전방너클 관련 리콜",
-   "serious": false,
-   "reason": "전방 스트럿과 너클간 체결 불량으로 인해 체결부 이탈 발생 시 차량 쏠림 및 조향력을 상실하여 충돌할 가능성이 확인됨에 따른 리콜",
-   "fix": "체결부 토크 점검, 토크 불량 시 재체결 후 휠 얼라이먼트 조정",
-   "part": "완충장치 기타",
-   "count": 4,
-   "items": [
-    {
-     "name": "아반떼(CN7)",
-     "from": "2026-02-12",
-     "to": "2026-04-10"
-    }
-   ],
-   "firstSeen": "2026-11-10",
    "source": "carkr"
   }
  ]
