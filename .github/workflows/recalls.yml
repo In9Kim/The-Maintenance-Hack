@@ -32,9 +32,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      # 액션은 바뀔 수 있는 태그 대신 커밋 SHA로 고정 (뒤 주석이 버전)
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
 
@@ -47,14 +48,18 @@ jobs:
           RECALL_YEARS: "3"
         run: node scripts/fetch-recalls.mjs
 
+      # PDF 읽기 도구 설치는 키가 없는 단계에서, 설치 스크립트 실행 없이 (패키지가 키를 볼 수 없게)
+      - name: Install PDF reader
+        id: pdfjs
+        continue-on-error: true
+        run: npm install --prefix "$RUNNER_TEMP/pdfjs" --no-audit --no-fund --ignore-scripts pdfjs-dist@6.4.299
+
       - name: Fetch recall press releases (molit.go.kr)
         id: news
         continue-on-error: true
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          # 프로젝트 전체 대신 PDF 읽기 도구만 임시 폴더에 설치
-          npm install --prefix "$RUNNER_TEMP/pdfjs" --no-audit --no-fund pdfjs-dist@6.4.299
           PDFJS_MODULE="$RUNNER_TEMP/pdfjs/node_modules/pdfjs-dist/legacy/build/pdf.mjs" node scripts/fetch-recall-news.mjs
 
       - name: Fetch recall center board (car.go.kr)
