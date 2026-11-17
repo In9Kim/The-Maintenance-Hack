@@ -11,6 +11,7 @@ import {
   intervalText,
   calculatorHref,
   SITE_URL,
+  pageMetadata,
 } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
 import { Breadcrumbs, JsonLd, PartnersDisclosure } from "@/components/seo/Shared"
@@ -105,11 +106,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const car = getSeoCar((await params).carId)
   if (!car) return {}
   const name = carShortName(car)
-  return {
+  return pageMetadata({
     title: `${name} 소모품 교체 비용 · 규격 총정리 (엔진오일·필터·브레이크) | 정비핵`,
     description: `${name}(${car.yearRange}) 엔진오일, 에어컨 필터, 브레이크 패드 등 소모품 규격과 교체 비용. 공식센터 견적 대비 쿠팡 부품+공임나라 셀프 정비 시 절약 금액을 비교합니다.`,
-    alternates: { canonical: `${SITE_URL}/cars/${car.id}` },
-  }
+    path: `/cars/${car.id}`,
+  })
 }
 
 export default async function CarPage({ params }: Props) {

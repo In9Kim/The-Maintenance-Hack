@@ -1,8 +1,28 @@
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
+import { SITE_URL } from "@/lib/seo"
 
-export function Breadcrumbs({ items }: { items: { href?: string; label: string }[] }) {
+type Crumb = { href?: string; label: string }
+
+/** 화면의 경로 표시와 같은 내용을 구조화 데이터로 (검색 결과에 경로가 표시될 수 있음) */
+export function breadcrumbJsonLd(items: Crumb[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.label,
+      // 마지막(현재 페이지)은 주소 생략 가능
+      ...(it.href ? { item: `${SITE_URL}${it.href}` } : {}),
+    })),
+  }
+}
+
+export function Breadcrumbs({ items }: { items: Crumb[] }) {
   return (
+    <>
+    <JsonLd data={breadcrumbJsonLd(items)} />
     <nav aria-label="breadcrumb" className="mb-6 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
       {items.map((it, i) => (
         <span key={i} className="flex items-center gap-1">
@@ -17,6 +37,7 @@ export function Breadcrumbs({ items }: { items: { href?: string; label: string }
         </span>
       ))}
     </nav>
+    </>
   )
 }
 

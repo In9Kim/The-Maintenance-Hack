@@ -1,12 +1,21 @@
 import Link from "next/link"
 import { ShieldCheck, Zap, Wrench } from "lucide-react"
 import { CompatibilityChecker } from "@/components/CompatibilityChecker"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata = pageMetadata({
+  title: "정비핵 - 자동차 정비 비용 계산기",
+  description:
+    "공임나라 + 쿠팡 조합으로 공식 서비스 센터 대비 최대 60% 절약. 차종별 소모품 규격 자동 조회 및 최저가 부품 링크 제공.",
+  path: "/",
+})
 
 export default function Home() {
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
       {/* ── 히어로 섹션 ──────────────────────────────────────────── */}
-      <main className="flex flex-1 flex-col items-center justify-center px-4 py-12 sm:py-16">
+      {/* 레이아웃에 이미 <main>이 있어서 여기는 section (페이지당 main은 하나) */}
+      <section className="flex flex-1 flex-col items-center justify-center px-4 py-12 sm:py-16">
         {/* 아이브로우 배지 */}
         <div className="mb-5 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
           AI 부품 호환성 즉시 검증 서비스
@@ -52,7 +61,7 @@ export default function Home() {
             국산·수입차 전 차종 지원
           </span>
         </div>
-      </main>
+      </section>
 
       {/* ── 하단 계산기 유입 CTA ────────────────────────────────── */}
       <div className="border-t border-border py-5 text-center">

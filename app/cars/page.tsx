@@ -1,14 +1,14 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { seoCars, carShortName, SITE_URL } from "@/lib/seo"
+import { seoCars, carShortName, pageMetadata } from "@/lib/seo"
 import { Breadcrumbs } from "@/components/seo/Shared"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "차종별 소모품 교체 비용 · 규격 총정리 | 정비핵",
   description:
     "현대·기아·테슬라 인기 차종의 엔진오일, 필터, 브레이크 패드, 배터리 교체 비용과 규격을 차종별로 정리했습니다. 공식센터 견적과 쿠팡 부품 + 공임나라 비용을 비교해 보세요.",
-  alternates: { canonical: `${SITE_URL}/cars` },
-}
+  path: "/cars",
+})
 
 export default function CarsIndexPage() {
   const cars = seoCars()

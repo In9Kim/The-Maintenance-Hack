@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import type { CarModel, MaintenancePart } from "@/types"
 import { CAR_DATA, getCarById } from "@/lib/data/cars"
 
@@ -62,4 +63,45 @@ export function seoCars(): CarModel[] {
 export function getSeoCar(id: string): CarModel | undefined {
   const car = getCarById(id)
   return car && car.is_verified !== false ? car : undefined
+}
+
+export const SITE_NAME = "정비핵"
+
+/**
+ * 페이지 메타데이터 공통 형식: 제목·설명·canonical + 링크 공유용 Open Graph.
+ * (Next.js는 og:title을 페이지 제목에서 물려받지 않고, 하위 openGraph가 상위를 통째로 덮어써서
+ *  app/opengraph-image.png 자동 연결도 사라지므로 이미지까지 여기서 함께 넣는다)
+ */
+const OG_IMAGE = {
+  url: "/opengraph-image.png",
+  width: 1200,
+  height: 630,
+  alt: "정비핵 - 공식센터 정비 견적을 쿠팡 부품과 공임나라로 비교하는 자동차 정비 비용 계산기",
+}
+
+export function pageMetadata(m: {
+  /** "… | 정비핵" 형태의 전체 제목 */
+  title: string
+  description: string
+  /** "/cars/kia-sorento-mq4" 형태. 홈은 "/" */
+  path: string
+  robots?: Metadata["robots"]
+}): Metadata {
+  const url = `${SITE_URL}${m.path}`
+  return {
+    title: m.title,
+    description: m.description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: m.title.replace(/\s*\|\s*정비핵$/, ""),
+      description: m.description,
+      url,
+      siteName: SITE_NAME,
+      locale: "ko_KR",
+      type: "website",
+      images: [OG_IMAGE],
+    },
+    twitter: { card: "summary_large_image", images: [OG_IMAGE.url] },
+    ...(m.robots ? { robots: m.robots } : {}),
+  }
 }

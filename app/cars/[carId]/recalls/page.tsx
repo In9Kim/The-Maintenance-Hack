@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { seoCars, getSeoCar, carShortName, partCost, SITE_URL } from "@/lib/seo"
+import { seoCars, getSeoCar, carShortName, partCost, pageMetadata } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
 import { engineGroups } from "@/lib/engines"
 import { TrackedLink } from "@/components/seo/TrackedLink"
@@ -32,13 +32,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const recalls = recallsForCar(car.id)
   const { dataAsOf } = recallData()
   const latest = recalls[0]
-  return {
+  return pageMetadata({
     title: `${name} 리콜 대상 조회 · 리콜 ${recalls.length}건 정리 | 정비핵`,
     description: latest
       ? `${name} 리콜 ${recalls.length}건 정리. 최근 리콜(${fmtDate(latest.startDate)}): ${shortReason(latest.reason, 50)} 생산기간별 대상과 차대번호 조회 방법을 안내합니다.`
       : `${name} 리콜 정보와 리콜 대상 조회 방법${dataAsOf ? ` (${dataBasisText()})` : ""}. 내 차가 대상인지 자동차리콜센터에서 차대번호로 확인하세요.`,
-    alternates: { canonical: `${SITE_URL}/cars/${car.id}/recalls` },
-  }
+    path: `/cars/${car.id}/recalls`,
+    // 매칭된 리콜이 없으면 빈 페이지라 색인하지 않음 (사이트맵에서도 빠져 있음)
+    robots: recalls.length ? undefined : { index: false, follow: true },
+  })
 }
 
 export default async function CarRecallsPage({ params }: Props) {
