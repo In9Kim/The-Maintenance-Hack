@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
-import { generateAdminToken, verifyAdminToken, ADMIN_COOKIE, ADMIN_COOKIE_MAX_AGE } from "@/lib/admin-auth"
+import {
+  checkAdminPassword,
+  generateAdminToken,
+  verifyAdminToken,
+  ADMIN_COOKIE,
+  ADMIN_COOKIE_MAX_AGE,
+} from "@/lib/admin-auth"
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,7 +15,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "ADMIN_PASSWORD가 서버에 설정되지 않았습니다." }, { status: 503 })
     }
 
-    if (password !== process.env.ADMIN_PASSWORD) {
+    if (!(await checkAdminPassword(password))) {
       return NextResponse.json({ error: "비밀번호가 올바르지 않습니다." }, { status: 401 })
     }
 

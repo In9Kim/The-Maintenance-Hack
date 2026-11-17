@@ -71,7 +71,7 @@ export function CalculatorPage({
   // 마운트 시 전달받은 차량 정보 검증 로그
   useEffect(() => {
     const resolved = allCars.find((c) => c.id === selectedCarId)
-    console.log("[Cost Calculator] 전달받은 차량 정보:", {
+    if (process.env.NODE_ENV !== "production") console.log("[Cost Calculator] 전달받은 차량 정보:", {
       queryModel: initialModelQuery ?? "(직접 접근)",
       resolvedCarId: selectedCarId || "(미매칭)",
       resolvedCarName: resolved

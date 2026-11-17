@@ -1,16 +1,24 @@
 "use client"
 
+import { Fragment } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Wrench } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 
 // "견적서 분석"(Phase 3, 미완성)은 기능이 열릴 때까지 메뉴에서 숨김
+const NAV = [
+  { href: "/", label: "호환성 검증", match: (p: string) => p === "/" },
+  { href: "/calculator", label: "비용 계산기", match: (p: string) => p === "/calculator" },
+  { href: "/cars", label: "차종별 비용", match: (p: string) => p.startsWith("/cars") },
+  { href: "/recalls", label: "리콜 정보", match: (p: string) => p.startsWith("/recalls") },
+]
+
 export function Header() {
   const pathname = usePathname()
 
   const navCls = (active: boolean) =>
-    `rounded-md px-3 py-1.5 transition-colors hover:bg-accent hover:text-foreground ${
+    `rounded-md py-1.5 transition-colors hover:bg-accent hover:text-foreground ${
       active ? "text-foreground font-semibold" : "text-muted-foreground"
     }`
 
@@ -30,25 +38,36 @@ export function Header() {
               </span>
             </Link>
 
-            {/* 네비게이션 */}
-            <nav className="ml-2 flex min-w-0 items-center gap-1 overflow-x-auto whitespace-nowrap text-sm">
-              <Link href="/" className={navCls(pathname === "/")}>
-                호환성 검증
-              </Link>
-              <Separator orientation="vertical" className="mx-1 h-4" />
-              <Link href="/calculator" className={navCls(pathname === "/calculator")}>
-                비용 계산기
-              </Link>
-              <Separator orientation="vertical" className="mx-1 h-4" />
-              <Link href="/cars" className={navCls(pathname.startsWith("/cars"))}>
-                차종별 비용
-              </Link>
-              <Separator orientation="vertical" className="mx-1 h-4" />
-              <Link href="/recalls" className={navCls(pathname.startsWith("/recalls"))}>
-                리콜 정보
-              </Link>
+            {/* 네비게이션 (태블릿·PC: 로고 옆 한 줄) */}
+            <nav aria-label="주 메뉴" className="ml-2 hidden min-w-0 items-center gap-1 whitespace-nowrap text-sm sm:flex">
+              {NAV.map((item, i) => (
+                <Fragment key={item.href}>
+                  {i > 0 && <Separator orientation="vertical" className="mx-1 h-4" />}
+                  <Link
+                    href={item.href}
+                    aria-current={item.match(pathname) ? "page" : undefined}
+                    className={`${navCls(item.match(pathname))} px-3`}
+                  >
+                    {item.label}
+                  </Link>
+                </Fragment>
+              ))}
             </nav>
           </div>
+
+          {/* 네비게이션 (휴대폰: 한 줄에 다 안 들어가서 로고 아래 둘째 줄에 네 개를 고르게) */}
+          <nav aria-label="주 메뉴" className="-mx-2 flex items-center justify-between pb-2 text-sm sm:hidden">
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={item.match(pathname) ? "page" : undefined}
+                className={`${navCls(item.match(pathname))} px-2`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </header>
     </>

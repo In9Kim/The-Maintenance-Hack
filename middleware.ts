@@ -1,24 +1,7 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { ADMIN_COOKIE } from "@/lib/admin-auth"
-
-const SALT = "maintenance-hack-admin-v1"
-
-async function verifyToken(token: string, password: string): Promise<boolean> {
-  const encoder = new TextEncoder()
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(password),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  )
-  const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(SALT))
-  const expected = Array.from(new Uint8Array(sig))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("")
-  return token === expected
-}
+// 토큰 확인은 lib/admin-auth.ts 한 곳에서 (응답 시간이 일정한 비교 포함)
+import { ADMIN_COOKIE, verifyAdminToken } from "@/lib/admin-auth"
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -37,7 +20,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/admin/login", request.url))
   }
 
-  const valid = await verifyToken(token, password)
+  const valid = await verifyAdminToken(token)
   if (!valid) {
     const res = NextResponse.redirect(new URL("/admin/login", request.url))
     res.cookies.delete(ADMIN_COOKIE)
