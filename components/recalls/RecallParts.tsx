@@ -13,6 +13,7 @@ import {
 } from "@/lib/recalls/data"
 import type { RecallNewsItem } from "@/lib/recalls/types"
 import { recallBlogPost } from "@/lib/recalls/blog"
+import { partLabel, recallCars, type RecallGroup } from "@/lib/recalls/highlight"
 
 /** 모든 리콜 페이지 상단: 데이터 기준일 + 차대번호 조회 안내 */
 export function RecallNotice({ carId }: { carId?: string }) {
@@ -218,32 +219,78 @@ export function faqJsonLd(items: { q: string; a: string }[]) {
   }
 }
 
-/** 최근 시작된 리콜 요약 (자동차리콜센터) — 아래 전체 목록의 해당 리콜로 이동 */
-export function LatestRecallList({ recalls }: { recalls: Recall[] }) {
+const SeriousBadge = () => (
+  <span className="shrink-0 rounded bg-red-500/15 px-1.5 py-0.5 text-[11px] font-semibold text-red-400">중대</span>
+)
+
+/**
+ * 주요 리콜 요약 목록 (/recalls 첫 화면). 같은 날 같은 제작사 리콜은 한 줄로 묶고,
+ * 한 줄에는 날짜·제작사·대수·차명·결함 장치만. 누르면 사유·생산기간·블로그 글이 펼쳐진다.
+ */
+export function MajorRecallList({ groups }: { groups: RecallGroup[] }) {
   return (
-    <ul className="space-y-2">
-      {recalls.map((r) => (
-        <li key={r.id}>
-          <a
-            href={`#${r.id}`}
-            className="block rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/50"
-          >
-            <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-              <span>
-                리콜 시작 <strong className="text-foreground">{fmtDate(r.startDate)}</strong>
-              </span>
-              <span>· {r.makerName}</span>
-              {r.count ? <span>· {r.count.toLocaleString("ko-KR")}대</span> : null}
-              {r.serious && (
-                <span className="rounded bg-red-500/15 px-1.5 py-0.5 font-semibold text-red-400">중대리콜</span>
-              )}
-            </div>
-            <div className="text-sm font-semibold leading-snug">
-              {r.sourceTitle ?? [...new Set(r.items.map((i) => i.name))].slice(0, 3).join(", ")}
-            </div>
-          </a>
-        </li>
-      ))}
+    <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+      {groups.map((g) => {
+        const top = g.recalls[0]
+        const more = g.recalls.length - 1
+        return (
+          <li key={g.key}>
+            <details className="group">
+              <summary className="flex cursor-pointer list-none items-start gap-3 px-4 py-3 hover:bg-muted/30 [&::-webkit-details-marker]:hidden">
+                <span className="w-12 shrink-0 pt-0.5 text-xs tabular-nums text-muted-foreground">
+                  {fmtDate(g.startDate).slice(5)}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-2 text-sm font-semibold">
+                    <span className="truncate">
+                      {g.makerName} · {recallCars(top)}
+                    </span>
+                    {g.serious && <SeriousBadge />}
+                  </span>
+                  <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                    {[partLabel(top.part), top.reason].filter(Boolean).join(" — ")}
+                  </span>
+                  {more > 0 && <span className="mt-0.5 block text-xs text-primary">같은 날 리콜 {more}건 더</span>}
+                </span>
+                <span className="shrink-0 pt-0.5 text-right text-xs tabular-nums text-muted-foreground">
+                  {g.count ? `${g.count.toLocaleString("ko-KR")}대` : ""}
+                  <span className="ml-1 inline-block transition-transform group-open:rotate-90">›</span>
+                </span>
+              </summary>
+
+              <div className="space-y-4 border-t border-border/60 bg-muted/10 px-4 py-3 text-sm">
+                {g.recalls.map((r) => (
+                  <div key={r.id}>
+                    <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-medium">
+                      {[...new Set(r.items.map((i) => i.name))].join(", ")}
+                      {r.serious && <SeriousBadge />}
+                    </div>
+                    <p className="mb-1 text-xs text-muted-foreground">
+                      {[partLabel(r.part), r.count ? `대상 ${r.count.toLocaleString("ko-KR")}대` : ""].filter(Boolean).join(" · ")}
+                    </p>
+                    <p className="leading-relaxed">{r.reason}</p>
+                    {recallBlogPost(r.id) && (
+                      <OutboundLink
+                        href={recallBlogPost(r.id)!.url}
+                        target="blog"
+                        className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/15"
+                      >
+                        {recallBlogPost(r.id)!.label} <ExternalLink className="h-3 w-3" />
+                      </OutboundLink>
+                    )}
+                    <Link
+                      href={`/recalls/maker/${r.makerSlug}#${r.id}`}
+                      className="mt-2 block text-xs text-primary hover:underline"
+                    >
+                      생산기간·시정 방법 자세히 보기 →
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </details>
+          </li>
+        )
+      })}
     </ul>
   )
 }

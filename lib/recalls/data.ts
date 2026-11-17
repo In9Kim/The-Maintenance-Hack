@@ -4,6 +4,7 @@ import centerJson from "@/data/recall_center.json"
 import { matchRecallsForCar } from "./match"
 import { displayCarName, displayMaker } from "./display"
 import { latestDate } from "@/lib/indexing"
+import { majorRecallGroups } from "./highlight"
 import type { Recall, RecallCenterData, RecallData, RecallNewsData, RecallNewsItem } from "./types"
 
 /**
@@ -93,10 +94,9 @@ const ALL: Recall[] = [...CENTER_RECALLS, ...NEWS_RECALLS, ...ANNUAL.recalls].ma
 )
 const DATA: RecallData = { ...ANNUAL, recalls: ALL }
 
-/** 자동차리콜센터에서 가져온 리콜 중 이미 시작된 최근 리콜 (시작 예정 리콜은 제외) */
-export function latestCenterRecalls(limit = 6): Recall[] {
-  const today = todayKst()
-  return ALL.filter((r) => r.source === "carkr" && r.startDate <= today).slice(0, limit)
+/** /recalls 첫 화면의 주요 리콜 (최근 90일, 이미 시작한 것만, 같은 날 같은 제작사는 묶음). 규칙은 highlight.ts */
+export function majorRecalls(limit = 15) {
+  return majorRecallGroups(ALL, todayKst(), { days: 90, limit })
 }
 
 /** 최근 국토부 리콜 보도자료 (표를 정리하지 못한 글도 제목·링크는 보여줌) */
@@ -132,19 +132,12 @@ export const RECALL_CENTER_LIST_URL = "https://www.car.go.kr/ri/stat/list.do"
 /** 공공데이터포털 원본 데이터셋 */
 export const RECALL_DATASET_URL = "https://www.data.go.kr/data/3048950/fileData.do"
 
-/** /recalls 첫 화면에 보여줄 최근 리콜 수 */
-export const RECENT_LIMIT = 60
-
 export function recallData(): RecallData {
   return DATA
 }
 
 export function allRecalls(): Recall[] {
   return DATA.recalls
-}
-
-export function recentRecalls(limit = RECENT_LIMIT): Recall[] {
-  return DATA.recalls.slice(0, limit)
 }
 
 export interface RecallMaker {

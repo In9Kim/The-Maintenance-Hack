@@ -46,7 +46,8 @@ const MAKERS: [RegExp, string, string][] = [
   [/^할리데이비슨/, "harley-davidson", "할리데이비슨"],
   [/^폴스타/, "polestar", "폴스타"],
   [/^캐딜락/, "cadillac", "캐딜락"],
-  [/^에프엘오토/, "fl-auto", "에프엘오토코리아"],
+  // 포드·링컨 공식 수입사 (리콜 대상 차명: Explorer, Bronco, MKX, Aviator 등). 주소는 그대로 두고 표시명만 알아보기 쉽게
+  [/^에프엘오토/, "fl-auto", "포드·링컨"],
   // 리콜이 많은데 표에 없어 maker-xxxxxx 주소가 나오던 제작사 (2026-11-14 기준 5건 이상)
   [/^이비온/, "ibion", "이비온"],
   [/^기흥모터스/, "giheung-motors", "기흥모터스"],
