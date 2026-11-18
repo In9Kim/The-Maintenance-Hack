@@ -66,7 +66,9 @@
 
 ## 배포 시 주의
 
-공개 페이지는 빌드 때 미리 만든 정적 캐시(static assets incremental cache)로 제공됩니다. 그래서 **반드시 `npm run deploy`(= `opennextjs-cloudflare build && deploy`)로 배포**해야 합니다. 빌드 뒤 `wrangler deploy`나 `wrangler versions upload`만 쓰면 캐시가 자산에 복사되지 않아 `/cars/...` 페이지가 404가 됩니다. 미리보기 버전 2에서 실제로 겪은 문제이며, `opennextjs-cloudflare populateCache local`을 먼저 실행해 해결했습니다.
+- **운영 배포는 main에 push하면 Cloudflare가 자동으로 합니다** (Workers Builds, `DEPLOY.md`). Cloudflare 빌드 변수(`NEXT_PUBLIC_SITE_URL`, 사이트 소유 확인 값)가 그때만 들어갑니다.
+- **로컬에서 `npm run deploy`로 운영에 올리지 마세요.** 빌드 변수가 없어 사이트맵·canonical 주소가 `http://localhost:3000`이 되고 소유 확인 태그가 빠집니다. 2026-11-19 배포 때 실제로 1분 정도 그렇게 됐다가, push로 시작된 Cloudflare 자동 배포가 덮어써서 정상이 됐습니다.
+- 미리보기(`wrangler versions upload --preview-alias`)를 로컬에서 올릴 때는 빌드 뒤 `opennextjs-cloudflare populateCache local`을 먼저 실행해야 합니다. 빼면 정적 캐시가 자산에 복사되지 않아 `/cars/...` 페이지가 404가 됩니다(미리보기 버전 2에서 겪음).
 
 ## 남은 확인
 
