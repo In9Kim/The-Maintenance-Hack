@@ -49,7 +49,7 @@ export default async function MakerRecallsPage({ params }: Props) {
   const faq = recallFaq(`${maker.name} 차`)
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-10">
+    <div className="mx-auto max-w-5xl px-5 pb-6 pt-6 sm:pt-10">
       <Breadcrumbs
         items={[
           { href: "/", label: "정비핵" },
@@ -58,16 +58,18 @@ export default async function MakerRecallsPage({ params }: Props) {
         ]}
       />
 
-      <h1 className="mb-2 text-2xl font-extrabold tracking-tight sm:text-3xl">{maker.name} 리콜 정보</h1>
-      <p className="mb-6 text-sm text-muted-foreground">
-        {maker.name}의 자동차 리콜 {maker.count}건을 최근 시작일 순으로 정리했습니다.{" "}
-        <Link href="/recalls" className="text-primary hover:underline">
+      <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[36px]">{maker.name} 리콜 정보</h1>
+      <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
+        {maker.name} 자동차 리콜 <b className="num text-foreground">{maker.count}건</b>을 최근 시작일 순으로 정리했어요.{" "}
+        <Link href="/recalls" className="font-semibold text-foreground underline underline-offset-2">
           다른 제작사 보기
         </Link>
       </p>
 
       <RecallNotice />
-      <RecallList recalls={recalls} showMaker={false} />
+      <section className="mt-10" aria-label={`${maker.name} 리콜 목록`}>
+        <RecallList recalls={recalls} showMaker={false} />
+      </section>
       <RecallFaq items={faq} />
       <RecallSource />
       <JsonLd data={faqJsonLd(faq)} />

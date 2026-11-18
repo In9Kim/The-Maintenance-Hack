@@ -2,7 +2,7 @@ import Link from "next/link"
 import { CompatibilityChecker } from "@/components/CompatibilityChecker"
 import { CarPicker, type PickerCar } from "@/components/home/CarPicker"
 import { ReceiptCard } from "@/components/home/ReceiptCard"
-import { carShortName, pageMetadata, partCost, priceBasis, seoCars } from "@/lib/seo"
+import { carShortName, pageMetadata, partCost, priceBasis, seoCars, carTotals } from "@/lib/seo"
 import { majorRecalls, fmtDate } from "@/lib/recalls/data"
 import { recallCars } from "@/lib/recalls/highlight"
 import type { CarModel } from "@/types"
@@ -26,19 +26,6 @@ const POPULAR = [
   "kia-k5-dl3",
 ]
 
-/** 차종의 대표 엔진 기준 소모품 전체 교체 비용 */
-function carTotals(car: CarModel) {
-  const engine = car.engineTypes[0]
-  let dealer = 0
-  let self = 0
-  for (const p of car.parts) {
-    if (p.engine && p.engine !== engine) continue
-    const c = partCost(p)
-    dealer += c.dealer
-    self += c.self
-  }
-  return { dealer, self, save: Math.max(dealer - self, 0) }
-}
 
 const won = (n: number) => `${n.toLocaleString("ko-KR")}원`
 
