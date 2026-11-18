@@ -100,10 +100,16 @@ export default function Home() {
                     <p className="mt-0.5 font-bold">
                       {car.model} <span className="font-semibold text-muted-foreground">{car.generation.replace(/\s*\(.*?\)\s*/g, "")}</span>
                     </p>
-                    <p className="num mt-3 flex flex-col text-[13px] sm:flex-row sm:items-baseline sm:justify-between sm:text-[14px]">
-                      <span className="price-was">{won(t.dealer)}</span>
-                      <span className="font-bold text-primary">{won(t.self)}</span>
-                    </p>
+                    <dl className="mt-3 space-y-0.5 text-[13px] sm:text-[14px]">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <dt className="text-[12px] text-muted-foreground">공식센터</dt>
+                        <dd className="num price-was">{won(t.dealer)}</dd>
+                      </div>
+                      <div className="flex items-baseline justify-between gap-2">
+                        <dt className="text-[12px] text-muted-foreground">직접 구매</dt>
+                        <dd className="num font-bold text-primary">{won(t.self)}</dd>
+                      </div>
+                    </dl>
                   </Link>
                 </li>
               )
