@@ -128,7 +128,7 @@ export function StatsPanel({ cars }: Props) {
               value={totalClicks}
             />
             <StatRow
-              icon={<Wrench className="h-3.5 w-3.5 text-emerald-400" />}
+              icon={<Wrench className="h-3.5 w-3.5 text-primary" />}
               label="공임나라 클릭"
               value={(stats ?? []).reduce((s, c) => s + c.gongimClicks, 0)}
             />
@@ -172,14 +172,14 @@ function CacheSavingsCard({ data }: { data: CacheStatsData | null }) {
   return (
     <div className="rounded-xl border border-border bg-card p-5">
       <div className="mb-4 flex items-center gap-2">
-        <Database className="h-4 w-4 text-emerald-400" />
+        <Database className="h-4 w-4 text-primary" />
         <p className="text-sm font-semibold">Google Sheets 캐시 절감 통계</p>
         {data.sheetsEnabled ? (
-          <span className="ml-auto rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-400">
+          <span className="ml-auto rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-primary">
             연동됨
           </span>
         ) : (
-          <span className="ml-auto rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-400">
+          <span className="ml-auto rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
             미연동
           </span>
         )}
@@ -247,7 +247,7 @@ function MetricTile({
   return (
     <div className="rounded-lg border border-border bg-background p-3">
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p className={`mt-1 text-xl font-extrabold tabular-nums ${highlight ? "text-emerald-400" : "text-foreground"}`}>
+      <p className={`mt-1 text-xl font-extrabold tabular-nums ${highlight ? "text-primary" : "text-foreground"}`}>
         {value}
       </p>
       <p className="mt-0.5 text-xs text-muted-foreground">{sub}</p>

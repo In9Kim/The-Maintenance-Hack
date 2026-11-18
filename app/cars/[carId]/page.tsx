@@ -141,7 +141,7 @@ export default async function CarPage({ params }: Props) {
       </p>
       <Link
         href={`/cars/${car.id}/recalls`}
-        className="mb-6 inline-flex items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-300 hover:bg-amber-500/20"
+        className="mb-6 inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 hover:bg-amber-50"
       >
         {recallCount > 0 ? `리콜 ${recallCount}건 →` : "리콜 정보 →"}
       </Link>

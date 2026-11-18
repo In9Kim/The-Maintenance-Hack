@@ -48,7 +48,7 @@ export function CostDashboard({ car, summary }: CostDashboardProps) {
               <div className="flex shrink-0 items-center gap-1.5">
                 <span className="font-medium tabular-nums">{formatPrice(coupangSubtotal)}</span>
                 {itemSavings > 0 && (
-                  <span className="rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-emerald-400">
+                  <span className="rounded-full bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-primary">
                     -{formatPriceCompact(itemSavings)}
                   </span>
                 )}
@@ -94,7 +94,7 @@ export function CostDashboard({ car, summary }: CostDashboardProps) {
                 서비스 센터
               </p>
               {summary.savingsPercent > 0 && (
-                <span className="rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400">
+                <span className="rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9px] font-bold text-primary">
                   -{summary.savingsPercent}%
                 </span>
               )}
@@ -115,7 +115,7 @@ export function CostDashboard({ car, summary }: CostDashboardProps) {
                 </span>
               </div>
               {summary.savings > 0 && (
-                <p className="text-right text-[10px] font-semibold tabular-nums text-emerald-400">
+                <p className="text-right text-[10px] font-semibold tabular-nums text-primary">
                   {formatPriceCompact(summary.savings)} 저렴
                 </p>
               )}

@@ -20,14 +20,14 @@ export const CATEGORY_LABELS: Record<PartCategory, string> = {
 }
 
 export const CATEGORY_COLORS: Record<PartCategory, string> = {
-  oil: "bg-amber-500/15 text-amber-400 border border-amber-500/25",
-  filter: "bg-blue-500/15 text-blue-400 border border-blue-500/25",
-  brake: "bg-red-500/15 text-red-400 border border-red-500/25",
-  wiper: "bg-sky-500/15 text-sky-400 border border-sky-500/25",
-  spark: "bg-purple-500/15 text-purple-400 border border-purple-500/25",
-  battery: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/25",
-  belt: "bg-orange-500/15 text-orange-400 border border-orange-500/25",
-  fluid: "bg-cyan-500/15 text-cyan-400 border border-cyan-500/25",
+  oil: "bg-amber-50 text-amber-700 border border-amber-200",
+  filter: "bg-blue-50 text-blue-700 border border-blue-200",
+  brake: "bg-red-50 text-red-700 border border-red-200",
+  wiper: "bg-sky-50 text-sky-700 border border-sky-200",
+  spark: "bg-purple-50 text-purple-700 border border-purple-200",
+  battery: "bg-emerald-50 text-primary border border-emerald-200",
+  belt: "bg-orange-50 text-orange-700 border border-orange-200",
+  fluid: "bg-cyan-50 text-cyan-700 border border-cyan-200",
 }
 
 export interface MaintenancePart {

@@ -58,15 +58,15 @@ const STEP_DELAYS  = [2400, 5000, 7800]
 
 // ─── 뱃지 설정 ────────────────────────────────────────────────────
 const BADGE_CONFIG = {
-  YES:       { label: "✅ 호환 가능성 높음",  icon: CheckCircle2, container: "border-emerald-500/30 bg-emerald-500/10", badge: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30", icon_class: "text-emerald-400" },
-  NO:        { label: "❌ 맞지 않을 가능성 높음",     icon: XCircle,      container: "border-red-500/30 bg-red-500/10",         badge: "bg-red-500/15 text-red-300 border border-red-500/30",         icon_class: "text-red-400"     },
-  UNCERTAIN: { label: "⚠️ 확인 필요", icon: AlertTriangle, container: "border-amber-500/30 bg-amber-500/10",    badge: "bg-amber-500/15 text-amber-300 border border-amber-500/30",  icon_class: "text-amber-400"   },
+  YES:       { label: "✅ 호환 가능성 높음",  icon: CheckCircle2, container: "border-emerald-200 bg-emerald-50", badge: "bg-emerald-50 text-primary border border-emerald-200", icon_class: "text-primary" },
+  NO:        { label: "❌ 맞지 않을 가능성 높음",     icon: XCircle,      container: "border-red-200 bg-red-50",         badge: "bg-red-50 text-red-700 border border-red-200",         icon_class: "text-red-700"     },
+  UNCERTAIN: { label: "⚠️ 확인 필요", icon: AlertTriangle, container: "border-amber-200 bg-amber-50",    badge: "bg-amber-50 text-amber-700 border border-amber-200",  icon_class: "text-amber-700"   },
 }
 
 const VERDICT_CONFIG = {
-  YES:       { label: "호환 가능성 높음 ✅", class: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" },
-  NO:        { label: "맞지 않을 가능성 높음 ❌",    class: "bg-red-500/15 text-red-300 border border-red-500/30"             },
-  UNCERTAIN: { label: "확인 필요 ⚠️", class: "bg-amber-500/15 text-amber-300 border border-amber-500/30"      },
+  YES:       { label: "호환 가능성 높음 ✅", class: "bg-emerald-50 text-primary border border-emerald-200" },
+  NO:        { label: "맞지 않을 가능성 높음 ❌",    class: "bg-red-50 text-red-700 border border-red-200"             },
+  UNCERTAIN: { label: "확인 필요 ⚠️", class: "bg-amber-50 text-amber-700 border border-amber-200"      },
 }
 
 // ─── 하위 컴포넌트 ─────────────────────────────────────────────────
@@ -123,7 +123,7 @@ function StepIndicator({ steps, activeIdx }: { steps: string[]; activeIdx: numbe
               active ? "text-primary" : done ? "text-muted-foreground/50" : "text-muted-foreground/25"
             }`}
           >
-            {done   ? <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+            {done   ? <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-primary" />
             : active ? <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin" />
             :           <span className="h-3.5 w-3.5 shrink-0 rounded-full border border-current" />}
             <span className={done ? "line-through" : ""}>{step}</span>
@@ -254,7 +254,7 @@ function ResultCard({ data, onReset, userInput }: { data: ApiResponse; onReset: 
         {/* ▶ 쿠팡 파트너스 CTA */}
         <div className="space-y-2">
           {data.cacheHit && (
-            <p className="text-center text-xs font-semibold text-emerald-400">
+            <p className="text-center text-xs font-semibold text-primary">
               ✅ 이미 검증된 규격입니다
             </p>
           )}
@@ -280,7 +280,7 @@ function ResultCard({ data, onReset, userInput }: { data: ApiResponse; onReset: 
               </>
             )}
           </a>
-          <p className="text-center text-xs text-gray-500">
+          <p className="text-center text-xs text-muted-foreground">
             이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
           </p>
         </div>
@@ -324,7 +324,7 @@ function CategorySelect({
         ))}
       </select>
       {!selected && (
-        <p className="mt-1.5 text-xs text-amber-400">
+        <p className="mt-1.5 text-xs text-amber-700">
           ⚠ 카테고리를 선택해야 검증 버튼이 활성화됩니다.
         </p>
       )}
@@ -460,7 +460,7 @@ export function CompatibilityChecker({ heroMode = false }: CompatibilityCheckerP
           />
           <div className="mt-1.5 flex justify-between">
             <p className="text-xs text-muted-foreground">자동차 등록증 또는 차량 앞유리 좌측 하단에서 확인</p>
-            <span className={`font-mono text-xs ${vinFormatted.length === 17 ? "text-emerald-400" : "text-muted-foreground"}`}>
+            <span className={`font-mono text-xs ${vinFormatted.length === 17 ? "text-primary" : "text-muted-foreground"}`}>
               {vinFormatted.length} / 17
             </span>
           </div>
@@ -542,8 +542,8 @@ export function CompatibilityChecker({ heroMode = false }: CompatibilityCheckerP
 
         {/* 오류 메시지 */}
         {errorMsg && pageState !== "loading" && (
-          <div className="rounded-lg border border-amber-500/25 bg-amber-500/10 px-4 py-3">
-            <p className="text-xs text-amber-300">{errorMsg}</p>
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
+            <p className="text-xs text-amber-700">{errorMsg}</p>
           </div>
         )}
 
@@ -580,8 +580,8 @@ export function CompatibilityChecker({ heroMode = false }: CompatibilityCheckerP
 
       {/* 시스템 오류 */}
       {pageState === "error" && (
-        <div className="mt-4 rounded-lg border border-red-500/25 bg-red-500/10 px-4 py-3">
-          <p className="text-sm font-semibold text-red-400">분석 실패</p>
+        <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+          <p className="text-sm font-semibold text-red-700">분석 실패</p>
           <p className="mt-1 text-xs text-muted-foreground">{errorMsg}</p>
           <button
             onClick={handleReset}

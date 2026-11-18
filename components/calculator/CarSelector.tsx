@@ -157,7 +157,7 @@ export function CarSelector({
           </div>
           <div className="ml-auto flex items-center gap-2">
             {isFromVerify && (
-              <span className="flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-400">
+              <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-primary">
                 <ShieldCheck className="h-3 w-3" />
                 검증됨
               </span>
@@ -305,13 +305,13 @@ export function CarSelector({
           </Button>
 
           {generateInfo && (
-            <p className="rounded-lg bg-blue-500/10 px-3 py-2 text-xs text-blue-400">
+            <p className="rounded-lg bg-blue-50 px-3 py-2 text-xs text-blue-700">
               ℹ️ {generateInfo}
             </p>
           )}
 
           {generateError && (
-            <p className="rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-400">
+            <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
               {generateError}
             </p>
           )}

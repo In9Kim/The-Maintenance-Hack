@@ -177,7 +177,7 @@ function PartCard({ part, isChecked, subtotal, onToggle }: PartCardProps) {
           </span>
           <span>+</span>
           <span className="flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+            <span className="h-1.5 w-1.5 rounded-full bg-orange-500" />
             공임 {part.laborCost === 0 ? "셀프 교체" : formatPrice(part.laborCost)}
           </span>
 

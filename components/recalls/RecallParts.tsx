@@ -18,9 +18,9 @@ import { partLabel, recallCars, type RecallGroup } from "@/lib/recalls/highlight
 /** 모든 리콜 페이지 상단: 데이터 기준일 + 차대번호 조회 안내 */
 export function RecallNotice({ carId }: { carId?: string }) {
   return (
-    <div className="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm">
+    <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm">
       <div className="flex items-start gap-2">
-        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
+        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
         <div className="space-y-2">
           <p className="font-semibold">실제 대상 여부는 자동차리콜센터에서 차대번호로 확인하세요.</p>
           <p className="text-muted-foreground">
@@ -90,7 +90,7 @@ export function RecallList({ recalls, showMaker = true }: { recalls: Recall[]; s
             )}
             {r.count ? <span>대상 {r.count.toLocaleString("ko-KR")}대</span> : null}
             {r.serious && (
-              <span className="rounded bg-red-500/15 px-1.5 py-0.5 font-semibold text-red-400">중대리콜</span>
+              <span className="rounded bg-red-50 px-1.5 py-0.5 font-semibold text-red-700">중대리콜</span>
             )}
             {r.source === "carkr" && (
               <a href={RECALL_CENTER_LIST_URL} target="_blank" rel="noopener" className="rounded bg-muted px-1.5 py-0.5 hover:text-foreground">
@@ -220,7 +220,7 @@ export function faqJsonLd(items: { q: string; a: string }[]) {
 }
 
 const SeriousBadge = () => (
-  <span className="shrink-0 rounded bg-red-500/15 px-1.5 py-0.5 text-[11px] font-semibold text-red-400">중대</span>
+  <span className="shrink-0 rounded bg-red-50 px-1.5 py-0.5 text-[11px] font-semibold text-red-700">중대</span>
 )
 
 /**

@@ -22,8 +22,8 @@ export default async function AdminDashboardPage() {
         <h1 className="mb-4 text-2xl font-bold">대시보드</h1>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <SummaryCard label="전체 차종" value={cars.length} color="text-foreground" />
-          <SummaryCard label="검증 완료" value={verified} color="text-emerald-400" />
-          <SummaryCard label="검증 대기" value={unverified} color="text-amber-400" />
+          <SummaryCard label="검증 완료" value={verified} color="text-primary" />
+          <SummaryCard label="검증 대기" value={unverified} color="text-amber-700" />
           <SummaryCard
             label="전체 부품 항목"
             value={cars.reduce((s, c) => s + c.parts.length, 0)}

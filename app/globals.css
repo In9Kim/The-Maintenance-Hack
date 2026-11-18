@@ -4,26 +4,27 @@
 
 @layer base {
   :root {
-    --background: 215 28% 7%;
-    --foreground: 210 40% 96%;
-    --card: 215 25% 10%;
-    --card-foreground: 210 40% 96%;
-    --popover: 215 28% 7%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 142 71% 45%;
-    --primary-foreground: 144 80% 10%;
-    --secondary: 215 20% 16%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 215 20% 16%;
-    --muted-foreground: 215 15% 58%;
-    --accent: 215 20% 16%;
-    --accent-foreground: 210 40% 96%;
-    --destructive: 0 63% 38%;
-    --destructive-foreground: 210 40% 96%;
-    --border: 215 20% 18%;
-    --input: 215 20% 18%;
-    --ring: 142 71% 40%;
-    --radius: 0.75rem;
+    /* docs/portfolio/DESIGN.md "견적서 해독" — 라이트 한 가지 */
+    --background: 216 33% 97%;      /* paper #F5F7FA */
+    --foreground: 221 51% 16%;      /* ink #14213D */
+    --card: 0 0% 100%;
+    --card-foreground: 221 51% 16%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 221 51% 16%;
+    --primary: 159 83% 26%;         /* save #0B7A53 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 213 33% 95%;
+    --secondary-foreground: 221 51% 16%;
+    --muted: 213 33% 95%;
+    --muted-foreground: 216 21% 37%; /* ink-muted #4A5A72 */
+    --accent: 213 33% 95%;
+    --accent-foreground: 221 51% 16%;
+    --destructive: 4 76% 40%;       /* dealer #B42318 */
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 28% 89%;          /* line #DCE3EC */
+    --input: 214 24% 82%;
+    --ring: 159 83% 26%;
+    --radius: 0.875rem;
   }
 }
 
@@ -50,4 +51,29 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground));
+}
+
+/* 한글은 단어 중간에서 줄을 바꾸지 않고, 금액은 자리를 맞춘다 */
+body {
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  letter-spacing: -0.01em;
+}
+h1, h2, h3 { letter-spacing: -0.03em; }
+.num, table, [data-num] { font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* 영수증 아래 톱니 가장자리 */
+.receipt::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: -1px;
+  height: 7px;
+  background: radial-gradient(circle at 7px 8px, hsl(var(--background)) 5.5px, transparent 6px) 0 0 / 14px 8px repeat-x;
 }
