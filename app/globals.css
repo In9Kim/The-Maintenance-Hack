@@ -77,3 +77,13 @@ h1, h2, h3 { letter-spacing: -0.03em; }
   height: 7px;
   background: radial-gradient(circle at 7px 8px, hsl(var(--background)) 5.5px, transparent 6px) 0 0 / 14px 8px repeat-x;
 }
+
+@layer components {
+  /* 공식센터 금액: 회색 취소선 (빨강보다 덜 공격적, 초록 "아끼는 돈"만 눈에 띄게) */
+  .price-was {
+    color: #5f6e85;
+    text-decoration: line-through;
+    text-decoration-color: #8a97aa;
+    text-decoration-thickness: 1.5px;
+  }
+}

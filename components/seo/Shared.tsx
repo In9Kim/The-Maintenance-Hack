@@ -67,7 +67,3 @@ export function JsonLd({ data }: { data: unknown }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
 }
 
-/** @deprecated 부품 페이지 개편 전까지 임시 */
-export function PartnersDisclosure() {
-  return <AffiliateNotice className="mt-10" />
-}

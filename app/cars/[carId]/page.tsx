@@ -11,6 +11,7 @@ import {
   intervalText,
   calculatorHref,
   SITE_URL,
+  priceBasis,
   pageMetadata,
 } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
@@ -97,7 +98,7 @@ function PartsList({ car, parts }: { car: CarModel; parts: MaintenancePart[] }) 
               <div className="hidden text-[14px] text-muted-foreground sm:block">{interval ?? "-"}</div>
               <div className="num mt-2 text-[14px] sm:mt-0 sm:text-right">
                 <span className="mr-1.5 text-muted-foreground sm:hidden">공식센터</span>
-                <span className="text-[#B42318] line-through decoration-[#B42318]/60 sm:text-foreground sm:no-underline">{formatPrice(c.dealer)}</span>
+                <span className="price-was sm:text-foreground sm:no-underline">{formatPrice(c.dealer)}</span>
               </div>
               <div className="num mt-2 text-right text-[15px] sm:mt-0">
                 <span className="font-bold text-primary">{formatPrice(c.self)}</span>
@@ -188,6 +189,7 @@ export default async function CarPage({ params }: Props) {
           title={`소모품 한 번씩 모두 교체${multi ? ` · ${groups[0].engine}` : ""}`}
           dealer={totals.dealer}
           self={totals.self}
+          basis={priceBasis(car)}
         />
       </div>
 
@@ -208,7 +210,7 @@ export default async function CarPage({ params }: Props) {
                   <div key={g.engine} className="pt-4">
                     <p className="num mb-3 text-[14px] text-muted-foreground">
                       {g.engine} 전체{" "}
-                      <span className="line-through decoration-[#B42318]/60">{formatPrice(t.dealer)}</span>
+                      <span className="price-was">{formatPrice(t.dealer)}</span>
                       {" → "}
                       <b className="text-primary">{formatPrice(t.self)}</b>
                     </p>

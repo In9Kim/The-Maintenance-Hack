@@ -2,7 +2,7 @@ import Link from "next/link"
 import { CompatibilityChecker } from "@/components/CompatibilityChecker"
 import { CarPicker, type PickerCar } from "@/components/home/CarPicker"
 import { ReceiptCard } from "@/components/home/ReceiptCard"
-import { carShortName, pageMetadata, partCost, seoCars } from "@/lib/seo"
+import { carShortName, pageMetadata, partCost, priceBasis, seoCars } from "@/lib/seo"
 import { majorRecalls, fmtDate } from "@/lib/recalls/data"
 import { recallCars } from "@/lib/recalls/highlight"
 import type { CarModel } from "@/types"
@@ -79,7 +79,7 @@ export default function Home() {
         </div>
         {sorento && oil && oilCost && (
           <div className="mx-auto w-full max-w-sm lg:mx-0 lg:justify-self-end">
-            <ReceiptCard title={`${carShortName(sorento)} · 엔진오일 교체 예시`} dealer={oilCost.dealer} self={oilCost.self} />
+            <ReceiptCard title={`${carShortName(sorento)} · 엔진오일 교체 예시`} dealer={oilCost.dealer} self={oilCost.self} basis={priceBasis(sorento)} />
             <Link
               href={`/cars/${sorento.id}`}
               className="mt-5 inline-flex min-h-[44px] items-center text-[14px] font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-primary"
@@ -114,7 +114,7 @@ export default function Home() {
                       {car.model} <span className="font-semibold text-muted-foreground">{car.generation.replace(/\s*\(.*?\)\s*/g, "")}</span>
                     </p>
                     <p className="num mt-3 flex flex-col text-[13px] sm:flex-row sm:items-baseline sm:justify-between sm:text-[14px]">
-                      <span className="text-muted-foreground line-through decoration-[#B42318]/60">{won(t.dealer)}</span>
+                      <span className="price-was">{won(t.dealer)}</span>
                       <span className="font-bold text-primary">{won(t.self)}</span>
                     </p>
                   </Link>
