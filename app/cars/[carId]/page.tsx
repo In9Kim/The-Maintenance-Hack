@@ -11,10 +11,13 @@ import {
   intervalText,
   calculatorHref,
   SITE_URL,
+  priceBasis,
   pageMetadata,
 } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
-import { Breadcrumbs, JsonLd, PartnersDisclosure } from "@/components/seo/Shared"
+import { AffiliateNotice, Breadcrumbs, EstimateNote, JsonLd } from "@/components/seo/Shared"
+import { ReceiptCard } from "@/components/home/ReceiptCard"
+import { EngineTabs } from "@/components/cars/EngineTabs"
 import { recallsForCar } from "@/lib/recalls/data"
 import { engineGroups } from "@/lib/engines"
 import { coupangLinksFor } from "@/lib/coupang-links"
@@ -31,12 +34,12 @@ function totalsOf(parts: MaintenancePart[]) {
   )
 }
 
-/** 규격 옆 "이 규격 제품 보기" — 규격이 정확히 맞는 상품을 넣어 둔 소모품만 (data/coupang-links.json) */
+/** 규격 아래 "규격 맞는 상품" — 규격이 정확히 맞는 상품을 넣어 둔 소모품만 (data/coupang-links.json) */
 function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
   const links = coupangLinksFor(part)
   if (!links.length) return null
   return (
-    <div className="mt-1 space-y-0.5">
+    <div className="mt-1.5 space-y-1">
       {links.map((l) => (
         <OutboundLink
           key={l.url}
@@ -45,51 +48,65 @@ function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
           carId={car.id}
           partId={part.id}
           sponsored
-          className="block text-xs font-semibold text-primary hover:underline"
+          className="inline-flex min-h-[32px] flex-wrap items-center gap-x-1.5 text-[13px] font-semibold text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary"
         >
-          이 규격 제품 보기 ↗ <span className="font-normal text-muted-foreground">{l.product}</span>
+          규격 맞는 상품 보기 (쿠팡)
+          <span className="font-normal text-muted-foreground no-underline">{l.product}</span>
         </OutboundLink>
       ))}
     </div>
   )
 }
 
-function PartsTable({ car, parts }: { car: CarModel; parts: MaintenancePart[] }) {
+/**
+ * 소모품 목록: 휴대폰은 행마다 카드(가격이 항상 보이게), PC는 표처럼 열을 맞춘 격자.
+ * 같은 마크업 하나를 CSS 격자로만 바꿔서 링크가 두 번 나오지 않는다.
+ */
+const COLS = "sm:grid-cols-[1.25fr_2fr_1fr_0.9fr_1fr]"
+
+function PartsList({ car, parts }: { car: CarModel; parts: MaintenancePart[] }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-border">
-      <table className="w-full min-w-[560px] text-sm">
-        <thead className="bg-muted/40 text-left text-xs text-muted-foreground">
-          <tr>
-            <th className="px-3 py-2 font-medium">항목</th>
-            <th className="px-3 py-2 font-medium">규격</th>
-            <th className="px-3 py-2 font-medium">교체 주기</th>
-            <th className="px-3 py-2 text-right font-medium">공식센터</th>
-            <th className="px-3 py-2 text-right font-medium">쿠팡 부품 + 공임나라</th>
-          </tr>
-        </thead>
-        <tbody>
-          {parts.map((part) => {
-            const c = partCost(part)
-            return (
-              <tr key={part.id} className="border-t border-border align-top">
-                <td className="px-3 py-2.5">
-                  <Link href={`/cars/${car.id}/${partSlug(car, part)}`} className="font-medium text-primary hover:underline">
-                    {part.name}
-                  </Link>
-                </td>
-                <td className="px-3 py-2.5 text-muted-foreground">
-                  {part.spec}
-                  {part.partNumber && <div className="text-xs">순정 품번 {part.partNumber}</div>}
-                  <SpecLinks car={car} part={part} />
-                </td>
-                <td className="px-3 py-2.5 text-muted-foreground">{intervalText(part) ?? "-"}</td>
-                <td className="px-3 py-2.5 text-right">{formatPrice(c.dealer)}</td>
-                <td className="px-3 py-2.5 text-right font-semibold text-primary">{formatPrice(c.self)}</td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+    <div className="overflow-hidden rounded-[14px] border border-border bg-card">
+      <div className={`hidden gap-4 border-b border-border bg-muted px-4 py-2.5 text-[13px] font-semibold text-muted-foreground sm:grid ${COLS}`} aria-hidden>
+        <span>항목</span>
+        <span>규격</span>
+        <span>교체 주기</span>
+        <span className="text-right">공식센터</span>
+        <span className="text-right">직접 구매+공임나라</span>
+      </div>
+      <ul className="divide-y divide-border">
+        {parts.map((part) => {
+          const c = partCost(part)
+          const interval = intervalText(part)
+          return (
+            <li key={part.id} className={`grid grid-cols-2 gap-x-4 gap-y-1 px-4 py-4 sm:items-start ${COLS}`}>
+              <div className="col-span-2 flex items-start justify-between gap-3 sm:col-span-1 sm:block">
+                <Link href={`/cars/${car.id}/${partSlug(car, part)}`} className="font-bold underline decoration-border underline-offset-4 hover:decoration-primary">
+                  {part.name}
+                </Link>
+                {interval && (
+                  <span className="shrink-0 rounded-full bg-muted px-2.5 py-0.5 text-[12px] font-medium text-muted-foreground sm:hidden">
+                    {interval}
+                  </span>
+                )}
+              </div>
+              <div className="col-span-2 text-[14px] leading-relaxed text-muted-foreground sm:col-span-1">
+                {part.spec}
+                {part.partNumber && <div className="text-[13px]">순정 품번 {part.partNumber}</div>}
+                <SpecLinks car={car} part={part} />
+              </div>
+              <div className="hidden text-[14px] text-muted-foreground sm:block">{interval ?? "-"}</div>
+              <div className="num mt-2 text-[14px] sm:mt-0 sm:text-right">
+                <span className="mr-1.5 text-muted-foreground sm:hidden">공식센터</span>
+                <span className="price-was sm:text-foreground sm:no-underline">{formatPrice(c.dealer)}</span>
+              </div>
+              <div className="num mt-2 text-right text-[15px] sm:mt-0">
+                <span className="font-bold text-primary">{formatPrice(c.self)}</span>
+              </div>
+            </li>
+          )
+        })}
+      </ul>
     </div>
   )
 }
@@ -125,8 +142,11 @@ export default async function CarPage({ params }: Props) {
   const totals = totalsOf(groups[0].parts)
   const sources = [...new Set(car.parts.map((p) => p.source).filter(Boolean))] as string[]
 
+  const hasLinks = car.parts.some((p) => coupangLinksFor(p).length > 0)
+  const engineId = (e: string) => `engine-${e.replace(/[^\w가-힣]+/g, "-")}`
+
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-10">
+    <div className="mx-auto max-w-5xl px-5 pb-6 pt-6 sm:pt-10">
       <Breadcrumbs
         items={[
           { href: "/", label: "정비핵" },
@@ -135,70 +155,98 @@ export default async function CarPage({ params }: Props) {
         ]}
       />
 
-      <h1 className="mb-2 text-2xl font-extrabold tracking-tight sm:text-3xl">{name} 소모품 교체 비용</h1>
-      <p className="mb-3 text-sm text-muted-foreground">
-        {car.generation} · {car.yearRange} · {car.engineTypes.join(" / ")}
-      </p>
-      <Link
-        href={`/cars/${car.id}/recalls`}
-        className="mb-6 inline-flex items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-300 hover:bg-amber-500/20"
-      >
-        {recallCount > 0 ? `리콜 ${recallCount}건 →` : "리콜 정보 →"}
-      </Link>
-
-      <div className="mb-8 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-border bg-card p-4">
-          <div className="text-xs text-muted-foreground">공식센터 예상 (전체{multi ? ` · ${groups[0].engine}` : ""})</div>
-          <div className="mt-1 text-lg font-bold">{formatPrice(totals.dealer)}</div>
+      <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start lg:gap-12">
+        <div>
+          <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[36px]">{name} 소모품 교체 비용</h1>
+          <p className="mt-2 text-[15px] text-muted-foreground">
+            {car.generation} · {car.yearRange}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {multi
+              ? groups.map((g) => (
+                  <a
+                    key={g.engine}
+                    href={`#${engineId(g.engine!)}`}
+                    className="inline-flex min-h-[36px] items-center rounded-full border border-border bg-card px-3.5 text-[13px] font-semibold hover:border-primary/50"
+                  >
+                    {g.engine}
+                  </a>
+                ))
+              : car.engineTypes.map((e) => (
+                  <span key={e} className="inline-flex min-h-[36px] items-center rounded-full border border-border bg-card px-3.5 text-[13px] font-semibold">
+                    {e}
+                  </span>
+                ))}
+            <Link
+              href={`/cars/${car.id}/recalls`}
+              className="inline-flex min-h-[36px] items-center rounded-full bg-[#FFF6ED] px-3.5 text-[13px] font-semibold text-[#B54708] hover:brightness-95"
+            >
+              {recallCount > 0 ? `리콜 ${recallCount}건` : "리콜 정보"}
+            </Link>
+          </div>
         </div>
-        <div className="rounded-xl border border-border bg-card p-4">
-          <div className="text-xs text-muted-foreground">쿠팡 부품 + 공임나라</div>
-          <div className="mt-1 text-lg font-bold text-primary">{formatPrice(totals.self)}</div>
-        </div>
-        <div className="rounded-xl border border-primary/40 bg-primary/10 p-4">
-          <div className="text-xs text-muted-foreground">절약 가능</div>
-          <div className="mt-1 text-lg font-bold text-primary">{formatPrice(Math.max(totals.dealer - totals.self, 0))}</div>
-        </div>
+        <ReceiptCard
+          title={`소모품 한 번씩 모두 교체${multi ? ` · ${groups[0].engine}` : ""}`}
+          dealer={totals.dealer}
+          self={totals.self}
+          basis={priceBasis(car)}
+        />
       </div>
 
-      <h2 className="mb-3 text-lg font-bold">항목별 규격과 비용</h2>
-      {multi ? (
-        <div className="space-y-8">
-          <p className="text-sm text-muted-foreground">엔진마다 엔진오일·필터 등 규격이 달라 엔진별로 나눴습니다. 내 차 엔진 표를 보세요.</p>
-          {groups.map((g) => {
-            const t = totalsOf(g.parts)
-            return (
-              <section key={g.engine} id={`engine-${partSlug(car, { id: `${car.id}-${g.engine}` } as MaintenancePart).replace(/[^\w가-힣-]/g, "")}`}>
-                <h3 className="mb-2 flex flex-wrap items-baseline justify-between gap-2 text-base font-bold">
-                  {g.engine}
-                  <span className="text-xs font-normal text-muted-foreground">
-                    공식센터 {formatPrice(t.dealer)} → 쿠팡 부품+공임나라 <b className="text-primary">{formatPrice(t.self)}</b>
-                  </span>
-                </h3>
-                <PartsTable car={car} parts={g.parts} />
-              </section>
-            )
-          })}
-        </div>
-      ) : (
-        <PartsTable car={car} parts={car.parts} />
-      )}
-      {sources.length > 0 && (
-        <p className="mt-3 text-xs text-muted-foreground">
-          규격·교체 주기 출처: {sources.join(" · ")}. 가격은 시세를 바탕으로 한 예상치이며, 구매 전 차대번호·순정 품번으로 확인하세요.
+      <section className="mt-12">
+        <h2 className="text-[20px] font-bold sm:text-[24px]">항목별 규격과 비용</h2>
+        <p className="mt-1.5 text-[14px] leading-relaxed text-muted-foreground">
+          {multi
+            ? "엔진마다 엔진오일·점화플러그 규격이 달라 엔진별로 나눴어요. 내 차 엔진을 보세요."
+            : "항목을 누르면 규격과 교체 비용을 자세히 볼 수 있어요."}
         </p>
-      )}
+        {hasLinks && <AffiliateNotice className="mt-4" />}
+        {multi ? (
+          <div className="mt-5">
+            <EngineTabs engines={groups.map((g) => g.engine!)} ids={groups.map((g) => engineId(g.engine!))}>
+              {groups.map((g) => {
+                const t = totalsOf(g.parts)
+                return (
+                  <div key={g.engine} className="pt-4">
+                    <p className="num mb-3 text-[14px] text-muted-foreground">
+                      {g.engine} 전체{" "}
+                      <span className="price-was">{formatPrice(t.dealer)}</span>
+                      {" → "}
+                      <b className="text-primary">{formatPrice(t.self)}</b>
+                    </p>
+                    <PartsList car={car} parts={g.parts} />
+                  </div>
+                )
+              })}
+            </EngineTabs>
+          </div>
+        ) : (
+          <div className="mt-5">
+            <PartsList car={car} parts={car.parts} />
+          </div>
+        )}
+        {sources.length > 0 && (
+          <details className="mt-4 text-[13px] text-muted-foreground">
+            <summary className="min-h-[44px] cursor-pointer content-center font-semibold text-foreground">규격·교체 주기 출처</summary>
+            <p className="leading-relaxed">{sources.join(" · ")}. 가격은 시세를 바탕으로 한 예상치예요.</p>
+          </details>
+        )}
+      </section>
 
-      <div className="mt-6">
+      <div className="mt-8 rounded-2xl border border-border bg-card p-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
+        <div>
+          <p className="font-bold">이번에 바꿀 것만 골라 보세요</p>
+          <p className="mt-1 text-[14px] text-muted-foreground">계산기에서 항목을 체크하면 합계가 바로 바뀌어요.</p>
+        </div>
         <Link
           href={calculatorHref(car)}
-          className="inline-flex rounded-lg border border-primary/50 px-4 py-2.5 text-sm font-semibold text-primary hover:bg-primary/10"
+          className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-primary px-5 text-[15px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px sm:mt-0 sm:w-auto"
         >
-          내 정비 항목만 골라 계산하기 →
+          내 정비 항목 계산하기
         </Link>
       </div>
 
-      <PartnersDisclosure />
+      <EstimateNote />
 
       <JsonLd
         data={{

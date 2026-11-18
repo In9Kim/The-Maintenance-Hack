@@ -23,7 +23,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
   return (
     <>
     <JsonLd data={breadcrumbJsonLd(items)} />
-    <nav aria-label="breadcrumb" className="mb-6 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+    <nav aria-label="breadcrumb" className="mb-5 flex flex-wrap items-center gap-1 text-[13px] text-muted-foreground">
       {items.map((it, i) => (
         <span key={i} className="flex items-center gap-1">
           {i > 0 && <ChevronRight className="h-3 w-3" />}
@@ -41,14 +41,24 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
   )
 }
 
-/** 쿠팡 파트너스 고지 문구 (파트너스 링크가 있는 페이지에 필수) */
-export function PartnersDisclosure() {
+/**
+ * 제휴 링크 고지 (공정위 추천·보증 심사지침: 확정적 표현, 소비자가 쉽게 보는 위치)
+ * 제휴 링크가 실제로 있는 화면에서, 그 링크 바로 위에 둔다.
+ */
+export function AffiliateNotice({ className = "" }: { className?: string }) {
   return (
-    <p className="mt-10 rounded-lg border border-border bg-muted/30 p-3 text-xs leading-relaxed text-muted-foreground">
-      이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
-      <br />
-      부품 규격·가격·공임은 참고용 예상치이며 연식·엔진·옵션에 따라 다를 수 있습니다. 구매 전 차량 등록증의
-      차대번호로 부품 번호를 꼭 확인하세요.
+    <p className={`rounded-[10px] bg-muted px-3 py-2 text-[13px] leading-relaxed text-muted-foreground ${className}`}>
+      이 페이지의 상품 링크는 쿠팡 파트너스 활동의 일환으로, 구매가 발생하면 일정액의 수수료를 제공받습니다.
+    </p>
+  )
+}
+
+/** 페이지 끝 안내: 가격·규격은 참고용 */
+export function EstimateNote() {
+  return (
+    <p className="mt-10 border-t border-border pt-4 text-[13px] leading-relaxed text-muted-foreground">
+      부품 규격·가격·공임은 참고용 예상치이며 연식·엔진·옵션에 따라 다를 수 있습니다. 구매 전 차량 등록증의 차대번호로 부품
+      번호를 꼭 확인하세요.
     </p>
   )
 }
@@ -56,3 +66,4 @@ export function PartnersDisclosure() {
 export function JsonLd({ data }: { data: unknown }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
 }
+

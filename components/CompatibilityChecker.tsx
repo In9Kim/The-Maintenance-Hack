@@ -13,8 +13,6 @@ import {
   RotateCcw,
   Calculator,
   ArrowRight,
-  ShoppingCart,
-  ExternalLink,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { track } from "@/lib/track"
@@ -58,15 +56,15 @@ const STEP_DELAYS  = [2400, 5000, 7800]
 
 // ─── 뱃지 설정 ────────────────────────────────────────────────────
 const BADGE_CONFIG = {
-  YES:       { label: "✅ 호환 가능성 높음",  icon: CheckCircle2, container: "border-emerald-500/30 bg-emerald-500/10", badge: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30", icon_class: "text-emerald-400" },
-  NO:        { label: "❌ 맞지 않을 가능성 높음",     icon: XCircle,      container: "border-red-500/30 bg-red-500/10",         badge: "bg-red-500/15 text-red-300 border border-red-500/30",         icon_class: "text-red-400"     },
-  UNCERTAIN: { label: "⚠️ 확인 필요", icon: AlertTriangle, container: "border-amber-500/30 bg-amber-500/10",    badge: "bg-amber-500/15 text-amber-300 border border-amber-500/30",  icon_class: "text-amber-400"   },
+  YES:       { label: "✅ 호환 가능성 높음",  icon: CheckCircle2, container: "border-emerald-200 bg-emerald-50", badge: "bg-emerald-50 text-primary border border-emerald-200", icon_class: "text-primary" },
+  NO:        { label: "❌ 맞지 않을 가능성 높음",     icon: XCircle,      container: "border-red-200 bg-red-50",         badge: "bg-red-50 text-red-700 border border-red-200",         icon_class: "text-red-700"     },
+  UNCERTAIN: { label: "⚠️ 확인 필요", icon: AlertTriangle, container: "border-amber-200 bg-amber-50",    badge: "bg-amber-50 text-amber-700 border border-amber-200",  icon_class: "text-amber-700"   },
 }
 
 const VERDICT_CONFIG = {
-  YES:       { label: "호환 가능성 높음 ✅", class: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" },
-  NO:        { label: "맞지 않을 가능성 높음 ❌",    class: "bg-red-500/15 text-red-300 border border-red-500/30"             },
-  UNCERTAIN: { label: "확인 필요 ⚠️", class: "bg-amber-500/15 text-amber-300 border border-amber-500/30"      },
+  YES:       { label: "호환 가능성 높음 ✅", class: "bg-emerald-50 text-primary border border-emerald-200" },
+  NO:        { label: "맞지 않을 가능성 높음 ❌",    class: "bg-red-50 text-red-700 border border-red-200"             },
+  UNCERTAIN: { label: "확인 필요 ⚠️", class: "bg-amber-50 text-amber-700 border border-amber-200"      },
 }
 
 // ─── 하위 컴포넌트 ─────────────────────────────────────────────────
@@ -123,7 +121,7 @@ function StepIndicator({ steps, activeIdx }: { steps: string[]; activeIdx: numbe
               active ? "text-primary" : done ? "text-muted-foreground/50" : "text-muted-foreground/25"
             }`}
           >
-            {done   ? <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+            {done   ? <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-primary" />
             : active ? <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin" />
             :           <span className="h-3.5 w-3.5 shrink-0 rounded-full border border-current" />}
             <span className={done ? "line-through" : ""}>{step}</span>
@@ -134,29 +132,10 @@ function StepIndicator({ steps, activeIdx }: { steps: string[]; activeIdx: numbe
   )
 }
 
-// "기아 K3" → "K3", "현대 아반떼 CN7" → "아반떼 CN7" (첫 단어=브랜드 제거)
-function extractModelName(manufacturerModel: string): string {
-  const parts = manufacturerModel.trim().split(/\s+/)
-  return parts.length > 1 ? parts.slice(1).join(" ") : manufacturerModel
-}
-
-function buildCoupangSearchUrl(query: string): string {
-  const affiliateId = process.env.NEXT_PUBLIC_COUPANG_AFFILIATE_ID ?? ""
-  return `https://link.coupang.com/a/search?q=${encodeURIComponent(query)}&lptag=${encodeURIComponent(affiliateId)}`
-}
-
 function ResultCard({ data, onReset, userInput }: { data: ApiResponse; onReset: () => void; userInput: string }) {
   const cfg  = BADGE_CONFIG[data.compatibility]
   const Icon = cfg.icon
   const firstPart = data.parts_analysis[0] ?? { part_name: "", oemNumber: "" }
-
-  // 쿠팡 검색어: [사용자 입력 부품명] + [모델명]. 연식·브랜드·엔진 제원 제외.
-  const modelName   = extractModelName(data.vehicle_spec.manufacturer_model)
-  const inputPart   = userInput.trim() || firstPart.part_name
-  const fallbackUrl = buildCoupangSearchUrl([inputPart, modelName].filter(Boolean).join(" "))
-
-  const [coupangUrl, setCoupangUrl] = useState(fallbackUrl)
-  const [coupangLoading, setCoupangLoading] = useState(true)
 
   // "2019년식" → 2019, "2020" → 2020 (숫자만 추출)
   const yearNum = parseInt(data.vehicle_spec.production_year ?? "")
@@ -166,20 +145,6 @@ function ResultCard({ data, onReset, userInput }: { data: ApiResponse; onReset: 
   )}${yearQuery}&part=${encodeURIComponent(
     firstPart.part_name
   )}${data.productCategory ? `&category=${encodeURIComponent(data.productCategory)}` : ""}`
-
-  useEffect(() => {
-    fetch("/api/coupang-link", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ inputPart, specs: modelName }),
-    })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((json: { shortenUrl?: string } | null) => {
-        if (json?.shortenUrl) setCoupangUrl(json.shortenUrl)
-      })
-      .catch(() => {})
-      .finally(() => setCoupangLoading(false))
-  }, [data, userInput])
 
   return (
     <div className={`mt-6 rounded-xl border p-5 ${cfg.container}`}>
@@ -251,39 +216,9 @@ function ResultCard({ data, onReset, userInput }: { data: ApiResponse; onReset: 
           <ArrowRight className="h-4 w-4" />
         </Link>
 
-        {/* ▶ 쿠팡 파트너스 CTA */}
-        <div className="space-y-2">
-          {data.cacheHit && (
-            <p className="text-center text-xs font-semibold text-emerald-400">
-              ✅ 이미 검증된 규격입니다
-            </p>
-          )}
-          <a
-            href={coupangUrl}
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            onClick={() =>
-              track({ type: "outbound", target: "coupang", meta: { from: "verify", part: inputPart, model: modelName } })
-            }
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#fe6001] px-4 py-3 text-sm font-bold text-white transition-all hover:bg-[#e55500]"
-          >
-            {coupangLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                수익 링크 생성 중…
-              </>
-            ) : (
-              <>
-                <ShoppingCart className="h-4 w-4" />
-                쿠팡에서 검증된 호환 부품 최저가 확인
-                <ExternalLink className="h-4 w-4" />
-              </>
-            )}
-          </a>
-          <p className="text-center text-xs text-gray-500">
-            이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
-          </p>
-        </div>
+        {data.cacheHit && (
+          <p className="text-center text-xs font-semibold text-primary">이미 검증한 적 있는 규격이에요</p>
+        )}
 
         {data.productInfo && (
           <p className="text-[11px] text-muted-foreground/50">
@@ -324,7 +259,7 @@ function CategorySelect({
         ))}
       </select>
       {!selected && (
-        <p className="mt-1.5 text-xs text-amber-400">
+        <p className="mt-1.5 text-xs text-amber-700">
           ⚠ 카테고리를 선택해야 검증 버튼이 활성화됩니다.
         </p>
       )}
@@ -460,7 +395,7 @@ export function CompatibilityChecker({ heroMode = false }: CompatibilityCheckerP
           />
           <div className="mt-1.5 flex justify-between">
             <p className="text-xs text-muted-foreground">자동차 등록증 또는 차량 앞유리 좌측 하단에서 확인</p>
-            <span className={`font-mono text-xs ${vinFormatted.length === 17 ? "text-emerald-400" : "text-muted-foreground"}`}>
+            <span className={`font-mono text-xs ${vinFormatted.length === 17 ? "text-primary" : "text-muted-foreground"}`}>
               {vinFormatted.length} / 17
             </span>
           </div>
@@ -542,8 +477,8 @@ export function CompatibilityChecker({ heroMode = false }: CompatibilityCheckerP
 
         {/* 오류 메시지 */}
         {errorMsg && pageState !== "loading" && (
-          <div className="rounded-lg border border-amber-500/25 bg-amber-500/10 px-4 py-3">
-            <p className="text-xs text-amber-300">{errorMsg}</p>
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
+            <p className="text-xs text-amber-700">{errorMsg}</p>
           </div>
         )}
 
@@ -580,8 +515,8 @@ export function CompatibilityChecker({ heroMode = false }: CompatibilityCheckerP
 
       {/* 시스템 오류 */}
       {pageState === "error" && (
-        <div className="mt-4 rounded-lg border border-red-500/25 bg-red-500/10 px-4 py-3">
-          <p className="text-sm font-semibold text-red-400">분석 실패</p>
+        <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+          <p className="text-sm font-semibold text-red-700">분석 실패</p>
           <p className="mt-1 text-xs text-muted-foreground">{errorMsg}</p>
           <button
             onClick={handleReset}

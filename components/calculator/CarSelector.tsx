@@ -1,14 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Car, Sparkles, Loader2, ChevronDown, ChevronUp, ShieldCheck } from "lucide-react"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Sparkles, Loader2, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { CarModel } from "@/types"
 import type { GenerateCarInput } from "@/lib/gemini"
@@ -24,6 +17,9 @@ interface CarSelectorProps {
   /** 호환성 검증 페이지에서 차종이 자동 설정된 경우 true */
   isFromVerify?: boolean
 }
+
+const SELECT_CLS =
+  "h-12 w-full appearance-none rounded-[10px] border border-input bg-card bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%234A5A72%22 stroke-width=%222.5%22><path d=%22m6 9 6 6 6-6%22/></svg>')] bg-[length:14px] bg-[right_14px_center] bg-no-repeat pl-3.5 pr-9 text-[16px] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-muted disabled:text-muted-foreground"
 
 const INPUT_CLS =
   "w-full rounded-md border border-border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors"
@@ -95,87 +91,51 @@ export function CarSelector({
       genInput.engineType.trim() !== ""
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 text-sm font-bold text-primary">
-          1
+    <div className="space-y-3">
+      <h2 className="text-[17px] font-bold">차종 선택</h2>
+      <div className="grid grid-cols-[0.8fr_1.2fr] gap-2">
+        <div>
+          <label htmlFor="calc-brand" className="sr-only">브랜드</label>
+          <select id="calc-brand" className={SELECT_CLS} value={selectedBrand} onChange={(e) => handleBrandChange(e.target.value)}>
+            <option value="">브랜드</option>
+            {brands.map((brand) => (
+              <option key={brand} value={brand}>{brand}</option>
+            ))}
+          </select>
         </div>
-        <h2 className="text-base font-semibold">차량 선택</h2>
-      </div>
-
-      {/* 브랜드 / 모델 드롭다운 */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="space-y-1.5">
-          <label className="text-xs font-medium text-muted-foreground">브랜드</label>
-          <Select value={selectedBrand} onValueChange={handleBrandChange}>
-            <SelectTrigger className="h-10">
-              <SelectValue placeholder="브랜드 선택" />
-            </SelectTrigger>
-            <SelectContent>
-              {brands.map((brand) => (
-                <SelectItem key={brand} value={brand}>
-                  {brand}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-1.5">
-          <label className="text-xs font-medium text-muted-foreground">모델 / 세대</label>
-          <Select
+        <div>
+          <label htmlFor="calc-car" className="sr-only">차종</label>
+          <select
+            id="calc-car"
+            className={SELECT_CLS}
             value={selectedCarId}
-            onValueChange={onCarChange}
             disabled={!selectedBrand}
+            onChange={(e) => onCarChange(e.target.value)}
           >
-            <SelectTrigger className="h-10">
-              <SelectValue placeholder="모델 선택" />
-            </SelectTrigger>
-            <SelectContent>
-              {modelsForBrand.map((car: CarModel) => (
-                <SelectItem key={car.id} value={car.id}>
-                  {car.model} {car.generation}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {!selectedBrand && <option value="">차종</option>}
+            {modelsForBrand.map((car: CarModel) => (
+              <option key={car.id} value={car.id}>
+                {car.model} {car.generation.replace(/\s*\(.*?\)\s*/g, "")}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
-      {/* 선택된 차량 정보 배지 */}
       {selectedCar && (
-        <div className="flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
-          <Car className="h-5 w-5 shrink-0 text-primary" />
-          <div>
-            <p className="text-sm font-semibold">
-              {selectedCar.brand} {selectedCar.model}{" "}
-              <span className="font-normal text-muted-foreground">{selectedCar.generation}</span>
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {selectedCar.yearRange} · {selectedCar.engineTypes.join(" / ")}
-            </p>
-          </div>
-          <div className="ml-auto flex items-center gap-2">
-            {isFromVerify && (
-              <span className="flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-400">
-                <ShieldCheck className="h-3 w-3" />
-                검증됨
-              </span>
-            )}
-            <span className="rounded-full bg-primary/20 px-2 py-0.5 text-xs font-medium text-primary">
-              {selectedCar.parts.length}개 항목
-            </span>
-          </div>
-        </div>
+        <p className="text-[13px] text-muted-foreground">
+          {selectedCar.brand} {selectedCar.model} {selectedCar.generation} · {selectedCar.engineTypes.join(" / ")}
+          {isFromVerify && <span className="ml-1.5 font-semibold text-primary">호환성 확인에서 자동 선택됨</span>}
+        </p>
       )}
 
       {/* AI 생성 토글 버튼 */}
       <button
         onClick={() => setShowGenerate((v) => !v)}
-        className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-primary"
+        className="flex min-h-[44px] items-center gap-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
       >
         <Sparkles className="h-3.5 w-3.5" />
-        내 차종이 없나요? Gemini AI로 분석하기
+        목록에 내 차가 없나요? AI로 규격 만들기
         {showGenerate ? (
           <ChevronUp className="h-3 w-3" />
         ) : (
@@ -305,13 +265,13 @@ export function CarSelector({
           </Button>
 
           {generateInfo && (
-            <p className="rounded-lg bg-blue-500/10 px-3 py-2 text-xs text-blue-400">
+            <p className="rounded-lg bg-blue-50 px-3 py-2 text-xs text-blue-700">
               ℹ️ {generateInfo}
             </p>
           )}
 
           {generateError && (
-            <p className="rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-400">
+            <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
               {generateError}
             </p>
           )}

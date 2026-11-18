@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { AlertTriangle, ExternalLink } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import type { Recall } from "@/lib/recalls/types"
 import {
@@ -15,29 +15,28 @@ import type { RecallNewsItem } from "@/lib/recalls/types"
 import { recallBlogPost } from "@/lib/recalls/blog"
 import { partLabel, recallCars, type RecallGroup } from "@/lib/recalls/highlight"
 
-/** 모든 리콜 페이지 상단: 데이터 기준일 + 차대번호 조회 안내 */
+const H2 = "text-[20px] font-bold sm:text-[24px]"
+const SUMMARY = "flex min-h-[44px] cursor-pointer list-none items-center gap-1 text-[14px] font-semibold text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden"
+
+/** 모든 리콜 페이지 상단: 차대번호 조회 안내 + 데이터 기준일 */
 export function RecallNotice({ carId }: { carId?: string }) {
   return (
-    <div className="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm">
-      <div className="flex items-start gap-2">
-        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
-        <div className="space-y-2">
-          <p className="font-semibold">실제 대상 여부는 자동차리콜센터에서 차대번호로 확인하세요.</p>
-          <p className="text-muted-foreground">
-            같은 차종이라도 생산 시기·사양에 따라 리콜 대상이 아닐 수 있습니다. 이 페이지는 공개 데이터를 정리한
-            참고 자료입니다.
-          </p>
-          <p className="text-xs font-medium text-foreground/80">{dataBasisText()}</p>
-          <OutboundLink
-            href={RECALL_CENTER_LOOKUP_URL}
-            target="recall_center"
-            carId={carId}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-          >
-            자동차리콜센터에서 내 차 조회 <ExternalLink className="h-3.5 w-3.5" />
-          </OutboundLink>
-        </div>
-      </div>
+    <div className="mt-6 rounded-2xl border border-[#F9DBAF] bg-[#FFF6ED] p-4 sm:p-5">
+      <p className="text-[16px] font-bold leading-snug text-[#7A2E0E]">
+        내 차가 대상인지는 차대번호로 확인해야 정확해요
+      </p>
+      <p className="mt-1 text-[14px] leading-relaxed text-[#93370D]">
+        같은 차종도 생산 시기·사양에 따라 대상이 아닐 수 있어요. 조회는 무료이고 1분이면 끝나요.
+      </p>
+      <OutboundLink
+        href={RECALL_CENTER_LOOKUP_URL}
+        target="recall_center"
+        carId={carId}
+        className="mt-3 flex h-12 w-full items-center justify-center gap-1.5 rounded-[10px] bg-[#B54708] text-[15px] font-bold text-white transition hover:brightness-110 active:translate-y-px sm:w-auto sm:px-6 sm:inline-flex"
+      >
+        자동차리콜센터에서 내 차 조회 <ExternalLink className="h-4 w-4" aria-hidden />
+      </OutboundLink>
+      <p className="mt-2 text-[12px] text-[#93370D]">{dataBasisText()}</p>
     </div>
   )
 }
@@ -45,7 +44,7 @@ export function RecallNotice({ carId }: { carId?: string }) {
 /** 페이지 하단 출처 */
 export function RecallSource() {
   return (
-    <p className="mt-10 rounded-lg border border-border bg-muted/30 p-3 text-xs leading-relaxed text-muted-foreground">
+    <p className="mt-12 border-t border-border pt-4 text-[12px] leading-relaxed text-muted-foreground">
       출처:{" "}
       <a href={RECALL_CENTER_LIST_URL} target="_blank" rel="noopener" className="underline hover:text-foreground">
         자동차리콜센터(car.go.kr) 리콜현황
@@ -67,98 +66,110 @@ export function RecallSource() {
 
 export function RecallEmpty({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+    <div className="rounded-[14px] border border-dashed border-border bg-card p-6 text-center text-[15px] leading-relaxed text-muted-foreground">
       {children}
     </div>
   )
 }
 
-/** 리콜 목록 */
+const SeriousBadge = () => (
+  <span className="shrink-0 rounded-full bg-[#FEF3F2] px-2 py-0.5 text-[12px] font-semibold text-[#B42318]">중대</span>
+)
+
+function carNames(r: Recall, max = 6) {
+  const names = [...new Set(r.items.map((i) => i.name))]
+  return names.slice(0, max).join(", ") + (names.length > max ? ` 외 ${names.length - max}개 차명` : "")
+}
+
+/** 리콜 목록 (차종·제작사 페이지) */
 export function RecallList({ recalls, showMaker = true }: { recalls: Recall[]; showMaker?: boolean }) {
   return (
     <ul className="space-y-3">
-      {recalls.map((r) => (
-        <li key={r.id} id={r.id} className="rounded-xl border border-border bg-card p-4">
-          <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-            <span>
-              리콜 시작일 <strong className="text-foreground">{fmtDate(r.startDate)}</strong>
-            </span>
-            {showMaker && (
-              <Link href={`/recalls/maker/${r.makerSlug}`} className="text-primary hover:underline">
-                {r.makerName}
-              </Link>
-            )}
-            {r.count ? <span>대상 {r.count.toLocaleString("ko-KR")}대</span> : null}
-            {r.serious && (
-              <span className="rounded bg-red-500/15 px-1.5 py-0.5 font-semibold text-red-400">중대리콜</span>
-            )}
-            {r.source === "carkr" && (
-              <a href={RECALL_CENTER_LIST_URL} target="_blank" rel="noopener" className="rounded bg-muted px-1.5 py-0.5 hover:text-foreground">
-                자동차리콜센터 ↗
-              </a>
-            )}
-            {r.source === "molit" && r.sourceUrl && (
-              <a href={r.sourceUrl} target="_blank" rel="noopener" className="rounded bg-muted px-1.5 py-0.5 hover:text-foreground">
-                국토부 보도자료 ↗
-              </a>
-            )}
-          </div>
+      {recalls.map((r) => {
+        const post = recallBlogPost(r.id)
+        return (
+          <li key={r.id} id={r.id} className="scroll-mt-20 rounded-[14px] border border-border bg-card p-4 sm:p-5">
+            <div className="num flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-muted-foreground">
+              <span>
+                <strong className="font-semibold text-foreground">{fmtDate(r.startDate)}</strong> 시작
+              </span>
+              {r.count ? <span>· 대상 {r.count.toLocaleString("ko-KR")}대</span> : null}
+              {showMaker && (
+                <>
+                  <span aria-hidden>·</span>
+                  <Link href={`/recalls/maker/${r.makerSlug}`} className="font-semibold text-foreground underline-offset-2 hover:underline">
+                    {r.makerName}
+                  </Link>
+                </>
+              )}
+              {r.serious && <SeriousBadge />}
+            </div>
 
-          <div className="mb-2 text-sm font-semibold leading-snug">
-            {[...new Set(r.items.map((i) => i.name))].slice(0, 6).join(", ")}
-            {new Set(r.items.map((i) => i.name)).size > 6 && ` 외 ${new Set(r.items.map((i) => i.name)).size - 6}개 차명`}
-          </div>
+            <h3 className="mt-1.5 text-[16px] font-bold leading-snug">{carNames(r)}</h3>
 
-          <dl className="space-y-1.5 text-sm">
-            {r.part && (
-              <div>
-                <dt className="inline text-muted-foreground">결함 장치 · </dt>
-                <dd className="inline">{r.part}</dd>
+            <dl className="mt-2 space-y-1 text-[15px] leading-relaxed">
+              {r.part && (
+                <div className="flex gap-2">
+                  <dt className="w-[68px] shrink-0 text-muted-foreground">결함 장치</dt>
+                  <dd>{r.part}</dd>
+                </div>
+              )}
+              <div className="flex gap-2">
+                <dt className="w-[68px] shrink-0 text-muted-foreground">리콜 사유</dt>
+                <dd>{r.reason}</dd>
               </div>
+              <div className="flex gap-2">
+                <dt className="w-[68px] shrink-0 text-muted-foreground">시정 방법</dt>
+                <dd>
+                  {r.fix ?? (
+                    <>
+                      <a href={RECALL_CENTER_LIST_URL} target="_blank" rel="noopener" className="font-semibold underline underline-offset-2">
+                        자동차리콜센터 원문
+                      </a>
+                      에서 확인
+                    </>
+                  )}
+                </dd>
+              </div>
+            </dl>
+
+            {post && (
+              <OutboundLink
+                href={post.url}
+                target="blog"
+                className="mt-3 inline-flex min-h-[40px] items-center gap-1.5 rounded-[10px] border border-border px-3 text-[13px] font-semibold hover:bg-muted"
+              >
+                {post.label} <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+              </OutboundLink>
             )}
-            <div>
-              <dt className="inline text-muted-foreground">리콜 사유 · </dt>
-              <dd className="inline leading-relaxed">{r.reason}</dd>
-            </div>
-            <div>
-              <dt className="inline text-muted-foreground">시정 방법 · </dt>
-              <dd className="inline">
-                {r.fix ?? (
-                  <>
-                    <a href={RECALL_CENTER_LIST_URL} target="_blank" rel="noopener" className="text-primary hover:underline">
-                      자동차리콜센터 원문
-                    </a>
-                    에서 확인 (공개 데이터에는 시정 방법 항목이 없습니다)
-                  </>
-                )}
-              </dd>
-            </div>
-          </dl>
 
-          {recallBlogPost(r.id) && (
-            <OutboundLink
-              href={recallBlogPost(r.id)!.url}
-              target="blog"
-              className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/15"
-            >
-              {recallBlogPost(r.id)!.label} <ExternalLink className="h-3 w-3" />
-            </OutboundLink>
-          )}
-
-          <details className="mt-2 text-xs text-muted-foreground">
-            <summary className="cursor-pointer select-none hover:text-foreground">
-              대상 생산기간 보기 ({r.items.length})
-            </summary>
-            <ul className="mt-2 space-y-0.5">
-              {r.items.map((it, i) => (
-                <li key={i}>
-                  {it.name} · {fmtDate(it.from)} ~ {fmtDate(it.to)} 생산분
-                </li>
-              ))}
-            </ul>
-          </details>
-        </li>
-      ))}
+            <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 border-t border-border pt-1">
+              <details className="group min-w-0 flex-1">
+                <summary className={SUMMARY}>
+                  대상 생산기간 {r.items.length}건 보기
+                  <span aria-hidden className="transition group-open:rotate-180">⌄</span>
+                </summary>
+                <ul className="num space-y-1 pb-2 text-[13px] text-muted-foreground">
+                  {r.items.map((it, i) => (
+                    <li key={i}>
+                      {it.name} · {fmtDate(it.from)} ~ {fmtDate(it.to)} 생산분
+                    </li>
+                  ))}
+                </ul>
+              </details>
+              {r.source === "molit" && r.sourceUrl ? (
+                <a href={r.sourceUrl} target="_blank" rel="noopener" className="text-[12px] text-muted-foreground hover:text-foreground">
+                  국토부 보도자료 ↗
+                </a>
+              ) : r.source === "carkr" ? (
+                <a href={RECALL_CENTER_LIST_URL} target="_blank" rel="noopener" className="text-[12px] text-muted-foreground hover:text-foreground">
+                  자동차리콜센터 ↗
+                </a>
+              ) : null}
+            </div>
+          </li>
+        )
+      })}
     </ul>
   )
 }
@@ -193,13 +204,16 @@ export function recallFaq(carName?: string): { q: string; a: string }[] {
 
 export function RecallFaq({ items }: { items: { q: string; a: string }[] }) {
   return (
-    <section className="mt-10">
-      <h2 className="mb-3 text-lg font-bold">자주 묻는 질문</h2>
-      <div className="space-y-2">
+    <section className="mt-12">
+      <h2 className={H2}>자주 묻는 질문</h2>
+      <div className="mt-4 divide-y divide-border rounded-[14px] border border-border bg-card">
         {items.map((f) => (
-          <details key={f.q} className="rounded-xl border border-border bg-card p-4">
-            <summary className="cursor-pointer select-none text-sm font-semibold">{f.q}</summary>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+          <details key={f.q} className="group px-4">
+            <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-3 py-3 font-semibold [&::-webkit-details-marker]:hidden">
+              <h3 className="text-[15px]">{f.q}</h3>
+              <span aria-hidden className="text-muted-foreground transition group-open:rotate-180">⌄</span>
+            </summary>
+            <p className="pb-4 text-[15px] leading-relaxed text-muted-foreground">{f.a}</p>
           </details>
         ))}
       </div>
@@ -219,73 +233,73 @@ export function faqJsonLd(items: { q: string; a: string }[]) {
   }
 }
 
-const SeriousBadge = () => (
-  <span className="shrink-0 rounded bg-red-500/15 px-1.5 py-0.5 text-[11px] font-semibold text-red-400">중대</span>
-)
-
 /**
- * 주요 리콜 요약 목록 (/recalls 첫 화면). 같은 날 같은 제작사 리콜은 한 줄로 묶고,
- * 한 줄에는 날짜·제작사·대수·차명·결함 장치만. 누르면 사유·생산기간·블로그 글이 펼쳐진다.
+ * 주요 리콜 요약 목록 (/recalls). 같은 날 같은 제작사 리콜은 한 줄로 묶고,
+ * 한 줄에는 날짜·제작사·차명·결함 장치·대수만. 누르면 사유·블로그 글·자세히 보기 링크가 펼쳐진다.
  */
 export function MajorRecallList({ groups }: { groups: RecallGroup[] }) {
   return (
-    <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+    <ul className="divide-y divide-border overflow-hidden rounded-[14px] border border-border bg-card">
       {groups.map((g) => {
         const top = g.recalls[0]
         const more = g.recalls.length - 1
         return (
           <li key={g.key}>
             <details className="group">
-              <summary className="flex cursor-pointer list-none items-start gap-3 px-4 py-3 hover:bg-muted/30 [&::-webkit-details-marker]:hidden">
-                <span className="w-12 shrink-0 pt-0.5 text-xs tabular-nums text-muted-foreground">
-                  {fmtDate(g.startDate).slice(5)}
-                </span>
+              <summary className="flex min-h-[64px] cursor-pointer list-none items-start gap-3 px-4 py-3 hover:bg-muted/40 [&::-webkit-details-marker]:hidden">
+                <span className="num w-11 shrink-0 pt-0.5 text-[13px] text-muted-foreground">{fmtDate(g.startDate).slice(5)}</span>
                 <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2 text-sm font-semibold">
-                    <span className="truncate">
-                      {g.makerName} · {recallCars(top)}
+                  <span className="flex items-center gap-2">
+                    <span className="truncate text-[15px] font-semibold">
+                      {recallCars(top).startsWith(g.makerName.split(/[·(\s]/)[0]) ? "" : `${g.makerName} `}
+                      {recallCars(top)}
                     </span>
                     {g.serious && <SeriousBadge />}
                   </span>
-                  <span className="mt-0.5 block truncate text-xs text-muted-foreground">
-                    {[partLabel(top.part), top.reason].filter(Boolean).join(" — ")}
+                  <span className="mt-0.5 block truncate text-[13px] text-muted-foreground">
+                    {[partLabel(top.part), top.reason].filter(Boolean).join(" · ")}
                   </span>
-                  {more > 0 && <span className="mt-0.5 block text-xs text-primary">같은 날 리콜 {more}건 더</span>}
+                  {more > 0 && <span className="mt-0.5 block text-[13px] font-semibold text-[#B54708]">같은 날 리콜 {more}건 더</span>}
                 </span>
-                <span className="shrink-0 pt-0.5 text-right text-xs tabular-nums text-muted-foreground">
+                <span className="num shrink-0 pt-0.5 text-right text-[13px] text-muted-foreground">
                   {g.count ? `${g.count.toLocaleString("ko-KR")}대` : ""}
-                  <span className="ml-1 inline-block transition-transform group-open:rotate-90">›</span>
+                  <span aria-hidden className="ml-1 inline-block transition-transform group-open:rotate-180">⌄</span>
                 </span>
               </summary>
 
-              <div className="space-y-4 border-t border-border/60 bg-muted/10 px-4 py-3 text-sm">
-                {g.recalls.map((r) => (
-                  <div key={r.id}>
-                    <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-medium">
-                      {[...new Set(r.items.map((i) => i.name))].join(", ")}
-                      {r.serious && <SeriousBadge />}
+              <div className="space-y-4 border-t border-border bg-background px-4 py-4 text-[15px]">
+                {g.recalls.map((r) => {
+                  const post = recallBlogPost(r.id)
+                  return (
+                    <div key={r.id}>
+                      <p className="flex flex-wrap items-center gap-2 font-semibold">
+                        {[...new Set(r.items.map((i) => i.name))].join(", ")}
+                        {r.serious && <SeriousBadge />}
+                      </p>
+                      <p className="num mt-0.5 text-[13px] text-muted-foreground">
+                        {[partLabel(r.part), r.count ? `대상 ${r.count.toLocaleString("ko-KR")}대` : ""].filter(Boolean).join(" · ")}
+                      </p>
+                      <p className="mt-1.5 leading-relaxed">{r.reason}</p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {post && (
+                          <OutboundLink
+                            href={post.url}
+                            target="blog"
+                            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-[10px] border border-border bg-card px-3 text-[13px] font-semibold hover:bg-muted"
+                          >
+                            {post.label} <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                          </OutboundLink>
+                        )}
+                        <Link
+                          href={`/recalls/maker/${r.makerSlug}#${r.id}`}
+                          className="inline-flex min-h-[40px] items-center rounded-[10px] border border-border bg-card px-3 text-[13px] font-semibold hover:bg-muted"
+                        >
+                          생산기간·시정 방법 보기
+                        </Link>
+                      </div>
                     </div>
-                    <p className="mb-1 text-xs text-muted-foreground">
-                      {[partLabel(r.part), r.count ? `대상 ${r.count.toLocaleString("ko-KR")}대` : ""].filter(Boolean).join(" · ")}
-                    </p>
-                    <p className="leading-relaxed">{r.reason}</p>
-                    {recallBlogPost(r.id) && (
-                      <OutboundLink
-                        href={recallBlogPost(r.id)!.url}
-                        target="blog"
-                        className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/15"
-                      >
-                        {recallBlogPost(r.id)!.label} <ExternalLink className="h-3 w-3" />
-                      </OutboundLink>
-                    )}
-                    <Link
-                      href={`/recalls/maker/${r.makerSlug}#${r.id}`}
-                      className="mt-2 block text-xs text-primary hover:underline"
-                    >
-                      생산기간·시정 방법 자세히 보기 →
-                    </Link>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </details>
           </li>
@@ -298,18 +312,17 @@ export function MajorRecallList({ groups }: { groups: RecallGroup[] }) {
 /** 최근 국토교통부 리콜 보도자료 목록 */
 export function RecallNewsList({ items }: { items: RecallNewsItem[] }) {
   return (
-    <ul className="space-y-2">
+    <ul className="divide-y divide-border rounded-[14px] border border-border bg-card">
       {items.map((it) => {
         const cars = [...new Set(it.groups.flatMap((g) => g.cars.map((c) => c.name)))]
         return (
-          <li key={it.id} className="rounded-xl border border-border bg-card p-4">
-            <div className="mb-1 text-xs text-muted-foreground">{fmtDate(it.date)} · 국토교통부</div>
-            <a href={it.url} target="_blank" rel="noopener" className="text-sm font-semibold hover:text-primary hover:underline">
+          <li key={it.id} className="px-4 py-3.5">
+            <p className="num text-[13px] text-muted-foreground">{fmtDate(it.date)} · 국토교통부</p>
+            <a href={it.url} target="_blank" rel="noopener" className="mt-0.5 block text-[15px] font-semibold leading-snug hover:underline">
               {it.title} ↗
             </a>
-            {it.summary && <p className="mt-1 text-xs text-muted-foreground">{it.summary}</p>}
             {cars.length > 0 && (
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 line-clamp-2 text-[13px] text-muted-foreground">
                 대상 차명: {cars.slice(0, 10).join(", ")}
                 {cars.length > 10 && ` 외 ${cars.length - 10}개`}
               </p>

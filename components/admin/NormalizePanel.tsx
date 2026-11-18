@@ -67,7 +67,7 @@ export function NormalizePanel() {
       </div>
 
       {doneMsg && (
-        <div className="flex items-center gap-2 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs text-emerald-400">
+        <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs text-primary">
           <CheckCircle className="h-3.5 w-3.5" />
           {doneMsg}
         </div>
@@ -76,7 +76,7 @@ export function NormalizePanel() {
       {duplicates !== null && (
         <>
           {duplicates.length === 0 ? (
-            <div className="rounded-lg bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
+            <div className="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-primary">
               중복 차종이 감지되지 않았습니다.
             </div>
           ) : (
@@ -84,11 +84,11 @@ export function NormalizePanel() {
               {duplicates.map((group, gi) => (
                 <div
                   key={gi}
-                  className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4"
+                  className="rounded-lg border border-amber-200 bg-amber-50 p-4"
                 >
                   <div className="mb-2 flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 text-amber-400" />
-                    <p className="text-sm font-medium text-amber-400">{group.reason}</p>
+                    <AlertTriangle className="h-4 w-4 text-amber-700" />
+                    <p className="text-sm font-medium text-amber-700">{group.reason}</p>
                   </div>
                   <div className="space-y-2">
                     {group.cars.map((car, ci) => (
@@ -104,9 +104,9 @@ export function NormalizePanel() {
                           <p className="text-xs text-muted-foreground">
                             {car.yearRange} · {car.parts.length}개 부품 ·{" "}
                             {car.is_verified === false ? (
-                              <span className="text-amber-400">미검증</span>
+                              <span className="text-amber-700">미검증</span>
                             ) : (
-                              <span className="text-emerald-400">검증됨</span>
+                              <span className="text-primary">검증됨</span>
                             )}
                           </p>
                         </div>

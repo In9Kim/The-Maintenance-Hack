@@ -131,11 +131,11 @@ export function VehicleTable({ initialCars }: Props) {
                     </td>
                     <td className="px-4 py-3 text-center">
                       {isVerified ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-400">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-primary">
                           <CheckCircle className="h-3 w-3" /> 검증됨
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-400">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
                           <XCircle className="h-3 w-3" /> 대기
                         </span>
                       )}
@@ -154,7 +154,7 @@ export function VehicleTable({ initialCars }: Props) {
                         <button
                           onClick={() => deleteCar(car.id)}
                           disabled={busy}
-                          className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-400"
+                          className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-700"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>

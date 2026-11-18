@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root { --ink:#14213D; --muted:#4A5A72; --paper:#F5F7FA; --line:#DCE3EC; --save:#0B7A53; --was:#5F6E85; }
+  * { box-sizing:border-box; margin:0 }
+  body { font-family:"Pretendard Variable",Pretendard,sans-serif; background:var(--paper); color:var(--ink); word-break:keep-all }
+  .sheet { padding:56px 64px 64px; width:max-content }
+  h1 { font-size:40px; font-weight:800; letter-spacing:-0.02em }
+  .sub { margin-top:8px; font-size:18px; color:var(--muted) }
+  .grid { margin-top:40px; display:grid; grid-template-columns:120px repeat(var(--n),300px); gap:20px 24px; align-items:start }
+  .rowlabel { font-size:20px; font-weight:800; padding-top:8px }
+  .rowlabel.was { color:var(--was) }
+  .rowlabel.now { color:var(--save) }
+  .col { font-size:17px; font-weight:700; text-align:left; padding-left:4px }
+  .phone { width:300px; height:650px; border-radius:22px; overflow:hidden; border:1px solid var(--line); background:#fff; box-shadow:0 8px 24px rgba(20,33,61,.08) }
+  .phone img { width:100%; display:block }
+  .note { margin-top:12px; font-size:14px; color:var(--muted); line-height:1.5; padding-left:4px }
+  /* 한 쌍 비교 (홈) */
+  .pair { margin-top:40px; display:flex; gap:56px; align-items:flex-start }
+  .pair .phone { width:375px; height:812px; border-radius:28px }
+  .pair h2 { font-size:22px; font-weight:800; margin-bottom:14px }
+  .pair h2.was { color:var(--was) } .pair h2.now { color:var(--save) }
+  .pair ul { margin-top:18px; padding-left:20px; width:375px; font-size:16px; line-height:1.6; color:var(--muted) }
+  .arrow { align-self:center; font-size:40px; color:var(--line) }
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet"></div>
+<script>
+const B = "./"  // docs/portfolio 안에서 열면 before/·after/ 이미지를 읽음 (?home 또는 ?all)
+const mode = location.search.slice(1) || "all"
+const s = document.getElementById("sheet")
+if (mode === "home") {
+  s.innerHTML = `
+  <h1>정비핵 홈 첫 화면</h1>
+  <p class="sub">휴대폰 375px · 들어오자마자 보이는 한 화면</p>
+  <div class="pair">
+    <div><h2 class="was">개선 전</h2><div class="phone"><img src="${B}before/mobile-1-home.png"></div>
+      <ul><li>첫 동작이 차대번호·상품 링크 입력이라 둘 다 가진 사람만 시작 가능</li><li>핵심 기능인 정비 비용은 맨 아래 작은 링크로만 연결</li><li>제목이 '정 / 비핵'으로 끊기는 줄바꿈</li></ul></div>
+    <div class="arrow">→</div>
+    <div><h2 class="now">개선 후</h2><div class="phone"><img src="${B}after/mobile-1-home.png"></div>
+      <ul><li>제목이 서비스가 하는 일을 그대로 설명</li><li>브랜드·차종 고르고 버튼 한 번이면 내 차 비용으로</li><li>실제 데이터로 만든 견적 예시와 금액 기준 표시</li></ul></div>
+  </div>`
+} else {
+  const pages = [
+    ["홈", "1-home"], ["차종 상세", "3-car"], ["부품", "4-part"], ["계산기", "5-calculator"], ["리콜", "6-recalls"],
+  ]
+  s.style.setProperty("--n", pages.length)
+  s.innerHTML = `
+  <h1>정비핵 리디자인 전후</h1>
+  <p class="sub">휴대폰 375px 첫 화면 · 같은 데이터, 같은 주소</p>
+  <div class="grid" style="--n:${pages.length}">
+    <div></div>${pages.map(([n]) => `<div class="col">${n}</div>`).join("")}
+    <div class="rowlabel was">개선 전</div>${pages.map(([, f]) => `<div class="phone"><img src="${B}before/mobile-${f}.png"></div>`).join("")}
+    <div class="rowlabel now">개선 후</div>${pages.map(([, f]) => `<div class="phone"><img src="${B}after/mobile-${f}.png"></div>`).join("")}
+  </div>`
+}
+</script>
+</body>
+</html>

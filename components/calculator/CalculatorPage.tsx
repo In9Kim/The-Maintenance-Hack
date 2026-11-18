@@ -8,6 +8,7 @@ import { CAR_DATA } from "@/lib/data/cars"
 import type { CarModel, CostSummary, PartCategory } from "@/types"
 import type { GenerateCarInput } from "@/lib/gemini"
 import { carEngines, partsForEngine } from "@/lib/engines"
+import { formatPrice } from "@/lib/utils"
 
 interface CalculatorPageProps {
   initialCarId?: string
@@ -188,48 +189,21 @@ export function CalculatorPage({
   }, [selectedCar, selectedParts])
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-extrabold tracking-tight">
-          정비 비용{" "}
-          <span className="bg-gradient-to-r from-primary to-emerald-400 bg-clip-text text-transparent">
-            계산기
-          </span>
-        </h1>
-        <p className="mt-2 text-muted-foreground">
-          공임나라 + 쿠팡 조합으로{" "}
-          <span className="font-semibold text-primary">최대 60%</span>를 절약하세요
-        </p>
-      </div>
+    <div className="mx-auto max-w-5xl px-5 pb-28 pt-6 sm:pt-10 lg:pb-6">
+      <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[36px]">정비 비용 계산기</h1>
+      <p className="mt-2 max-w-xl text-[16px] leading-relaxed text-muted-foreground">
+        이번에 바꿀 소모품만 체크하세요. 공식센터 견적과 부품을 직접 사서 공임나라에 맡길 때의 금액을 바로 비교해요.
+      </p>
 
-      {/* 호환성 검증에서 진입 시 안내 배너 */}
-      {isFromVerify && selectedCar && (
-        <div className="mb-6 rounded-xl border border-primary/25 bg-primary/5 px-4 py-3 text-sm">
-          <span className="font-semibold text-primary">검증된 차량 자동 적용됨:</span>{" "}
-          <strong className="text-foreground">
-            {selectedCar.brand} {selectedCar.model} {selectedCar.generation}
-          </strong>
-          {initialPartKeyword && (
-            <span className="text-muted-foreground">
-              {" "}·{" "}
-              <strong className="text-foreground">{initialPartKeyword}</strong> 항목이 자동 선택되었습니다.
-            </span>
-          )}
-        </div>
-      )}
       {isFromVerify && !selectedCar && initialModelQuery && (
-        <div className="mb-6 rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-sm text-amber-400">
-          <span className="font-semibold">차종 DB 매칭 실패:</span>{" "}
-          <span className="text-muted-foreground">
-            <strong className="text-foreground">{initialModelQuery}</strong>와 일치하는 차종을
-            찾지 못했습니다. 아래에서 차종을 직접 선택하거나 AI로 생성해주세요.
-          </span>
-        </div>
+        <p className="mt-4 rounded-[10px] bg-[#FFF6ED] px-4 py-3 text-[14px] text-[#B54708]">
+          <strong>{initialModelQuery}</strong>와 맞는 차종을 찾지 못했어요. 아래에서 직접 고르거나 AI로 규격을 만들어 보세요.
+        </p>
       )}
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px]">
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
         <div className="space-y-6">
-          <div className="rounded-xl border border-border bg-card p-5">
+          <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
             <CarSelector
               allCars={allCars}
               selectedCarId={selectedCarId}
@@ -240,81 +214,68 @@ export function CalculatorPage({
               generateInfo={generateInfo}
               isFromVerify={isFromVerify && Boolean(selectedCarId)}
             />
+            {selectedCar && engines.length > 1 && (
+              <div className="mt-3">
+                <p className="mb-2 text-[13px] font-semibold text-muted-foreground">엔진 (엔진마다 소모품 규격이 달라요)</p>
+                <div role="radiogroup" aria-label="엔진 선택" className="flex flex-wrap gap-2">
+                  {engines.map((e) => (
+                    <button
+                      key={e}
+                      type="button"
+                      role="radio"
+                      aria-checked={e === activeEngine}
+                      onClick={() => {
+                        setSelectedEngine(e)
+                        setSelectedParts(new Set())
+                      }}
+                      className={`min-h-[40px] rounded-full border px-3.5 text-[14px] font-semibold transition ${
+                        e === activeEngine ? "border-primary bg-emerald-50 text-primary" : "border-border bg-card hover:border-input"
+                      }`}
+                    >
+                      {e}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          {selectedCar ? (
-            <div className="rounded-xl border border-border bg-card p-5">
-              {engines.length > 1 && (
-                <div className="mb-4">
-                  <p className="mb-2 text-xs font-semibold text-muted-foreground">엔진 선택 (엔진마다 소모품 규격이 달라요)</p>
-                  <div className="flex flex-wrap gap-2">
-                    {engines.map((e) => (
-                      <button
-                        key={e}
-                        type="button"
-                        onClick={() => {
-                          setSelectedEngine(e)
-                          setSelectedParts(new Set())
-                        }}
-                        className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                          e === activeEngine ? "border-primary bg-primary/15 text-primary" : "border-border hover:border-primary/50"
-                        }`}
-                      >
-                        {e}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <MaintenanceChecklist
-                car={selectedCar}
-                selectedParts={selectedParts}
-                onToggle={handleToggle}
-                onSelectAll={handleSelectAll}
-                onClearAll={handleClearAll}
-              />
-            </div>
-          ) : (
-            <div className="flex h-48 items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
-              위에서 차량을 선택하면 정비 항목이 표시됩니다
-            </div>
+          {selectedCar && (
+            <MaintenanceChecklist
+              car={selectedCar}
+              selectedParts={selectedParts}
+              onToggle={handleToggle}
+              onSelectAll={handleSelectAll}
+              onClearAll={handleClearAll}
+            />
           )}
         </div>
 
-        <div className="lg:sticky lg:top-[4.5rem] lg:h-fit">
-          <div className="rounded-xl border border-border bg-card p-5">
+        <section id="calc-result" aria-label="계산 결과" className="scroll-mt-20 lg:sticky lg:top-[4.5rem]">
+          <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
+            <h2 className="mb-3 text-[17px] font-bold">계산 결과</h2>
             <CostDashboard car={selectedCar} summary={costSummary} />
           </div>
+        </section>
+      </div>
+
+      {/* 휴대폰: 체크하는 동안 합계가 항상 보이는 아래 막대 */}
+      {costSummary && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 px-5 py-3 shadow-[0_-4px_16px_rgba(20,33,61,0.08)] backdrop-blur lg:hidden">
+          <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
+            <p className="num leading-tight">
+              <span className="block text-[13px] text-muted-foreground">{costSummary.items.length}개 · 아끼는 돈</span>
+              <span className="text-[20px] font-extrabold text-primary">{formatPrice(Math.max(costSummary.savings, 0))}</span>
+            </p>
+            <a
+              href="#calc-result"
+              className="inline-flex h-11 items-center rounded-[10px] bg-foreground px-4 text-[14px] font-bold text-background"
+            >
+              결과 보기
+            </a>
+          </div>
         </div>
-      </div>
-
-      <div id="guide-section" className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <GuideCard
-          step="01"
-          title="차량 선택"
-          desc="내 차종과 세대를 선택하면 맞춤 부품 규격이 자동으로 로드됩니다. 없는 차종은 AI가 즉시 생성합니다."
-        />
-        <GuideCard
-          step="02"
-          title="항목 체크"
-          desc="교체가 필요한 소모품을 선택하면 실시간으로 비용이 계산됩니다."
-        />
-        <GuideCard
-          step="03"
-          title="구매 & 예약"
-          desc="쿠팡에서 직접 부품을 구매하고 공임나라에서 장착을 예약하세요."
-        />
-      </div>
-    </div>
-  )
-}
-
-function GuideCard({ step, title, desc }: { step: string; title: string; desc: string }) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <p className="mb-2 text-xs font-bold text-primary">STEP {step}</p>
-      <p className="mb-1.5 text-sm font-semibold">{title}</p>
-      <p className="text-xs leading-relaxed text-muted-foreground">{desc}</p>
+      )}
     </div>
   )
 }

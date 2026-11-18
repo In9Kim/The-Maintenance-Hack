@@ -41,11 +41,32 @@ export function partCost(part: MaintenancePart) {
   return { self, dealer, savings, savingsPercent }
 }
 
+/** 차종의 대표 엔진 기준 소모품 전체 교체 비용 */
+export function carTotals(car: CarModel) {
+  const engine = car.engineTypes[0]
+  let dealer = 0
+  let self = 0
+  for (const p of car.parts) {
+    if (p.engine && p.engine !== engine) continue
+    const c = partCost(p)
+    dealer += c.dealer
+    self += c.self
+  }
+  return { dealer, self, save: Math.max(dealer - self, 0) }
+}
+
 export function intervalText(part: MaintenancePart): string | null {
   const bits: string[] = []
   if (part.intervalKm) bits.push(`${part.intervalKm.toLocaleString("ko-KR")}km`)
   if (part.intervalMonths) bits.push(`${part.intervalMonths}개월`)
   return bits.length ? bits.join(" 또는 ") : null
+}
+
+/** 금액 기준 문구: 데이터를 마지막으로 고친 달 (data/vehicles.json updatedAt) */
+export function priceBasis(car: CarModel): string {
+  const m = car.updatedAt?.match(/^(\d{4})-(\d{2})/)
+  const when = m ? `부품가 ${m[1]}년 ${Number(m[2])}월 시세 기준` : "부품가는 시세 기준 예상치"
+  return `공임나라 표준 공임 · ${when}`
 }
 
 /** 계산기 페이지로 이 차종을 미리 선택해서 보내는 링크 */

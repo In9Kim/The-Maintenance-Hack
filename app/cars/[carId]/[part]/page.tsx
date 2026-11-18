@@ -12,13 +12,14 @@ import {
   intervalText,
   calculatorHref,
   pageMetadata,
+  priceBasis,
 } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
-import { CoupangLink } from "@/components/seo/CoupangLink"
 import { coupangLinksFor } from "@/lib/coupang-links"
 import { OutboundLink } from "@/components/seo/OutboundLink"
-import { Breadcrumbs, JsonLd, PartnersDisclosure } from "@/components/seo/Shared"
+import { AffiliateNotice, Breadcrumbs, EstimateNote, JsonLd } from "@/components/seo/Shared"
+import { ReceiptCard } from "@/components/home/ReceiptCard"
 
 export const dynamicParams = false
 
@@ -83,7 +84,7 @@ export default async function PartPage({ params }: Props) {
   ]
 
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-10">
+    <div className="mx-auto max-w-5xl px-5 pb-6 pt-6 sm:pt-10">
       <Breadcrumbs
         items={[
           { href: "/", label: "정비핵" },
@@ -93,130 +94,115 @@ export default async function PartPage({ params }: Props) {
         ]}
       />
 
-      <h1 className="mb-2 text-2xl font-extrabold tracking-tight sm:text-3xl">
-        {name} {title} 교체 비용 · 규격
+      <h1 className="text-[26px] font-extrabold leading-[1.3] sm:text-[36px]">
+        {name} {title} 교체 비용
       </h1>
-      <p className="mb-8 text-sm text-muted-foreground">
-        {car.yearRange} · {car.engineTypes.join(" / ")}
+      <p className="mt-2 text-[15px] text-muted-foreground">
+        {car.yearRange} · {part.engine ?? car.engineTypes.join(" / ")}
       </p>
 
-      {/* 비용 비교 */}
-      <section className="mb-8 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-xl border border-border bg-card p-5">
-          <div className="text-xs text-muted-foreground">공식 서비스센터 예상</div>
-          <div className="mt-1 text-2xl font-bold">{formatPrice(c.dealer)}</div>
-          <div className="mt-2 text-xs text-muted-foreground">
-            부품 {formatPrice(part.dealerPartPrice)} + 공임 {formatPrice(part.dealerLaborCost)}
-          </div>
-        </div>
-        <div className="rounded-xl border border-primary/40 bg-primary/10 p-5">
-          <div className="text-xs text-muted-foreground">쿠팡 부품 + 공임나라</div>
-          <div className="mt-1 text-2xl font-bold text-primary">{formatPrice(c.self)}</div>
-          <div className="mt-2 text-xs text-muted-foreground">
-            부품 {formatPrice(part.coupangPrice)} + 공임 {formatPrice(part.laborCost)}
-            {c.savings > 0 && (
-              <span className="ml-1 font-semibold text-primary">
-                · {formatPrice(c.savings)} ({c.savingsPercent}%) 절약
-              </span>
-            )}
-          </div>
-        </div>
-      </section>
+      <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-start lg:gap-10">
+        {/* 비용: 영수증 */}
+        <ReceiptCard
+          title={`${title} 교체 한 번`}
+          dealer={c.dealer}
+          self={c.self}
+          dealerNote={`부품 ${formatPrice(part.dealerPartPrice)} + 공임 ${formatPrice(part.dealerLaborCost)}`}
+          selfNote={`부품 ${formatPrice(part.coupangPrice)} + 공임 ${formatPrice(part.laborCost)}`}
+          basis={priceBasis(car)}
+        />
 
-      {/* 규격 */}
-      <section className="mb-8">
-        <h2 className="mb-3 text-lg font-bold">규격 정보</h2>
-        <dl className="divide-y divide-border rounded-xl border border-border text-sm">
-          <div className="flex justify-between gap-4 px-4 py-3">
-            <dt className="text-muted-foreground">규격</dt>
-            <dd className="text-right font-medium">{part.spec}</dd>
-          </div>
-          {part.partNumber && (
-            <div className="flex justify-between gap-4 px-4 py-3">
-              <dt className="text-muted-foreground">참고 품번</dt>
-              <dd className="text-right font-medium">{part.partNumber}</dd>
-            </div>
-          )}
-          {part.engine && (
-            <div className="flex justify-between gap-4 px-4 py-3">
-              <dt className="text-muted-foreground">해당 엔진</dt>
-              <dd className="text-right font-medium">{part.engine}</dd>
-            </div>
-          )}
-          {interval && (
-            <div className="flex justify-between gap-4 px-4 py-3">
-              <dt className="text-muted-foreground">교체 주기</dt>
-              <dd className="text-right font-medium">{interval}</dd>
-            </div>
-          )}
-          <div className="flex justify-between gap-4 px-4 py-3">
-            <dt className="text-muted-foreground">적용 연식</dt>
-            <dd className="text-right font-medium">{car.yearRange}</dd>
-          </div>
-        </dl>
-        {part.source && <p className="mt-2 text-xs text-muted-foreground">출처: {part.source}</p>}
-      </section>
+        {/* 준비하기: 규격 → (맞는 상품) → 공임나라 */}
+        <section aria-labelledby="buy" className="rounded-2xl border border-border bg-card p-5">
+          <h2 id="buy" className="text-[17px] font-bold">{title} 준비하기</h2>
+          <p className="mt-3 text-[13px] font-semibold text-muted-foreground">이 규격으로 사세요</p>
+          <p className="mt-1 text-[16px] font-semibold leading-relaxed">{part.spec}</p>
+          {part.partNumber && <p className="mt-1 text-[14px] text-muted-foreground">참고 품번 {part.partNumber}</p>}
 
-      {/* 행동 버튼 */}
-      <section className="mb-10 flex flex-wrap gap-3">
-        {specLinks.length ? (
-          // 규격이 정확히 맞는 상품을 넣어 둔 소모품은 검색 대신 그 상품으로
-          specLinks.map((l) => (
+          {specLinks.length > 0 ? (
+            <div className="mt-4 space-y-2">
+              <AffiliateNotice />
+              {specLinks.map((l) => (
+                <OutboundLink
+                  key={l.url}
+                  href={l.url}
+                  target="coupang"
+                  carId={car.id}
+                  partId={part.id}
+                  sponsored
+                  className="block rounded-[10px] bg-primary px-4 py-3 text-primary-foreground transition hover:brightness-110 active:translate-y-px"
+                >
+                  <span className="block text-[15px] font-bold">규격 맞는 상품 보기 (쿠팡)</span>
+                  <span className="mt-0.5 block text-[13px] opacity-90">{l.product}</span>
+                </OutboundLink>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-4 rounded-[10px] bg-muted px-3 py-2.5 text-[14px] leading-relaxed text-muted-foreground">
+              규격을 확인한 상품 링크는 아직 없어요. 위 규격과 차대번호로 맞는 부품을 고르세요.
+            </p>
+          )}
+
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <OutboundLink
-              key={l.url}
-              href={l.url}
-              target="coupang"
+              href={GONGIM_RESERVATION_URL}
+              target="gongim"
               carId={car.id}
               partId={part.id}
-              sponsored
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+              className="inline-flex h-12 w-full items-center justify-center rounded-[10px] px-5 text-[15px] font-bold transition active:translate-y-px border border-border bg-card text-foreground hover:bg-muted"
             >
-              이 규격 제품 보기 · {l.product}
+              공임나라 예약하기
             </OutboundLink>
-          ))
-        ) : (
-          <CoupangLink keyword={part.coupangKeyword} label={`${title} 쿠팡 최저가 보기`} carId={car.id} partId={part.id} />
-        )}
-        <OutboundLink
-          href={GONGIM_RESERVATION_URL}
-          target="gongim"
-          carId={car.id}
-          partId={part.id}
-          className="inline-flex items-center rounded-lg border border-border px-4 py-2.5 text-sm font-semibold hover:bg-accent"
-        >
-          공임나라 예약
-        </OutboundLink>
-        <Link
-          href={calculatorHref(car, part)}
-          className="inline-flex items-center rounded-lg border border-primary/50 px-4 py-2.5 text-sm font-semibold text-primary hover:bg-primary/10"
-        >
-          다른 항목과 함께 계산 →
-        </Link>
+            <Link href={calculatorHref(car, part)} className="inline-flex h-12 w-full items-center justify-center rounded-[10px] px-5 text-[15px] font-bold transition active:translate-y-px border border-border bg-card text-foreground hover:bg-muted">
+              다른 항목과 함께 계산
+            </Link>
+          </div>
+        </section>
+      </div>
+
+      {/* 규격 정보 */}
+      <section className="mt-12">
+        <h2 className="text-[20px] font-bold sm:text-[24px]">규격 정보</h2>
+        <dl className="mt-4 divide-y divide-border rounded-[14px] border border-border bg-card text-[15px]">
+          {[
+            ["규격", part.spec],
+            ...(part.partNumber ? [["참고 품번", part.partNumber]] : []),
+            ...(part.engine ? [["해당 엔진", part.engine]] : []),
+            ...(interval ? [["교체 주기", interval]] : []),
+            ["적용 연식", car.yearRange],
+          ].map(([k, v]) => (
+            <div key={k} className="grid grid-cols-[88px_1fr] gap-3 px-4 py-3.5 sm:grid-cols-[140px_1fr]">
+              <dt className="text-muted-foreground">{k}</dt>
+              <dd className="font-medium">{v}</dd>
+            </div>
+          ))}
+        </dl>
+        {part.source && <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">출처: {part.source}</p>}
       </section>
 
       {/* 자주 묻는 질문 */}
-      <section className="mb-10">
-        <h2 className="mb-3 text-lg font-bold">자주 묻는 질문</h2>
-        <div className="space-y-3">
+      <section className="mt-12">
+        <h2 className="text-[20px] font-bold sm:text-[24px]">자주 묻는 질문</h2>
+        <div className="mt-4 divide-y divide-border rounded-[14px] border border-border bg-card">
           {faq.map((f) => (
-            <div key={f.q} className="rounded-xl border border-border p-4">
-              <h3 className="text-sm font-semibold">{f.q}</h3>
-              <p className="mt-1.5 text-sm text-muted-foreground">{f.a}</p>
-            </div>
+            <details key={f.q} className="group px-4">
+              <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-3 py-3 font-semibold">
+                <h3 className="text-[15px]">{f.q}</h3>
+                <span aria-hidden className="text-muted-foreground transition group-open:rotate-180">⌄</span>
+              </summary>
+              <p className="pb-4 text-[15px] leading-relaxed text-muted-foreground">{f.a}</p>
+            </details>
           ))}
         </div>
       </section>
 
       {/* 내부 링크 */}
-      <section className="mb-6">
-        <h2 className="mb-3 text-base font-bold">{name} 다른 소모품</h2>
-        <ul className="flex flex-wrap gap-2">
+      <section className="mt-12">
+        <h2 className="text-[17px] font-bold">{name} 다른 소모품</h2>
+        <ul className="mt-3 flex flex-wrap gap-2">
           {otherParts.map((p) => (
             <li key={p.id}>
-              <Link
-                href={`/cars/${car.id}/${partSlug(car, p)}`}
-                className="inline-block rounded-full border border-border px-3 py-1 text-xs hover:border-primary/50 hover:text-primary"
-              >
+              <Link href={`/cars/${car.id}/${partSlug(car, p)}`} className="inline-flex min-h-[36px] items-center rounded-full border border-border bg-card px-3.5 text-[13px] hover:border-primary/50">
                 {partTitleName(p)}
               </Link>
             </li>
@@ -225,24 +211,37 @@ export default async function PartPage({ params }: Props) {
       </section>
 
       {sameOnOtherCars.length > 0 && (
-        <section>
-          <h2 className="mb-3 text-base font-bold">다른 차종 {title} 비용</h2>
-          <ul className="flex flex-wrap gap-2">
-            {sameOnOtherCars.map(({ car: oc, part: p }) => (
+        <section className="mt-8">
+          <h2 className="text-[17px] font-bold">다른 차종 {title} 비용</h2>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {sameOnOtherCars.slice(0, 8).map(({ car: oc, part: p }) => (
               <li key={p.id}>
-                <Link
-                  href={`/cars/${oc.id}/${partSlug(oc, p)}`}
-                  className="inline-block rounded-full border border-border px-3 py-1 text-xs hover:border-primary/50 hover:text-primary"
-                >
+                <Link href={`/cars/${oc.id}/${partSlug(oc, p)}`} className="inline-flex min-h-[36px] items-center rounded-full border border-border bg-card px-3.5 text-[13px] hover:border-primary/50">
                   {carShortName(oc)}
                 </Link>
               </li>
             ))}
           </ul>
+          {sameOnOtherCars.length > 8 && (
+            <details className="mt-2">
+              <summary className="min-h-[44px] cursor-pointer content-center text-[14px] font-semibold text-muted-foreground">
+                차종 {sameOnOtherCars.length - 8}개 더 보기
+              </summary>
+              <ul className="flex flex-wrap gap-2">
+                {sameOnOtherCars.slice(8).map(({ car: oc, part: p }) => (
+                  <li key={p.id}>
+                    <Link href={`/cars/${oc.id}/${partSlug(oc, p)}`} className="inline-flex min-h-[36px] items-center rounded-full border border-border bg-card px-3.5 text-[13px] hover:border-primary/50">
+                      {carShortName(oc)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
         </section>
       )}
 
-      <PartnersDisclosure />
+      <EstimateNote />
 
       <JsonLd
         data={{
