@@ -13,8 +13,6 @@ import {
   RotateCcw,
   Calculator,
   ArrowRight,
-  ShoppingCart,
-  ExternalLink,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { track } from "@/lib/track"
@@ -134,29 +132,10 @@ function StepIndicator({ steps, activeIdx }: { steps: string[]; activeIdx: numbe
   )
 }
 
-// "기아 K3" → "K3", "현대 아반떼 CN7" → "아반떼 CN7" (첫 단어=브랜드 제거)
-function extractModelName(manufacturerModel: string): string {
-  const parts = manufacturerModel.trim().split(/\s+/)
-  return parts.length > 1 ? parts.slice(1).join(" ") : manufacturerModel
-}
-
-function buildCoupangSearchUrl(query: string): string {
-  const affiliateId = process.env.NEXT_PUBLIC_COUPANG_AFFILIATE_ID ?? ""
-  return `https://link.coupang.com/a/search?q=${encodeURIComponent(query)}&lptag=${encodeURIComponent(affiliateId)}`
-}
-
 function ResultCard({ data, onReset, userInput }: { data: ApiResponse; onReset: () => void; userInput: string }) {
   const cfg  = BADGE_CONFIG[data.compatibility]
   const Icon = cfg.icon
   const firstPart = data.parts_analysis[0] ?? { part_name: "", oemNumber: "" }
-
-  // 쿠팡 검색어: [사용자 입력 부품명] + [모델명]. 연식·브랜드·엔진 제원 제외.
-  const modelName   = extractModelName(data.vehicle_spec.manufacturer_model)
-  const inputPart   = userInput.trim() || firstPart.part_name
-  const fallbackUrl = buildCoupangSearchUrl([inputPart, modelName].filter(Boolean).join(" "))
-
-  const [coupangUrl, setCoupangUrl] = useState(fallbackUrl)
-  const [coupangLoading, setCoupangLoading] = useState(true)
 
   // "2019년식" → 2019, "2020" → 2020 (숫자만 추출)
   const yearNum = parseInt(data.vehicle_spec.production_year ?? "")
@@ -166,20 +145,6 @@ function ResultCard({ data, onReset, userInput }: { data: ApiResponse; onReset: 
   )}${yearQuery}&part=${encodeURIComponent(
     firstPart.part_name
   )}${data.productCategory ? `&category=${encodeURIComponent(data.productCategory)}` : ""}`
-
-  useEffect(() => {
-    fetch("/api/coupang-link", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ inputPart, specs: modelName }),
-    })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((json: { shortenUrl?: string } | null) => {
-        if (json?.shortenUrl) setCoupangUrl(json.shortenUrl)
-      })
-      .catch(() => {})
-      .finally(() => setCoupangLoading(false))
-  }, [data, userInput])
 
   return (
     <div className={`mt-6 rounded-xl border p-5 ${cfg.container}`}>
@@ -251,39 +216,9 @@ function ResultCard({ data, onReset, userInput }: { data: ApiResponse; onReset: 
           <ArrowRight className="h-4 w-4" />
         </Link>
 
-        {/* ▶ 쿠팡 파트너스 CTA */}
-        <div className="space-y-2">
-          {data.cacheHit && (
-            <p className="text-center text-xs font-semibold text-primary">
-              ✅ 이미 검증된 규격입니다
-            </p>
-          )}
-          <a
-            href={coupangUrl}
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            onClick={() =>
-              track({ type: "outbound", target: "coupang", meta: { from: "verify", part: inputPart, model: modelName } })
-            }
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#fe6001] px-4 py-3 text-sm font-bold text-white transition-all hover:bg-[#e55500]"
-          >
-            {coupangLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                수익 링크 생성 중…
-              </>
-            ) : (
-              <>
-                <ShoppingCart className="h-4 w-4" />
-                쿠팡에서 검증된 호환 부품 최저가 확인
-                <ExternalLink className="h-4 w-4" />
-              </>
-            )}
-          </a>
-          <p className="text-center text-xs text-muted-foreground">
-            이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
-          </p>
-        </div>
+        {data.cacheHit && (
+          <p className="text-center text-xs font-semibold text-primary">이미 검증한 적 있는 규격이에요</p>
+        )}
 
         {data.productInfo && (
           <p className="text-[11px] text-muted-foreground/50">
