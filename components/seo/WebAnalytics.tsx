@@ -5,7 +5,7 @@ import Script from "next/script"
  * 토큰은 Cloudflare 대시보드 > Web Analytics > 사이트 추가 후 나오는 JS 코드의 "token" 값.
  * 공개되는 값이라 코드에 둬도 된다 (환경변수가 있으면 그 값 우선). 비어 있으면 아무것도 넣지 않는다.
  */
-const CF_BEACON_TOKEN = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN || ""
+const CF_BEACON_TOKEN = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN || "7fbbf8d528b24ad99fae0da337936411"
 
 export function WebAnalytics() {
   if (!CF_BEACON_TOKEN) return null
