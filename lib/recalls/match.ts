@@ -23,6 +23,8 @@ export interface RecallMatchRule {
   names: string[]
   /** 세대 코드 (대문자). 차명 괄호 안 첫 단어와 비교 */
   genCode?: string
+  /** 같은 세대를 다르게 적는 코드 (예: GV70은 "JK1"과 "JK"가 섞여 나옴) */
+  altGenCodes?: string[]
   /** 세대 코드가 없는 차명을 위한 양산 시작일 (보수적으로 실제보다 약간 늦게 잡음) */
   sop?: string
   /** 세대 코드가 없는 차명을 위한 생산 종료일 — 생산기간 끝이 이 날 이후면(다음 세대와 겹치면) 매칭 안 함 */
@@ -69,6 +71,33 @@ export const RECALL_MATCH_RULES: Record<string, RecallMatchRule> = {
   "tesla-model3-highland": { maker: /^테슬라/, names: ["model3", "모델3"], sop: "2023-10-01" },
   // Model Y 주니퍼: 상하이 양산 2025년 1월 → 2025-02-01 이후 생산분만
   "tesla-modely": { maker: /^테슬라/, names: ["modely", "모델y"], sop: "2025-02-01" },
+  // ── 2026-11-18 추가 차종 (취급설명서 기준 세대와 맞춤) ──
+  // 쏘나타·팰리세이드는 리콜 표기에 부분변경 구분이 없어 세대 전체를 매칭 (엔진 구성은 같은 계열)
+  "hyundai-sonata-dn8": { maker: /^현대자동차/, names: ["쏘나타", "sonata"], genCode: "DN8", sop: "2023-05-01" },
+  "hyundai-kona-sx2": { maker: /^현대자동차/, names: ["코나", "kona"], genCode: "SX2", sop: "2023-02-01" },
+  "hyundai-palisade-lx2": { maker: /^현대자동차/, names: ["팰리세이드", "palisade"], genCode: "LX2", sop: "2022-08-01", eop: "2025-03-31" },
+  "hyundai-casper-ax1": { maker: /^현대자동차/, names: ["캐스퍼", "casper"], genCode: "AX1", codeRe: /^AX1(?!\s*(EV|KV)\b)/i, sop: "2021-10-01" },
+  // 그랜저 IG는 부분변경 전후 엔진이 달라 PE만
+  "hyundai-grandeur-ig": { maker: /^현대자동차/, names: ["그랜저", "grandeur"], genCode: "IG", codeRe: /^IG\s*PE\b/i, sop: "2019-12-01", eop: "2022-10-31" },
+  "hyundai-avante-ad": { maker: /^현대자동차/, names: ["아반떼", "avante", "elantra"], genCode: "AD", sop: "2018-10-01", eop: "2020-04-30" },
+  "hyundai-staria-us4": { maker: /^현대자동차/, names: ["스타리아", "staria"], genCode: "US4", sop: "2021-05-01" },
+  // 아이오닉5 부분변경: "NE1 PE"와 "NE PE"가 섞여 나옴. 변경 전 "(NE)"는 제외
+  "hyundai-ioniq5-ne": { maker: /^현대자동차/, names: ["아이오닉5", "ioniq5"], genCode: "NE1", altGenCodes: ["NE"], codeRe: /^NE1?\s*PE\b/i, sop: "2024-04-01" },
+  "kia-sportage-nq5": { maker: /^기아/, names: ["스포티지", "sportage"], genCode: "NQ5", sop: "2021-07-01" },
+  "kia-seltos-sp2": { maker: /^기아/, names: ["셀토스", "seltos"], genCode: "SP2", sop: "2022-08-01", eop: "2025-12-31" },
+  // 레이는 2011년부터 TAM 한 코드라 이전 연식 리콜도 붙음 (엔진 같은 계열). 전기차는 제외
+  "kia-ray-tam": { maker: /^기아/, names: ["레이", "ray"], genCode: "TAM", codeRe: /^TAM(?!\s*EV)/i, sop: "2022-09-01" },
+  "kia-morning-ja": { maker: /^기아/, names: ["모닝", "morning", "picanto"], genCode: "JA", sop: "2020-06-01" },
+  "kia-k8-gl3": { maker: /^기아/, names: ["k8"], genCode: "GL3", sop: "2021-04-01" },
+  "kia-niro-sg2": { maker: /^기아/, names: ["니로", "niro"], genCode: "SG2", codeRe: /^SG2(?!\s*EV)/i, sop: "2022-02-01" },
+  // 차명은 소문자로 비교하므로 "봉고Ⅲ" → "봉고ⅲ"
+  "kia-bongo3-pu": { maker: /^기아/, names: ["봉고ⅲ", "봉고3", "봉고iii", "bongo3", "bongoiii"], genCode: "PU", codeRe: /^PU(?!\s*EV)/i },
+  // 제네시스: 부분변경(PE) 리콜은 제외
+  "genesis-g80-rg3": { maker: /^현대자동차|^제네시스/, names: ["g80", "제네시스g80"], genCode: "RG3", codeRe: /^RG3(?!\s*(PE|EV)\b)/i, sop: "2020-04-01", eop: "2023-11-30" },
+  "genesis-gv80-jx1": { maker: /^현대자동차|^제네시스/, names: ["gv80", "제네시스gv80"], genCode: "JX1", altGenCodes: ["JX"], codeRe: /^JX1?\b(?!\s*(PE|EV)\b)/i, sop: "2020-02-01", eop: "2023-07-31" },
+  "genesis-gv70-jk1": { maker: /^현대자동차|^제네시스/, names: ["gv70", "제네시스gv70"], genCode: "JK1", altGenCodes: ["JK"], codeRe: /^JK1?\b(?!\s*(PE|EV)\b)/i, sop: "2021-01-01", eop: "2024-02-29" },
+  // 토레스는 리콜 차명에 세대 코드가 없음. "토레스(VAN)"·"토레스EVX"는 규칙상 자동 제외
+  "kgm-torres-j100": { maker: /^케이지모빌리티|^KG|^쌍용/i, names: ["토레스", "torres"], sop: "2022-07-01" },
 }
 
 const norm = (s: string) => s.toLowerCase().replace(/[\s·\-_]/g, "")
@@ -103,7 +132,8 @@ export function itemMatchesCar(maker: string, item: RecallItem, rule: RecallMatc
 
   if (code) {
     // 세대 코드가 적혀 있으면 그것으로만 판단 (다른 세대면 불일치)
-    return !!rule.genCode && code === rule.genCode && (!rule.codeRe || rule.codeRe.test(inside))
+    const codes = rule.genCode ? [rule.genCode, ...(rule.altGenCodes ?? [])] : []
+    return codes.includes(code) && (!rule.codeRe || rule.codeRe.test(inside))
   }
   // 세대 코드가 없으면 생산기간이 이 세대 양산 기간 안일 때만
   if (!rule.sop || !/^\d{4}-\d{2}-\d{2}$/.test(item.from)) return false

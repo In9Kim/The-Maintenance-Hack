@@ -110,3 +110,21 @@ test("싼타페 TM 부분변경만 매칭 (변경 전 TM·MX5 제외)", () => {
   assert.equal(it("싼타페", "2019-01-01", "2021-01-01"), false)
   assert.equal(it("싼타페", "2022-01-01", "2024-03-01"), false)
 })
+
+test("세대 코드를 두 가지로 적는 차종 (GV70 JK1/JK, 아이오닉5 NE1 PE/NE PE)", () => {
+  assert.equal(hit("genesis-gv70-jk1", HMC, "GV70(JK1)"), true)
+  assert.equal(hit("genesis-gv70-jk1", HMC, "GV70 (JK)"), true)
+  assert.equal(hit("genesis-gv70-jk1", HMC, "GV70 (JK1 PE)"), false) // 부분변경 제외
+  assert.equal(hit("genesis-gv70-jk1", HMC, "Electrified GV70 (JK EV)"), false)
+  assert.equal(hit("genesis-gv80-jx1", HMC, "GV80(JX)"), true)
+  assert.equal(hit("hyundai-ioniq5-ne", HMC, "아이오닉5(NE1 PE)"), true)
+  assert.equal(hit("hyundai-ioniq5-ne", HMC, "아이오닉5 (NE PE)"), true)
+  assert.equal(hit("hyundai-ioniq5-ne", HMC, "아이오닉5 (NE)"), false) // 변경 전
+})
+
+test("봉고Ⅲ 표기, 전기차 파생 제외", () => {
+  assert.equal(hit("kia-bongo3-pu", KIA, "봉고Ⅲ (PU)"), true)
+  assert.equal(hit("kia-bongo3-pu", KIA, "봉고Ⅲ EV(PU EV)"), false)
+  assert.equal(hit("kia-ray-tam", KIA, "레이 (TAM PE2)"), true)
+  assert.equal(hit("hyundai-casper-ax1", HMC, "캐스퍼 일렉트릭(AX1 EV)"), false)
+})
