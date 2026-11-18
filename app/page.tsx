@@ -168,13 +168,13 @@ export default function Home() {
       )}
 
       {/* ── 부품 호환성 확인 (기존 기능) ───────────────────────── */}
-      <section id="compat" className="scroll-mt-20 border-t border-border bg-card">
+      <section id="compat" className="scroll-mt-20 border-t border-border">
         <div className="mx-auto max-w-2xl px-5 py-12">
           <h2 className="text-[20px] font-bold sm:text-[24px]">사려는 부품이 내 차에 맞는지 확인</h2>
           <p className="mt-1.5 text-[14px] leading-relaxed text-muted-foreground">
             차대번호와 상품 링크를 넣으면 AI가 규격을 대조해 맞을 가능성을 알려 드려요. 차대번호는 저장하지 않습니다.
           </p>
-          <div className="mt-5 rounded-2xl border border-border bg-background p-4 sm:p-6">
+          <div className="mt-5 rounded-2xl border border-border bg-card p-4 sm:p-6">
             <CompatibilityChecker heroMode />
           </div>
         </div>

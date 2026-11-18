@@ -48,7 +48,26 @@
 | 홈 내 차 선택 | `nav · via=home_picker` → `/cars/kia-sorento-mq4`로 이동 |
 | `?from=` 유입 꼬리표 | 첫 방문 기록 요청 확인. 이후 클릭에도 `meta.from`이 붙음 |
 
+## 미리보기 주소에서 재측정
+
+미리보기: https://redesign-maintenance-hack.wwe9459.workers.dev (운영 트래픽과 분리된 버전, `noindex` 자동 적용)
+
+| 항목 | 결과 |
+|---|---|
+| 권장사항 | **10개 측정 모두 100** (로컬의 96은 `localhost` 전용 문제였음) |
+| 접근성 | 10개 모두 100 |
+| SEO | 66. 미리보기의 `noindex` 때문(`is-crawlable`)이며, 실제 배포에서는 해당 없음 |
+| 성능 | 측정마다 65~98로 흔들림. 같은 시간에 잰 **운영 사이트도 63~99**라서 서버 응답 시간(콜드 스타트·네트워크) 영향으로 판단. 코드 기준 비교는 로컬 측정(97~100)을 사용 |
+| 주소 | 사이트맵 357개 모두 200 |
+
+### 알려진 차이: 글꼴 용량
+
+첫 방문 글꼴이 48KB에서 300~420KB로 늘었습니다. 개선 전에는 한글이 기기 기본 글꼴이었고, 지금은 Pretendard를 동적 서브셋으로 내려받기 때문입니다. 성능 점수와 레이아웃 흔들림에는 영향이 거의 없고 페이지 사이에서 캐시가 재사용돼, 유지(A안)로 결정했습니다.
+
+## 배포 시 주의
+
+공개 페이지는 빌드 때 미리 만든 정적 캐시(static assets incremental cache)로 제공됩니다. 그래서 **반드시 `npm run deploy`(= `opennextjs-cloudflare build && deploy`)로 배포**해야 합니다. 빌드 뒤 `wrangler deploy`나 `wrangler versions upload`만 쓰면 캐시가 자산에 복사되지 않아 `/cars/...` 페이지가 404가 됩니다. 미리보기 버전 2에서 실제로 겪은 문제이며, `opennextjs-cloudflare populateCache local`을 먼저 실행해 해결했습니다.
+
 ## 남은 확인
 
-- 미리보기 주소에서 휴대폰 실기기 확인
-- 미리보기 주소에서 Lighthouse 권장사항 재측정
+- 미리보기 주소에서 휴대폰 실기기 확인 (사용자)
