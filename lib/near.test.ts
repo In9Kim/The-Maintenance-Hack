@@ -29,3 +29,10 @@ test("거리 표시와 계산", () => {
   const d = haversine(37.5665, 126.978, 37.5665, 126.988)
   assert.ok(d > 850 && d < 900, String(d))
 })
+
+test("카센터: 정비 업종만, 튜닝·학원 제외", () => {
+  const k = nearKind("carcenter")!
+  assert.equal(keepPlace(k, place("서광카센타", "교통,수송 > 자동차 > 자동차정비")), true)
+  assert.equal(keepPlace(k, place("팩트디자인 자동차 아카데미", "교통,수송 > 자동차 > 자동차정비")), false)
+  assert.equal(keepPlace(k, place("OO세차", "교통,수송 > 자동차 > 세차장")), false)
+})

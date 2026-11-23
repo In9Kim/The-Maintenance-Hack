@@ -25,6 +25,32 @@ interface Place extends KakaoPlace {
   meters: number
 }
 
+/** 마지막으로 찾은 위치 (다음 방문 때 위치 권한을 다시 묻지 않으려고). 이 브라우저에만 저장 */
+const LOC_KEY = "mh_near_loc"
+const LOC_DAYS = 30
+interface SavedLoc {
+  lat: number
+  lng: number
+  label: string
+  t: number
+}
+function readLoc(): SavedLoc | null {
+  try {
+    const v = JSON.parse(localStorage.getItem(LOC_KEY) ?? "null") as SavedLoc | null
+    if (v && Number.isFinite(v.lat) && Number.isFinite(v.lng) && Date.now() - v.t < LOC_DAYS * 864e5) return v
+  } catch {
+    /* 저장소를 못 쓰면 매번 새로 찾음 */
+  }
+  return null
+}
+function saveLoc(lat: number, lng: number, label: string) {
+  try {
+    localStorage.setItem(LOC_KEY, JSON.stringify({ lat: +lat.toFixed(4), lng: +lng.toFixed(4), label, t: Date.now() }))
+  } catch {
+    /* 무시 */
+  }
+}
+
 let sdkPromise: Promise<any> | null = null
 function loadKakao(): Promise<any> {
   if (typeof window === "undefined") return Promise.reject(new Error("no window"))
@@ -86,6 +112,8 @@ export function NearMap({ slug }: { slug: string }) {
   const [area, setArea] = useState("")
   const [center, setCenter] = useState<{ lat: number; lng: number; label: string } | null>(null)
   const [moved, setMoved] = useState(false)
+  const [variant, setVariant] = useState(kind.variants?.[0]?.id ?? "")
+  const query = kind.variants?.find((v) => v.id === variant)?.query ?? kind.query
 
   /** 지도에 번호 핀 다시 그리기 */
   const drawPins = useCallback(
@@ -139,7 +167,7 @@ export function NearMap({ slug }: { slug: string }) {
 
         const found: KakaoPlace[] = []
         for (let page = 1; page <= 3; page++) {
-          const r = await searchPage(kakao, kind.query, {
+          const r = await searchPage(kakao, query, {
             location: loc,
             radius: RADIUS,
             sort: kakao.maps.services.SortBy.DISTANCE,
@@ -167,12 +195,13 @@ export function NearMap({ slug }: { slug: string }) {
         if (list.length) map.setBounds(bounds, 40, 40, 40, 40)
         else map.setCenter(loc)
         setStatus("done")
+        if (label !== "서울시청") saveLoc(lat, lng, label === "지도 중심" || label === "내 위치" ? "지난번 위치" : label)
       } catch {
         setStatus("error")
         setError("지도를 불러오지 못했어요. 잠시 뒤 다시 시도하거나 카카오맵에서 직접 검색해 주세요.")
       }
     },
-    [kind, drawPins]
+    [kind, query, drawPins]
   )
 
   const locateMe = useCallback(() => {
@@ -234,7 +263,9 @@ export function NearMap({ slug }: { slug: string }) {
         map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT)
         kakao.maps.event.addListener(map, "dragend", () => setMoved(true))
         mapRef.current = map
-        locateMe()
+        const saved = readLoc()
+        if (saved) searchAround(saved.lat, saved.lng, saved.label)
+        else locateMe()
       })
       .catch(() => {
         if (cancelled) return
@@ -246,6 +277,17 @@ export function NearMap({ slug }: { slug: string }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // 세부 종류(셀프·손세차 등)를 바꾸면 같은 위치에서 다시 찾기
+  const firstVariant = useRef(true)
+  useEffect(() => {
+    if (firstVariant.current) {
+      firstVariant.current = false
+      return
+    }
+    if (center) searchAround(center.lat, center.lng, center.label)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variant])
 
   useEffect(() => {
     drawPins(places, active)
@@ -263,7 +305,7 @@ export function NearMap({ slug }: { slug: string }) {
   }
 
   const busy = status === "locating" || status === "searching"
-  const kakaoSearchUrl = `https://map.kakao.com/?q=${encodeURIComponent(kind.query)}`
+  const kakaoSearchUrl = `https://map.kakao.com/?q=${encodeURIComponent(query)}`
 
   return (
     <div>
@@ -294,6 +336,24 @@ export function NearMap({ slug }: { slug: string }) {
           <span aria-hidden className="mr-1">◎</span>내 위치
         </button>
       </form>
+
+      {kind.variants && (
+        <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="세차장 종류">
+          {kind.variants.map((v) => (
+            <button
+              key={v.id}
+              type="button"
+              onClick={() => setVariant(v.id)}
+              aria-pressed={variant === v.id}
+              className={`inline-flex min-h-[36px] items-center rounded-full border px-3.5 text-[13px] font-semibold transition active:translate-y-px ${
+                variant === v.id ? "border-foreground bg-foreground text-background" : "border-border bg-card hover:border-primary/50"
+              }`}
+            >
+              {v.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {notice && <p className="mt-3 rounded-[10px] bg-[#FFF6ED] px-3.5 py-2.5 text-[14px] text-[#B54708]">{notice}</p>}
 

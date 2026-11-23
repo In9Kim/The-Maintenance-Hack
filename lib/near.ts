@@ -14,6 +14,10 @@ export interface NearKind {
   description: string
   intro: string
   color: string
+  /** 같은 종류 안에서 고르는 세부 종류 (검색어를 바꿔 다시 찾음). 예: 세차장 → 셀프/손세차/노터치 */
+  variants?: { id: string; label: string; query: string }[]
+  /** 이름에 이 말이 있으면 뺀다 */
+  exclude?: RegExp
 }
 
 export const NEAR_KINDS: NearKind[] = [
@@ -27,6 +31,17 @@ export const NEAR_KINDS: NearKind[] = [
     description: "지금 위치에서 가까운 공임나라 지점을 지도와 거리순 목록으로 보여 줍니다. 부품을 직접 사서 맡길 곳을 찾을 때 쓰세요.",
     intro: "부품을 직접 사 가면 공임만 받고 교체해 주는 곳이에요. 방문 전에 전화로 예약하세요.",
     color: "#0B7A53",
+  },
+  {
+    slug: "carcenter",
+    label: "카센터",
+    query: "카센터",
+    category: /자동차정비/,
+    exclude: /튜닝|아카데미|학원/,
+    title: "근처 카센터 찾기 - 가까운 자동차 정비소 지도·전화·길찾기",
+    description: "지금 위치에서 가까운 카센터·자동차 정비소를 지도와 거리순 목록으로 보여 줍니다. 타이어·오일 교환할 곳을 찾을 때 쓰세요.",
+    intro: "동네 정비소·타이어 전문점까지 함께 보여 줘요. 부품을 가져가도 되는지는 전화로 먼저 물어보세요.",
+    color: "#B54708",
   },
   {
     slug: "bluehands",
@@ -59,6 +74,12 @@ export const NEAR_KINDS: NearKind[] = [
     description: "지금 위치에서 가까운 셀프세차장과 손세차장을 지도와 거리순 목록으로 보여 줍니다.",
     intro: "셀프세차장과 손세차장을 함께 보여 줘요. 영업시간은 카카오맵에서 확인하세요.",
     color: "#1570EF",
+    variants: [
+      { id: "all", label: "전체", query: "세차장" },
+      { id: "self", label: "셀프세차", query: "셀프세차장" },
+      { id: "hand", label: "손세차", query: "손세차" },
+      { id: "notouch", label: "노터치", query: "노터치세차" },
+    ],
   },
 ]
 
@@ -80,6 +101,7 @@ export interface KakaoPlace {
 export function keepPlace(kind: NearKind, p: KakaoPlace): boolean {
   if (kind.name && !kind.name.test(p.place_name)) return false
   if (kind.category && !kind.category.test(p.category_name)) return false
+  if (kind.exclude && kind.exclude.test(p.place_name)) return false
   return true
 }
 

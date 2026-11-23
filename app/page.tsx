@@ -36,6 +36,14 @@ const POPULAR = [
   "kia-k5-dl3",
 ];
 
+const NEAR_SUB: Record<string, string> = {
+  gongim: "부품 들고 가서 교체",
+  carcenter: "동네 정비소·타이어",
+  bluehands: "현대·제네시스 공식",
+  autoq: "기아 공식",
+  carwash: "셀프·손세차·노터치",
+}
+
 const won = (n: number) => `${n.toLocaleString("ko-KR")}원`;
 
 export default function Home() {
@@ -176,7 +184,7 @@ export default function Home() {
           지금 위치에서 가까운 순으로 지도에 띄워 드려요. 전화·길찾기까지 한
           번에.
         </p>
-        <ul className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
+        <ul className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
           {NEAR_KINDS.map((k) => (
             <li key={k.slug}>
               <Link
@@ -195,13 +203,7 @@ export default function Home() {
                 <span>
                   <span className="block font-bold">근처 {k.label}</span>
                   <span className="block text-[12px] text-muted-foreground">
-                    {k.slug === "gongim"
-                      ? "부품 들고 가서 교체"
-                      : k.slug === "carwash"
-                        ? "셀프·손세차"
-                        : k.slug === "bluehands"
-                          ? "현대·제네시스 공식"
-                          : "기아 공식"}
+                    {NEAR_SUB[k.slug]}
                   </span>
                 </span>
               </Link>
