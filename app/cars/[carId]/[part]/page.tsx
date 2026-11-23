@@ -146,6 +146,16 @@ export default async function PartPage({ params }: Props) {
           )}
 
           <Link
+            href="/check"
+            className="mt-3 flex min-h-[48px] items-center justify-between gap-3 rounded-[10px] border border-primary/30 bg-[#ECFDF3] px-4 py-2.5 text-[14px] transition hover:border-primary"
+          >
+            <span>
+              <b className="block text-foreground">사려는 상품이 내 차에 맞을까?</b>
+              <span className="text-[13px] text-muted-foreground">차대번호와 상품 링크로 30초 만에 확인</span>
+            </span>
+            <span aria-hidden className="shrink-0 font-bold text-primary">확인하기</span>
+          </Link>
+          <Link
             href="/near"
             className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-[10px] bg-foreground px-5 text-[15px] font-bold text-background transition hover:brightness-125 active:translate-y-px"
           >

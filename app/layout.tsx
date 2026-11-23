@@ -71,7 +71,7 @@ function SiteFooter() {
             <li><Link className="hover:text-foreground hover:underline" href="/recalls">리콜 정보</Link></li>
             <li><Link className="hover:text-foreground hover:underline" href="/near">근처 공임나라·정비소</Link></li>
             <li><Link className="hover:text-foreground hover:underline" href="/near/carwash">근처 세차장</Link></li>
-            <li><Link className="hover:text-foreground hover:underline" href="/#compat">부품 호환성 확인</Link></li>
+            <li><Link className="hover:text-foreground hover:underline" href="/check">차대번호로 부품 호환 확인</Link></li>
           </ul>
         </nav>
         <div>

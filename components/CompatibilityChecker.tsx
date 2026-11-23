@@ -504,6 +504,10 @@ export function CompatibilityChecker({ heroMode = false }: CompatibilityCheckerP
           )}
         </Button>
 
+        <p className="text-center text-[12px] text-muted-foreground">
+          AI 판정은 한 사람당 하루 3번까지예요. 이미 확인된 같은 차·같은 상품은 횟수와 상관없이 바로 보여 드려요.
+        </p>
+
         {/* 4단계 진행 인디케이터 */}
         {pageState === "loading" && <StepIndicator steps={steps} activeIdx={stepIdx} />}
       </form>

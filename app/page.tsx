@@ -65,6 +65,16 @@ export default function Home() {
           <p className="mt-3 text-[13px] text-muted-foreground">
             국산·수입 {cars.length}개 차종 · 규격은 제조사 취급설명서 기준
           </p>
+          <Link
+            href="/check"
+            className="mt-5 flex max-w-xl items-center justify-between gap-3 rounded-[14px] border border-primary/30 bg-[#ECFDF3] px-4 py-3 transition hover:border-primary"
+          >
+            <span>
+              <b className="block text-[15px]">사려는 부품이 이미 있나요?</b>
+              <span className="text-[13px] text-muted-foreground">차대번호로 내 차에 맞는지 30초 만에 확인</span>
+            </span>
+            <span aria-hidden className="shrink-0 text-[14px] font-bold text-primary">확인하기</span>
+          </Link>
         </div>
         {sorento && oil && oilCost && (
           <div className="mx-auto w-full max-w-sm lg:mx-0 lg:justify-self-end">
@@ -228,7 +238,10 @@ export default function Home() {
           </h2>
           <p className="mt-1.5 text-[14px] leading-relaxed text-muted-foreground">
             차대번호와 상품 링크를 넣으면 AI가 규격을 대조해 맞을 가능성을 알려
-            드려요. 차대번호는 저장하지 않습니다.
+            드려요. 차대번호는 저장하지 않습니다.{" "}
+            <Link href="/check" className="font-semibold text-foreground underline underline-offset-4">
+              언제 쓰면 좋은지 보기
+            </Link>
           </p>
           <div className="mt-5 rounded-2xl border border-border bg-card p-4 sm:p-6">
             <CompatibilityChecker heroMode />

@@ -15,6 +15,8 @@
 			"service": "maintenance-hack"
 		}
 	],
+	// 부품 호환 확인(AI) 하루 조회 횟수 제한용 (lib/verify-limit.ts). 무료 KV
+	"kv_namespaces": [{ "binding": "VERIFY_LIMIT", "id": "19092b499f78410c8c4e5b94fdffb960" }],
 	// 무료 방문 분석은 Cloudflare 대시보드 > Workers > maintenance-hack > Metrics 에서 확인
 	"observability": { "enabled": true }
 }
