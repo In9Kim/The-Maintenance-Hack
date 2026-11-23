@@ -8,14 +8,12 @@ import {
   partCost,
   priceBasis,
   seoCars,
-  carTotals,
 } from "@/lib/seo";
 import { majorRecalls, fmtDate } from "@/lib/recalls/data";
 import { recallCars, splitCritical } from "@/lib/recalls/highlight";
-import type { CarModel } from "@/types";
-import { NEAR_KINDS } from "@/lib/near";
-import { CarThumb, PhotoCredits } from "@/components/cars/CarPhoto";
-import { carPhoto } from "@/lib/car-photos";
+import { NEAR_KINDS } from "@/lib/near"
+import { SalesRanking } from "@/components/home/SalesRanking"
+import { monthText, salesRanking } from "@/lib/sales-ranking";
 
 export const metadata = pageMetadata({
   title: "엔진오일 교환비용·공임나라 공임비 계산, 차종별 소모품 가격 | 정비핵",
@@ -24,17 +22,6 @@ export const metadata = pageMetadata({
   path: "/",
 });
 
-/** 많이 타는 차 먼저 (홈 차종 바로가기 순서) */
-const POPULAR = [
-  "kia-sorento-mq4",
-  "hyundai-grandeur-gn7",
-  "kia-carnival-ka4",
-  "hyundai-avante-cn7",
-  "kia-sportage-nq5",
-  "hyundai-santafe-mx5",
-  "hyundai-tucson-nx4",
-  "kia-k5-dl3",
-];
 
 const NEAR_SUB: Record<string, string> = {
   gongim: "부품 들고 가서 교체",
@@ -44,7 +31,6 @@ const NEAR_SUB: Record<string, string> = {
   carwash: "셀프·손세차·노터치",
 }
 
-const won = (n: number) => `${n.toLocaleString("ko-KR")}원`;
 
 export default function Home() {
   const cars = seoCars();
@@ -53,9 +39,6 @@ export default function Home() {
     brand: c.brand,
     label: `${c.model} ${c.generation.replace(/\s*\(.*?\)\s*/g, "")} · ${c.yearRange}`,
   }));
-  const popular = POPULAR.map((id) => cars.find((c) => c.id === id)).filter(
-    (c): c is CarModel => !!c,
-  );
 
   // 첫 화면 예시 영수증: 실제 데이터 (쏘렌토 MQ4 엔진오일)
   const sorento = cars.find((c) => c.id === "kia-sorento-mq4");
@@ -101,77 +84,19 @@ export default function Home() {
         )}
       </section>
 
-      {/* ── 많이 찾는 차종 ─────────────────────────────────────── */}
+      {/* ── 이번 달 많이 팔린 차 (판매 순위) ─────────────────────── */}
       <section className="border-y border-border bg-card">
         <div className="mx-auto max-w-5xl px-5 py-12">
           <div className="flex items-end justify-between gap-4">
-            <h2 className="text-[20px] font-bold sm:text-[24px]">
-              많이 찾는 차종
-            </h2>
-            <Link
-              href="/cars"
-              className="min-h-[44px] content-center text-[14px] font-semibold text-muted-foreground hover:text-foreground"
-            >
+            <h2 className="text-[20px] font-bold sm:text-[24px]">{monthText(salesRanking().month)} 많이 팔린 차</h2>
+            <Link href="/cars" className="min-h-[44px] content-center text-[14px] font-semibold text-muted-foreground hover:text-foreground">
               전체 {cars.length}개 차종
             </Link>
           </div>
-          <p className="mt-1 text-[14px] text-muted-foreground">
-            소모품을 한 번씩 모두 교체할 때, 대표 엔진 기준
-          </p>
-          <ul className="mt-5 grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-4">
-            {popular.map((car) => {
-              const t = carTotals(car);
-              const photo = carPhoto(car.id);
-              return (
-                <li key={car.id}>
-                  <Link
-                    href={`/cars/${car.id}`}
-                    className="group block h-full overflow-hidden rounded-[14px] border border-border bg-background transition hover:-translate-y-0.5 hover:border-primary/40"
-                  >
-                    {photo && (
-                      <CarThumb
-                        photo={photo}
-                        alt={`${car.model} ${car.generation}`}
-                      />
-                    )}
-                    <div className="p-3.5 sm:p-4">
-                      <p className="text-[13px] text-muted-foreground">
-                        {car.brand}
-                      </p>
-                      <p className="mt-0.5 font-bold">
-                        {car.model}{" "}
-                        <span className="font-semibold text-muted-foreground">
-                          {car.generation.replace(/\s*\(.*?\)\s*/g, "")}
-                        </span>
-                      </p>
-                      <dl className="mt-3 space-y-0.5 text-[13px] sm:text-[14px]">
-                        <div className="flex items-baseline justify-between gap-2">
-                          <dt className="text-[12px] text-muted-foreground">
-                            공식센터
-                          </dt>
-                          <dd className="num price-was">{won(t.dealer)}</dd>
-                        </div>
-                        <div className="flex items-baseline justify-between gap-2">
-                          <dt className="text-[12px] text-muted-foreground">
-                            직접 구매
-                          </dt>
-                          <dd className="num font-bold text-primary">
-                            {won(t.self)}
-                          </dd>
-                        </div>
-                      </dl>
-                    </div>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-          <PhotoCredits
-            items={popular.flatMap((c) => {
-              const photo = carPhoto(c.id);
-              return photo ? [{ name: c.model, photo }] : [];
-            })}
-          />
+          <p className="mt-1 text-[14px] text-muted-foreground">국산차 판매 순위예요. 누르면 그 차의 소모품 규격과 정비 비용을 볼 수 있어요.</p>
+          <div className="mt-5">
+            <SalesRanking />
+          </div>
         </div>
       </section>
 
