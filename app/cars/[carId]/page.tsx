@@ -22,6 +22,10 @@ import { recallsForCar } from "@/lib/recalls/data"
 import { engineGroups } from "@/lib/engines"
 import { coupangChoicesFor } from "@/lib/coupang-links"
 import { OutboundLink } from "@/components/seo/OutboundLink"
+import { CarDiagram, type DiagramPart } from "@/components/cars/CarDiagram"
+import { CarPhoto } from "@/components/cars/CarPhoto"
+import { carPhoto } from "@/lib/car-photos"
+import { bodyTypeOf, isElectric, zoneLabel, zoneOf, type ZoneId } from "@/lib/car-diagram"
 import type { CarModel, MaintenancePart } from "@/types"
 
 function totalsOf(parts: MaintenancePart[]) {
@@ -123,8 +127,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const car = getSeoCar((await params).carId)
   if (!car) return {}
   const name = carShortName(car)
+  const hasOil = car.parts.some((p) => p.category === "oil")
   return pageMetadata({
-    title: `${name} 소모품 교체 비용 · 규격 총정리 (엔진오일·필터·브레이크) | 정비핵`,
+    title: `${name} 소모품 가격 - ${hasOil ? "와이퍼·배터리·에어컨필터·엔진오일 교환비용" : "와이퍼·에어컨필터·배터리·브레이크패드 교체비용"} | 정비핵`,
     description: `${name}(${car.yearRange}) 엔진오일, 에어컨 필터, 브레이크 패드 등 소모품 규격과 교체 비용. 공식센터 견적 대비 쿠팡 부품+공임나라 셀프 정비 시 절약 금액을 비교합니다.`,
     path: `/cars/${car.id}`,
   })
@@ -142,8 +147,32 @@ export default async function CarPage({ params }: Props) {
   const totals = totalsOf(groups[0].parts)
   const sources = [...new Set(car.parts.map((p) => p.source).filter(Boolean))] as string[]
 
+  const photo = carPhoto(car.id)
   const hasLinks = car.parts.some((p) => coupangChoicesFor(p).length > 0)
   const engineId = (e: string) => `engine-${e.replace(/[^\w가-힣]+/g, "-")}`
+
+  // 부품 위치 도면
+  const body = bodyTypeOf(car)
+  const ev = isElectric(car)
+  const diagramParts: DiagramPart[] = car.parts.map((p) => {
+    const c = partCost(p)
+    const link = coupangChoicesFor(p).at(-1)
+    return {
+      id: p.id,
+      name: p.name,
+      spec: p.spec,
+      href: `/cars/${car.id}/${partSlug(car, p)}`,
+      interval: intervalText(p) ?? undefined,
+      dealer: c.dealer,
+      self: c.self,
+      zone: zoneOf(p),
+      coupang: link ? { url: link.url, title: link.title, sub: link.sub } : undefined,
+    }
+  })
+  const zoneOrder: ZoneId[] = ["engine", "front", "rear", "cabin", "wiper"]
+  const diagramZones = zoneOrder
+    .filter((z) => diagramParts.some((p) => p.zone === z))
+    .map((z) => ({ id: z, ...zoneLabel(z, { ev, body }) }))
 
   return (
     <div className="mx-auto max-w-5xl px-5 pb-6 pt-6 sm:pt-10">
@@ -184,6 +213,7 @@ export default async function CarPage({ params }: Props) {
               {recallCount > 0 ? `리콜 ${recallCount}건` : "리콜 정보"}
             </Link>
           </div>
+          {photo && <CarPhoto photo={photo} alt={`${name} 외관`} priority className="mt-6" />}
         </div>
         <ReceiptCard
           title={`소모품 한 번씩 모두 교체${multi ? ` · ${groups[0].engine}` : ""}`}
@@ -192,6 +222,12 @@ export default async function CarPage({ params }: Props) {
           basis={priceBasis(car)}
         />
       </div>
+
+      <section className="mt-12">
+        <h2 className="text-[20px] font-bold sm:text-[24px]">부품 위치로 보기</h2>
+        <p className="mt-1.5 mb-4 text-[14px] leading-relaxed text-muted-foreground">어디에 있는 부품인지 눌러서 확인하고, 그 자리에서 규격과 비용을 보세요.</p>
+        <CarDiagram carId={car.id} carName={name} body={body} zones={diagramZones} parts={diagramParts} />
+      </section>
 
       <section className="mt-12">
         <h2 className="text-[20px] font-bold sm:text-[24px]">항목별 규격과 비용</h2>

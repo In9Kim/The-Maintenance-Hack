@@ -1,3 +1,4 @@
+import { NEAR_KINDS } from "@/lib/near"
 import type { Recall } from "@/lib/recalls/types"
 import { carShortName, partSlug, seoCars } from "@/lib/seo"
 import { isIndexableMaker, latestDate } from "@/lib/indexing"
@@ -22,7 +23,7 @@ export interface SitePage {
   path: string
   lastModified?: string
   priority: number
-  kind: "home" | "calculator" | "cars" | "car" | "recalls" | "maker" | "car-recalls" | "part"
+  kind: "home" | "near" | "calculator" | "cars" | "car" | "recalls" | "maker" | "car-recalls" | "part"
   /** RSS 항목 제목·설명 (car·maker·car-recalls만) */
   title?: string
   description?: string
@@ -44,6 +45,7 @@ export function sitePages(): SitePage[] {
 
   return [
     { path: "/", priority: 1, kind: "home" },
+    ...NEAR_KINDS.map((k): SitePage => ({ path: k.slug === "gongim" ? "/near" : `/near/${k.slug}`, priority: 0.7, kind: "near" })),
     { path: "/calculator", lastModified: carsUpdated, priority: 0.8, kind: "calculator" },
     { path: "/cars", lastModified: carsUpdated, priority: 0.9, kind: "cars" },
     ...cars.map((car): SitePage => {

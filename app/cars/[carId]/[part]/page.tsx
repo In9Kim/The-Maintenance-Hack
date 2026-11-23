@@ -13,6 +13,8 @@ import {
   calculatorHref,
   pageMetadata,
   priceBasis,
+  partSeoTitle,
+  changeWord,
 } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
@@ -46,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const c = partCost(part)
   return pageMetadata({
     // 검색 결과에서 잘리지 않게 핵심(차종·소모품·비용·절약액)만. 비교 문구는 설명에 있음
-    title: `${name} ${title} 교체 비용·규격 (${formatPrice(c.savings)} 절약) | 정비핵`,
+    title: `${partSeoTitle(car, part)} | 정비핵`,
     description: `${name} ${title} 규격은 ${part.spec}. 공식센터 예상 ${formatPrice(c.dealer)}, 쿠팡 부품+공임나라 공임 ${formatPrice(c.self)}으로 약 ${c.savingsPercent}% 절약할 수 있습니다.${intervalText(part) ? ` 교체 주기 ${intervalText(part)}.` : ""}`,
     path: `/cars/${car.id}/${partSlug(car, part)}`,
   })
@@ -95,7 +97,7 @@ export default async function PartPage({ params }: Props) {
       />
 
       <h1 className="text-[26px] font-extrabold leading-[1.3] sm:text-[36px]">
-        {name} {title} 교체 비용
+        {name} {title} {changeWord(part)} 비용
       </h1>
       <p className="mt-2 text-[15px] text-muted-foreground">
         {car.yearRange} · {part.engine ?? car.engineTypes.join(" / ")}

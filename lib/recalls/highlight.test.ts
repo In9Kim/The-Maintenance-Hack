@@ -2,7 +2,7 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import type { Recall } from "./types.ts"
-import { daysBefore, groupRecalls, isMajorRecall, majorRecallGroups, partLabel, recallCars } from "./highlight.ts"
+import { daysBefore, groupRecalls, isMajorRecall, majorRecallGroups, partLabel, recallCars, splitCritical } from "./highlight.ts"
 
 const r = (o: Partial<Recall>): Recall => ({
   id: o.id ?? Math.random().toString(36).slice(2),
@@ -75,4 +75,15 @@ test("차명·장치 요약", () => {
   assert.equal(partLabel("원동기(동력발생장치) 기타"), "원동기")
   assert.equal(partLabel("제동장치 기타"), "제동장치")
   assert.equal(partLabel(null), "")
+})
+
+test("꼭 확인할 리콜: 안전 직결 결함이 하나라도 있는 묶음만, 나머지는 접기", () => {
+  const groups = groupRecalls([
+    r({ startDate: "2026-11-10", count: 3000, reason: "배선 과열로 화재 발생 가능성" }),
+    r({ startDate: "2026-11-09", makerSlug: "kia", makerName: "기아", count: 5000, reason: "계기판 표시 오류" }),
+  ])
+  const { critical, other } = splitCritical(groups)
+  assert.equal(critical.length, 1)
+  assert.equal(critical[0].makerSlug, "hyundai")
+  assert.equal(other.length, 1)
 })

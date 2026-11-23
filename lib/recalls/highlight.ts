@@ -81,6 +81,17 @@ export function majorRecallGroups(
   return { groups: groups.slice(0, limit), total: major.length }
 }
 
+/**
+ * 첫 화면 "꼭 확인할 리콜": 주요 리콜 중 화재·제동·조향·에어백처럼 사고로 이어지는 결함만.
+ * 나머지 주요 리콜(소프트웨어·표시등·라벨 등)은 접어서 보여 준다.
+ */
+export function splitCritical(groups: RecallGroup[]): { critical: RecallGroup[]; other: RecallGroup[] } {
+  const critical: RecallGroup[] = []
+  const other: RecallGroup[] = []
+  for (const g of groups) (g.recalls.some(isSafetyCritical) ? critical : other).push(g)
+  return { critical, other }
+}
+
 /** 차명 요약: "아반떼(CN7) 외 1개 차명" */
 export function recallCars(r: Pick<Recall, "items">): string {
   const names = [...new Set(r.items.map((i) => i.name))]

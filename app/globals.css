@@ -87,3 +87,11 @@ h1, h2, h3 { letter-spacing: -0.03em; }
     text-decoration-thickness: 1.5px;
   }
 }
+
+/* 차종 페이지 부품 위치 도면 (components/cars/CarDiagram.tsx) */
+@keyframes cd-pulse { 0% { transform: scale(1); opacity: .45 } 100% { transform: scale(2.6); opacity: 0 } }
+.cd-pulse { animation: cd-pulse 1.8s ease-out infinite; }
+@keyframes cd-glow { 0%, 100% { opacity: 1 } 50% { opacity: .45 } }
+.cd-glow { animation: cd-glow 1.6s ease-in-out infinite; }
+@keyframes cd-wipe { 0%, 100% { transform: rotate(0deg) } 50% { transform: rotate(-38deg) } }
+.cd-wipe { animation: cd-wipe 1.4s ease-in-out 2; }

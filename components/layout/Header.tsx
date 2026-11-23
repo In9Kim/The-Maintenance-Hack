@@ -6,9 +6,10 @@ import { usePathname } from "next/navigation"
 // "견적서 분석"(Phase 3, 미완성)은 기능이 열릴 때까지 메뉴에서 숨김
 // 휴대폰은 한 줄에 들어가도록 짧은 이름(short)을 쓴다
 const NAV = [
-  { href: "/cars", label: "차종별 비용", short: "차종별 비용", match: (p: string) => p.startsWith("/cars") },
+  { href: "/cars", label: "차종별 비용", short: "차종", match: (p: string) => p.startsWith("/cars") },
   { href: "/calculator", label: "비용 계산기", short: "계산기", match: (p: string) => p === "/calculator" },
   { href: "/recalls", label: "리콜 정보", short: "리콜", match: (p: string) => p.startsWith("/recalls") },
+  { href: "/near", label: "근처 정비소", short: "정비소", match: (p: string) => p.startsWith("/near") },
 ]
 
 /** 로고: 영수증 한 장 (견적서를 다시 쓴다는 뜻) */

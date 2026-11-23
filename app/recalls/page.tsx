@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { pageMetadata, seoCars, carShortName } from "@/lib/seo"
 import { isIndexableMaker } from "@/lib/indexing"
-import { MIN_MAJOR_COUNT } from "@/lib/recalls/highlight"
+import { splitCritical } from "@/lib/recalls/highlight"
 import { Breadcrumbs, JsonLd } from "@/components/seo/Shared"
 import { CarPicker } from "@/components/home/CarPicker"
 import {
@@ -59,11 +59,14 @@ const H2 = "text-[20px] font-bold sm:text-[24px]"
 const SUMMARY =
   "flex min-h-[44px] cursor-pointer list-none items-center gap-1 text-[14px] font-semibold text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden"
 /** 휴대폰에서 한 화면 남짓만 보이게 나머지는 접어 둔다 (링크는 HTML에 그대로 있어 검색 수집에 영향 없음) */
-const MAJOR_VISIBLE = 6
+const CRITICAL_VISIBLE = 5
 const MAKERS_VISIBLE = 12
 
 export default function RecallsPage() {
-  const { groups, total: majorTotal } = majorRecalls()
+  const { groups } = majorRecalls(30)
+  const { critical, other } = splitCritical(groups)
+  const criticalShown = critical.slice(0, CRITICAL_VISIBLE)
+  const folded = [...critical.slice(CRITICAL_VISIBLE), ...other]
   const makers = recallMakers()
   // 리콜이 많고 이름 주소가 있는 제작사만 바로 보이게, 나머지(이륜차·소형 수입사 등)는 접어 둔다
   const shownMakers = makers.filter(isIndexableMaker).slice(0, MAKERS_VISIBLE)
@@ -118,28 +121,26 @@ export default function RecallsPage() {
       )}
 
       <section className="mt-12" aria-labelledby="major">
-        <h2 id="major" className={H2}>최근 주요 리콜</h2>
+        <h2 id="major" className={H2}>꼭 확인할 리콜</h2>
         <p className="mt-1 text-[14px] leading-relaxed text-muted-foreground">
-          최근 90일, 중대리콜이거나 대상 {MIN_MAJOR_COUNT.toLocaleString("ko-KR")}대 이상인 화재·제동·조향 결함
-          {majorTotal > 0 && ` ${majorTotal}건`}. 누르면 사유가 펼쳐져요.
+          최근 90일, 국산·인기 수입 브랜드의 화재·제동·조향·에어백처럼 사고로 이어질 수 있는 결함만 골랐어요. 누르면 사유가 펼쳐져요.
         </p>
         <div className="mt-4">
-          {groups.length ? (
-            <>
-              <MajorRecallList groups={groups.slice(0, MAJOR_VISIBLE)} />
-              {groups.length > MAJOR_VISIBLE && (
-                <details className="group mt-2">
-                  <summary className={SUMMARY}>
-                    주요 리콜 {groups.length - MAJOR_VISIBLE}건 더 보기 <span aria-hidden className="transition group-open:rotate-180">⌄</span>
-                  </summary>
-                  <div className="pt-1">
-                    <MajorRecallList groups={groups.slice(MAJOR_VISIBLE)} />
-                  </div>
-                </details>
-              )}
-            </>
+          {criticalShown.length ? (
+            <MajorRecallList groups={criticalShown} />
           ) : (
-            <RecallEmpty>최근 90일 동안 주요 리콜이 없어요. 제작사별 페이지에서 전체 리콜을 확인하세요.</RecallEmpty>
+            <RecallEmpty>최근 90일 동안 안전 직결 리콜이 없어요. 아래에서 그 밖의 리콜을 확인하세요.</RecallEmpty>
+          )}
+          {folded.length > 0 && (
+            <details className="group mt-2">
+              <summary className={SUMMARY}>
+                그 밖의 최근 리콜 {folded.length}건 (소프트웨어·표시·부품 결함 등)
+                <span aria-hidden className="transition group-open:rotate-180">⌄</span>
+              </summary>
+              <div className="pt-1">
+                <MajorRecallList groups={folded} />
+              </div>
+            </details>
           )}
         </div>
       </section>
@@ -147,6 +148,7 @@ export default function RecallsPage() {
       {makers.length > 0 && (
         <section className="mt-12" aria-labelledby="by-maker">
           <h2 id="by-maker" className={H2}>제작사별 전체 리콜</h2>
+          <p className="mt-1 text-[14px] text-muted-foreground">오래된 리콜까지 전부 보려면 제작사를 고르세요.</p>
           <div className="mt-4">
             <MakerChips makers={shownMakers} />
           </div>
@@ -165,13 +167,15 @@ export default function RecallsPage() {
       )}
 
       {news.length > 0 && (
-        <section className="mt-12" aria-labelledby="news">
-          <h2 id="news" className={H2}>국토교통부 리콜 보도자료</h2>
-          <p className="mt-1 text-[14px] text-muted-foreground">여러 제작사 리콜을 모아 몇 주~몇 달에 한 번 나오는 발표예요.</p>
-          <div className="mt-4">
+        <details className="group mt-12" aria-labelledby="news">
+          <summary className={SUMMARY}>
+            <span id="news">국토교통부 리콜 보도자료 {news.length}건</span>
+            <span aria-hidden className="transition group-open:rotate-180">⌄</span>
+          </summary>
+          <div className="pt-2">
             <RecallNewsList items={news} />
           </div>
-        </section>
+        </details>
       )}
 
       <RecallFaq items={faq} />

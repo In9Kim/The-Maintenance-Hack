@@ -33,6 +33,27 @@ export function partTitleName(part: MaintenancePart): string {
     .trim()
 }
 
+/**
+ * 소모품 페이지 검색 제목 (네이버 검색광고 키워드 도구 2026-11 조사, data/keyword-volumes.json)
+ *  - 엔진오일은 "교환"이 "교체"보다 5~9배 많이 검색됨, 와이퍼는 "사이즈", 배터리는 "규격"
+ */
+export function partSeoTitle(car: CarModel, part: MaintenancePart): string {
+  const name = carShortName(car)
+  const variant = part.name.match(/\((.*?)\)/)?.[1]
+  const n = part.name
+  if (part.category === "oil") return `${name} 엔진오일 교환비용·규격·용량${variant ? ` (${variant})` : ""}`
+  if (part.category === "wiper") return `${name} 와이퍼 사이즈·가격·교체 방법`
+  if (part.category === "battery") return `${name} ${/12V/.test(n) ? "12V 보조배터리" : "배터리"} 규격·교체비용`
+  if (part.category === "filter" && /에어컨/.test(n)) return `${name} 에어컨필터 규격·교체주기·가격`
+  if (part.category === "filter" && /에어클리너/.test(n)) return `${name} 에어클리너 필터 규격·교체비용`
+  if (part.category === "brake") return `${name} ${partTitleName(part).replace("브레이크 패드", "브레이크패드")} 교체비용·주기`
+  if (part.category === "spark") return `${name} 점화플러그 규격·교체비용·주기`
+  return `${name} ${partTitleName(part)} 교체 비용·규격`
+}
+
+/** 본문 제목 동사: 엔진오일은 "교환" */
+export const changeWord = (part: MaintenancePart) => (part.category === "oil" ? "교환" : "교체")
+
 export function partCost(part: MaintenancePart) {
   const self = part.coupangPrice + part.laborCost
   const dealer = part.dealerPartPrice + part.dealerLaborCost

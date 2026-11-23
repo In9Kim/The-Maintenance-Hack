@@ -69,6 +69,8 @@ function SiteFooter() {
             <li><Link className="hover:text-foreground hover:underline" href="/cars">차종별 정비 비용</Link></li>
             <li><Link className="hover:text-foreground hover:underline" href="/calculator">정비 비용 계산기</Link></li>
             <li><Link className="hover:text-foreground hover:underline" href="/recalls">리콜 정보</Link></li>
+            <li><Link className="hover:text-foreground hover:underline" href="/near">근처 공임나라·정비소</Link></li>
+            <li><Link className="hover:text-foreground hover:underline" href="/near/carwash">근처 세차장</Link></li>
             <li><Link className="hover:text-foreground hover:underline" href="/#compat">부품 호환성 확인</Link></li>
           </ul>
         </nav>
@@ -78,6 +80,7 @@ function SiteFooter() {
             <li>규격·교체 주기: 제조사 취급설명서</li>
             <li>공임: 공임나라 표준 공임 기준</li>
             <li>리콜: 국토교통부·자동차리콜센터</li>
+            <li>정비소·세차장 위치: 카카오 로컬</li>
           </ul>
         </div>
       </div>
