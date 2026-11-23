@@ -20,7 +20,7 @@ import { ReceiptCard } from "@/components/home/ReceiptCard"
 import { EngineTabs } from "@/components/cars/EngineTabs"
 import { recallsForCar } from "@/lib/recalls/data"
 import { engineGroups } from "@/lib/engines"
-import { coupangLinksFor } from "@/lib/coupang-links"
+import { coupangChoicesFor } from "@/lib/coupang-links"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import type { CarModel, MaintenancePart } from "@/types"
 
@@ -34,9 +34,9 @@ function totalsOf(parts: MaintenancePart[]) {
   )
 }
 
-/** 규격 아래 "규격 맞는 상품" — 규격이 정확히 맞는 상품을 넣어 둔 소모품만 (data/coupang-links.json) */
+/** 규격 아래 쿠팡 링크 — 규격 확인 상품(있으면) → 규격·차종 검색 (lib/coupang-links.ts) */
 function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
-  const links = coupangLinksFor(part)
+  const links = coupangChoicesFor(part)
   if (!links.length) return null
   return (
     <div className="mt-1.5 space-y-1">
@@ -50,8 +50,8 @@ function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
           sponsored
           className="inline-flex min-h-[32px] flex-wrap items-center gap-x-1.5 text-[13px] font-semibold text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary"
         >
-          규격 맞는 상품 보기 (쿠팡)
-          <span className="font-normal text-muted-foreground no-underline">{l.product}</span>
+          {l.title}
+          <span className="font-normal text-muted-foreground no-underline">{l.sub}</span>
         </OutboundLink>
       ))}
     </div>
@@ -142,7 +142,7 @@ export default async function CarPage({ params }: Props) {
   const totals = totalsOf(groups[0].parts)
   const sources = [...new Set(car.parts.map((p) => p.source).filter(Boolean))] as string[]
 
-  const hasLinks = car.parts.some((p) => coupangLinksFor(p).length > 0)
+  const hasLinks = car.parts.some((p) => coupangChoicesFor(p).length > 0)
   const engineId = (e: string) => `engine-${e.replace(/[^\w가-힣]+/g, "-")}`
 
   return (

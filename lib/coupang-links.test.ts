@@ -31,3 +31,15 @@ test("검사 규칙", () => {
   assert.deepEqual(checkCoupangLink(oil, oilLink), [])
   assert.ok(checkCoupangLink(oil, { ...oilLink, matches: ["0W-30", "ACEA C5"] }).length) // 규격 하나라도 다르면 실패
 })
+
+test("모든 소모품에 쿠팡 파트너스 검색 링크가 있고, 검색어가 차종 데이터와 같아야 한다", () => {
+  const search = (read("data/coupang-search-links.json").links ?? {}) as Record<string, { kind: string; query: string; url: string }>
+  for (const [id, part] of parts) {
+    const s = search[id]
+    assert.ok(s, `${id} 검색 링크 없음 (node scripts/build-coupang-search-links.mjs 실행)`)
+    assert.equal(new URL(s.url).hostname, "link.coupang.com", `${id} 파트너스 링크 아님`)
+    assert.ok(s.kind === "spec" || s.kind === "car", `${id} kind`)
+    assert.equal(s.query, (part.coupangKeyword || "").trim() || s.query, `${id} 검색어가 coupangKeyword와 다름 → 스크립트 다시 실행`)
+  }
+  for (const id of Object.keys(search)) assert.ok(parts.has(id), `${id} 차종 데이터에 없는 소모품`)
+})

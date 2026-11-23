@@ -2,7 +2,7 @@
 
 import { formatPrice } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
-import { coupangLinksFor } from "@/lib/coupang-links"
+import { coupangChoicesFor } from "@/lib/coupang-links"
 import { priceBasis } from "@/lib/seo"
 import { ReceiptCard } from "@/components/home/ReceiptCard"
 import { OutboundLink } from "@/components/seo/OutboundLink"
@@ -16,7 +16,7 @@ interface CostDashboardProps {
 
 /**
  * 계산 결과: 영수증 + 다음 할 일.
- * 쿠팡은 규격을 확인해 넣어 둔 상품(data/coupang-links.json)이 있는 항목만 링크한다. 검색 링크는 쓰지 않는다.
+ * 쿠팡: 규격 확인 상품(있으면) + 규격·차종 검색 링크 (lib/coupang-links.ts coupangChoicesFor)
  */
 export function CostDashboard({ car, summary }: CostDashboardProps) {
   if (!car) {
@@ -30,7 +30,7 @@ export function CostDashboard({ car, summary }: CostDashboardProps) {
     )
   }
 
-  const linked = summary.items.flatMap(({ part }) => coupangLinksFor(part).map((l) => ({ part, link: l })))
+  const linked = summary.items.flatMap(({ part }) => coupangChoicesFor(part).map((l) => ({ part, link: l })))
 
   return (
     <div className="space-y-4">
@@ -72,8 +72,8 @@ export function CostDashboard({ car, summary }: CostDashboardProps) {
               sponsored
               className="block rounded-[10px] border border-border bg-card px-4 py-3 hover:border-primary/50"
             >
-              <span className="block text-[14px] font-semibold">{part.name} · 규격 맞는 상품 (쿠팡)</span>
-              <span className="mt-0.5 block text-[13px] text-muted-foreground">{link.product}</span>
+              <span className="block text-[14px] font-semibold">{part.name} · {link.title}</span>
+              <span className="mt-0.5 block text-[13px] text-muted-foreground">{link.sub}</span>
             </OutboundLink>
           ))}
         </div>

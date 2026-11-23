@@ -1,0 +1,1290 @@
+{
+  "_설명": "소모품별 쿠팡 파트너스 검색 링크 (scripts/build-coupang-search-links.mjs가 만듦, 손으로 고치지 않음). kind spec=규격 검색, car=차종 검색(구매 전 품번 확인)",
+  "links": {
+    "genesis-g80-rg3-air-filter": {
+      "kind": "car",
+      "query": "G80 RG3 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR4mS0oWi"
+    },
+    "genesis-g80-rg3-battery": {
+      "kind": "car",
+      "query": "G80 RG3 배터리",
+      "url": "https://link.coupang.com/a/iUR4tfJyEe"
+    },
+    "genesis-g80-rg3-brake-pad-front": {
+      "kind": "car",
+      "query": "G80 RG3 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR4m0et8m"
+    },
+    "genesis-g80-rg3-brake-pad-rear": {
+      "kind": "car",
+      "query": "G80 RG3 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR4m3G8Wa"
+    },
+    "genesis-g80-rg3-cabin-filter": {
+      "kind": "car",
+      "query": "G80 RG3 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR4mXq6Nw"
+    },
+    "genesis-g80-rg3-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR4mP4oG4"
+    },
+    "genesis-g80-rg3-engine-oil-35t": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR4mP4oG4"
+    },
+    "genesis-g80-rg3-spark-plug": {
+      "kind": "car",
+      "query": "G80 RG3 2.5 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR4nbR2s0"
+    },
+    "genesis-g80-rg3-spark-plug-35t": {
+      "kind": "car",
+      "query": "G80 RG3 3.5 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR4ne258K"
+    },
+    "genesis-g80-rg3-wiper": {
+      "kind": "car",
+      "query": "G80 RG3 와이퍼",
+      "url": "https://link.coupang.com/a/iUR4m7LxHE"
+    },
+    "genesis-gv70-jk1-air-filter": {
+      "kind": "car",
+      "query": "GV70 JK1 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR4zJoOYK"
+    },
+    "genesis-gv70-jk1-battery": {
+      "kind": "car",
+      "query": "GV70 JK1 배터리",
+      "url": "https://link.coupang.com/a/iUR4F0dNV6"
+    },
+    "genesis-gv70-jk1-brake-pad-front": {
+      "kind": "car",
+      "query": "GV70 JK1 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR4zQckO4"
+    },
+    "genesis-gv70-jk1-brake-pad-rear": {
+      "kind": "car",
+      "query": "GV70 JK1 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR4zThjhY"
+    },
+    "genesis-gv70-jk1-cabin-filter": {
+      "kind": "car",
+      "query": "GV70 JK1 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR4zMkPdY"
+    },
+    "genesis-gv70-jk1-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR4zFWaaW"
+    },
+    "genesis-gv70-jk1-engine-oil-35t": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR4zFWaaW"
+    },
+    "genesis-gv70-jk1-spark-plug": {
+      "kind": "car",
+      "query": "GV70 JK1 2.5 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR4zZXzs4"
+    },
+    "genesis-gv70-jk1-spark-plug-35t": {
+      "kind": "car",
+      "query": "GV70 JK1 3.5 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR4z3O44a"
+    },
+    "genesis-gv70-jk1-wiper": {
+      "kind": "car",
+      "query": "GV70 JK1 와이퍼",
+      "url": "https://link.coupang.com/a/iUR4zWJX5M"
+    },
+    "genesis-gv80-jx1-air-filter": {
+      "kind": "car",
+      "query": "GV80 JX1 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR4tqeIsC"
+    },
+    "genesis-gv80-jx1-battery": {
+      "kind": "car",
+      "query": "GV80 JX1 배터리",
+      "url": "https://link.coupang.com/a/iUR4zzGZjw"
+    },
+    "genesis-gv80-jx1-brake-pad-front": {
+      "kind": "car",
+      "query": "GV80 JX1 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR4twuKBg"
+    },
+    "genesis-gv80-jx1-brake-pad-rear": {
+      "kind": "car",
+      "query": "GV80 JX1 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR4tAhyeG"
+    },
+    "genesis-gv80-jx1-cabin-filter": {
+      "kind": "car",
+      "query": "GV80 JX1 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR4ttjGVw"
+    },
+    "genesis-gv80-jx1-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR4tmncRw"
+    },
+    "genesis-gv80-jx1-engine-oil-35t": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR4tmncRw"
+    },
+    "genesis-gv80-jx1-spark-plug": {
+      "kind": "car",
+      "query": "GV80 JX1 2.5 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR4tGWraD"
+    },
+    "genesis-gv80-jx1-spark-plug-35t": {
+      "kind": "car",
+      "query": "GV80 JX1 3.5 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR4tKo5Yq"
+    },
+    "genesis-gv80-jx1-wiper": {
+      "kind": "car",
+      "query": "GV80 JX1 와이퍼",
+      "url": "https://link.coupang.com/a/iUR4tD83PM"
+    },
+    "hyundai-avante-ad-air-filter": {
+      "kind": "car",
+      "query": "아반떼 AD 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR4MjN8uG"
+    },
+    "hyundai-avante-ad-battery": {
+      "kind": "car",
+      "query": "아반떼 AD 배터리",
+      "url": "https://link.coupang.com/a/iUR4MAoYYS"
+    },
+    "hyundai-avante-ad-brake-pad-front": {
+      "kind": "car",
+      "query": "아반떼 AD 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR4Mqs1qC"
+    },
+    "hyundai-avante-ad-cabin-filter": {
+      "kind": "car",
+      "query": "아반떼 AD 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR4MnFD5M"
+    },
+    "hyundai-avante-ad-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR4GqFYg8"
+    },
+    "hyundai-avante-ad-engine-oil-diesel": {
+      "kind": "spec",
+      "query": "디젤 엔진오일 ACEA C3 5W-30",
+      "url": "https://link.coupang.com/a/iUR4MgR8fs"
+    },
+    "hyundai-avante-ad-spark-plug": {
+      "kind": "car",
+      "query": "아반떼 AD 스마트스트림 1.6 점화플러그",
+      "url": "https://link.coupang.com/a/iUR4MxBBD2"
+    },
+    "hyundai-avante-ad-wiper": {
+      "kind": "car",
+      "query": "아반떼 AD 와이퍼",
+      "url": "https://link.coupang.com/a/iUR4MtJ52W"
+    },
+    "hyundai-avante-cn7-air-filter": {
+      "kind": "car",
+      "query": "아반떼 CN7 에어클리너",
+      "url": "https://link.coupang.com/a/iUR2u1qRXM"
+    },
+    "hyundai-avante-cn7-battery": {
+      "kind": "car",
+      "query": "아반떼 CN7 배터리 60ah",
+      "url": "https://link.coupang.com/a/iUR2vh8AFM"
+    },
+    "hyundai-avante-cn7-brake-pad-front": {
+      "kind": "car",
+      "query": "아반떼 CN7 브레이크패드 전",
+      "url": "https://link.coupang.com/a/iUR2u7Yveu"
+    },
+    "hyundai-avante-cn7-cabin-filter": {
+      "kind": "car",
+      "query": "아반떼 CN7 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR2u4vQqG"
+    },
+    "hyundai-avante-cn7-engine-oil": {
+      "kind": "spec",
+      "query": "아반떼 CN7 엔진오일 0W-20",
+      "url": "https://link.coupang.com/a/iUR2o1RWHk"
+    },
+    "hyundai-avante-cn7-spark-plug": {
+      "kind": "car",
+      "query": "아반떼 CN7 이리듐 점화플러그",
+      "url": "https://link.coupang.com/a/iUR2vfldkW"
+    },
+    "hyundai-avante-cn7-wiper": {
+      "kind": "car",
+      "query": "아반떼 CN7 와이퍼",
+      "url": "https://link.coupang.com/a/iUR2vaUvtI"
+    },
+    "hyundai-casper-ax1-air-filter": {
+      "kind": "car",
+      "query": "캐스퍼 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR3f0Uyjc"
+    },
+    "hyundai-casper-ax1-battery": {
+      "kind": "car",
+      "query": "캐스퍼 배터리",
+      "url": "https://link.coupang.com/a/iUR3l55YVU"
+    },
+    "hyundai-casper-ax1-brake-pad-front": {
+      "kind": "car",
+      "query": "캐스퍼 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR3lPu8rI"
+    },
+    "hyundai-casper-ax1-brake-shoe-rear": {
+      "kind": "car",
+      "query": "캐스퍼 브레이크 라이닝 뒤",
+      "url": "https://link.coupang.com/a/iUR3lTEfaS"
+    },
+    "hyundai-casper-ax1-cabin-filter": {
+      "kind": "car",
+      "query": "캐스퍼 에어컨 필터",
+      "url": "https://link.coupang.com/a/iUR3lMhw4q"
+    },
+    "hyundai-casper-ax1-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3fTUA0a"
+    },
+    "hyundai-casper-ax1-engine-oil-turbo": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3fXJuDs"
+    },
+    "hyundai-casper-ax1-spark-plug": {
+      "kind": "car",
+      "query": "캐스퍼 1.0 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3lZq5ZY"
+    },
+    "hyundai-casper-ax1-spark-plug-turbo": {
+      "kind": "car",
+      "query": "캐스퍼 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3l3RNRc"
+    },
+    "hyundai-casper-ax1-wiper": {
+      "kind": "car",
+      "query": "캐스퍼 와이퍼",
+      "url": "https://link.coupang.com/a/iUR3lWrCvI"
+    },
+    "hyundai-grandeur-gn7-air-filter": {
+      "kind": "car",
+      "query": "그랜저 GN7 에어클리너",
+      "url": "https://link.coupang.com/a/iUR2vnX3sG"
+    },
+    "hyundai-grandeur-gn7-battery": {
+      "kind": "car",
+      "query": "그랜저 GN7 AGM 배터리 90ah",
+      "url": "https://link.coupang.com/a/iUR2BxV7AW"
+    },
+    "hyundai-grandeur-gn7-brake-pad-front": {
+      "kind": "car",
+      "query": "그랜저 GN7 브레이크패드 전",
+      "url": "https://link.coupang.com/a/iUR2vuGpDE"
+    },
+    "hyundai-grandeur-gn7-brake-pad-rear": {
+      "kind": "car",
+      "query": "그랜저 GN7 브레이크패드 후",
+      "url": "https://link.coupang.com/a/iUR2Bn6aZg"
+    },
+    "hyundai-grandeur-gn7-cabin-filter": {
+      "kind": "car",
+      "query": "그랜저 GN7 에어컨필터 캐빈필터",
+      "url": "https://link.coupang.com/a/iUR2vrvlXV"
+    },
+    "hyundai-grandeur-gn7-engine-oil": {
+      "kind": "spec",
+      "query": "그랜저 GN7 엔진오일 0W-30",
+      "url": "https://link.coupang.com/a/iUR2vljElw"
+    },
+    "hyundai-grandeur-gn7-spark-plug": {
+      "kind": "car",
+      "query": "그랜저 GN7 2.5T 이리듐 점화플러그",
+      "url": "https://link.coupang.com/a/iUR2BvmR88"
+    },
+    "hyundai-grandeur-gn7-wiper": {
+      "kind": "car",
+      "query": "그랜저 GN7 와이퍼",
+      "url": "https://link.coupang.com/a/iUR2BrU4Cy"
+    },
+    "hyundai-grandeur-ig-air-filter": {
+      "kind": "car",
+      "query": "그랜저 IG 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR3mfa85Y"
+    },
+    "hyundai-grandeur-ig-battery": {
+      "kind": "car",
+      "query": "그랜저 IG 배터리",
+      "url": "https://link.coupang.com/a/iUR3sqOH0K"
+    },
+    "hyundai-grandeur-ig-brake-pad-front": {
+      "kind": "car",
+      "query": "그랜저 IG 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR3r9o98e"
+    },
+    "hyundai-grandeur-ig-brake-pad-rear": {
+      "kind": "car",
+      "query": "그랜저 IG 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR3scUmDA"
+    },
+    "hyundai-grandeur-ig-cabin-filter": {
+      "kind": "car",
+      "query": "그랜저 IG 에어컨 필터",
+      "url": "https://link.coupang.com/a/iUR3r5Y7ie"
+    },
+    "hyundai-grandeur-ig-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3l8ZrtA"
+    },
+    "hyundai-grandeur-ig-engine-oil-v6": {
+      "kind": "spec",
+      "query": "엔진오일 5W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3mbVrIO"
+    },
+    "hyundai-grandeur-ig-spark-plug": {
+      "kind": "car",
+      "query": "그랜저 IG 2.5 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3skHD5M"
+    },
+    "hyundai-grandeur-ig-spark-plug-v6": {
+      "kind": "car",
+      "query": "그랜저 IG 3.3 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3snSHLw"
+    },
+    "hyundai-grandeur-ig-wiper": {
+      "kind": "car",
+      "query": "그랜저 IG 와이퍼",
+      "url": "https://link.coupang.com/a/iUR3shk4uO"
+    },
+    "hyundai-ioniq5-ne-12v-battery": {
+      "kind": "car",
+      "query": "아이오닉5 12V 보조배터리",
+      "url": "https://link.coupang.com/a/iUR4gG8H8u"
+    },
+    "hyundai-ioniq5-ne-brake-fluid": {
+      "kind": "car",
+      "query": "브레이크오일 DOT4 LV",
+      "url": "https://link.coupang.com/a/iUR4gKmjvM"
+    },
+    "hyundai-ioniq5-ne-brake-pad-front": {
+      "kind": "car",
+      "query": "아이오닉5 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR4gxAmES"
+    },
+    "hyundai-ioniq5-ne-brake-pad-rear": {
+      "kind": "car",
+      "query": "아이오닉5 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR4gBag7U"
+    },
+    "hyundai-ioniq5-ne-cabin-filter": {
+      "kind": "car",
+      "query": "아이오닉5 NE 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR4guEmpE"
+    },
+    "hyundai-ioniq5-ne-reducer-oil-2wd": {
+      "kind": "car",
+      "query": "아이오닉5 감속기 오일 SP4M-1",
+      "url": "https://link.coupang.com/a/iUR4gOdO6S"
+    },
+    "hyundai-ioniq5-ne-reducer-oil-4wd": {
+      "kind": "car",
+      "query": "아이오닉5 감속기 오일 SP4M-1",
+      "url": "https://link.coupang.com/a/iUR4mJDDEa"
+    },
+    "hyundai-ioniq5-ne-wiper": {
+      "kind": "car",
+      "query": "아이오닉5 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR4gDXEsK"
+    },
+    "hyundai-kona-sx2-air-filter": {
+      "kind": "car",
+      "query": "코나 SX2 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR227F8X6"
+    },
+    "hyundai-kona-sx2-battery": {
+      "kind": "car",
+      "query": "코나 SX2 배터리",
+      "url": "https://link.coupang.com/a/iUR29yoxMa"
+    },
+    "hyundai-kona-sx2-brake-pad-front": {
+      "kind": "car",
+      "query": "코나 SX2 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR29dod9o"
+    },
+    "hyundai-kona-sx2-brake-pad-rear": {
+      "kind": "car",
+      "query": "코나 SX2 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR29gBPwG"
+    },
+    "hyundai-kona-sx2-cabin-filter": {
+      "kind": "car",
+      "query": "코나 SX2 에어컨 필터",
+      "url": "https://link.coupang.com/a/iUR289VzlA"
+    },
+    "hyundai-kona-sx2-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR222suo8"
+    },
+    "hyundai-kona-sx2-engine-oil-2-0": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR222suo8"
+    },
+    "hyundai-kona-sx2-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-16 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR224J8IS"
+    },
+    "hyundai-kona-sx2-spark-plug": {
+      "kind": "car",
+      "query": "코나 SX2 1.6 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR29oKblY"
+    },
+    "hyundai-kona-sx2-spark-plug-2-0": {
+      "kind": "car",
+      "query": "코나 SX2 2.0 점화플러그",
+      "url": "https://link.coupang.com/a/iUR29rQUvs"
+    },
+    "hyundai-kona-sx2-spark-plug-hybrid": {
+      "kind": "car",
+      "query": "코나 하이브리드 SX2 점화플러그",
+      "url": "https://link.coupang.com/a/iUR29uEhQi"
+    },
+    "hyundai-kona-sx2-wiper": {
+      "kind": "car",
+      "query": "코나 SX2 와이퍼",
+      "url": "https://link.coupang.com/a/iUR29lhwya"
+    },
+    "hyundai-palisade-lx2-air-filter": {
+      "kind": "car",
+      "query": "팰리세이드 LX2 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR3fv4h4K"
+    },
+    "hyundai-palisade-lx2-battery": {
+      "kind": "car",
+      "query": "팰리세이드 LX2 배터리",
+      "url": "https://link.coupang.com/a/iUR3fQF8lE"
+    },
+    "hyundai-palisade-lx2-brake-pad-front": {
+      "kind": "car",
+      "query": "팰리세이드 LX2 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR3fEbMCO"
+    },
+    "hyundai-palisade-lx2-brake-pad-rear": {
+      "kind": "car",
+      "query": "팰리세이드 LX2 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR3fGK14C"
+    },
+    "hyundai-palisade-lx2-cabin-filter": {
+      "kind": "car",
+      "query": "팰리세이드 LX2 에어컨 필터",
+      "url": "https://link.coupang.com/a/iUR3fAsnYa"
+    },
+    "hyundai-palisade-lx2-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 5W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR29Bkx1o"
+    },
+    "hyundai-palisade-lx2-engine-oil-diesel": {
+      "kind": "spec",
+      "query": "디젤 엔진오일 ACEA C3 5W-30",
+      "url": "https://link.coupang.com/a/iUR29FtEKy"
+    },
+    "hyundai-palisade-lx2-spark-plug": {
+      "kind": "car",
+      "query": "팰리세이드 3.8 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3fNvVW8"
+    },
+    "hyundai-palisade-lx2-wiper": {
+      "kind": "car",
+      "query": "팰리세이드 LX2 와이퍼",
+      "url": "https://link.coupang.com/a/iUR3fJG2jQ"
+    },
+    "hyundai-santafe-mx5-air-filter": {
+      "kind": "car",
+      "query": "싼타페 MX5 에어클리너",
+      "url": "https://link.coupang.com/a/iUR2H7D7ka"
+    },
+    "hyundai-santafe-mx5-battery": {
+      "kind": "car",
+      "query": "싼타페 MX5 AGM 배터리 80ah",
+      "url": "https://link.coupang.com/a/iUR2O0Yw1K"
+    },
+    "hyundai-santafe-mx5-brake-pad-front": {
+      "kind": "car",
+      "query": "싼타페 MX5 브레이크패드 전",
+      "url": "https://link.coupang.com/a/iUR2IeABoa"
+    },
+    "hyundai-santafe-mx5-brake-pad-rear": {
+      "kind": "car",
+      "query": "싼타페 MX5 브레이크패드 후",
+      "url": "https://link.coupang.com/a/iUR2Ih3gbY"
+    },
+    "hyundai-santafe-mx5-cabin-filter": {
+      "kind": "car",
+      "query": "싼타페 MX5 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR2IbvCVg"
+    },
+    "hyundai-santafe-mx5-engine-oil": {
+      "kind": "spec",
+      "query": "싼타페 MX5 엔진오일 0W-30",
+      "url": "https://link.coupang.com/a/iUR2H4qvWS"
+    },
+    "hyundai-santafe-mx5-wiper": {
+      "kind": "car",
+      "query": "싼타페 MX5 와이퍼",
+      "url": "https://link.coupang.com/a/iUR2OXBXqK"
+    },
+    "hyundai-santafe-tm-air-filter": {
+      "kind": "car",
+      "query": "싼타페 TM 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR2BLESMC"
+    },
+    "hyundai-santafe-tm-battery": {
+      "kind": "car",
+      "query": "싼타페 TM 배터리",
+      "url": "https://link.coupang.com/a/iUR2H1fsg8"
+    },
+    "hyundai-santafe-tm-brake-pad-front": {
+      "kind": "car",
+      "query": "싼타페 TM 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR2BSWrdI"
+    },
+    "hyundai-santafe-tm-brake-pad-rear": {
+      "kind": "car",
+      "query": "싼타페 TM 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR2HOewfY"
+    },
+    "hyundai-santafe-tm-cabin-filter": {
+      "kind": "car",
+      "query": "97133-L1100",
+      "url": "https://link.coupang.com/a/iUR2BPtMpU"
+    },
+    "hyundai-santafe-tm-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR2BA9IYe"
+    },
+    "hyundai-santafe-tm-engine-oil-diesel": {
+      "kind": "spec",
+      "query": "디젤 엔진오일 ACEA C3 5W-30",
+      "url": "https://link.coupang.com/a/iUR2BFAqPs"
+    },
+    "hyundai-santafe-tm-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR2BH9Ghg"
+    },
+    "hyundai-santafe-tm-spark-plug": {
+      "kind": "car",
+      "query": "18875-09085",
+      "url": "https://link.coupang.com/a/iUR2HUL9wG"
+    },
+    "hyundai-santafe-tm-spark-plug-hybrid": {
+      "kind": "car",
+      "query": "18875-08085",
+      "url": "https://link.coupang.com/a/iUR2HXSSGa"
+    },
+    "hyundai-santafe-tm-wiper": {
+      "kind": "car",
+      "query": "싼타페 TM 와이퍼",
+      "url": "https://link.coupang.com/a/iUR2HRjuIS"
+    },
+    "hyundai-sonata-dn8-air-filter": {
+      "kind": "car",
+      "query": "쏘나타 디엣지 DN8 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR2WeTyhw"
+    },
+    "hyundai-sonata-dn8-battery": {
+      "kind": "car",
+      "query": "쏘나타 DN8 배터리",
+      "url": "https://link.coupang.com/a/iUR22UkZQ4"
+    },
+    "hyundai-sonata-dn8-brake-pad-front": {
+      "kind": "car",
+      "query": "쏘나타 DN8 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR2WlzOsC"
+    },
+    "hyundai-sonata-dn8-brake-pad-rear": {
+      "kind": "car",
+      "query": "쏘나타 DN8 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR22CRYJw"
+    },
+    "hyundai-sonata-dn8-cabin-filter": {
+      "kind": "car",
+      "query": "쏘나타 디엣지 DN8 에어컨 필터",
+      "url": "https://link.coupang.com/a/iUR2Wimc5k"
+    },
+    "hyundai-sonata-dn8-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR2V8HQE8"
+    },
+    "hyundai-sonata-dn8-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-16 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR2WbOzOC"
+    },
+    "hyundai-sonata-dn8-engine-oil-turbo": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR2V8HQE8"
+    },
+    "hyundai-sonata-dn8-spark-plug": {
+      "kind": "car",
+      "query": "쏘나타 DN8 2.0 점화플러그",
+      "url": "https://link.coupang.com/a/iUR22JyeUC"
+    },
+    "hyundai-sonata-dn8-spark-plug-hybrid": {
+      "kind": "car",
+      "query": "쏘나타 하이브리드 DN8 점화플러그",
+      "url": "https://link.coupang.com/a/iUR22QPNlJ"
+    },
+    "hyundai-sonata-dn8-spark-plug-turbo": {
+      "kind": "car",
+      "query": "쏘나타 DN8 1.6 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR22NEJFY"
+    },
+    "hyundai-sonata-dn8-wiper": {
+      "kind": "car",
+      "query": "쏘나타 DN8 와이퍼",
+      "url": "https://link.coupang.com/a/iUR22GCeFo"
+    },
+    "hyundai-staria-us4-air-filter": {
+      "kind": "car",
+      "query": "스타리아 US4 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR34bWbUi"
+    },
+    "hyundai-staria-us4-battery": {
+      "kind": "car",
+      "query": "스타리아 배터리",
+      "url": "https://link.coupang.com/a/iUR4ak50lU"
+    },
+    "hyundai-staria-us4-brake-pad-front": {
+      "kind": "car",
+      "query": "스타리아 US4 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR34h7TwG"
+    },
+    "hyundai-staria-us4-brake-pad-rear": {
+      "kind": "car",
+      "query": "스타리아 US4 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR397NtcG"
+    },
+    "hyundai-staria-us4-cabin-filter": {
+      "kind": "car",
+      "query": "스타리아 US4 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR34e2U3M"
+    },
+    "hyundai-staria-us4-engine-oil-diesel": {
+      "kind": "spec",
+      "query": "디젤 엔진오일 ACEA C5 0W-30",
+      "url": "https://link.coupang.com/a/iUR331OEay"
+    },
+    "hyundai-staria-us4-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR338K8ey"
+    },
+    "hyundai-staria-us4-engine-oil-lpg": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR338K8ey"
+    },
+    "hyundai-staria-us4-spark-plug-hybrid": {
+      "kind": "car",
+      "query": "스타리아 하이브리드 점화플러그",
+      "url": "https://link.coupang.com/a/iUR4ah01S0"
+    },
+    "hyundai-staria-us4-spark-plug-lpg": {
+      "kind": "car",
+      "query": "스타리아 LPG 3.5 점화플러그",
+      "url": "https://link.coupang.com/a/iUR4aeq7pY"
+    },
+    "hyundai-staria-us4-wiper": {
+      "kind": "car",
+      "query": "스타리아 US4 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR4aaVUUC"
+    },
+    "hyundai-tucson-nx4-air-filter": {
+      "kind": "car",
+      "query": "투싼 NX4 에어클리너",
+      "url": "https://link.coupang.com/a/iUR2oIwBS8"
+    },
+    "hyundai-tucson-nx4-battery": {
+      "kind": "car",
+      "query": "투싼 NX4 AGM 배터리",
+      "url": "https://link.coupang.com/a/iUR2oX0q6e"
+    },
+    "hyundai-tucson-nx4-brake-pad-front": {
+      "kind": "car",
+      "query": "투싼 NX4 브레이크패드 전",
+      "url": "https://link.coupang.com/a/iUR2oOwNAi"
+    },
+    "hyundai-tucson-nx4-brake-pad-rear": {
+      "kind": "car",
+      "query": "투싼 NX4 브레이크패드 후",
+      "url": "https://link.coupang.com/a/iUR2oRTnbg"
+    },
+    "hyundai-tucson-nx4-cabin-filter": {
+      "kind": "car",
+      "query": "투싼 NX4 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR2oLHFyS"
+    },
+    "hyundai-tucson-nx4-engine-oil": {
+      "kind": "spec",
+      "query": "투싼 NX4 엔진오일 0W-20",
+      "url": "https://link.coupang.com/a/iUR2oF0PGm"
+    },
+    "hyundai-tucson-nx4-wiper": {
+      "kind": "car",
+      "query": "투싼 NX4 와이퍼",
+      "url": "https://link.coupang.com/a/iUR2oU4qQ0"
+    },
+    "kgm-torres-j100-air-filter": {
+      "kind": "car",
+      "query": "토레스 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR4F5LFAW"
+    },
+    "kgm-torres-j100-battery": {
+      "kind": "car",
+      "query": "AGM 70Ah 배터리",
+      "url": "https://link.coupang.com/a/iUR4GnMvJs"
+    },
+    "kgm-torres-j100-brake-pad-front": {
+      "kind": "car",
+      "query": "토레스 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR4GbRmgK"
+    },
+    "kgm-torres-j100-brake-pad-rear": {
+      "kind": "car",
+      "query": "토레스 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR4Ge2pWu"
+    },
+    "kgm-torres-j100-cabin-filter": {
+      "kind": "car",
+      "query": "토레스 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR4F9Dbb2"
+    },
+    "kgm-torres-j100-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 ACEA C2",
+      "url": "https://link.coupang.com/a/iUR4F27gtM"
+    },
+    "kgm-torres-j100-spark-plug": {
+      "kind": "car",
+      "query": "토레스 1.5 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR4GlgJwG"
+    },
+    "kgm-torres-j100-wiper": {
+      "kind": "car",
+      "query": "토레스 와이퍼",
+      "url": "https://link.coupang.com/a/iUR4GhYqbI"
+    },
+    "kia-bongo3-pu-air-filter": {
+      "kind": "car",
+      "query": "봉고3 PU 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR3XPTt7I"
+    },
+    "kia-bongo3-pu-battery": {
+      "kind": "car",
+      "query": "봉고3 배터리",
+      "url": "https://link.coupang.com/a/iUR33YSDVk"
+    },
+    "kia-bongo3-pu-brake-pad-front": {
+      "kind": "car",
+      "query": "봉고3 PU 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR3XV8EY8"
+    },
+    "kia-bongo3-pu-brake-shoe-rear": {
+      "kind": "car",
+      "query": "봉고3 PU 브레이크 라이닝 뒤",
+      "url": "https://link.coupang.com/a/iUR33O2HjE"
+    },
+    "kia-bongo3-pu-cabin-filter": {
+      "kind": "car",
+      "query": "봉고3 PU 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR3XS4xNs"
+    },
+    "kia-bongo3-pu-engine-oil-diesel": {
+      "kind": "spec",
+      "query": "디젤 엔진오일 ACEA C2",
+      "url": "https://link.coupang.com/a/iUR3XFXwzs"
+    },
+    "kia-bongo3-pu-engine-oil-lpg": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3XJeBbM"
+    },
+    "kia-bongo3-pu-fuel-filter-diesel": {
+      "kind": "car",
+      "query": "봉고3 디젤 연료필터",
+      "url": "https://link.coupang.com/a/iUR3XNnHUW"
+    },
+    "kia-bongo3-pu-spark-plug-lpg": {
+      "kind": "car",
+      "query": "봉고3 LPG 2.5 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR33VHAfA"
+    },
+    "kia-bongo3-pu-wiper": {
+      "kind": "car",
+      "query": "봉고3 PU 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR33SUcUK"
+    },
+    "kia-carnival-ka4-air-filter": {
+      "kind": "car",
+      "query": "카니발 KA4 에어클리너",
+      "url": "https://link.coupang.com/a/iUR2h9lIqa"
+    },
+    "kia-carnival-ka4-battery": {
+      "kind": "car",
+      "query": "카니발 배터리 90ah",
+      "url": "https://link.coupang.com/a/iUR2inf3Nk"
+    },
+    "kia-carnival-ka4-brake-pad-front": {
+      "kind": "car",
+      "query": "카니발 KA4 브레이크패드 전",
+      "url": "https://link.coupang.com/a/iUR2igzNCe"
+    },
+    "kia-carnival-ka4-cabin-filter": {
+      "kind": "car",
+      "query": "카니발 KA4 에어컨필터 캐빈필터",
+      "url": "https://link.coupang.com/a/iUR2iddd1g"
+    },
+    "kia-carnival-ka4-engine-oil": {
+      "kind": "spec",
+      "query": "카니발 KA4 3.5 엔진오일 5W-30 6L",
+      "url": "https://link.coupang.com/a/iUR2b2ANXw"
+    },
+    "kia-carnival-ka4-wiper": {
+      "kind": "car",
+      "query": "카니발 KA4 와이퍼",
+      "url": "https://link.coupang.com/a/iUR2ij2sp2"
+    },
+    "kia-k5-dl3-air-filter": {
+      "kind": "car",
+      "query": "K5 DL3 에어클리너",
+      "url": "https://link.coupang.com/a/iUR2iuxCeq"
+    },
+    "kia-k5-dl3-battery": {
+      "kind": "car",
+      "query": "K5 DL3 AGM 배터리 70ah",
+      "url": "https://link.coupang.com/a/iUR2oB9j5g"
+    },
+    "kia-k5-dl3-brake-pad-front": {
+      "kind": "car",
+      "query": "K5 3세대 브레이크패드 전",
+      "url": "https://link.coupang.com/a/iUR2iBRIm4"
+    },
+    "kia-k5-dl3-cabin-filter": {
+      "kind": "car",
+      "query": "K5 DL3 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR2ixLdBI"
+    },
+    "kia-k5-dl3-engine-oil": {
+      "kind": "spec",
+      "query": "K5 3세대 엔진오일 0W-20",
+      "url": "https://link.coupang.com/a/iUR2irmyyG"
+    },
+    "kia-k5-dl3-spark-plug": {
+      "kind": "car",
+      "query": "K5 2.0 이리듐 점화플러그",
+      "url": "https://link.coupang.com/a/iUR2oy9QA0"
+    },
+    "kia-k5-dl3-wiper": {
+      "kind": "car",
+      "query": "K5 DL3 와이퍼",
+      "url": "https://link.coupang.com/a/iUR2iE2L2O"
+    },
+    "kia-k8-gl3-air-filter": {
+      "kind": "car",
+      "query": "K8 GL3 에어클리너 에어필터",
+      "url": "https://link.coupang.com/a/iUR3RsfgLA"
+    },
+    "kia-k8-gl3-battery": {
+      "kind": "car",
+      "query": "K8 GL3 배터리",
+      "url": "https://link.coupang.com/a/iUR3XDrKmG"
+    },
+    "kia-k8-gl3-brake-pad-front": {
+      "kind": "car",
+      "query": "K8 GL3 브레이크패드 전 앞",
+      "url": "https://link.coupang.com/a/iUR3RyjIIK"
+    },
+    "kia-k8-gl3-brake-pad-rear": {
+      "kind": "car",
+      "query": "K8 GL3 브레이크패드 후 뒤",
+      "url": "https://link.coupang.com/a/iUR3RB8Cl2"
+    },
+    "kia-k8-gl3-cabin-filter": {
+      "kind": "car",
+      "query": "K8 GL3 에어컨필터 캐빈필터",
+      "url": "https://link.coupang.com/a/iUR3Ru57ls"
+    },
+    "kia-k8-gl3-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3Rn592q"
+    },
+    "kia-k8-gl3-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3Rn592q"
+    },
+    "kia-k8-gl3-engine-oil-v6": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3Rn592q"
+    },
+    "kia-k8-gl3-spark-plug": {
+      "kind": "car",
+      "query": "K8 GL3 2.5 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3XtKLYG"
+    },
+    "kia-k8-gl3-spark-plug-hybrid": {
+      "kind": "car",
+      "query": "K8 GL3 하이브리드 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3XzRPTE"
+    },
+    "kia-k8-gl3-spark-plug-v6": {
+      "kind": "car",
+      "query": "K8 GL3 3.5 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3XwVPEq"
+    },
+    "kia-k8-gl3-wiper": {
+      "kind": "car",
+      "query": "K8 GL3 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR3RFpGYm"
+    },
+    "kia-morning-ja-air-filter": {
+      "kind": "car",
+      "query": "모닝 JA 에어클리너 에어필터",
+      "url": "https://link.coupang.com/a/iUR3LaUuwS"
+    },
+    "kia-morning-ja-battery": {
+      "kind": "car",
+      "query": "모닝 JA 배터리",
+      "url": "https://link.coupang.com/a/iUR3RcAIEe"
+    },
+    "kia-morning-ja-brake-pad-front": {
+      "kind": "car",
+      "query": "모닝 JA 브레이크패드 전 앞",
+      "url": "https://link.coupang.com/a/iUR3LhUrPU"
+    },
+    "kia-morning-ja-cabin-filter": {
+      "kind": "car",
+      "query": "모닝 JA 에어컨필터 캐빈필터",
+      "url": "https://link.coupang.com/a/iUR3LeJoaa"
+    },
+    "kia-morning-ja-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3K7GS9A"
+    },
+    "kia-morning-ja-spark-plug": {
+      "kind": "car",
+      "query": "모닝 JA 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3Q9Nljo"
+    },
+    "kia-morning-ja-wiper": {
+      "kind": "car",
+      "query": "모닝 JA 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR3LkQr48"
+    },
+    "kia-niro-sg2-air-filter": {
+      "kind": "car",
+      "query": "니로 SG2 에어클리너 필터",
+      "url": "https://link.coupang.com/a/iUR4asw2YC"
+    },
+    "kia-niro-sg2-battery": {
+      "kind": "car",
+      "query": "니로 SG2 하이브리드 12V 배터리",
+      "url": "https://link.coupang.com/a/iUR4grtiJU"
+    },
+    "kia-niro-sg2-brake-pad-front": {
+      "kind": "car",
+      "query": "니로 SG2 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iUR4ayuCHY"
+    },
+    "kia-niro-sg2-brake-pad-rear": {
+      "kind": "car",
+      "query": "니로 SG2 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iUR4aByJTE"
+    },
+    "kia-niro-sg2-cabin-filter": {
+      "kind": "car",
+      "query": "니로 SG2 에어컨필터",
+      "url": "https://link.coupang.com/a/iUR4avDL76"
+    },
+    "kia-niro-sg2-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-16 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR4an5tQa"
+    },
+    "kia-niro-sg2-spark-plug": {
+      "kind": "car",
+      "query": "니로 SG2 하이브리드 점화플러그",
+      "url": "https://link.coupang.com/a/iUR4goXww8"
+    },
+    "kia-niro-sg2-wiper": {
+      "kind": "car",
+      "query": "니로 SG2 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR4gkOpNY"
+    },
+    "kia-ray-tam-air-filter": {
+      "kind": "car",
+      "query": "레이 TAM 에어클리너 에어필터",
+      "url": "https://link.coupang.com/a/iUR3E766BU"
+    },
+    "kia-ray-tam-battery": {
+      "kind": "car",
+      "query": "레이 TAM 배터리",
+      "url": "https://link.coupang.com/a/iUR3K4P2zJ"
+    },
+    "kia-ray-tam-brake-pad-front": {
+      "kind": "car",
+      "query": "레이 TAM 브레이크패드 전 앞",
+      "url": "https://link.coupang.com/a/iUR3KVKSpE"
+    },
+    "kia-ray-tam-cabin-filter": {
+      "kind": "car",
+      "query": "레이 TAM 에어컨필터 캐빈필터",
+      "url": "https://link.coupang.com/a/iUR3KSaXWC"
+    },
+    "kia-ray-tam-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 5W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3E4xb8S"
+    },
+    "kia-ray-tam-spark-plug": {
+      "kind": "car",
+      "query": "레이 TAM 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3K1f76G"
+    },
+    "kia-ray-tam-wiper": {
+      "kind": "car",
+      "query": "레이 TAM 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR3KYgECq"
+    },
+    "kia-seltos-sp2-air-filter": {
+      "kind": "car",
+      "query": "셀토스 SP2 에어클리너 에어필터",
+      "url": "https://link.coupang.com/a/iUR3EEBGmq"
+    },
+    "kia-seltos-sp2-battery": {
+      "kind": "car",
+      "query": "셀토스 SP2 배터리",
+      "url": "https://link.coupang.com/a/iUR3E1BbTE"
+    },
+    "kia-seltos-sp2-brake-pad-front": {
+      "kind": "car",
+      "query": "셀토스 SP2 브레이크패드 전 앞",
+      "url": "https://link.coupang.com/a/iUR3ELEbm0"
+    },
+    "kia-seltos-sp2-brake-pad-rear": {
+      "kind": "car",
+      "query": "셀토스 SP2 브레이크패드 후 뒤",
+      "url": "https://link.coupang.com/a/iUR3EPoriS"
+    },
+    "kia-seltos-sp2-cabin-filter": {
+      "kind": "car",
+      "query": "셀토스 SP2 에어컨필터 캐빈필터",
+      "url": "https://link.coupang.com/a/iUR3EIhBL3"
+    },
+    "kia-seltos-sp2-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3yLyFOe"
+    },
+    "kia-seltos-sp2-engine-oil-mpi": {
+      "kind": "spec",
+      "query": "엔진오일 5W-20 합성유",
+      "url": "https://link.coupang.com/a/iUR3yNMQSW"
+    },
+    "kia-seltos-sp2-spark-plug": {
+      "kind": "car",
+      "query": "셀토스 SP2 1.6 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3EWbW9c"
+    },
+    "kia-seltos-sp2-spark-plug-mpi": {
+      "kind": "car",
+      "query": "셀토스 SP2 2.0 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3EYHJlY"
+    },
+    "kia-seltos-sp2-wiper": {
+      "kind": "car",
+      "query": "셀토스 SP2 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR3ER2Qp2"
+    },
+    "kia-sorento-mq4-air-filter": {
+      "kind": "car",
+      "query": "쏘렌토 MQ4 에어클리너 에어필터",
+      "url": "https://link.coupang.com/a/iUR2bDQeoT"
+    },
+    "kia-sorento-mq4-battery": {
+      "kind": "car",
+      "query": "쏘렌토 MQ4 배터리",
+      "url": "https://link.coupang.com/a/iUR2bZsmfA"
+    },
+    "kia-sorento-mq4-brake-pad-front": {
+      "kind": "car",
+      "query": "쏘렌토 MQ4 브레이크패드 전 앞",
+      "url": "https://link.coupang.com/a/iUR2bLx0Sq"
+    },
+    "kia-sorento-mq4-brake-pad-rear": {
+      "kind": "car",
+      "query": "쏘렌토 MQ4 브레이크패드 후 뒤",
+      "url": "https://link.coupang.com/a/iUR2bOUAto"
+    },
+    "kia-sorento-mq4-cabin-filter": {
+      "kind": "car",
+      "query": "쏘렌토 MQ4 에어컨필터 캐빈필터",
+      "url": "https://link.coupang.com/a/iUR2bHGvhk"
+    },
+    "kia-sorento-mq4-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR2bwTKkS"
+    },
+    "kia-sorento-mq4-engine-oil-diesel": {
+      "kind": "spec",
+      "query": "디젤 엔진오일 ACEA C5",
+      "url": "https://link.coupang.com/a/iUR2bA2Q32"
+    },
+    "kia-sorento-mq4-spark-plug": {
+      "kind": "car",
+      "query": "쏘렌토 MQ4 2.5 점화플러그",
+      "url": "https://link.coupang.com/a/iUR2bVAQEu"
+    },
+    "kia-sorento-mq4-wiper": {
+      "kind": "car",
+      "query": "쏘렌토 MQ4 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR2bSnfhc"
+    },
+    "kia-sportage-nq5-air-filter": {
+      "kind": "car",
+      "query": "스포티지 NQ5 에어클리너 에어필터",
+      "url": "https://link.coupang.com/a/iUR3ymYrIq"
+    },
+    "kia-sportage-nq5-battery": {
+      "kind": "car",
+      "query": "스포티지 NQ5 배터리",
+      "url": "https://link.coupang.com/a/iUR3yHYLlc"
+    },
+    "kia-sportage-nq5-brake-pad-front": {
+      "kind": "car",
+      "query": "스포티지 NQ5 브레이크패드 전 앞",
+      "url": "https://link.coupang.com/a/iUR3ys38oe"
+    },
+    "kia-sportage-nq5-brake-pad-rear": {
+      "kind": "car",
+      "query": "스포티지 NQ5 브레이크패드 후 뒤",
+      "url": "https://link.coupang.com/a/iUR3yvXAVU"
+    },
+    "kia-sportage-nq5-cabin-filter": {
+      "kind": "car",
+      "query": "스포티지 NQ5 에어컨필터 캐빈필터",
+      "url": "https://link.coupang.com/a/iUR3yqymbs"
+    },
+    "kia-sportage-nq5-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3syW3P2"
+    },
+    "kia-sportage-nq5-engine-oil-diesel": {
+      "kind": "spec",
+      "query": "디젤 엔진오일 ACEA C5",
+      "url": "https://link.coupang.com/a/iUR3sBS35g"
+    },
+    "kia-sportage-nq5-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iUR3syW3P2"
+    },
+    "kia-sportage-nq5-spark-plug": {
+      "kind": "car",
+      "query": "스포티지 NQ5 1.6 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3yCbUv6"
+    },
+    "kia-sportage-nq5-spark-plug-hybrid": {
+      "kind": "car",
+      "query": "스포티지 NQ5 하이브리드 점화플러그",
+      "url": "https://link.coupang.com/a/iUR3yEHGIS"
+    },
+    "kia-sportage-nq5-wiper": {
+      "kind": "car",
+      "query": "스포티지 NQ5 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR3yyBZ24"
+    },
+    "tesla-model3-highland-12v-battery": {
+      "kind": "car",
+      "query": "테슬라 모델3 12V 보조배터리 LFP",
+      "url": "https://link.coupang.com/a/iUR2Ph3V4C"
+    },
+    "tesla-model3-highland-brake-fluid": {
+      "kind": "car",
+      "query": "브레이크오일 DOT4 테슬라",
+      "url": "https://link.coupang.com/a/iUR2PlQJH2"
+    },
+    "tesla-model3-highland-brake-pad-front": {
+      "kind": "car",
+      "query": "테슬라 모델3 브레이크패드 전",
+      "url": "https://link.coupang.com/a/iUR2O7WokS"
+    },
+    "tesla-model3-highland-brake-pad-rear": {
+      "kind": "car",
+      "query": "테슬라 모델3 브레이크패드 후",
+      "url": "https://link.coupang.com/a/iUR2PbNTVY"
+    },
+    "tesla-model3-highland-cabin-filter": {
+      "kind": "car",
+      "query": "테슬라 모델3 Highland 에어컨필터 HEPA",
+      "url": "https://link.coupang.com/a/iUR2O40n5E"
+    },
+    "tesla-model3-highland-wiper": {
+      "kind": "car",
+      "query": "테슬라 모델3 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR2PeBhgO"
+    },
+    "tesla-modely-12v-battery": {
+      "kind": "car",
+      "query": "테슬라 모델Y 12V 보조배터리 LFP",
+      "url": "https://link.coupang.com/a/iUR2VXRCtE"
+    },
+    "tesla-modely-brake-fluid": {
+      "kind": "car",
+      "query": "브레이크오일 DOT4 테슬라 모델Y",
+      "url": "https://link.coupang.com/a/iUR2V1khhs"
+    },
+    "tesla-modely-brake-pad-front": {
+      "kind": "car",
+      "query": "테슬라 모델Y 브레이크패드 전",
+      "url": "https://link.coupang.com/a/iUR2PsvCDY"
+    },
+    "tesla-modely-brake-pad-rear": {
+      "kind": "car",
+      "query": "테슬라 모델Y 브레이크패드 후",
+      "url": "https://link.coupang.com/a/iUR2VQU8pE"
+    },
+    "tesla-modely-cabin-filter": {
+      "kind": "car",
+      "query": "테슬라 모델Y Juniper 에어컨필터 HEPA",
+      "url": "https://link.coupang.com/a/iUR2PpqEa4"
+    },
+    "tesla-modely-wiper": {
+      "kind": "car",
+      "query": "테슬라 모델Y 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iUR2VU4e8O"
+    }
+  }
+}
