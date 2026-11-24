@@ -39,12 +39,31 @@ const LEGACY_CODES = ["HD", "MD", "LF", "YF", "NF", "TL", "QL", "SL", "UM", "XM"
 const isTurbo = (s) => /T-?GDi|터보|\d\.\dT\b|TGDI/i.test(s)
 const OTHER_MAKERS = /쌍용|KGM|토요타|도요타|TOYOTA|렉서스|혼다|닛산|르노|쉐보레|GM대우|BMW|벤츠|아우디|폭스바겐|볼보|포드/i
 
+/** 상품명의 연식 범위 (두 자리 연도). "20-23년식" → [20,23], "21년식 이후" → [21,99], "(04~)" → [4,99] */
+export function yearsOf(title) {
+  const r = title.match(/(?<!\d)(\d{2})\s*[-~]\s*(\d{2})\s*년/)
+  if (r) return [+r[1], +r[2]]
+  const a = title.match(/(?<!\d)(\d{2})\s*년\s*(?:식|형)?\s*(?:이후|~)/) ?? title.match(/\((\d{2})\s*~\s*\)/)
+  return a ? [+a[1], 99] : null
+}
+/** 차종 연식 "2020~현재" → [20,99] */
+export function carYears(yearRange) {
+  const m = String(yearRange).match(/(\d{4})\s*~\s*(\d{4}|현재)?/)
+  return m ? [+m[1] % 100, m[2] && m[2] !== "현재" ? +m[2] % 100 : 99] : null
+}
+const overlap = (a, b) => !!a && !!b && a[0] <= b[1] && b[0] <= a[1]
+/** 세대 코드 없이 연식만으로 볼 때: 상품 시작 연도가 우리 차 마지막 해와 겹치기만 하면(신형 첫해) 제외 */
+const overlapStrict = (a, b) => overlap(a, b) && !(b[1] !== 99 && a[0] >= b[1])
+
 /** 차종 전용 세트 상품이 이 차·엔진에 맞는지 */
-export function setMatches(title, { model, code, visc, grade, grades = [], fuel, disp, turbo, multi, codes = [] }) {
+export function setMatches(title, { model, alias = [], code, years, visc, grade, grades = [], fuel, disp, turbo, multi, codes = [] }) {
   const t = norm(title)
-  if (!t.includes(norm(model)) && !(code && t.includes(norm(code)))) return false
-  if (code && !t.includes(norm(code))) return false // 세대 코드가 꼭 있어야 (아반떼 AD ↔ CN7 구분)
-  if (!code && codes.some((c) => t.includes(norm(c)))) return false
+  const hasModel = [model, ...alias].some((m) => t.includes(norm(m)))
+  const hasCode = !!code && t.includes(norm(code))
+  if (!hasModel && !hasCode) return false
+  // 세대 코드가 있어야 (아반떼 AD ↔ CN7 구분). 없으면 상품명 연식이 우리 차 연식과 겹치고 다른 세대 코드가 없을 때만
+  if (code && !hasCode && !overlapStrict(yearsOf(title), years)) return false
+  if (codes.some((c) => c !== code && new RegExp(`(^|[^A-Z0-9])${c}([^A-Z0-9]|$)`).test(title.toUpperCase()))) return false
   if (LEGACY_CODES.some((c) => c !== code && new RegExp(`(^|[^A-Z])${c}([^A-Z0-9]|$)`).test(title.toUpperCase()))) return false
   if (visc) {
     if (!t.includes(norm(visc))) return false
@@ -58,6 +77,25 @@ export function setMatches(title, { model, code, visc, grade, grades = [], fuel,
   if (turbo && /MPI/i.test(title)) return false
   if (/공임/.test(title)) return false
   return /세트|필터/.test(title)
+}
+
+/** 통과한 후보끼리 순위: 세대 코드·연식·배기량이 적혀 있을수록, 로켓배송이면 위로 */
+export function setScore(title, ctx, item = {}) {
+  let sc = 0
+  if (ctx.code && norm(title).includes(norm(ctx.code))) sc += 3
+  if (overlap(yearsOf(title), ctx.years)) sc += 2
+  if (ctx.disp && displacementOf(title) === ctx.disp) sc += 2
+  if (ctx.fuel && fuelOf(title) === ctx.fuel) sc += 1
+  if (item.isRocket) sc += 1
+  return sc
+}
+
+/** 상품명의 용량(L) — "6L", "4리터", "1L x 6" */
+export function litersOf(title) {
+  const x = title.match(/(\d)\s*L\s*[x×*]\s*(\d+)/i)
+  if (x) return +x[1] * +x[2]
+  const m = title.match(/(?<![\d.])(\d(?:\.\d)?)\s*(?:L\b|리터)/i)
+  return m ? +m[1] : null
 }
 
 /** 단품 오일이 점도·등급에 맞고 다른 차 전용이 아닌지 */
@@ -85,6 +123,8 @@ async function search(keyword, ak, sk) {
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+/** 쇼핑몰에서 같이 쓰는 차 이름 */
+const ALIAS = { 쏘나타: ["소나타"], 그랜저: ["그랜져"], 싼타페: ["산타페"], 팰리세이드: ["펠리세이드"], 스타리아: [], 캐스퍼: [], 쏘렌토: ["소렌토"] }
 
 async function main() {
   const ak = env("COUPANG_ACCESS_KEY")
@@ -118,18 +158,39 @@ async function main() {
         carNames,
         codes,
       }
+      ctx.alias = ALIAS[car.model] ?? []
+      ctx.years = carYears(car.yearRange)
+      ctx.need = Number(part.spec.match(/(\d+(?:\.\d)?)\s*L\b/)?.[1] ?? 0) || null
       let pick = null
-      const q1 = [car.model, ctx.code, ctx.disp, ctx.fuel, "엔진오일세트"].filter(Boolean).join(" ")
-      const r1 = await search(q1, ak, sk)
-      await sleep(2500)
-      const hit1 = r1.find((x) => setMatches(x.productName, ctx))
-      if (hit1) pick = { kind: "set", query: q1, item: hit1 }
-      else if (ctx.visc) {
-        const q2 = ["엔진오일", ctx.visc, ctx.grade ?? "", "4L"].filter(Boolean).join(" ")
-        const r2 = await search(q2, ak, sk)
+      const seen = new Map()
+      const run = async (q) => {
+        try {
+          for (const x of await search(q, ak, sk)) if (!seen.has(x.productId)) seen.set(x.productId, { ...x, _q: q })
+        } catch (e) {
+          console.log(`  (검색 실패: ${q}) ${e.message}`)
+        }
         await sleep(2500)
-        const hit2 = r2.find((x) => oilMatches(x.productName, ctx))
-        if (hit2) pick = { kind: "oil", query: q2, item: hit2 }
+      }
+      // ① 차종 전용 세트: 세대 코드 넣은 검색 → 코드 없이 연식·엔진 검색
+      const q1 = [car.model, ctx.code, ctx.disp, ctx.fuel, "엔진오일세트"].filter(Boolean).join(" ")
+      await run(q1)
+      await run([car.model, ctx.disp, ctx.turbo ? "터보" : "", ctx.fuel, "엔진오일 필터 세트"].filter(Boolean).join(" "))
+      const sets = [...seen.values()].filter((x) => setMatches(x.productName, ctx))
+      sets.sort((x, y) => setScore(y.productName, ctx, y) - setScore(x.productName, ctx, x) || x.rank - y.rank)
+      if (sets[0]) pick = { kind: "set", query: sets[0]._q, item: sets[0] }
+      else if (ctx.visc) {
+        // ② 같은 규격 단품: 필요량을 채우는 용량을 우선
+        seen.clear()
+        const big = ctx.need && ctx.need > 4.5
+        await run(["엔진오일", ctx.visc, ctx.grade ?? "", big ? "6L" : "4L"].filter(Boolean).join(" "))
+        if (big) await run(["엔진오일", ctx.visc, ctx.grade ?? "", "4L"].filter(Boolean).join(" "))
+        const oils = [...seen.values()].filter((x) => oilMatches(x.productName, ctx))
+        const fit = (x) => {
+          const l = litersOf(x.productName) ?? 0
+          return (ctx.need && l >= ctx.need ? 3 : 0) + (x.isRocket ? 1 : 0) - (ctx.need && l > ctx.need + 3 ? 2 : 0)
+        }
+        oils.sort((x, y) => fit(y) - fit(x) || x.rank - y.rank)
+        if (oils[0]) pick = { kind: "oil", query: oils[0]._q, item: oils[0] }
       }
       if (pick) {
         out.picks[part.id] = {

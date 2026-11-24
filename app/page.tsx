@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MyCarCard } from "@/components/home/MyCarCard";
+import { RecentList } from "@/components/recent/Recent";
 import { CarPicker, type PickerCar } from "@/components/home/CarPicker";
 import { ReceiptCard } from "@/components/home/ReceiptCard";
 import {
@@ -45,9 +46,10 @@ export default function Home() {
     <div>
       {/* ── 첫 화면: 내 차 선택 ───────────────────────────────── */}
       <section className="mx-auto grid max-w-5xl gap-8 px-5 pb-12 pt-8 sm:pt-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-14">
-        <div>
+        <div className="min-w-0">
           <div className="mb-6 max-w-xl">
             <MyCarCard />
+            <RecentList className="mt-4" />
           </div>
           <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[40px] sm:leading-[1.25]">
             정비소 견적, 부품값과 공임으로 나눠 보세요

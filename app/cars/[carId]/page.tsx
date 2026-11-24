@@ -26,6 +26,7 @@ import { OutboundLink } from "@/components/seo/OutboundLink"
 import { CarDiagram, type DiagramPart } from "@/components/cars/CarDiagram"
 import { CarPhoto } from "@/components/cars/CarPhoto"
 import { carPhoto } from "@/lib/car-photos"
+import { TrackRecent } from "@/components/recent/Recent"
 import { bodyTypeOf, isElectric, zoneLabel, zoneOf, type ZoneId } from "@/lib/car-diagram"
 import type { CarModel, MaintenancePart } from "@/types"
 
@@ -182,6 +183,7 @@ export default async function CarPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-5xl px-5 pb-6 pt-6 sm:pt-10">
+      <TrackRecent href={`/cars/${car.id}`} title={carShortName(car).replace(/^(기아|현대|제네시스|테슬라|KGM)\s/, "")} img={photo?.localSmall} />
       <Breadcrumbs
         items={[
           { href: "/", label: "정비핵" },

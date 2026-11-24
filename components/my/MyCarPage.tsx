@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 import { dueList, loadMyCar, saveMyCar, today, type DueState, type MyCar, type MyCarSnapshot } from "@/lib/my-car"
 import { track } from "@/lib/track"
+import { RecentList } from "@/components/recent/Recent"
 
 export interface MyCarOption {
   id: string
@@ -68,6 +69,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
   return (
     <div className="mx-auto max-w-2xl px-5 pb-6 pt-6 sm:pt-10">
       {my ? <Garage my={my} update={update} /> : <Register options={options} onSave={update} />}
+      <RecentList className="mt-8" />
     </div>
   )
 }

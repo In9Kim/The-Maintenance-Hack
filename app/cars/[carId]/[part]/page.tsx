@@ -19,6 +19,8 @@ import {
 import { formatPrice } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
 import { coupangChoicesFor } from "@/lib/coupang-links"
+import { TrackRecent } from "@/components/recent/Recent"
+import { carPhoto } from "@/lib/car-photos"
 import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AffiliateNotice, Breadcrumbs, EstimateNote, JsonLd } from "@/components/seo/Shared"
@@ -88,6 +90,7 @@ export default async function PartPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-5xl px-5 pb-6 pt-6 sm:pt-10">
+      <TrackRecent href={`/cars/${car.id}/${partSlug(car, part)}`} title={name.replace(/^(기아|현대|제네시스|테슬라|KGM)\s/, "")} sub={title} img={carPhoto(car.id)?.localSmall} />
       <Breadcrumbs
         items={[
           { href: "/", label: "정비핵" },

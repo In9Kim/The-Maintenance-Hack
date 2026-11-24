@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { setMatches, oilMatches, viscosityOf, gradeOf, displacementOf } from "./pick-coupang-oil.mjs"
+import { setMatches, oilMatches, viscosityOf, gradeOf, displacementOf, yearsOf, carYears, litersOf } from "./pick-coupang-oil.mjs"
 
 const ctx = { model: "쏘나타", code: "DN8", visc: "0W-20", grade: "SP", fuel: "가솔린", disp: "1.6", carNames: ["쏘나타", "K5", "셀토스"] }
 
@@ -39,4 +39,21 @@ test("배기량·세대·연료 구분", () => {
   assert.ok(!setMatches("투싼 NX4 2.0 디젤 엔진오일 세트 5W30", dsl))
   assert.ok(setMatches("쏘렌토 MQ4 2.2 디젤 엔진오일세트 킥스 C5 0W30", dsl))
   assert.equal(displacementOf("G2.0 가솔린"), "2.0")
+})
+
+test("연식으로 세대 확인 (코드 없는 상품명)", () => {
+  assert.deepEqual(yearsOf("더 뉴 싼타페 하이브리드 20-23년식 킥스"), [20, 23])
+  assert.deepEqual(yearsOf("코나 23년식 이후 킥스"), [23, 99])
+  assert.deepEqual(carYears("2020~현재"), [20, 99])
+  const tm = { model: "싼타페", code: "TM", years: [18, 23], visc: "0W-20", grade: "SP", fuel: "하이브리드", disp: "1.6", turbo: true, multi: true, codes: ["TM", "MX5"] }
+  assert.ok(setMatches("현대 더 뉴 싼타페 가솔린 하이브리드 1.6 터보 20-23년 킥스 GX7 0W20 엔진오일세트", tm))
+  assert.ok(!setMatches("싼타페 MX5 1.6 하이브리드 24년식 이후 0W20 엔진오일세트", tm), "다른 세대 코드")
+  assert.ok(!setMatches("싼타페 1.6 하이브리드 24년식 이후 0W20 엔진오일세트", tm), "연식 안 겹침")
+  assert.equal(litersOf("킥스 0W20 1L x 6"), 6)
+  assert.equal(litersOf("지크 X7 0W30 4리터"), 4)
+})
+
+test("신형 첫해만 겹치면 제외", () => {
+  const tm = { model: "싼타페", code: "TM", years: [20, 23], visc: "0W-30", grade: "SP", fuel: "가솔린", disp: "2.5", turbo: true, multi: true, codes: ["TM", "MX5"] }
+  assert.ok(!setMatches("디올뉴 싼타페 2.5 터보 가솔린 23-26년식 킥스 GX7 0W30 6L 엔진오일 오일필터", tm))
 })
