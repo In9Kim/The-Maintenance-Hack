@@ -12,7 +12,7 @@ function Change({ row }: { row: SalesRow }) {
   if (pct === 0) return <span className="text-muted-foreground">전달과 같음</span>
   const up = pct > 0
   return (
-    <span className={up ? "text-[#B42318]" : "text-[#1570EF]"} title={`지난달 ${n(row.prevSales)}대`}>
+    <span className={up ? "text-[#B42318]" : "text-[#175CD3]"} title={`지난달 ${n(row.prevSales)}대`}>
       {up ? "▲" : "▼"} {Math.abs(pct)}%
     </span>
   )
@@ -43,7 +43,7 @@ export function SalesRanking() {
                 {photo ? (
                   <CarThumb photo={photo} alt={`${r.maker} ${r.model}`} />
                 ) : (
-                  <div className="flex aspect-[16/10] items-center justify-center bg-muted text-[22px] font-extrabold text-muted-foreground/50">{r.model}</div>
+                  <div className="flex aspect-[16/10] items-center justify-center bg-muted text-[22px] font-extrabold text-muted-foreground">{r.model}</div>
                 )}
                 <span
                   className={`num absolute left-2 top-2 flex h-8 min-w-8 items-center justify-center rounded-full px-2 text-[15px] font-extrabold shadow ${

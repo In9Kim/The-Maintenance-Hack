@@ -48,7 +48,7 @@ export function OilTiers({ rows, carId, partId }: { rows: OilTierRow[]; carId: s
               <OutboundLink href={r.item.url} target="coupang" carId={carId} partId={partId} sponsored className="inline-flex min-h-[36px] items-center text-[13px] font-semibold text-primary underline underline-offset-2">
                 쿠팡에서 보기
               </OutboundLink>
-              <OutboundLink href={naverSearchUrl(naverQueryOf(r.item.name))} target="naver" carId={carId} partId={partId} className="inline-flex min-h-[36px] items-center text-[13px] font-semibold text-[#03A94D] underline underline-offset-2">
+              <OutboundLink href={naverSearchUrl(naverQueryOf(r.item.name))} target="naver" carId={carId} partId={partId} className="inline-flex min-h-[36px] items-center text-[13px] font-semibold text-[#027A48] underline underline-offset-2">
                 네이버 같은 상품 가격
               </OutboundLink>
             </div>

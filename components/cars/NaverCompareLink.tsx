@@ -8,7 +8,7 @@ export function NaverCompareLink({ url, carId, partId, className = "" }: { url: 
       target="naver"
       carId={carId}
       partId={partId}
-      className={`inline-flex min-h-[36px] items-center gap-1.5 text-[13px] font-semibold text-[#03A94D] underline decoration-[#03A94D]/30 underline-offset-2 hover:decoration-[#03A94D] ${className}`}
+      className={`inline-flex min-h-[36px] items-center gap-1.5 text-[13px] font-semibold text-[#027A48] underline decoration-[#027A48]/30 underline-offset-2 hover:decoration-[#027A48] ${className}`}
     >
       <span aria-hidden className="flex h-4 w-4 items-center justify-center rounded-[3px] bg-[#03C75A] text-[10px] font-black text-white">
         N
