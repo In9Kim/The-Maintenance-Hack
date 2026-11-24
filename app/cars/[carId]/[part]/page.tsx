@@ -209,6 +209,26 @@ export default async function PartPage({ params }: Props) {
           ))}
         </dl>
         {part.source && <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">출처: {part.source}</p>}
+        {part.fitted && part.fitted.length > 0 && (
+          <div className="mt-3 rounded-[12px] border border-border bg-card px-4 py-3 text-[14px] leading-relaxed">
+            <p className="font-semibold">실제로 달아 본 상품</p>
+            <p className="mt-0.5 text-[13px] text-muted-foreground">
+              정비핵 운영자 차량에 실제로 장착한 상품이에요. 주문 내역으로 확인한 것만 적었어요. 내 차에도 맞는지는 연식·트림을 꼭 확인하세요.
+            </p>
+            <ul className="mt-2 space-y-2">
+              {part.fitted.map((f) => (
+                <li key={f.item + f.date} className="border-t border-border pt-2 first:border-t-0 first:pt-0">
+                  <p className="font-medium">{f.item}</p>
+                  <p className="text-[13px] text-muted-foreground">
+                    {f.date.replace("-", "년 ")}월{f.km ? ` · ${f.km.toLocaleString()}km` : ""}
+                    {f.price ? ` · ${f.price.toLocaleString()}원` : ""}
+                    {f.note ? ` · ${f.note}` : ""}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {part.category === "oil" && (
           <div className="mt-3 rounded-[12px] border border-border bg-card px-4 py-3 text-[14px] leading-relaxed">
             <p className="font-semibold">내 차 번호로 한 번 더 확인하고 싶다면</p>

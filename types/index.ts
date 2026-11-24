@@ -51,6 +51,19 @@ export interface MaintenancePart {
   engine?: string
   /** 규격 출처 (제조사 공식 자료) */
   source?: string
+  /** 운영자 차량에 실제로 달아 본 상품 (주문 내역·영수증으로 확인한 것만) */
+  fitted?: FittedCase[]
+}
+
+export interface FittedCase {
+  /** 상품명 (판매처 표기 그대로) */
+  item: string
+  /** "2026-05" 형태 */
+  date: string
+  km?: number
+  price?: number
+  /** 어디서 어떻게 달았는지 */
+  note?: string
 }
 
 export interface CarModel {
