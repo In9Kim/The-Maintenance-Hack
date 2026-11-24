@@ -88,7 +88,7 @@ function PartCard({ part, isChecked, onToggle }: PartCardProps) {
           <span className="font-semibold">{part.name}</span>
           <span className="num shrink-0 text-right">
             <span className="block font-bold text-primary">{formatPrice(self)}</span>
-            <span className="price-was block text-[12px]">{formatPrice(dealer)}</span>
+            <span className="price-was block text-[12px]">센터 추정 {formatPrice(dealer)}</span>
           </span>
         </span>
         <span className="mt-0.5 block text-[13px] leading-relaxed text-muted-foreground">

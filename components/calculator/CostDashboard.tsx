@@ -52,7 +52,7 @@ export function CostDashboard({ car, summary }: CostDashboardProps) {
             <li key={part.id} className="flex items-baseline justify-between gap-3">
               <span className="min-w-0 text-muted-foreground">{part.name}</span>
               <span className="shrink-0">
-                <span className="price-was mr-2 text-[12px]">{formatPrice(dealerSubtotal)}</span>
+                <span className="price-was mr-2 text-[12px]">센터 추정 {formatPrice(dealerSubtotal)}</span>
                 <b>{formatPrice(coupangSubtotal)}</b>
               </span>
             </li>

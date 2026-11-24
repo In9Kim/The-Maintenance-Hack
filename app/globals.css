@@ -81,10 +81,8 @@ h1, h2, h3 { letter-spacing: -0.03em; }
 @layer components {
   /* 공식센터 금액: 회색 취소선 (빨강보다 덜 공격적, 초록 "아끼는 돈"만 눈에 띄게) */
   .price-was {
+    /* 공식센터 금액은 추정치라 취소선(실제 정가처럼 보임)을 쓰지 않는다 */
     color: #5f6e85;
-    text-decoration: line-through;
-    text-decoration-color: #8a97aa;
-    text-decoration-thickness: 1.5px;
   }
 }
 

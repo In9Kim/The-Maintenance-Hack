@@ -110,7 +110,7 @@ function PartsList({ car, parts }: { car: CarModel; parts: MaintenancePart[] }) 
               <div className="hidden text-[14px] text-muted-foreground sm:block">{interval ?? "-"}</div>
               <div className="num mt-2 text-[14px] sm:mt-0 sm:text-right">
                 <span className="mr-1.5 text-muted-foreground sm:hidden">공식센터(추정)</span>
-                <span className="price-was sm:text-foreground sm:no-underline">{formatPrice(c.dealer)}</span>
+                <span className="price-was sm:text-foreground">{formatPrice(c.dealer)}</span>
               </div>
               <div className="num mt-2 text-right text-[15px] sm:mt-0">
                 <span className="font-bold text-primary">{formatPrice(c.self)}</span>
@@ -257,7 +257,7 @@ export default async function CarPage({ params }: Props) {
                   <div key={g.engine} className="pt-4">
                     <p className="num mb-3 text-[14px] text-muted-foreground">
                       {g.engine} 전체{" "}
-                      <span className="price-was">{formatPrice(t.dealer)}</span>
+                      <span className="price-was">공식센터(추정) {formatPrice(t.dealer)}</span>
                       {" → "}
                       <b className="text-primary">{formatPrice(t.self)}</b>
                     </p>

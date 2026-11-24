@@ -1,4 +1,4 @@
-/** 견적서 해독 영수증: 공식센터 금액(취소선) → 직접 구매+공임나라 → 아끼는 돈 */
+/** 견적서 해독 영수증: 공식센터 금액(추정) → 직접 구매+공임나라 → 아끼는 돈 + 절약률 배지 */
 export function ReceiptCard({
   title,
   dealer,
@@ -22,6 +22,8 @@ export function ReceiptCard({
 }) {
   const won = (n: number) => `${n.toLocaleString("ko-KR")}원`
   const save = Math.max(dealer - self, 0)
+  // 공식센터 금액이 추정치라 할인율이 아니라 "추정 대비 절약"으로만 표시한다 (취소선·정가 표기 금지)
+  const pct = dealer > 0 ? Math.round((save / dealer) * 100) : 0
   return (
     <div className={`receipt relative rounded-2xl border border-border bg-card px-5 pb-6 pt-5 ${className}`}>
       <p className="text-[13px] font-semibold text-muted-foreground">{title}</p>
@@ -41,6 +43,13 @@ export function ReceiptCard({
         <span className="font-bold">아끼는 돈</span>
         <span className="text-[22px] font-extrabold text-primary">{won(save)}</span>
       </div>
+      {pct > 0 && (
+        <p className="mt-2 text-right">
+          <span className="inline-block rounded-md bg-primary/10 px-2 py-0.5 text-[13px] font-bold text-primary">
+            공식센터(추정)보다 약 {pct}% ↓
+          </span>
+        </p>
+      )}
       {basis && <p className="mt-3 text-[12px] leading-relaxed text-muted-foreground">{basis}</p>}
     </div>
   )
