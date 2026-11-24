@@ -207,6 +207,23 @@ export default async function PartPage({ params }: Props) {
           ))}
         </dl>
         {part.source && <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">출처: {part.source}</p>}
+        {part.category === "oil" && (
+          <div className="mt-3 rounded-[12px] border border-border bg-card px-4 py-3 text-[14px] leading-relaxed">
+            <p className="font-semibold">내 차 번호로 한 번 더 확인하고 싶다면</p>
+            <p className="mt-0.5 text-[13px] text-muted-foreground">
+              SK ZIC 엔진오일 추천 페이지에 차량번호를 넣으면 규격·점도·용량을 알려 줘요. 정비핵은 차량번호를 받지 않아요. ZIC 제품 위주로 추천해요.
+            </p>
+            <OutboundLink
+              href="https://www.skzic.com/popup/fpop.html"
+              target="other"
+              carId={car.id}
+              partId={part.id}
+              className="mt-1.5 inline-flex min-h-[40px] items-center text-[14px] font-semibold underline underline-offset-4"
+            >
+              SK ZIC에서 차량번호로 확인하기
+            </OutboundLink>
+          </div>
+        )}
       </section>
 
       {/* 자주 묻는 질문 */}
