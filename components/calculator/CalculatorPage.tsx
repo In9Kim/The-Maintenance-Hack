@@ -261,7 +261,7 @@ export function CalculatorPage({
 
       {/* 휴대폰: 체크하는 동안 합계가 항상 보이는 아래 막대 */}
       {costSummary && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 px-5 py-3 shadow-[0_-4px_16px_rgba(20,33,61,0.08)] backdrop-blur lg:hidden">
+        <div className="fixed inset-x-0 bottom-[calc(57px+env(safe-area-inset-bottom))] z-40 md:bottom-0 border-t border-border bg-card/95 px-5 py-3 shadow-[0_-4px_16px_rgba(20,33,61,0.08)] backdrop-blur lg:hidden">
           <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
             <p className="num leading-tight">
               <span className="block text-[13px] text-muted-foreground">{costSummary.items.length}개 · 아끼는 돈</span>

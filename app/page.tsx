@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CompatibilityChecker } from "@/components/CompatibilityChecker";
+import { MyCarCard } from "@/components/home/MyCarCard";
 import { CarPicker, type PickerCar } from "@/components/home/CarPicker";
 import { ReceiptCard } from "@/components/home/ReceiptCard";
 import {
@@ -11,7 +11,6 @@ import {
 } from "@/lib/seo";
 import { majorRecalls, fmtDate } from "@/lib/recalls/data";
 import { recallCars, splitCritical } from "@/lib/recalls/highlight";
-import { NEAR_KINDS } from "@/lib/near"
 import { SalesRanking } from "@/components/home/SalesRanking"
 import { monthText, salesRanking } from "@/lib/sales-ranking";
 
@@ -23,13 +22,6 @@ export const metadata = pageMetadata({
 });
 
 
-const NEAR_SUB: Record<string, string> = {
-  gongim: "부품 들고 가서 교체",
-  carcenter: "동네 정비소·타이어",
-  bluehands: "현대·제네시스 공식",
-  autoq: "기아 공식",
-  carwash: "셀프·손세차·노터치",
-}
 
 
 export default function Home() {
@@ -45,13 +37,18 @@ export default function Home() {
   const oil = sorento?.parts.find((p) => p.category === "oil");
   const oilCost = oil ? partCost(oil) : null;
 
-  const groups = splitCritical(majorRecalls(30).groups).critical.slice(0, 3);
+  const criticalGroups = splitCritical(majorRecalls(30).groups).critical;
+  const top = criticalGroups[0];
+  const critical = Math.min(criticalGroups.length, 5);
 
   return (
     <div>
       {/* ── 첫 화면: 내 차 선택 ───────────────────────────────── */}
       <section className="mx-auto grid max-w-5xl gap-8 px-5 pb-12 pt-8 sm:pt-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-14">
         <div>
+          <div className="mb-6 max-w-xl">
+            <MyCarCard />
+          </div>
           <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[40px] sm:leading-[1.25]">
             정비소 견적, 부품값과 공임으로 나눠 보세요
           </h1>
@@ -110,144 +107,22 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 근처 정비소·세차장 ─────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-5 pt-12">
-        <h2 className="text-[20px] font-bold sm:text-[24px]">
-          부품 샀으면, 근처 어디서 바꾸지?
-        </h2>
-        <p className="mt-1 text-[14px] text-muted-foreground">
-          지금 위치에서 가까운 순으로 지도에 띄워 드려요. 전화·길찾기까지 한
-          번에.
-        </p>
-        <ul className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
-          {NEAR_KINDS.map((k) => (
-            <li key={k.slug}>
-              <Link
-                href={k.slug === "gongim" ? "/near" : `/near/${k.slug}`}
-                className="group flex h-full items-center gap-3 rounded-[14px] border border-border bg-card p-4 transition hover:-translate-y-0.5 hover:border-primary/40"
-              >
-                <span
-                  aria-hidden
-                  className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-                  style={{ background: `${k.color}1A` }}
-                >
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill={k.color}>
-                    <path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" />
-                  </svg>
-                </span>
-                <span>
-                  <span className="block font-bold">근처 {k.label}</span>
-                  <span className="block text-[12px] text-muted-foreground">
-                    {NEAR_SUB[k.slug]}
-                  </span>
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* ── 계산 방법 (실제 순서) ─────────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-5 py-12">
-        <h2 className="text-[20px] font-bold sm:text-[24px]">
-          정비핵이 비용을 나누는 방법
-        </h2>
-        <ol className="mt-5 grid gap-3 sm:grid-cols-3">
-          {[
-            [
-              "차종과 엔진 고르기",
-              "같은 차라도 엔진마다 오일 규격과 용량이 달라서, 엔진별로 따로 계산해요.",
-            ],
-            [
-              "규격 확인하기",
-              "오일 등급·용량, 교체 주기는 제조사 취급설명서에 나온 값만 씁니다.",
-            ],
-            [
-              "부품은 직접, 교체는 공임나라",
-              "부품을 온라인으로 사고 공임나라 표준 공임으로 맡긴 금액을 공식센터와 비교해요.",
-            ],
-          ].map(([t, d], i) => (
-            <li
-              key={t}
-              className="rounded-[14px] border border-border bg-card p-5"
-            >
-              <span className="num flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-[13px] font-bold text-background">
-                {i + 1}
-              </span>
-              <p className="mt-3 font-bold">{t}</p>
-              <p className="mt-1.5 text-[14px] leading-relaxed text-muted-foreground">
-                {d}
-              </p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {/* ── 최근 주요 리콜 ─────────────────────────────────────── */}
-      {groups.length > 0 && (
-        <section className="mx-auto max-w-5xl px-5 pb-12">
-          <div className="flex items-end justify-between gap-4">
-            <h2 className="text-[20px] font-bold sm:text-[24px]">
-              꼭 확인할 최근 리콜
-            </h2>
-            <Link
-              href="/recalls"
-              className="min-h-[44px] content-center text-[14px] font-semibold text-muted-foreground hover:text-foreground"
-            >
-              리콜 전체 보기
-            </Link>
-          </div>
-          <ul className="mt-4 divide-y divide-border rounded-[14px] border border-border bg-card">
-            {groups.map((g) => {
-              const r = g.recalls[0];
-              return (
-                <li key={g.key}>
-                  <Link
-                    href={`/recalls/maker/${g.makerSlug}#${r.id}`}
-                    className="flex items-start gap-3 p-4 hover:bg-muted/60"
-                  >
-                    <span className="num mt-0.5 shrink-0 text-[13px] text-muted-foreground">
-                      {fmtDate(g.startDate).slice(5)}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-semibold">
-                        {g.makerName} · {recallCars(r)}
-                      </span>
-                      <span className="mt-0.5 block truncate text-[14px] text-muted-foreground">
-                        {r.reason}
-                      </span>
-                    </span>
-                    {g.count != null && (
-                      <span className="num shrink-0 rounded-full bg-[#FFF6ED] px-2.5 py-1 text-[12px] font-semibold text-[#B54708]">
-                        {g.count.toLocaleString("ko-KR")}대
-                      </span>
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+      {/* ── 꼭 확인할 리콜: 한 줄 ─────────────────────────────── */}
+      {top && (
+        <section className="mx-auto max-w-5xl px-5 pt-8">
+          <Link
+            href="/recalls"
+            className="flex items-center gap-3 rounded-[14px] border border-[#FEDF89] bg-[#FFFAEB] px-4 py-3 transition hover:border-[#F79009]"
+          >
+            <span aria-hidden className="shrink-0 rounded-full bg-[#B54708] px-2 py-0.5 text-[12px] font-bold text-white">리콜</span>
+            <span className="min-w-0 flex-1 truncate text-[14px]">
+              <b>{top.makerName} {recallCars(top.recalls[0])}</b>
+              <span className="text-muted-foreground"> · {fmtDate(top.startDate).slice(5)} 시작</span>
+            </span>
+            <span className="shrink-0 text-[13px] font-semibold text-[#B54708]">꼭 확인할 리콜 {critical}건</span>
+          </Link>
         </section>
       )}
-
-      {/* ── 부품 호환성 확인 (기존 기능) ───────────────────────── */}
-      <section id="compat" className="scroll-mt-20 border-t border-border">
-        <div className="mx-auto max-w-2xl px-5 py-12">
-          <h2 className="text-[20px] font-bold sm:text-[24px]">
-            사려는 부품이 내 차에 맞는지 확인
-          </h2>
-          <p className="mt-1.5 text-[14px] leading-relaxed text-muted-foreground">
-            차대번호와 상품 링크를 넣으면 AI가 규격을 대조해 맞을 가능성을 알려
-            드려요. 차대번호는 저장하지 않습니다.{" "}
-            <Link href="/check" className="font-semibold text-foreground underline underline-offset-4">
-              언제 쓰면 좋은지 보기
-            </Link>
-          </p>
-          <div className="mt-5 rounded-2xl border border-border bg-card p-4 sm:p-6">
-            <CompatibilityChecker heroMode />
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

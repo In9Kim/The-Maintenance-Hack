@@ -4,12 +4,14 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 // "견적서 분석"(Phase 3, 미완성)은 기능이 열릴 때까지 메뉴에서 숨김
-// 휴대폰은 한 줄에 들어가도록 짧은 이름(short)을 쓴다
-const NAV = [
-  { href: "/cars", label: "차종별 비용", short: "차종", match: (p: string) => p.startsWith("/cars") },
-  { href: "/calculator", label: "비용 계산기", short: "계산기", match: (p: string) => p === "/calculator" },
-  { href: "/recalls", label: "리콜 정보", short: "리콜", match: (p: string) => p.startsWith("/recalls") },
-  { href: "/near", label: "근처 정비소", short: "정비소", match: (p: string) => p.startsWith("/near") },
+// 휴대폰은 위 메뉴를 숨기고 아래 탭(BottomNav)을 쓴다
+export const NAV = [
+  { href: "/cars", label: "차종별 비용", match: (p: string) => p.startsWith("/cars") },
+  { href: "/calculator", label: "계산기", match: (p: string) => p === "/calculator" },
+  { href: "/check", label: "부품 호환 확인", match: (p: string) => p === "/check" },
+  { href: "/near", label: "근처 정비소", match: (p: string) => p.startsWith("/near") },
+  { href: "/recalls", label: "리콜", match: (p: string) => p.startsWith("/recalls") },
+  { href: "/my", label: "내 차", match: (p: string) => p === "/my" },
 ]
 
 /** 로고: 영수증 한 장 (견적서를 다시 쓴다는 뜻) */
@@ -34,7 +36,7 @@ export function Header() {
           <LogoMark />
           <span className="text-[17px] font-extrabold tracking-tight">정비핵</span>
         </Link>
-        <nav aria-label="주 메뉴" className="flex items-center gap-1 whitespace-nowrap text-[15px]">
+        <nav aria-label="주 메뉴" className="hidden items-center gap-0.5 whitespace-nowrap text-[15px] md:flex">
           {NAV.map((item) => {
             const active = item.match(pathname)
             return (
@@ -42,12 +44,11 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-h-[44px] items-center rounded-lg px-2.5 transition-colors sm:px-3 ${
+                className={`flex min-h-[44px] items-center rounded-lg px-2.5 transition-colors lg:px-3 ${
                   active ? "font-bold text-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 }`}
               >
-                <span className="sm:hidden">{item.short}</span>
-                <span className="hidden sm:inline">{item.label}</span>
+                {item.label}
               </Link>
             )
           })}

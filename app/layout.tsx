@@ -1,6 +1,7 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import Link from "next/link"
 import { Header } from "@/components/layout/Header"
+import { BottomNav } from "@/components/layout/BottomNav"
 import { TrackFrom } from "@/components/seo/TrackFrom"
 import { WebAnalytics } from "@/components/seo/WebAnalytics"
 import "./globals.css"
@@ -22,6 +23,8 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" }
+
 export default function RootLayout({
   children,
 }: {
@@ -39,7 +42,7 @@ export default function RootLayout({
         {/* metadata.alternates는 페이지별 canonical 설정이 덮어써서 RSS 링크는 여기 직접 둔다 */}
         <link rel="alternate" type="application/rss+xml" title="정비핵 최근 리콜·차종 정보" href={`${SITE_URL}/rss.xml`} />
       </head>
-      <body>
+      <body className="pb-[calc(57px+env(safe-area-inset-bottom))] md:pb-0">
         <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[60] focus:rounded-md focus:bg-card focus:px-3 focus:py-2 focus:text-sm focus:shadow">
           본문 바로가기
         </a>
@@ -48,6 +51,7 @@ export default function RootLayout({
         <WebAnalytics />
         <main id="content" className="min-h-[calc(100vh-3.5rem)]">{children}</main>
         <SiteFooter />
+        <BottomNav />
       </body>
     </html>
   )
@@ -72,6 +76,7 @@ function SiteFooter() {
             <li><Link className="hover:text-foreground hover:underline" href="/near">근처 공임나라·정비소</Link></li>
             <li><Link className="hover:text-foreground hover:underline" href="/near/carwash">근처 세차장</Link></li>
             <li><Link className="hover:text-foreground hover:underline" href="/check">차대번호로 부품 호환 확인</Link></li>
+            <li><Link className="hover:text-foreground hover:underline" href="/my">내 차 교체 시기 관리</Link></li>
           </ul>
         </nav>
         <div>
