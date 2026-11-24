@@ -14,6 +14,7 @@ const BODY: Record<string, BodyType> = {
   "kia-bongo3-pu": "truck",
   "kia-k5-dl3": "sedan",
   "hyundai-avante-cn7": "sedan",
+  "kia-k3-bd": "sedan",
   "hyundai-avante-ad": "sedan",
   "hyundai-grandeur-gn7": "sedan",
   "hyundai-grandeur-ig": "sedan",

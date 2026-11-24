@@ -81,7 +81,7 @@ export function coupangPickFor(part: MaintenancePart): CoupangPick | undefined {
 
 /** 규격에서 필요한 오일 양 (예: "5.8L") */
 export function oilAmount(part: MaintenancePart): string | null {
-  return part.spec.match(/(\d+(?:\.\d)?)\s*L/)?.[1] ?? null
+  return part.spec.match(/(\d+(?:\.\d)?)\s*L\b/)?.[1] ?? null
 }
 
 export function coupangChoicesFor(part: MaintenancePart): CoupangChoice[] {
@@ -123,13 +123,79 @@ export function coupangChoicesFor(part: MaintenancePart): CoupangChoice[] {
 }
 
 /**
+ * 같은 규격 엔진오일 3가지 (data/coupang-oil-tiers.json, scripts/pick-coupang-oil-tiers.mjs가 만듦)
+ * 규격(점도 + 가솔린/디젤)별로 고른 상품을 이 차의 필요량과 맞춰 "규격 체크"와 함께 보여 준다.
+ */
+export interface OilTierItem {
+  name: string
+  price: number
+  liters: number
+  gradeShown: boolean
+  url: string
+  image?: string
+  rocket?: boolean
+}
+// 주의: JSON을 점(.)으로 깊게 읽으면 빌드(webpack)가 안쪽 키 이름을 줄여 버려 값이 사라진다 → 통째로 복사해서 읽기
+type TierInfo = { key: string; visc: string | null; diesel: boolean; need: number | null }
+const OIL_TIERS = (JSON.parse(JSON.stringify(picksRaw)) as {
+  oilTiers?: { tiers?: Record<string, Record<string, OilTierItem | null>>; byPart?: Record<string, TierInfo>; checkedAt?: string }
+}).oilTiers
+const TIERS = OIL_TIERS?.tiers ?? {}
+const BY_PART = OIL_TIERS?.byPart ?? {}
+export const OIL_TIERS_DATE = OIL_TIERS?.checkedAt ?? ""
+
+export interface OilTierRow {
+  tier: "oem" | "value" | "premium"
+  label: string
+  item: OilTierItem
+  /** 필요량을 채우려면 몇 개 사야 하는지 */
+  count: number
+  checks: { label: string; ok: boolean | null; text: string }[]
+}
+
+const TIER_LABEL = { oem: "순정", value: "가성비", premium: "프리미엄" } as const
+
+export function oilTiersFor(part: MaintenancePart): OilTierRow[] {
+  const info = BY_PART[part.id]
+  const t = info && TIERS[info.key]
+  if (!info || !t) return []
+  const { visc, diesel, need } = info
+  return (["oem", "value", "premium"] as const).flatMap((tier) => {
+    const item = t[tier]
+    if (!item) return []
+    const count = need ? Math.max(1, Math.ceil(need / item.liters - 0.001)) : 1
+    const checks = [
+      { label: "점도", ok: visc ? true : null, text: visc ?? "설명서 점도표 확인" },
+      {
+        label: "등급",
+        ok: item.gradeShown ? true : null,
+        text: item.gradeShown ? (diesel ? "ACEA C 등급" : "API SP급") : "상품 상세에서 확인",
+      },
+      {
+        label: "용량",
+        ok: need ? item.liters * count >= need : null,
+        text: need ? (count > 1 ? `${item.liters}L × ${count}개 (필요 ${need}L)` : `${item.liters}L (필요 ${need}L)`) : `${item.liters}L`,
+      },
+    ]
+    return [{ tier, label: TIER_LABEL[tier], item, count, checks }]
+  })
+}
+
+/**
  * 네이버쇼핑 검색 링크 (가격 비교용). 네이버는 쇼핑 검색 API를 새로 내주지 않아서 가격을 가져오지 못하고,
  * 같은 검색어로 네이버쇼핑 결과를 열어 사용자가 직접 비교하게 한다. 제휴 링크가 아니라 수수료는 없다.
  */
 export function naverShoppingFor(part: MaintenancePart): { url: string; query: string } | undefined {
-  const query = coupangPickFor(part)?.query.replace(/엔진오일 필터 세트/, "엔진오일세트") ?? coupangSearchFor(part)?.query ?? part.coupangKeyword
+  const pick = coupangPickFor(part)
+  const query = pick ? naverQueryOf(pick.name) : coupangSearchFor(part)?.query ?? part.coupangKeyword
   if (!query) return undefined
-  return { url: `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(query)}`, query }
+  return { url: naverSearchUrl(query), query }
 }
+
+/** 쿠팡 상품명을 네이버 검색어로: 옵션(쉼표 뒤)·괄호 꼬리표를 떼고 앞부분만 → 같은 상품의 다른 판매처 가격이 나온다 */
+export function naverQueryOf(name: string): string {
+  return name.split(",")[0].replace(/\[[^\]]*\]/g, " ").replace(/\s+/g, " ").trim().slice(0, 60)
+}
+export const naverSearchUrl = (q: string) => `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(q)}`
 
 export { checkCoupangLink } from "./coupang-check"

@@ -931,6 +931,61 @@
       "query": "카니발 KA4 와이퍼",
       "url": "https://link.coupang.com/a/iUR2ij2sp2"
     },
+    "kia-k3-bd-air-filter": {
+      "kind": "car",
+      "query": "K3 BD 에어클리너 에어필터",
+      "url": "https://link.coupang.com/a/iV2Pc283R6"
+    },
+    "kia-k3-bd-battery": {
+      "kind": "car",
+      "query": "K3 BD AGM 배터리",
+      "url": "https://link.coupang.com/a/iV2PjBx5Lo"
+    },
+    "kia-k3-bd-brake-fluid": {
+      "kind": "car",
+      "query": "브레이크액 DOT4",
+      "url": "https://link.coupang.com/a/iV2PdezUK4"
+    },
+    "kia-k3-bd-brake-pad-front": {
+      "kind": "car",
+      "query": "K3 BD 브레이크패드 앞",
+      "url": "https://link.coupang.com/a/iV2Pc8Kt6i"
+    },
+    "kia-k3-bd-brake-pad-rear": {
+      "kind": "car",
+      "query": "K3 BD 브레이크패드 뒤",
+      "url": "https://link.coupang.com/a/iV2PdbuiRM"
+    },
+    "kia-k3-bd-cabin-filter": {
+      "kind": "car",
+      "query": "K3 BD 에어컨필터 캐빈필터",
+      "url": "https://link.coupang.com/a/iV2Pc5uKA0"
+    },
+    "kia-k3-bd-engine-oil": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iV2PcWChSC"
+    },
+    "kia-k3-bd-engine-oil-turbo": {
+      "kind": "spec",
+      "query": "엔진오일 5W-30 합성유 A5/B5",
+      "url": "https://link.coupang.com/a/iV2PcZQKw8"
+    },
+    "kia-k3-bd-spark-plug": {
+      "kind": "car",
+      "query": "K3 BD 1.6 점화플러그",
+      "url": "https://link.coupang.com/a/iV2PdkaZFY"
+    },
+    "kia-k3-bd-spark-plug-turbo": {
+      "kind": "car",
+      "query": "K3 GT 1.6 터보 점화플러그",
+      "url": "https://link.coupang.com/a/iV2PdmwGoS"
+    },
+    "kia-k3-bd-wiper": {
+      "kind": "car",
+      "query": "K3 BD 와이퍼 블레이드",
+      "url": "https://link.coupang.com/a/iV2Pdhx28i"
+    },
     "kia-k5-dl3-air-filter": {
       "kind": "car",
       "query": "K5 DL3 에어클리너",

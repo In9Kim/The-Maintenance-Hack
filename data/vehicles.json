@@ -3971,6 +3971,165 @@
           "coupangKeyword": "아반떼 AD 배터리"
         }
       ]
+    },
+    {
+      "id": "kia-k3-bd",
+      "brand": "기아",
+      "model": "K3",
+      "generation": "BD (2세대, 더 뉴 K3 포함)",
+      "yearRange": "2018~2024",
+      "updatedAt": "2026-11-24",
+      "engineTypes": [
+        "G1.6 가솔린",
+        "G1.6 T-GDi 가솔린 (GT)"
+      ],
+      "parts": [
+        {
+          "id": "kia-k3-bd-engine-oil",
+          "name": "엔진오일 + 오일필터 (1.6 가솔린)",
+          "category": "oil",
+          "spec": "SAE 0W-20 · API SN PLUS/SP 또는 ILSAC GF-6 · 3.8L (오일필터 교환 포함)",
+          "coupangPrice": 38000,
+          "laborCost": 12000,
+          "dealerPartPrice": 65000,
+          "dealerLaborCost": 22000,
+          "intervalKm": 15000,
+          "intervalMonths": 12,
+          "coupangKeyword": "엔진오일 0W-20 API SP 합성유",
+          "engine": "G1.6 가솔린",
+          "source": "기아 K3(BD) 국문 취급설명서 2022·2023·2024 '추천오일 및 용량'·'정기 점검' (가혹 조건 7,500km 또는 6개월). 2019·2020년형 설명서는 등급을 'API Latest 또는 ACEA C5'로, 점도는 온도별 분류표로만 표기"
+        },
+        {
+          "id": "kia-k3-bd-engine-oil-turbo",
+          "name": "엔진오일 + 오일필터 (GT 1.6 터보)",
+          "category": "oil",
+          "spec": "SAE 5W-30 · ACEA A5/B5 (API SN PLUS 이상 풀 합성유) · 4.0L (오일필터 교환 포함, 2019·2020년형은 4.5L)",
+          "coupangPrice": 44000,
+          "laborCost": 12000,
+          "dealerPartPrice": 72000,
+          "dealerLaborCost": 22000,
+          "intervalKm": 10000,
+          "intervalMonths": 12,
+          "coupangKeyword": "엔진오일 5W-30 합성유 A5/B5",
+          "engine": "G1.6 T-GDi 가솔린 (GT)",
+          "source": "기아 K3(BD) 국문 취급설명서 2022·2023·2024 '추천오일 및 용량'·'정기 점검' (가혹 조건 5,000km 또는 6개월)"
+        },
+        {
+          "id": "kia-k3-bd-air-filter",
+          "name": "에어클리너 필터",
+          "category": "filter",
+          "spec": "차종 전용 (구매 전 순정 품번 확인)",
+          "coupangPrice": 10000,
+          "laborCost": 5000,
+          "dealerPartPrice": 24000,
+          "dealerLaborCost": 10000,
+          "intervalKm": 40000,
+          "coupangKeyword": "K3 BD 에어클리너 에어필터",
+          "source": "기아 K3(BD) 국문 취급설명서 '정기 점검(통상 조건)' (1만 km마다 점검, 4만 km 교체)"
+        },
+        {
+          "id": "kia-k3-bd-cabin-filter",
+          "name": "에어컨 필터 (캐빈)",
+          "category": "filter",
+          "spec": "차종 전용 (구매 전 순정 품번 확인)",
+          "coupangPrice": 8000,
+          "laborCost": 5000,
+          "dealerPartPrice": 19000,
+          "dealerLaborCost": 10000,
+          "intervalKm": 15000,
+          "coupangKeyword": "K3 BD 에어컨필터 캐빈필터",
+          "source": "기아 K3(BD) 국문 취급설명서 '정기 점검(통상 조건)' (공조장치용 에어 필터 15,000km마다 교체)"
+        },
+        {
+          "id": "kia-k3-bd-brake-pad-front",
+          "name": "브레이크 패드 (전)",
+          "category": "brake",
+          "spec": "전륜 좌우 세트",
+          "coupangPrice": 30000,
+          "laborCost": 28000,
+          "dealerPartPrice": 78000,
+          "dealerLaborCost": 52000,
+          "coupangKeyword": "K3 BD 브레이크패드 앞",
+          "source": "기아 K3(BD) 국문 취급설명서 '정기 점검' (교체 주기 없이 정기 점검 때 마모 확인)"
+        },
+        {
+          "id": "kia-k3-bd-brake-pad-rear",
+          "name": "브레이크 패드 (후)",
+          "category": "brake",
+          "spec": "후륜 좌우 세트",
+          "coupangPrice": 26000,
+          "laborCost": 28000,
+          "dealerPartPrice": 62000,
+          "dealerLaborCost": 52000,
+          "coupangKeyword": "K3 BD 브레이크패드 뒤",
+          "source": "기아 K3(BD) 국문 취급설명서 '정기 점검' (교체 주기 없이 정기 점검 때 마모 확인)"
+        },
+        {
+          "id": "kia-k3-bd-brake-fluid",
+          "name": "브레이크액",
+          "category": "fluid",
+          "spec": "DOT-4LV 또는 DOT-4 · 0.7~0.8L",
+          "coupangPrice": 9000,
+          "laborCost": 20000,
+          "dealerPartPrice": 18000,
+          "dealerLaborCost": 35000,
+          "intervalKm": 50000,
+          "coupangKeyword": "브레이크액 DOT4",
+          "source": "기아 K3(BD) 국문 취급설명서 2021~2024 '정기 점검'·'추천오일 및 용량' (2019·2020년형은 4만 km, DOT-3 또는 DOT-4)"
+        },
+        {
+          "id": "kia-k3-bd-wiper",
+          "name": "와이퍼 블레이드 (전면)",
+          "category": "wiper",
+          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "coupangPrice": 16000,
+          "laborCost": 0,
+          "dealerPartPrice": 34000,
+          "dealerLaborCost": 10000,
+          "intervalMonths": 12,
+          "coupangKeyword": "K3 BD 와이퍼 블레이드"
+        },
+        {
+          "id": "kia-k3-bd-spark-plug",
+          "name": "점화플러그 (4개, 1.6 가솔린)",
+          "category": "spark",
+          "spec": "4개 (스마트스트림 G1.6)",
+          "coupangPrice": 30000,
+          "laborCost": 20000,
+          "dealerPartPrice": 64000,
+          "dealerLaborCost": 38000,
+          "intervalKm": 160000,
+          "coupangKeyword": "K3 BD 1.6 점화플러그",
+          "engine": "G1.6 가솔린",
+          "source": "기아 K3(BD) 국문 취급설명서 '정기 점검(통상 조건)'"
+        },
+        {
+          "id": "kia-k3-bd-spark-plug-turbo",
+          "name": "점화플러그 (4개, GT 1.6 터보)",
+          "category": "spark",
+          "spec": "4개 (1.6 T-GDi)",
+          "coupangPrice": 36000,
+          "laborCost": 22000,
+          "dealerPartPrice": 76000,
+          "dealerLaborCost": 40000,
+          "intervalKm": 70000,
+          "coupangKeyword": "K3 GT 1.6 터보 점화플러그",
+          "engine": "G1.6 T-GDi 가솔린 (GT)",
+          "source": "기아 K3(BD) 국문 취급설명서 '정기 점검(통상 조건)'"
+        },
+        {
+          "id": "kia-k3-bd-battery",
+          "name": "배터리 (12V)",
+          "category": "battery",
+          "spec": "차종 전용 (AGM 배터리가 달린 차는 AGM으로 교체 · 용량은 기존 배터리 라벨 확인)",
+          "coupangPrice": 120000,
+          "laborCost": 13000,
+          "dealerPartPrice": 190000,
+          "dealerLaborCost": 22000,
+          "coupangKeyword": "K3 BD AGM 배터리",
+          "source": "기아 K3(BD) 국문 취급설명서 '배터리' 주의 문구"
+        }
+      ]
     }
   ]
 }

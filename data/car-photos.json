@@ -580,6 +580,26 @@
         "height": 768
       },
       "edited": "배경 제거·크기 통일"
+    },
+    "kia-k3-bd": {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/1/1e/2019_Kia_K3_BD_Prestige_%281%29.jpg",
+      "width": 1024,
+      "height": 640,
+      "title": "File:2019 Kia K3 BD Prestige (1).jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:2019_Kia_K3_BD_Prestige_(1).jpg",
+      "author": "Avante2025",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+      "confidence": "high",
+      "local": "/cars/kia-k3-bd-studio.webp",
+      "localSmall": "/cars/kia-k3-bd-studio-480.webp",
+      "original": {
+        "local": "/cars/kia-k3-bd.webp",
+        "localSmall": "/cars/kia-k3-bd-480.webp",
+        "width": 1024,
+        "height": 740
+      },
+      "edited": "배경 제거·크기 통일·번호판 흐림"
     }
   }
 }

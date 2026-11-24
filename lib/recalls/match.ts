@@ -88,6 +88,8 @@ export const RECALL_MATCH_RULES: Record<string, RecallMatchRule> = {
   // 레이는 2011년부터 TAM 한 코드라 이전 연식 리콜도 붙음 (엔진 같은 계열). 전기차는 제외
   "kia-ray-tam": { maker: /^기아/, names: ["레이", "ray"], genCode: "TAM", codeRe: /^TAM(?!\s*EV)/i, sop: "2022-09-01" },
   "kia-morning-ja": { maker: /^기아/, names: ["모닝", "morning", "picanto"], genCode: "JA", sop: "2020-06-01" },
+  // K3 2세대(BD). 1세대 YD와 K3 EV는 제외
+  "kia-k3-bd": { maker: /^기아/, names: ["k3"], genCode: "BD", codeRe: /^BD(?!\s*EV)/i, sop: "2018-02-01", eop: "2024-12-31" },
   "kia-k8-gl3": { maker: /^기아/, names: ["k8"], genCode: "GL3", sop: "2021-04-01" },
   "kia-niro-sg2": { maker: /^기아/, names: ["니로", "niro"], genCode: "SG2", codeRe: /^SG2(?!\s*EV)/i, sop: "2022-02-01" },
   // 차명은 소문자로 비교하므로 "봉고Ⅲ" → "봉고ⅲ"

@@ -1,33 +1,393 @@
 {
   "picks": {
     "kia-sorento-mq4-engine-oil": {
-      "kind": "set",
-      "name": "기아 4세대 쏘렌토 MQ4 2.5 터보 가솔린 20/23년형(20-26년식) 킥스 GX7 0W30 6L 엔진오일 오일필터 에어크리너 세트, 0W-30, 6개, 6L",
-      "price": 67000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785523298&itemId=29297647605&vendorItemId=96213441940&traceid=V0-153-ea448039adc3fb4b&clickBeacon=d68246d0-e7cd-11f1-98ca-082cddfbfd97%7E3&requestid=20261124151107787301548755&token=31850C%7CMIXED&pt=1&slot=2",
-      "image": "https://ads-partners.coupang.com/image1/95ILNJlRJ8XuwPGc9590YoxqH8GzT4Mewq72d8rKVW0As2Uy4jrF_AxTPGaPRoiM9PxgS3IUNw8roiJ_0lNDjFXFy3ukGQ06mobuhKPwypPV-J_E82oEcWTDGC8HoCxfZ6Zmef_bFvLfOeKFPDLB0za64bVpwU36S7SLJYM5tjWggu2Cccm8JqRzhimV9rXzKCbCafOpaeA3Hk48QHEKEErJStG7nnC-PJqG5WconcYeUSz72zsAJ75z9vtCrAkICJ7rv1A6lrAscseVGg8c-CtxvcRwYkcSfsSRctQ2HZq_NeaQCHCjwXOXOpqIqJm1I4ecCBFvO0FfU2dPzURJMo-TNZsEHuaRIT_CRdF-2gRu_KgvMsswyO_AHcPCMZSwHLtoU9a_US4I6KTFjLttfF4RnefcYkhvq_z0gHe6Fkrh5l-TpRTxVXJx1CpJ1IFKXgUGgPdzCyds6CTUWNtHnxCKkEDpKVyzN_RQVXYIHc2w8o4pSfBxUPUn9ITSBJ7BLPCkuXzltRVdFeVR9umJRzrlh_3gSqhUMg==",
+      "kind": "oil",
+      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
+      "price": 29900,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=9c3ab2f0-e7dc-11f1-8788-4c688a2fe9df%7E3&requestid=20261124165652442104299031&token=31850C%7CMIXED&pt=1&slot=2",
+      "image": "https://ads-partners.coupang.com/image1/OYkt47LkIjkdRXG3OWo1yv4HGNye2n6yiTFt5YTm1k2wOV_6_4Ooisqvi4uUWMBwnz7rO5p3X7QFlCIw3Cv-e3nofy0xyJW2Zd7v2RUbA3lCTsFYh5OJz4lOiZDlFnP-R7pnVRcL0weKraUFEnK-4rqAJRAUvQlbnPP62lI6aY9jUKxTU0NJj5EjW1d_xPE4ZAe8ClGD01se5WIMTAyX65IZnAu4kYJv-6_0oFEjv15Lxypaua_OfHxyCABFtWd_oQkm4UPyaIwlpHy7lHCP7urwh-8V8XTeV4f1bLfbz7KDZLi-eHN84VeY509N5yzJVIpp8fnaAyQCD2zjzEDnsLyebjH2ScJNpLMCf5K_wqlr5pVRYr2PSJW-u67LZHGkt1DDLAWTnLn0IK-NL_GMe4gH_WMyXEzTn2aPgLSKzCtF79EeCb7aUh1efmGKATu7utBBSx7dD3tJENofmYjg0uBZxNYs7G00J5MhEqq2OYIE0QyyxABuILE8llqCCK4hM72sWDrapDhgICp2X2mNeSGBGA7uY9Q=",
       "rocket": false,
-      "query": "쏘렌토 MQ4 2.5 가솔린 엔진오일세트",
+      "query": "엔진오일 0W-30 SP 6L",
       "checkedAt": "2026-11-24"
     },
     "hyundai-santafe-tm-engine-oil-hybrid": {
       "kind": "set",
-      "name": "더뉴 싼타페 TM 1.6 터보 하이브리드 20-23년식 킥스 HYBRID 0W20 5L 엔진오일 오일필터 에어크리너 3종세트, 0W-20, 1개, 5L",
-      "price": 60200,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785523023&itemId=29297646438&vendorItemId=96213440797&traceid=V0-153-7b32f7ea9406117a&clickBeacon=2aa40eb0-e7ce-11f1-b1d9-5eb72956ac5e%7E3&requestid=20261124151328941100456905&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/MtPr1IfI49NCXutrMtX7AHG6ILelK_bR9pkNlRyOmzuWWEKYmKYqoeaTc4wb0vtBv3VqipNLlv6ZxrTy6KaAJ0TkcOW6rKqUWBSJA70-Lunp0HUpHrxTTxI9zWTVBMIrijd0bEC596_iAWz-nV2Uelkjr--gE0jRHuTLscfcJWIBW_YyHSEyEka-q8E9gyVt11Bqu6y8rK3JBHk2s0CwLWYqBTbfN8_acz-RmgjiSwImuuCLaABc69UtftrnBugFWlQjMYqSGsuciSCbrRMz41m3ArXMwcxNumIDC1Ta8IuuWplMqW-KS-I8JDMM-rlvU0R3DXYG-28SnctquS_6KlJPZt-te8WCF7oTXr4Fljf1kgmNRDPtts2qFyycYLETJHvN-u8jORdu0tfm8nvTEoMqiBULYIMfAfsnYMWClfre60-PimyQMmpy1Ivl9wJAPIqDyog_slPKUKVq5UuBWgQkClT5m9j4iplUwgonx_MW15uB7qH8HQAnUhni5aqA5OoWucKnrk5lLoy0hZzBLfeZ1pWLNplx",
+      "name": "더뉴싼타페TM 하이브리드 엔진오일 캐스트롤 마그네틱 하이브리드 0W20 5리터 순정 필터 세트",
+      "price": 77000,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8672512585&itemId=25175943266&vendorItemId=92173028405&traceid=V0-153-7a2872dad71ad8b9&requestid=20261124165948436315160296&token=31850C%7CGM&pt=0&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/K3grWbZB18mKMF_VK-aRW-NO3-CgvJU4wYvAADz5kV3KR4_D4maxMs7YYkre_2Jj82FKTO5OBvaS8qnNA6COil_F5RBXLxM8gxQdvxTELlkwAYyNyCyxC6MIRAYcI2jL9-aaHdbZrsr2Of-0wlOj-Km-2K-GCeGH_eQc1bD0BG0ZBrR0VX24JV8nVo3l8Pr4XQR1AzuRZ2YYEneB-wj6vYsBxjbxpGT5IeSZ2s29AsY91okuJ5_5d6GdNcaTh5-kQbeXb2FB1i7Cp9_FI4OjtbPDZKMtzskihXZowffFA6j_rk55-kBq_BQR7BPuvrzgXEfO53CvYAwCOKOUTjHH7jdCffe89DME4iTDk3Asfdi2GnArQZNTrzHy0YhiTNllo63hz5TBiTGkWQpTHaKvrGy6G9RzBT8Z4GIfteoQrkBE3f5kHzZzJDQqMqU6d8yqN7kGbwTPRyzq9med42ul2Y-ZiL261eoTESH0w33nGVQUzK31YHtskuAgAFshyFfEn0I8MeUNx5KUmK5bD2G6HSy8EdtLTF3ZV0CqxNRLbmI=",
       "rocket": false,
       "query": "싼타페 TM 1.6 하이브리드 엔진오일세트",
       "checkedAt": "2026-11-24"
     },
     "hyundai-sonata-dn8-engine-oil": {
       "kind": "set",
-      "name": "디엣지 쏘나타 DN8 2.0 가솔린 19-26년식 킥스 GX7 0W20 5L 엔진오일 오일필터 에어크리너 3종세트, 0W-20, 1개, 5L",
-      "price": 57600,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785521195&itemId=29297640202&vendorItemId=96213434747&traceid=V0-153-f0d177a4e46e7571&clickBeacon=3417a4c0-e7ce-11f1-9586-1450235fe7d6%7E3&requestid=20261124151344783268618236&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/BhFJsg-90vojdDr9BonKssJUu0agrSLHUEsOkGi-er4JCCdGyRXjPCP_ZGTPuwVu6y5fSB-md1uhlzNEAS7E5azLgcjbLzeMTzuNpLBL50lsm5aeUFhv-kExJC5HISuvveI_2JeigmBnnIh7XK7q5C_nQCliQdhqL7UBM7xvnLVxvEP-LH5DoJEm3DVXrrR4gD3w6oOX7odgbubI9JrikGMjrushKxSzFwdd7DCOjJpFnQdYHgG3y86pvznXN5FVAzu1_iCkwb8CZK6GhYSDCbfu02zUIRCO3tH-V2F2S5chnXR7lpP66foD2_8jyzaTjLUV3re-tpyLoW02DMCoBpMHOdO9LiilJRN5Kl9m2qoNujWjtRT3xMLGL204MAk8twZW53BnUW9J01a-ExqN1fcC1CIGKuvjRdjH86hNvIuk5qbUfzgq5_c6lhq3O3wB2xtHMIDUs6nWvuUA7Pvzm8nKqkwGg4Ykgdjus41NcUmx4qsTnKefLErCYIqlZ0glM2KDSu2NlmBfEyBL4D37K9cq3A0m_Xw=",
+      "name": "쏘나타 디 엣지 (DN8) 2.0 가솔린 엔진오일세트 ZIC X9 HYBRID 0W20, 0W-20, 1L",
+      "price": 81300,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8955398174&itemId=26199202858&vendorItemId=94105757279&traceid=V0-153-41aab50c8bccfda8&clickBeacon=11d92c30-e7dd-11f1-be36-2a0b9f25ff4a%7E3&requestid=20261124170009740301545576&token=31850C%7CMIXED&pt=1&slot=3",
+      "image": "https://ads-partners.coupang.com/image1/sk3hYRnvjZLPG3O_srMOn-9vEhjUVCpmfwZR-Yfoh6hM4x0Xudo82NKfQKpG_qgE3csBd0Lq4_ZMC2WyIAd6OA5c5Vkoz0gQ2RdlvYDDF_nUszUCYmN6uccAhEc-5BA9ihpePEAFBXnv0C-Y6gSjEEKSH1045EgvBunEJNNsPsTJRs5Y1EVC0rlYoS79LCiYCGRYnK8ta6dZsZFv1U5QxR7S_pXRkI_1R5ujw10fxybnjFGXtgnwpT2kBE6hjyLdIN-M7MqgoppJCLQbz2fvTkfAfHxX60tMgS4TChT6EV2eLg6isgv4W2BLwTBwzA-oLovRMyBeamgtiFbKOKSsb5fixvpzZKVEK0JfZnjMq1NLAq6x1YoVr2_d1dIsvvNPd9dgwT5aSBNReRoEj5zdYwxF2UWL3s5GLGLdf4IGK2ReUdBOxE4B0L_wujV_fqDrzBVHlTf_9Q0copNVaYNWUtuPQahDj6Esp70E7h9P8W8_Dku96NU74QHWdmGe6BgTy_A93xPM0sSKCPi65yV_A1qJYwJDaYY=",
       "rocket": false,
       "query": "쏘나타 DN8 2.0 가솔린 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-palisade-lx2-engine-oil": {
+      "kind": "oil",
+      "name": "SK 승용차엔진오일 ZIC X5 5W-20 4L",
+      "price": 20000,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=7329758234&itemId=21111320238&vendorItemId=92736142291&traceid=V0-153-3e65962f0d60d41b&requestid=20261124171222699323543922&token=31850C%7CGM&pt=0&slot=2",
+      "image": "https://ads-partners.coupang.com/image1/7NHqTrnVRNO6Lc117IntzdpTyCH9Tm756onEgaasWQCykdV6tONC22izqdW0Krlqd7SRBiRQhw6NRwcGuY2yf4OGe5WzpYO6ETrj_W_dvZ5mi5AeXD-o8ndrPyd6iKD85q8LxIRetKnhAtcfntvuc1xph9udc11SPEZOkJQ_HKAYGkaPbN-jE71tIYXbxYBA3rXKBPDO4JK4U7XvhHkc0Vdjf25NVhYomQ3oGdrPhMvYze2k3023HsTjG3Ew199VfUbY7ZHRvHedQYFFzVplh2acCKg0lHEl0z3abmrlJb_d6Wr3g1B5WAFSw8j1r3-V4P70AG2b0mX5LV_fI-rcTBhCpL0qOSsJitHLg1ILYwzfKSni4Utz-bi4sua0sBFYEea8M3XuO0XZBVDoLVf1aZU5Rv-1q7nQHqFQ7gndLzqrve9UGNVtV8clNafBBGbwNtznR8rsToah6ZCFETfuZvBfVdAQHTfwHJJgtUhr70zJSgatBal-vZBVO8gRB4EG7QG1_okrKpxfxEkqOe2H-lHAUeiw4elKvafvZNTRq6zS",
+      "rocket": false,
+      "query": "엔진오일 5W-20 4L",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-casper-ax1-engine-oil-turbo": {
+      "kind": "set",
+      "name": "캐스퍼 AX1 1.0 가솔린 엔진오일세트 킥스파오 100 0W30 3L",
+      "price": 48470,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9517988240&itemId=28370479623&vendorItemId=95322860961&traceid=V0-153-2ada8e4abff8b61f&requestid=20261124170127275218416769&token=31850C%7CGM&pt=0&slot=4",
+      "image": "https://ads-partners.coupang.com/image1/y-g6FOodIQrDTD6sy7gx-hxgl69akLQcl6abH7LkC9-4Fwg5uItva1i58cgaMtblyf3Y8kWJrX5zIMT0-zMjyNPM_jgGMuZiQY6hdMNYd6mNBBxdFTZUumF4nE4MF9vxdMuaQiIVjWRR9pkheCxYbk31rJ2esi1OIvIkfvW4q5OCdJyyNfRMHRYBtikJIc68NymxHm5GNzPW6oArCoxtPLaGb9ZDsB_LByAr2IqaYCwLvb5Ue6HNfm5LglF5NDx-jn9JMO_vmgHHfhpDQFrvlMqdKB-q0ashPpAkni4iIIFsEFGrwD8k-a3COBaOX4I5eU0PUMPRa47q4sjxU0TsRsK_LbRZ8tx1YAMJdhJfQyX0xlvO6jMFb13ym6WYt43fiXkUJFHjhsssTpAFDSoVg-JsKbRWcGJ1tDxzTbj3gR0voIDc6JKrtJ24hpzpAt9Kcy-GGL3YsiqWg1p7dwx3vv_7BAWvci6m_GB2dolzOFCWul-tJCUVFCETv4DH10Wr8VVnkEHGzPyEao7LVkyLtNSx91XqkzhiX1K1YGk_-HEf",
+      "rocket": false,
+      "query": "캐스퍼 AX1 1.0 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-grandeur-ig-engine-oil-v6": {
+      "kind": "oil",
+      "name": "SK 승용차엔진오일 ZIC X5 5W-20 4L",
+      "price": 20000,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=7329758234&itemId=21111320238&vendorItemId=92736142291&traceid=V0-153-3e65962f0d60d41b&requestid=20261124171251605072220326&token=31850C%7CGM&pt=0&slot=2",
+      "image": "https://ads-partners.coupang.com/image1/59JU233evM5np9rA5_dKphRcEPV9-61065fad-7JZgrtUiurbQHsANk12qisxYTKQUhHEbvIBPTZLEz3uq-5Z6OQFtqA5dbBBolvHVMkp7lX7ce4QhPQrgHTSJJbi1DhREvUMeaxjK-Gau3ndRRkXz8HbSawjxHmua4Rdig9rO4mCdLSMNqOPjEe1x8lmtvwnu_UTLsJMs55_VShtKUNRBR1cLIwjewGkqc6SKFRFeD21PNx6RESqS1UqY1mQkTlmHQ-r4VuYokc8Szzxtw9ZPsh73OoqyEZ24HIGjs59tW1mk9IP_WjP6QqrC2NZ-lnZrtxC0kZOyt67JuPqGogzjI1edGHVyR_TJXz82wFADRiDYENeO0Xtqh6JkNeWUXUzz5HajoHafleS1nNhaAO7xPpO28IQAgvwuu0NOSWurjDJL2i7kno-Nv5XH9T0qtlV8Q9CLN0_i9NoNwJboz-bXdswoeD2_iNjs5kJilbYPJoFTOuex0C4adocibGpC9AJwOtfWmAklHMUPhoxnI_sF8x_8oXuISwhTrldiF2vW0=",
+      "rocket": false,
+      "query": "엔진오일 5W-20 4L",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-seltos-sp2-engine-oil": {
+      "kind": "set",
+      "name": "더 뉴 셀토스 (SP2) 1.6터보 가솔린 엔진오일세트 ZIC X9 HYBRID 0W20, 0W-20, 1L",
+      "price": 78200,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8955310706&itemId=26198854800&vendorItemId=94105925966&traceid=V0-153-969b4a95e567d1f2&clickBeacon=60a3c410-e7dd-11f1-9181-c0ab7e6cdc82%7E3&requestid=20261124170221986323542874&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/oAycQey-4m8X4wanoGrSDsvDjNqcOhB-lakXiSDRQh4hL1VzQq58WG3-RixU-N8LFU-tgMqGGZhoVZG5gLbe2dEA1Ll-p3bLIWgQvQgA2j-WAZduqiW8uknCZ6iMOG-pJP3ja4fHuEV2sCkE5DrOpTGKQZdrXignkb09QHy_Jms3fLaUQ9_VjyrcF7goV89Bo-OQZfcqtNcT7o_2TZHz3L9-JUeGIFHv1HRVSh60x6Iy_iATGoQfQrRquH0WUY2HpDuN5g3W3umZn75lwMaU_wXCZ-KorHt_jKnyAiTFYMswGw4FxnwQEKMMsL6vbXMmxLVe9ZoEFCNS5t0Qc7dL86mlRAjbZGpRbEioMPdlfRcNVyKLKWzkpw8YGIcJ7xd8b2jb3KBYWXJ_BRXuxDrd4_xbefgHPfuZb3m9jPV5sesRivQ4d5Nr48FseKa370uykhK5ujsWXMxS8tzL5C1LgiFnHEA1AABQ62DRZ6K0kAJX0dx07uqqnbybJ4uYYNMt1DxTMh4HVVNgBbUeqOLipyDnmtLA",
+      "rocket": false,
+      "query": "셀토스 SP2 1.6 가솔린 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-seltos-sp2-engine-oil-mpi": {
+      "kind": "oil",
+      "name": "SK 승용차엔진오일 ZIC X5 5W-20 4L",
+      "price": 20000,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=7329758234&itemId=21111320238&vendorItemId=92736142291&traceid=V0-153-3e65962f0d60d41b&requestid=20261124170232816093075826&token=31850C%7CGM&pt=0&slot=2",
+      "image": "https://ads-partners.coupang.com/image1/RGLMptlrCjYTLV5dRF49Q9mZh35WuIuhxHzt33Wyj20KDgTH6qER2Tz0UgpoQLsDD3AONe5x91l0dtyIoHwUYPyN-FORiqNFsHIwGgWQmv6rCXE60tutRBP-9D5L2ND7LVm1umlc_yJHm-_iJuOmgcDJF6nIIci_IxP4JPd0MYzrM185ZWAWEC8zB3ZKgKbtLdtK3bCtcPvL1Azu4L1Q_eH02TNuzERDPpRJsu8ugTuTqr9eaFndjp_k7BdK3Sv0erXg6sEK97g-hI3gsyqvBsa90etUHukjv6v_9tWmH5YgrqBfwvhKNPI598dtXam3c7Of0IoTB4COFCSUp1y9GDLEcZwGmSq-fDCOSdqT1vTTI27KVtw6-JoSxNWwSoQfuqS2skywL3x_exCIuW7BdktuSQETE3U4t6OWBDQsJ959kto1fvLHtDj_XpHwv17EtIRd7KgE-9MZAHNHWmNpcSGisWnzx9sKwAGoK2qfvtlxf0a21MX5j00vcFTwSZ6wmV_rX91O1-jzbCVW4zC0s4aCrDziyel0VhqYYN8_ftE=",
+      "rocket": false,
+      "query": "엔진오일 5W-20 4L",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-ray-tam-engine-oil": {
+      "kind": "oil",
+      "name": "SK 승용차엔진오일 ZIC X5 5W-20 4L",
+      "price": 20000,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=7329758234&itemId=21111320238&vendorItemId=92736142291&traceid=V0-153-3e65962f0d60d41b&requestid=20261124170240962095977617&token=31850C%7CGM&pt=0&slot=2",
+      "image": "https://ads-partners.coupang.com/image1/icu-Y6doUJhP0DQPiTJSJ-7LSBbjJ1HYQx6Jjdws7FHqCVB-XKC67ydPaXhSYtiCsYPR_nJoRPbbqzMHUx0YQNyU4TeiX9wTiTWwOpE6Cfppbi4HX5GMy-pSRqWMg4yapMYvUnM2yrTIuPnUR0m6dLHE6qftff7nRrqEIXUQzArd9IrBwF_eVLb55DxQoi-Ies7NJvgThsNcfdaE6GFVolZWJHVBSMj4KLxHkCzgA4XSrUKTvhlZmGubS1On81an9AmGWQv6UOJhQ781O00wIqcN2ypPsipPrl7h2ML90ur8QcLpTmFv6WY7wgTBk8Ur1ljskTcgkgPgMGZpnaTUR2Z1N486L-zvSt3Ta6B-zazVl0XlLQuPzc5UTFjWxpMxP7oKOpdb5X3xjDiHR30jOTXxN3mzecTbMPIH7EL6vURDotOSaOGpdD8VAOb67co-HHyENhY85prt3liH1p4p3_6psXR2wzUtWWid-hEZM5lczwQJHGNZiYIoE6CnT9oh5d34G1rH_qwEIZhyxyaoJGfukw4VRuENePyZGMzSLg==",
+      "rocket": false,
+      "query": "엔진오일 5W-20 4L",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-morning-ja-engine-oil": {
+      "kind": "set",
+      "name": "올 뉴 모닝 (JA) 1.0 가솔린 엔진오일세트 ZIC X9 HYBRID 0W20, 0W-20, 1L",
+      "price": 58300,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9684288208&itemId=28960255095&vendorItemId=94105761339&traceid=V0-153-ece1a0d29733fc00&clickBeacon=6d81d550-e7dd-11f1-a851-21232e81f951%7E3&requestid=20261124170243572315168841&token=31850C%7CMIXED&pt=1&slot=4",
+      "image": "https://ads-partners.coupang.com/image1/gvVTYWZUGrPhf3FzgvYR9E65QF1F_s61pZ9HBzI0tSE6oX1taYK28mD1Xqszd0jlSnu9i8nNJ2h66eeLS9z4NDfl3ANoi9YQtfL1nTiLW65dv0O-Z9ZKOuFCjyfO33xMKg8pnJaOamZda4sD48sgkERJdykK1j3meL-_F86lsuricPORvvhk3QnCV5RAOLNzsgUP5qdaKVm3I0Ytzb5s6IUFdohGAJ5aEYIikxs26YZ_1K9RoL_QstVvBLe7romkdnWjdLiYCPhL1B9D9JuwSYnVads0sxEBEt1BMnOWMdKoYiYlWnNuNKwiqesFiYkeM4idz9b8hoaSZUKiXi0qptQsM3XbtLoUkh4ynMzJy5jgdrA2H2kq7LMBGWqfmfRJXK7MOxIJixtZ00a1kdjK4LDy2lxlTZGX5nybwxNEFujDcVlI60ufaCMfJds3ZaD3ZrpNNUoVqx9oXfcq8RvEu2qyBWcTjRqsl2j4K6LgI1hm0cAcg-_HZUbmuD9dr4Cw88M8ms1-jsX0ZQxRkO23mjW9lk2CMaPofctN8juJog==",
+      "rocket": false,
+      "query": "모닝 JA 1.0 가솔린 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-bongo3-pu-engine-oil-diesel": {
+      "kind": "set",
+      "name": "더 뉴 봉고3 21년12월 이후 (PU) 2.5 디젤 엔진오일세트 킥스 GX7 C2C3 5W30, 6L",
+      "price": 71800,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9543687493&itemId=28469967338&vendorItemId=95415710624&traceid=V0-153-23d1256ab7f70e15&clickBeacon=83ea38f0-e7dd-11f1-a94c-915c61d55493%7E3&requestid=20261124170321160287637574&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/0UQM5fh05xXc8oRH0ds0Zl9w1eRh_ReeOuicpsCEi2xxoFQd-htASmwGnC1NQW_g8Wy57GRO-6fCCZwgViEpfJefs5kG7wO-FMb1nsLk2kFOMGRJS3gDAzf8NBxfqXMn0x54GXS9oXJUG2mfGY2ZdfW4SM4XOa9xwVrMoQUEixUfvdMNJodRQb-h2ZgJtUN5BDLFf4_A0lbIR6Lg5X2WrJk-FaR3rmLIRsxNm0-o3XilwMwOwAFVq2K2sqlKeuvv5e8A_0MI5AmXb7OjCIwG-eoumkAMWd4E_ivsl7vmxeHtCrjsYFmsOkE36oMl_jCQBQYK-69KumKEWrr5qNiiO3_ucTVDJRlGIbp5VWlpoM9eHCauoTy6v2aP9hX8yNxgM-7RxJAcP2Pr-PddStk6tMHeGwGnq7HA7tiQQU7jLLvSdeElxJXkcaLHMWJGoQdfCtwM-KuEoJaC6BmC3_FRE889llMw2rU_9ipMFabgmjxcKPP7FPVJgKrg2FYP-EysTWM5icjbWtdtCpXAvGjNANyanzvREqI=",
+      "rocket": false,
+      "query": "봉고3 PU 2.5 디젤 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-bongo3-pu-engine-oil-lpg": {
+      "kind": "oil",
+      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
+      "price": 29900,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=8bd24d00-e7dd-11f1-a761-dbc8f89f6b46%7E3&requestid=20261124170334459264412178&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/y0SAzY6SFZfEJtJHy85egJqLqmzsh3IqVhkJvdZanp72ziurS9ZZL2o7s0GxFA9Se4SFarNafKs1f002jorpNIhldI2dkq7GzPAuZheGp0yJpmRu7frjcnoIGvsz5c4fByG9YbG2F338mPquhI7rPkGHWuQW0bb_SdKJ3OLNLc12gvocQ_3tuJwoVy2mz8zlAdgR52tB9ZFow1hMwJ9Rj9fLpj5dfsf42pCctckSWbGeaXdDwa6uLnOHDRYNElwDTm7aX93-usKS1fXtWWwOFZkKKIxpKXXvj8jKRzrilqLchfmV1q7CWHE3jz2dXa2pZSoCqdo9svmc3e1n-R0s4zwCVMcvw2ueQ8XRNANSkxQicSXzfiv4tbxWlxDbiWhMFlhFuCAzvVRge2iKQu0J2cJt_p6pbleABe59w74HvitJU2Gy3nHqO33eAClO98JaoApfcAr2BlTdw_xMZQJ9SilsUGS5a97C-NksWMLbxjkyGS_j6cacdNWjixwFGCW7EbZKGUfSilhhD-Q1FeQvPnsmwN75DcI=",
+      "rocket": false,
+      "query": "엔진오일 0W-30 SP 4L",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-staria-us4-engine-oil-lpg": {
+      "kind": "set",
+      "name": "스타리아 3.5 LPG (21년식 이후) 순정필터+쉘울트라 합성유 0W20",
+      "price": 158580,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8476094878&itemId=24528657260&vendorItemId=91648089968&traceid=V0-153-4db3c224da80e3ce&requestid=20261124170350119202753077&token=31850C%7CGM&pt=0&slot=5",
+      "image": "https://ads-partners.coupang.com/image1/1ab7JfSLohlCgQ9G1SPSnVhVBtQmIpKla7-Q0nC969sHAPlJra76jgAPb8eyjCLrDtrrgRzOUHzqqQ25jEHD6gVUDjkRae5a9WT4jcKHP7TvkIllPrhxSJ2cxzWx6wDN_d4q_wFBhVWzkaSuOHwrFcBZQuK44yMNMcsGcp4zo0aRsh16e5IRFl0guKG5PYC_cl_hib_2TcbNTHojFMinr_oxJPYp6hXEdcqGk9BjGlRVhglH4_KXL7kQSEDb8ddeEPkEXyV6q1Yffg2xeUCGpQgoPYcjHs-bHvWMhdPSd1uI3pMweKmZfz1ReHuHD5adhxp_170OhItoTzgwtMeIvkgwXyOd_SeFPw2P76jgUfTpz_SSPr_tqZxj7xVQ0Guk_3AWV_fykPguGTmxqgEvgUZ3LqmgP0f2eDMuWYiEmZP0vB8vk6zgiycA1Bw-TkWio-X-a0vmxSLI8YtzueMtHvfFdN9YClS94_BCamyYhQwMRGBw5FYu-DOy222l7y-BtLTlEbhzEHD_ZBDAK5-exuQaoV5TuYH8HU5gBtak5uo=",
+      "rocket": false,
+      "query": "스타리아 3.5 LPG 엔진오일 필터 세트",
+      "checkedAt": "2026-11-24"
+    },
+    "genesis-g80-rg3-engine-oil": {
+      "kind": "oil",
+      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
+      "price": 29900,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=a4fdc840-e7dd-11f1-81ad-ade091c0f00b%7E3&requestid=20261124170416668264418327&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/Mq9rCVu2CkkdU52FMgAvzBhvT-fq3JterqofzxpiZkfSBjDMJpsKdH1WVMpbxK69WYB-Ptzm9GfKYoYACoNgbo5-vIanD8siiNvFTOiORBm3ywssls5dOVD38QO7lmHtL4haAIm7339OoSVzwDUQLfxEE5w4Y_tv916vtcBZZKCEhSJjMNESfjrZRKMPx3xcyymBpgLeuwn7T8R5HSpr2tIgaT6PUggNdJyqyA5i7Ypcg8fLhkFtKqNSr329fwKsgg2WsD-psO6icXfxrV1A9SlngYlGe0XdqdwGfbJMdlB1lHowI3nkouvwt3R_idvYV14gRec4CZ79fkRLRr_zeDUHsQ9mAglI39L46Gls_Kv2GsIZbcePzdivTJgswZ0bBMs6C3t7I7MCLGRkAsgE221hG_dIDZBAVCTthK0aqeMSSq0_6PuRLUCEAv3I6FIHzmEwvZibS4CqWWhG50NFMDGGh24fXLKiH5vX8Q89CWbMiCKQmtQKAOTzDhA_fqtEoOe7mKXqSN3ygDf981MUajOX0dDN-yQ=",
+      "rocket": false,
+      "query": "엔진오일 0W-30 SP 6L",
+      "checkedAt": "2026-11-24"
+    },
+    "genesis-gv80-jx1-engine-oil": {
+      "kind": "oil",
+      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
+      "price": 29900,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=b1953390-e7dd-11f1-a481-0721626976e1%7E3&requestid=20261124170437780301548527&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/RDHT_GByKEGy_aZWRNIBxrvLDV_gPGOxhU1Utx1WZeGehD245eLmYbHmcGA1MdEC6eSPpk0jm5x78spwJ7k4lTNAi1SRStIdu91nebR70jMLbc9OxGzldwktoRTmjka0XfNDS7lJtRw7k1mnE6VM-vJ0220zFScwS3uygAdzu8naMkpGVx5eZby_XjiAXh225_Mn_6Z1pSj3B0N61eI-kqImHCzZ_W_PEjbgqCmXtQkQx0F5RxKgFUjCLva-UFYCj7TgAa-Ox24v94foGyd747zZGpCocgLIlA5gWa01BPyvkd2ZxvhXaKWURSmWhF1jljQdhXeukRCGRSghZ3revjOezM-q6Ko-4vMh8XhHc4lgSQinWw70DwD-mZgBraO-EdOsysrlhS52vrX4p1DRV_pYl129g1LnwT50G_owX77yKBPHk2r5cHTJ6XCjyFng48w_YooST1U6S4jO3TRrKYw9hxTMLn0opizsZ7cYHCIhZJtLux4nhi_kZ8tFyn4UqEMP2vZgbngZ6fCrUyQRS0-Gt_FWVaA=",
+      "rocket": false,
+      "query": "엔진오일 0W-30 SP 6L",
+      "checkedAt": "2026-11-24"
+    },
+    "genesis-gv80-jx1-engine-oil-35t": {
+      "kind": "oil",
+      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
+      "price": 29900,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=b99f9cb0-e7dd-11f1-95b6-518ac0ad1d0f%7E3&requestid=20261124170451298218419452&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/ZRIyrRSFu3J66pceZdo5dnx0t7xfNf5fHaiW0gMm85xvDDBz17_kgUD5A0HS7Y9bPJQCHOp8SZUnx7FBxW0L1o-w5n1nZpwnEsFVlpa7jsoi0XnymrxJyda3NwnWZRX49uXbgo5Sg7q6WoVAgvRF9NasUHyCGzz-b6vQhxUK48gJwB-y8EdVY6MWeSmt5Cz--3hkUwfF87j1-YhpwFVpu-tExZ-PCKcOmqX0BqLTEqP0nEKADSJdQ1lRmTI20CrMTVVezeWHAQNAPtwkKPVGLVA5Z5-AFGXX7VmCV-TtEOxzURtYoihybtxB4xl9J43kzy2kbBevWWjPntR6J_w1q9syeb9rwcd5y8RwN5hHUimJSGb7uvfOFS6GbM_fXq0UFRS1Y1emA_Pfp1SKGVP0JnnnCUg2XPsENTj0nbqw4jU8u9nmIlY_5DRQL-0Ie4NQYoXEkOiCJMXZjG6od02bjpnw6Miw2nqAULSTKEpPzbdiU-GnxUkPaPWLmS8t7gIcZsCmQ38OrBlSjLU2NtiO9Ix92OMYYSc=",
+      "rocket": false,
+      "query": "엔진오일 0W-30 SP 4L",
+      "checkedAt": "2026-11-24"
+    },
+    "genesis-gv70-jk1-engine-oil": {
+      "kind": "oil",
+      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
+      "price": 29900,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=be6cdc30-e7dd-11f1-a139-f8a34a4048a3%7E3&requestid=20261124170459331155942085&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/Sdela7asZe0ZCQ5sSZ4ONzhVqsa4kIJnyMtDJeg02YdNnq-4y6zw9CWDnSEcuJNq7W3Et8-6BHZiYj7JTFH-6d_kA2H2sWDb3FsY-M2hNyultcrc5xeVpMA-ZgCQsSpjI7saUsJe8adrO1Vs06w5N1wxxQRYjasUJY7lflzVVEYrN13y-0FqC6hhbzt6EnYVrg1b2o0_-pfjUSWGoxROiSykrk4adrgTvvKIui_MPqiAyeCADXr4fN3fOnty0Dxor0KypmtfRuoHBAtv1FcZyaPKVPyxMrjW9XqY3CfVPCfWZd03Z-y8Nm2CUh1b72WVD_5fVAbgdCWu2_t98Vc5KIdUk_4bQr1hFUUzpvrOBMyOsSLRyfA43-EEzVsghMAKqYcDP7lUCJGI1mkqW6T65jZLYebFcb3-IaauhUHL9FeUZCW2QDsHJxwNCDiJorfMIUEKXuAUYClJK9K3_hBGDNtKsfLYoj_DLUbzU4ONqgpP1PA3RO7UDlsNLDYwtIQ-uY4JxoFGy-sSiWZrfASkzqepsxJ-97Q=",
+      "rocket": false,
+      "query": "엔진오일 0W-30 SP 6L",
+      "checkedAt": "2026-11-24"
+    },
+    "genesis-gv70-jk1-engine-oil-35t": {
+      "kind": "oil",
+      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
+      "price": 29900,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=c4dccf30-e7dd-11f1-a193-857b8233bc7d%7E3&requestid=20261124170510158012969210&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/wPi-6aOdJJLlbtlfwO4BhKtStX4W8CdG06H-lLEuiJRk3iwGW4nUGm9631iZdfXr2lVc0YiNnUSzNmXOpl9AoHXSU0yr4QlurG7PKSreUcy0Wrlza_N0TEH-BoKE5Y8f7LFP5Udsmvbgu2Xdc528ZtMp29hvvOvVPG4rkqULdrbgLwQHAJROL1dxJlsiqAORPZN3_D_-ouDdDW_9Quyz3hSaN2y6Rp5bkg1w3cfr8_unF1lktMLELEalUcJZSnN3Bpr3jEaMnE5GrQquIKc3Afo9631zXujdBBiMoMTDpQcrKFXijaQR9ZGMoibpFwcPgORHZ7jx2OTvozxUg4_ERhB871NmbBwkheVkwwLjYY9og7gmLC_KbFNgs6If3-5W35Cbdp27GkvmDyWpdEyykllaEeMwljc0vE5ziiJ6NGwsU7lISuuY0erAIpFqt-pppjdV0JiXyvEsRTWMi3SbJd-6sa7Kdzvu5A_L8q1kPRlPUbhvCcikdD8RdM3AvuZyoH9BTaCfVTIJ_Y5rNYkX_ad7wrLe",
+      "rocket": false,
+      "query": "엔진오일 0W-30 SP 6L",
+      "checkedAt": "2026-11-24"
+    },
+    "kgm-torres-j100-engine-oil": {
+      "kind": "set",
+      "name": "토레스 J100 1.5 가솔린 터보 엔진오일세트 킥스파오 100 0W30 5L",
+      "price": 80190,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9517974284&itemId=28370432543&vendorItemId=95322814673&traceid=V0-153-1060790ac525039d&requestid=20261124170515392048095273&token=31850C%7CGM&pt=0&slot=3",
+      "image": "https://ads-partners.coupang.com/image1/XmiZaxnx92lJiFpSXkmTLv32-I9eOhuEJnCnSaP7YHm6DC8f7L0_vm1kiRJ_CIuQVYaoFQyl97DiEBOWIlIda2dhp_VQkBjaCC-3QFuuBekPiprMbGECOP0B1rRUzlUfPQha-z_dyp4aN-E4A33o1dWS7rP286Lrm7AQT62cX-W-Eu-Xay2kc1ktbTLWrXnNiQdP-LM6TwxHqnEvOloHBAjk9ZeTJlFiBBCAUcrQn0cOQ8RLKgwrrdGTrZcFKuVn2jRHUZTPEgWJiCN13t5M_p_kJjNLLu3_1CdzR8fAG9orvcLPCJh_jdRGicHq3Q5rFBBv2-aVC76BQUfU8lYVIu_W_coYKeeQilOx_w7eUZwWga3knmBBR9ZQPqUnKX5zPFsHyZqFlmE8Zd2DxF-ULOcil9R_H6zM3yjL90Yv7GRplF-B8Xk1RxJ1ABVZFMX28JBig_Bld9gZqXHF1mcq_oI4PbHKm2IVupmWd_E5_TST1vaQQF2t5FwPbcJt3xtoRgoadTcYzkTe9aRLKecnTUxdErTxqZp3fbW5DwkoHobQ",
+      "rocket": false,
+      "query": "토레스 J100 1.5 가솔린 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-avante-ad-engine-oil-diesel": {
+      "kind": "set",
+      "name": "더뉴 아반떼 AD 1.6 디젤 (18-20년식) 킥스합성유+순정필터세트 5W30",
+      "price": 76550,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8427875273&itemId=24379931692&vendorItemId=91647946310&traceid=V0-153-5a7b91df7fe90a13&requestid=20261124170528704315164280&token=31850C%7CMIXED&pt=0&slot=3",
+      "image": "https://ads-partners.coupang.com/image1/yTBlHMYjPTWP-LVOycJok49znZ9HFqEEMQ5hrC3k0RqVClW1OKTb5tZCI8i4xi1nY1OGGqyzxx914QJKqO_jWF5snYfih6LTkT0ntvEilWOf6dGDTNH3eVZbKn-BELaTlfVnwqAgx5OGZdVaz9j8xxZHZpu96w9cYbYo6uR7ewALmgA8nl5MoTs_UtTGUKrQatUtlFE8EPKYwJRWWcnO5Y_IU5lMs5U5ZnvtFnlP5BPio1iAG3YxWpIH49CGS3FBOoWroVTYKlT4j8gBiNFimPYsJYRGLCghGkONCDeTYnJnbgZKvZT5TAhxbUYWudUrcv12oWzA9wbZupXlzDbadmKn9jChmpYgmNiDp_QzJSVX3MzBuinnuJ6BsgG7PR8zt-sgSOnk38Pc1-qY_iU43GTd1_LRklKK0yFK0Zj1Xvk9xrgTUKH3ri8bA8KkcEzRmDvGjIAbqzM9Lw-OgndlkYPBgLb4PPBDS8uEK5o190OynM3VV98BhIppP0ysZq04fl4i0bUTnBLgwkrvafpPj8kUtNkT6958id_TWHQ5cJhb_Q==",
+      "rocket": false,
+      "query": "아반떼 AD 1.6 디젤 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "genesis-g80-rg3-engine-oil-35t": {
+      "kind": "oil",
+      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
+      "price": 29900,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=acdc6670-e7dd-11f1-ae53-e464a40c4672%7E3&requestid=20261124170429886323543647&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/stONz1WX-A6RKOi7smBmqUTooeFqrrc1eSsDaowAN0A7D91JJaXN9EPrQGELE6w4wKfQ6VsgeaTaKIYIPSg1rBNCvpVU9O4E2kUMvmUFIYFjfkElMhkeqCij5de-QFXkqNOkbcCx-2Y0v1KQDjTIaAD1xN7iLP5nhjq7Uv_IjGu_RrlOfqkyzHKOKDxf7i3SlhdqeeDeo6jKx3smDuiPkPfyoWmcnv6XR5cTuBFTCj3AHL1HhScAMD9gSOZBUXAb-naj6b0yosk7aeRsa34vz6NW56rBtWE1O95W1ks8EpkhQQQo0LY5vPZrJecdGGzhbiYpefncLD7INbZYlk1hrP4j2eNXy6fR9Cqv8kPJ139Y_OE7G0OqyZVh3alJJKRSKvywgKSav4HNUYpyNHICVnO7u7tXR_hY0zG_GFECXKaLwPZMkN1t2awdEJOUCd2LpUBjwkyTD_dLznXTzjMi-5Ar2UcAtwHJr0dY9Zk-x8FLaa-krWngkzIsf2uxmbef3b06CuqBq1z7cfKqK308ATWOg7aJ",
+      "rocket": false,
+      "query": "엔진오일 0W-30 SP 4L",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-santafe-tm-engine-oil-diesel": {
+      "kind": "set",
+      "name": "더 뉴 싼타페 (TM) 2.2 디젤 엔진오일세트 킥스 GX7 C2C3 5W30, 6L",
+      "price": 62800,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9543687438&itemId=28469967142&vendorItemId=95415710966&traceid=V0-153-9b5e86f2da4b6c83&clickBeacon=01e0bb90-e7dd-11f1-a695-947d07ae8715%7E3&requestid=20261124165942944010269523&token=31850C%7CMIXED&pt=1&slot=3",
+      "image": "https://ads-partners.coupang.com/image1/sciAgGFKHQXoZmuesdz4LX_IrXqoCS1c63i1buF0-Ca1nTihsGFI7TGR3JDC2DVx49JaNsmXYsBm07C1P4cBCz82h20NAGw5aVFBLhXfkBRclluGAZhvUUl0rzqtUSyqH8C4TtvTqHT1hBEtVVQGLAV6bo_jbMwZA4vyJLFL8ZOs81_dpOILuodsS096PET6C_Qbc35kTgCIJZSf0fRFh6dTxPLpfHeqMjTnwLLIfp3uAYzsXr81vlKRFRIusFDisND_IpxvbxObs1K0apOhd55ITZLvlrQKyzEiw7RUqfLiabbFFD7ovbuDX7owiBeb0aehaiAAiXQBuM-pXg1ScEgny3odIWUvMFe3RkJQerlZIdfTbkmyNW0GdMjZSXtBTiaTsZZwXzV9i4-XubfzCYK-uM6GyYrn1Dt_tFTOMVO_HDLuNRGbZia7TvuUV4BckEFSii_KzGB7t-sSTaVywh6Ie85C1lMMaug0Mbq4U7vMqzQHRhnk188dvQTIlZxdQDQ0ThT4xc4NvQaUTkBUbybij_Abb1qW0Q==",
+      "rocket": false,
+      "query": "싼타페 TM 2.2 디젤 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-palisade-lx2-engine-oil-diesel": {
+      "kind": "set",
+      "name": "더 뉴 팰리세이드 (LX2) 2.2 디젤 엔진오일세트 킥스 파오100 0W30 (PAO100) (구) 파오1",
+      "price": 131700,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9207743437&itemId=27195001013&vendorItemId=94105869522&traceid=V0-153-1d57f4a489f6353e&requestid=20261124170113079315163977&token=31850C%7CGM&pt=0&slot=2",
+      "image": "https://ads-partners.coupang.com/image1/MB8n_c9pmbo6haJkMPazPQZTzSI2z1WTy-h_Ze3XzMx_44oDdanY03eecIJY_VfnfGLcoWfKTB6PpjLh2fMuu_cO_9KSaME_P3Xxu2LGFYsUZcdI0WHqhOX1DbYE98BN2q49GtC8TjwsGnSgaVpSIHA016wpRh_N_NXFGsBOUMaokUkt_eKTuaZwvm0KwuJliVBr5ad8MWaHDozI_P1KSQ70lyD9W-2nxMCnKSVGZxNcJkYId98d_l6Tv5iBdntu-7l2BRE93HoIPz3dalYUstym-GVhVTEghhWhPXwRQApXrcuQuO29lvdlYzl3sMLGZ4_ytre7pP_4qf6gt55HQNHcy7dYqOVnxkDmBS5pG5aMt7gVZkutnUvWYj8-RQiYKZhW0jcxTA4AUIYT6RO-aitff4ahzJv7wWq7ZkgwctxS5eoLN0rfsfMc3PzgqZCQHiwYdFTK-oKxIgTMztNzozWUhmhC1brjFmlI5_hlCAlf2ucuVw_3sWymTMhG0O_HndLfPhMfqc3QHOPSQC3vB5J5MrcGfZ11pg2rs9CxGsQ=",
+      "rocket": false,
+      "query": "팰리세이드 LX2 2.2 디젤 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-santafe-tm-engine-oil": {
+      "kind": "oil",
+      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
+      "price": 29900,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=feb74100-e7dc-11f1-8cd6-9e57327f5d45%7E3&requestid=20261124165937691269090834&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/DMCs2pI3UqXdH7KaDMnPWEYgc4XF8d1H-os-_NB8OY8G3EWfexoRhNbQjg6nOznLeZOed9VSU6oFU6-gFrz7RtXtoYv4C_xi5n1Y3FSDsk3BQ56UgF3X8ZuUYCAs6tYEisoGza7aPmaas78FUQmRMUYkm1tlnou-mtjmQC4nnfzpYl_RneKYvkjv5sv60subGAysM2OIi940gANEqyz4kq0Fc8AfIW_TS0Dca7ceJXDojbb1JKl7PEoCsh--Ot5svgelWY1bp5BIVKKdo1GJZxy_vkfvGwVkdO9p__9RCwPXQSryLnc4xYtLu6fgH5mpEJuf7hxdTB2t0HCLJf5g48J7bOvayo9tZpE1O3406z8qBZPsfxKY1YUTYcae5vyQlmJX0Z8rd0fWTXHQ-BHhljX5Xj_vMvin8goIUYwgiVpBPKF0GfDd7_Hv0ZcZUqSMDTN2fpco97Gsrxjahk8dZx_6ZeQWQu4nJNdS0zgmIXs2xTbfswSuip4MZ2Apz8Q8H_wGx3WPytVPtNz7NWb52Ark29aPCg==",
+      "rocket": false,
+      "query": "엔진오일 0W-30 SP 6L",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-tucson-nx4-engine-oil": {
+      "kind": "set",
+      "name": "현대 투싼NX4 1.6 가솔린 엔진오일 에스오일 세븐골드 0W20 5리터 순정 필터세트",
+      "price": 73500,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8680260519&itemId=25198402491&vendorItemId=92195032197&traceid=V0-153-1d71030d69cc74d3&requestid=20261124165756585323541264&token=31850C%7CMIXED&pt=0&slot=10",
+      "image": "https://ads-partners.coupang.com/image1/VM896W40Lfby1_AzVKnmERIl9IvPeaDMtrAyHG8eTCrEShRIFRmrvDoqf5tsdazRlQylL9slXz0sXKC2ag5x9UTfzaUfMPyxCLnjqbsAOeEmCMtDv8NCl36rsbxfrGWEDkVQKDl5pd43AE2pLImlP7tdaYERflFxSr4sybyzBaxNW90ptMSXMNawulU1_PugxLp964hkuuQv4euFJ05Jf5ZldFAdDJwGX1SOq4ZhrnRB5A-2SJWWB7d7c5MAsxX920F_sT9j_CfGCwJW19hiTpDYStN1TmcGEu-ghc5WCLXyNVtR3xeh6jROV0uedm_bd9MDIuCAihkJ0nHkNrvwXlTcJLBdFRAaZyUI8UBftKcXMm86DP6cZe0YvsA9HjMRfgkxt9O9LjwXjzOQNkDr3d08Z7HA7-_bN9B8Vv9uVcJOz8FIm5nFYX7WpronW28Gd6fypBbGXtJZBkLSccgxKX9bpktQv0lUGR-Geo_ke8pJEXqFDo_G_a7cudPz9qRkasK02Ls8rYUag0kU0uHZ5uiDU8g6HDraHmUm1tzY684MDs4=",
+      "rocket": false,
+      "query": "투싼 NX4 1.6 가솔린 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-tucson-nx4-engine-oil-diesel": {
+      "kind": "set",
+      "name": "더 뉴 투싼 FL (NX4) 2.0 디젤 엔진오일세트 킥스 GX7 C2C3 5W30, 6L",
+      "price": 62800,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9543687501&itemId=28469967379&vendorItemId=95415709920&traceid=V0-153-cdacccf934fca15d&clickBeacon=c5a19b40-e7dc-11f1-8cbe-c8ed218a2a08%7E3&requestid=20261124165801905265535585&token=31850C%7CMIXED&pt=1&slot=2",
+      "image": "https://ads-partners.coupang.com/image1/sc1gEUXth81oZ6-rsdDiEZBJD015RqX7w_PNQFvUnoZ6Zvz0kPazIEbzCZliR_080J7mk7jKzYXzT7jpPiCAF47cMSeT0q72cAQVUxz4vI-1iO9Jk2OcQcR98I6AF0l91U5kFbkb-WppjNydCBiujMkdplbZvVQngTydTZsWM4KhadUDNl6AA5z_UfaD11UhhBWtcDGnN8NS2mwVnCviKqJvzXMdMLUGupMrvFGgeHvRVwlSLquWE2VqFt0a256wgvcITo6_vu9Un-rF6ghmLsoXRQcNvMgPLLq5BWsVQd2MztkE1yZPUKmULAeS0VnHH7bO6bZdty-OLZUjnsIqdl6FHvUl-dXO6L3y7T6F3QbV9fhkjaOX5tMnr4qfnEo6tO77y-p5jVoAG3JdoTYU4KGNFGDt0A43qizres7XmSu9DZDzzcQapzH0EN4AGtMQSj5Jv0XPtr_Y5Yz0XEs-Za2JOlgXHd-CMUKl0KVo8tNZVJDH-5RKGmidBj8zL6RYRAbx948W8RHk2nflKg7tv3W3PVdYSuyc",
+      "rocket": false,
+      "query": "투싼 NX4 2.0 디젤 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-tucson-nx4-engine-oil-hybrid": {
+      "kind": "set",
+      "name": "디 올 뉴 투싼 하이브리드 (NX4) 1.6터보 가솔린 엔진오일세트 ZIC X9 HYBRID 0W20, 0W-20, 5L",
+      "price": 79800,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8955391017&itemId=26199164571&vendorItemId=94105923960&traceid=V0-153-1a0d7024f8707cb1&clickBeacon=c8cc0030-e7dc-11f1-a27f-2370b376488c%7E3&requestid=20261124165807214133104313&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/QEufdFYHbvA1yLOPQOK6miKv4zNblWtKHibPffVc3ecA4khMJEOHxTgCPa6Nw9eiydQY_tEMXm9HsT7jop-JwQ0dIT5jhk8vKPNSs4MnxTuyBJdTyisoagTnqwsUux8wzwnvQ9opKKHvX4lPzz0wzTPdfAdL7gAaWShXolD7qfxrsocQQGgVzA9qmWce4a9toen6VmZxaFxsUROJRN0qogKEIZeFmQ4sWZ2xQ8usk5qNYQ7MjnI3TgIt3NyNr81MynWr0w_e4DdtISCa3XiergKnTJeBFhrTVcN9elyGepvxhZyygDaxP4vQZ_ll_YzBqLUYLEqbV_f_POLpMy9GrrH1b0MkoPB7ktiXcKQZH8P3y98tNKGYuL_nOEwUrTCdrmMkl1PFfovsh9qfg7PZiKlHX_NGGhv0CTXpScl5Q1qx6ahXhYSGtpWi_vxY94oHM9xMvqRsXSJmLHGqbyB3MguUsxm-IJcAt8mlloZ1Vt8NyjKSjjKr975bO5kNUDYnD13nJ8pGabnwLewWZMZrSoc8r7Q3x13t",
+      "rocket": false,
+      "query": "투싼 NX4 1.6 하이브리드 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-santafe-mx5-engine-oil": {
+      "kind": "oil",
+      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
+      "price": 29900,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=0b7fce70-e7dd-11f1-b47f-9beae939ccdd%7E3&requestid=20261124165959109306580288&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/2Bp5tMH0fCPYUi392B_WqQuatNPIveovtcvAdPL_PPSPOgMjc6tb7Cjarlt68FgQxZ_DN9jWc_B81ZJX492DzOiTC8lnz4aARtQT7v-LOKwxZhB5jvRLb4pMQusZK7M25tKaQLASxhWrN3C6pV_DVmgvaWm4UseZWfmnXj0gwRLpCEzGR3-4q5xWJ-8zqHe_APvmHcjjG8N8PkknVFqofbuObDsOtUoZkVsXpD6d4TPHht3DVRT_rBddd8biCco0u2M1st3H7gk7Fv8iedXQMccSMFPvDZ0rtK783Iyse6qf2Cc_ES7VzvdqCOFVogn3TnY6BFM9ypxqQODiZeF-c1EBit25Go5N1KpFe-7cwhgB4i_0-vL6nPvg6X_nG_rp83ma5NleDraaUw89WbNF04XO3Bo3GbSkbf3IRggxY7BZkFSAo_IQuPnbqX0Gl1aTzfotSetCcqXFp8cNug_0u4MbKUHd9rZE9dYCuXMZIBsb0rVL2PY5tIwBtJzkmz3DfWeXrRzKlJEoa-kPn-A4YRJ4Ki3dLQ==",
+      "rocket": false,
+      "query": "엔진오일 0W-30 SP 6L",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-santafe-mx5-engine-oil-hybrid": {
+      "kind": "set",
+      "name": "현대 싼타페 MX5 가솔린 하이브리드 23년~ 킥스 KIXX GX7 SQ 0W20 엔진오일세트",
+      "price": 65500,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9830290233&itemId=29443745932&vendorItemId=96353187511&traceid=V0-153-345623ca142b2d39&requestid=20261124170004441049432114&token=31850C%7CMIXED&pt=0&slot=6",
+      "image": "https://ads-partners.coupang.com/image1/Grx4gy913OhKYI8AGujaCodRLCL2Ht2Dpba3DXuVeZPxSym7AKHm5rRla2I8plgd_zzwsGI132ZeGdcuyvP0nVYdVJ9T1dufh7TfUa2s48KCYhp39NgzI8Qy2WWrNdb89Dnj5zvV-x4eH5-uzAgiJ722KR5ho7s8S_dvkArsrmxxgXIbbtHa2EgIm_3dyG8vI_E-Vp804XrUAuyAUEBemd2YSuYCV-IqVJOEnq9HoPfji9r5QRKyX_TwBrny6jOtfgok9Y1FJSZUcLrxXTL5NIewEtFXGWu39QAHjm4nwQ71o4YYeoFBKnPB6piihyYokEA5YzluTMtCKhcJHjhxHXGM3aFgs8a662rQ0wdfZAPko3z_WMQo2H91wdUu1CmN8a0thvP_osvXlsOhdZNYAuqgq8COI1xIk6jxoxPFVkzD_inmW7qKUGHVek99Ut4DZyVfzZV7zFohfhbvqnF4-m7tKUW_0vjvz2GC5PYjDkz1dGhQ-eTTdGNyklLWMe1VmFPGNZAczLPnsmpkwciNOXp1HB8dOqlW6uGLS_fdCYXDqZ-G",
+      "rocket": false,
+      "query": "싼타페 MX5 1.6 하이브리드 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-carnival-ka4-engine-oil": {
+      "kind": "set",
+      "name": "4세대 카니발 (KA4) 3.5 가솔린 엔진오일세트 ZIC X9 HYBRID 0W20, 0W-20, 1L",
+      "price": 91100,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8955386855&itemId=26199147460&vendorItemId=94105771230&traceid=V0-153-d9db325f5becd203&clickBeacon=a2a500a0-e7dc-11f1-83f1-14a0d5c69344%7E3&requestid=20261124165703182315165299&token=31850C%7CMIXED&pt=1&slot=3",
+      "image": "https://ads-partners.coupang.com/image1/t9Z4e2AxgR2klD8ktyHnfgPP6A6ZSgies-miG9uI93oFCa3Myht5Ui6F9BwL8iuv-77q2KL82myuGjx4lHcgV0HcGqe_Vy96kZOzotJZ2ZvmtWdXKatwGh1BfNqFVvF1ll0Jfe7dW_p4CYQzBXxweh0G8RyvYRefGHg_pA1n5BeZjtii2O3cMUAAo0cbwanRdsI5Z-vW3pFzQPi1fDuFXU8mtVrxvrsPtq5cgy5TkOZN5eFUkpoA0TJT_4GUWd9iWQVb-KEHInGsaes7pXNhbCoW7Dg9NSk8LOe4fURS3VYwbHccQV6Ogo7dUGPB-GrduVwpyVlxcNp0_dnAmOmcwmpr16vDOCkRtD814sIxy35r3qzcCErCIZ3egMTP7eFp41eK3cOoZI1PDjwqkP-fvks2WUtfD1RHIyl2qcgzpeB0Jz6s1lT-n0IC4TGhqeGQrIoojN3c-TxzPq2R5eOepxIanDVPLGsDdI_sxjQBnc9KhGG6vTBDTwKXGabbxKOyKwJXIqgYp6l9KQFyjnXaYsxJfF2H-UQ=",
+      "rocket": false,
+      "query": "카니발 KA4 3.5 가솔린 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-carnival-ka4-engine-oil-diesel": {
+      "kind": "set",
+      "name": "기아 4세대 카니발 KA4 2.2 디젤 20/24년형(20-26년식) 킥스 GX7 C2/C3 5W30 6L 엔진오일 오일필터 에어크리너 세트",
+      "price": 58890,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785523096&itemId=29297646780&vendorItemId=96213441129&traceid=V0-153-0749b23e5f33777b&requestid=20261124165708581256175626&token=31850C%7CMIXED&pt=0&slot=9",
+      "image": "https://ads-partners.coupang.com/image1/90mk8qymat_DHSKC9-_ee2dvuS2RDVd1o27YzkVbt5y1uPD359ks9w8Gq-7KNJRIA5tddOVw4zIU2PmIYBiIl2ZJ-8wN6Zw_oYC03yg1NcRPoD_DJJ8WFphJABb3VMzqXBE9cp0GEBX16FZVJDbO8xJiheEjT8N5W8zZ_WevONNyw19sXkf5sgnl3rEkV4AFZq_ePjKfEMuTtZac7PW6v6krToxAQIpagqPwf0PvuUNDurLyG3dAA-BXJ1bR84tp7Bn1mPzustUDr_8dgeLGh5MPFK24Rog-1jyDh4v7l_sJaZQmuzX0wW2n3PcwJqdRnWFIJqZjGfIWBWSzsXofNYC7dXPTZKZ3EYEXHgrlVf2j1zLaO539qw1uODLeR-6CHWbCZKCL5hL0-rZB4J9Bia0n1kB8siFMC7xmHaD9qvjhX0v27bxxa2EESzXClvnYNOehcLdBdc2mv22QvTmcJCucRkoDhaEwIW-CiiCXMnTB6_b5Z0-Z3ceyBmQIZQQmnrUqKybBOKlp2z1cKwh5-tTX15BZcI6tresYKAoD2X13bKk=",
+      "rocket": false,
+      "query": "카니발 KA4 2.2 디젤 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-k5-dl3-engine-oil-lpg": {
+      "kind": "set",
+      "name": "K5(DL3)2.0LPI[한국쉘정품]k5(DL3)LPI 쉘울트라0W20(4L)엔진오일세트365-3020",
+      "price": 87500,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=6348616245&itemId=13349240393&vendorItemId=80604410096&traceid=V0-153-6bb443eb118afe7f&requestid=20261124165743258268610545&token=31850C%7CMIXED&pt=0&slot=6",
+      "image": "https://ads-partners.coupang.com/image1/PzK6nvnieQiz1EzFP85QZCWYl3XyT6Es3hZoTsk18loyEeSxiNNtk7vCKPdmeG6WyeBVyvkZAYuStvU3lwrs3zJoo16fBoFxGjWMlUfBbMx9Hyg8DtC2bJYWj2JQhytne6BK8dPMqJFiSc3_c1He7m9LwIwHKMKa3Q-PGWnwPsZsazmai9rAeUKXy31HDQBRkNvE7hnYKHguD1bzLIY5NNeIwmfpy38EShIoYMINZxlLlmiQTK0GhGL6hzyBmbs44scQzKM3QdJ8ZlrPHM6YNGRqeXB7pQ6izLDkjP8sj73AbJcP0McecRD00GZCHQ3p4s_Bt5rFZhIzWlLgrwF5f9OfiexVu1SK-iYCv1xYDhoPWf58RAR-_TXAsNAQ08vfnba4_M-WbfcPJvq6jQZCLyp-yydfVHui1I-i1iBjFtPem1iLV1wO2DS7Pq2jzKbM5SXdy4xRjsFBoIZb8YyPLWoaVp09KTMpCZrODjNpWxbXXufSBqNwbRRVYQqGzmXb0rgCviQQovnwzJxIDNemKU1L8bh88hFAcJFfCBSbTs6l_1U=",
+      "rocket": false,
+      "query": "K5 DL3 2.0 LPG 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-avante-cn7-engine-oil-lpg": {
+      "kind": "oil",
+      "name": "SK 승용차엔진오일 ZIC X5 5W-20 4L",
+      "price": 20000,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=7329758234&itemId=21111320238&vendorItemId=92736142291&traceid=V0-153-3e65962f0d60d41b&requestid=20261124165826039048090656&token=31850C%7CGM&pt=0&slot=2",
+      "image": "https://ads-partners.coupang.com/image1/NmWz4PidF4kV8cDeNlvr97011a-e69eW_5RdZiVK1sstZIZlrpkYUc1rmdlW2x0UUcdFX77kd4rArB01BuY-BSzlQdJLNHS9ASJomg7OeYo4quh98pKELc1o6S2afxEm5aolAtJgRWeXXATTsJF8yr-yjP7l0vKzq7hRKNnNwHq6PRcyEAxMolTXqOVIklLXmE6twRZBrwufqCU7pBVqshwDgvGKvrZPudPvWCo-zUAIpVksqgSHoa4IcpI8SeqjN3Npi68vwVbnnqwtZr7cuVm7Axf3H8KwsAYSpfOzRfyyMJo7BpimDAyQDrvvMj2EmMAbIpfEDGjop_G5TDZPzFupqwI8XNfaxuqqtsT2I2OqlsVhQAS3t5ilqd1PbhxW6VEXa6dVyYFfi92QOYzAptqzUia6ovrqA4_c3BroSYl2fPjAm4VLH5xe6mPxy8Iv5M_wEEdRtwubSF6saF3OKyLSrkxrrsdGDY_zrtBS6RhV5L90T7AAunliiphyrMNU-WMoXAei4Z7fBqz7ndDhpYa7NJKJO-EKKL2RbFLFKw==",
+      "rocket": false,
+      "query": "엔진오일 5W-20 4L",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-avante-cn7-engine-oil-hybrid": {
+      "kind": "set",
+      "name": "현대 더 뉴 아반떼 CN7 가솔린 LPG 하이브리드 23년~ 킥스 KIXX GX7 SQ 0W20 엔진오일세트",
+      "price": 65500,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9830193846&itemId=29443438569&vendorItemId=96352890171&traceid=V0-153-141af078987dd88e&requestid=20261124165839241104295266&token=31850C%7CMIXED&pt=0&slot=8",
+      "image": "https://ads-partners.coupang.com/image1/TViHmJQ3nl9sXl2qTYi2rpSNBv4vg_MppZAW1YQmiLZ9sdWy9zl4be3IJFfxXvRklLB7stlXm5h52RuPCNlOLkN-tLcI-ZEnKnwdmiN0losUqrmFCj98EYEVoRxzXT47G2VL3JB0YluD_Wx2qTmk6SNURNdHd0XqcqnrvWWeS23_zSoupiMIY9SoPg8jovb73uJAf5QokgKZQdQAkJhNT_uZhNlkxK9R_kxAGLEhyFu9x9NNWYD8VvFmCMYmA6c_aNhhF9Bl86GJErAqKeHP5J6ZgRzK53eKcmPRxrACoO_UNMc6WuHzGIHc8D296OdY-BLAHcUgtSLmgXVM9OGJXRQEOcJqcI1wL3B-ufcVLRlwEunQPXFjGwMqnRr7qBoOG2mB-Nv1ruj_pYA9vFNPTTKCxXdev4u84QS1V1y8AMXgwP7t1aB68vNEoGOIXoL_FrHSql2K_kaeE2hxFhiDsvoMz5vmOrdYlGlnHNUrpyNFKSp6Ov5Oi3ODpO6LDvUgwSKKuiv1tW7m9xbPn3tS-cC24T5H-Wc7TpL1JHztcspqxw==",
+      "rocket": false,
+      "query": "아반떼 CN7 1.6 하이브리드 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-avante-cn7-engine-oil-n": {
+      "kind": "oil",
+      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
+      "price": 29900,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=e238f140-e7dc-11f1-9faa-dcc396fc3461%7E3&requestid=20261124165849868208723197&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/1bN6gFArPwwLRN3U1SSKWcKxBX38ygylQE_VUnWIPTo8L7RuXII2LW7GEUaYyK93b2yIIAD4b5tc6ze5XyE3dtZQ_xQmPHqsP6E6wD3OdDqeHi5j6zzrjfU93mcQg7C3hZGJCZY6Ks51b26_tB2Hq6LcuP_nhX2NqSX2QjGLdmcx8EVxubi8BkM0d1KnqfIqE_eiFWW_kFHBbQEaivjeFC86YXe4eon6ikOyHv_jJnkJZCQ9Rf-0rFak7ZK0FOcCUnRYsvG1gZ27OJzevotHmMampJ450OylrrmS9jqbZ6HJAuMRYTccoXuZW1DbigQ_IyyDJD8KGoK12BZO3QG2PQNC5i1CJbUrXLyJKUIgtbeYIl24IRopYb_LV_hF2gVDVaEXRYmWmV-wI-i2mc4oAxe6Dl4i0j94I04IEixgiRCqEYhf7Sr7T5VBl-kpQhTdFy1a896d8bg7nCp38NyQR2Rvtg24pETTlfWQw9_bSr9bjyqSuhZGtgMrqUQEe6sUqrsAlTAmoFm190VyrRSdRp9N6bvn",
+      "rocket": false,
+      "query": "엔진오일 0W-30 SP 6L",
+      "checkedAt": "2026-11-24"
+    },
+    "hyundai-grandeur-gn7-engine-oil-hybrid": {
+      "kind": "set",
+      "name": "그랜저 GN7 1.6 하이브리드 킥스 0W-20 엔진오일 순정 필터세트 100% 합성유, 그랜저 GN7 1.6 하이브리드 23년형, 1세트, 현대",
+      "price": 69000,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9000058228&itemId=26374111058&vendorItemId=93350748698&traceid=V0-153-621b0613e894daf5&clickBeacon=f8413380-e7dc-11f1-8309-7c86102f7da8%7E3&requestid=20261124165926856264411426&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/7ek-dIHOZjhhwMjF7ecpR1hN6ARPSdL8lSEmIynKSd94wFc6cEn2r_ucAo2cNE51DewyWqc0lmOfDZw2FLYAQG01H0Kai-lUKB7OPgPNs3VJVPPnIAZwpOBbK58a75jYwdfSJlf0DGsHSW84QhJ0g4eqq2Cjh_yKG0RMmbq_oKaVGwJnGKpws-1dEk8m6FIR73YuTtXVLGzSDbiqvr4o9kpAelgzCs_KCM86EFepuwtJHwAFQYkyxn1SlQAJ9uaHTFpJ0DMCySPj66Xh8-fDr5kcbOEMNhX25neGwoWwqzTgIG3Sex8Su3P9AT5OFG5hCgeAnjQtfJtM_kKlCUymWrkSy-vWdDoOiiSc2CROTKrx8anoa5s3-EQubiAEjapf5KoN4R56CLX3JZfuzUMGbmRfzidHOCT_SBeURDU2gmGq5HYWj7zIjCUTqeemn8PCnnjg665tMP9L2jmfSKfxnJkWGk5rLTP4w9YAf6845vSi22HuomAPtUpJ8tCSqRR3TIJdGdaATeBt1ChthOMkE2TFced7ykmJGkUMSXY54EwcUKLDQ5okM-D5FXQ=",
+      "rocket": false,
+      "query": "그랜저 GN7 1.6 하이브리드 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-k3-bd-engine-oil-turbo": {
+      "kind": "set",
+      "name": "더 뉴 K3 GT (BD) 1.6터보 가솔린 엔진오일세트 킥스 GX7 5W30 (구) G1",
+      "price": 60300,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9204729725&itemId=27181860526&vendorItemId=94105767696&traceid=V0-153-dc9b435dde969efe&requestid=20261124170542471114065451&token=31850C%7CMIXED&pt=0&slot=9",
+      "image": "https://ads-partners.coupang.com/image1/ArLbH7aaKr9tJsgZAmI0fvLCfPaBL4Q4fFey-slQccKY8nGPVvFAte7TsowyTjbr2EKQDv2l4n26epIAvdtoSd1WH5x6CbaosNYbNAYKNpI4D-wOQYasC4hMSdoh0vQyU4XEexFm1czr8L9jYr_QLKFxGLc74OMvGzvaoLEiC7-uCVwJF5HVKBWOoXEAUW1cAq9erWg-ja2latNB8Y2JeBzUxUpz5tzSZH43xc7r_twpbaWrU0L0_OoOjZrlkQdpfwDsjz-pYMmrx39WodQ_ROG9cE02DgMpdd4Lqfc3k70yUk3oSeT0fGS9zWQ-A0zBN_ap2anbHVjD4pQ6rCs8eNOkoGGklKS9sKFVMmKK7CCCT2hAQLJ5rXWac8vGAjxOw1ZO6l9EdbaAGX4vEhKAQ7t1fS4M1fbQS4rygBfn-jik_Irs0aPcBZqpUtbwTjtaIiQvSdYMD25Mp4pQzhoZc8lPr6wnWv3jjtY3BzXnsCJxpBC4dnC2whfOsr3o3tI8uuyfTxZGj5T1cTvXpCGUEu-5VRmxbaa5E0Ojo3DRzNQtuw==",
+      "rocket": false,
+      "query": "K3 BD 1.6 가솔린 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-sorento-mq4-engine-oil-diesel": {
+      "kind": "set",
+      "name": "기아 4세대 쏘렌토 MQ4 2.2 디젤 20/23년형(20-26년식) 킥스 GX7 C2/C3 5W30 6L 엔진오일 오일필터 에어크리너 세트",
+      "price": 59000,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785523226&itemId=29297647338&vendorItemId=96213441570&traceid=V0-153-75c2f28aed1499af&requestid=20261124165657869012962291&token=31850C%7CMIXED&pt=0&slot=7",
+      "image": "https://ads-partners.coupang.com/image1/w_5tmgJAOhXmj21Vw2IVwGTwjDTe8154Zczu9ndotviCNsidPBHn5U-yJhbzZDjgyO8kPU2VR5BzbSysfqWVX2ATWyZ_I35zMhL9nOLApK9f7Qp_W7MFKTQy5Vijyf_RBBM_S7Voi-f0Dd_kZtkZ5ApG2nQQFBBNFiiN6p_iH2A6dkVsdnUUejE7jGQNht2d3HOCdttBonIyEUQi9Uu3Zpc2YOK9ogdzhlwWfcFKd_4i_BpmWuupKsFh6-ac3z0IwqRZyooYZnYtgFcfZWhrIe7jlWzwwnVM2uvmJWkCTUmDAjjRr7XLCvDBx7476BuW3-O2Rdc6Ngh5GgjtAJi4PwWX16lWnOOggctRM92TK95gmT5aukGWS5M_LIuT2aOQFlbQzsoComVknxwnuLkg7jOMFzdB5X5QqftxoDYYrMlELex6Uoi355TZCZsd5XfxP_gf8c8dP3-Pq3OXTkpxybFk0xm50knuVN1iPizpNKgdTrScwP0SJhjJxeZ0mYkPRi9JNqT1lovN4Ut9sz_9uNu2w1zikXkAkAd2zBOE4MUVZA==",
+      "rocket": false,
+      "query": "쏘렌토 MQ4 2.2 디젤 엔진오일세트",
+      "checkedAt": "2026-11-24"
+    },
+    "kia-sportage-nq5-engine-oil-diesel": {
+      "kind": "set",
+      "name": "디 올 뉴 스포티지 (NQ5) 2.0 디젤 엔진오일세트 킥스 GX7 C2C3 5W30, 6L",
+      "price": 62800,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9543779792&itemId=28470389842&vendorItemId=95415941031&traceid=V0-153-66da038459342d7f&clickBeacon=5d65d720-e7dd-11f1-9b88-96e3747ff260%7E3&requestid=20261124170216571264418540&token=31850C%7CMIXED&pt=1&slot=1",
+      "image": "https://ads-partners.coupang.com/image1/2emuAkZlLX83MVTU2W4Bb90W08Zv-813Eqs0G96qx8KiQKxceicXoDQoi-_NfvooQkXjl8Zu8dcAvSZKaLgTp1MoyVW84AqSoq2mRC0lWzTm1xhqgauP-reEpGU6TNHqeLzY8Li6jYQyUM05GeGdhOcHbHBanX8sW_r1cx759jqjrZ9BRK0uddmP8a9JU6nhco5-NsHVxzGF5vFOQ1G6HukoCiLr_iSv2O2P6_Jlx6ZLM4F97-Nj4Eg7KoCmmJfwjFmnfsQ9Jq0PFVAC9mtVhwobRFi6JWZY6miRqQgcGsrgg0Q-GHLcWNdQjwz6ctu-uPUpdlI3TwtAr2NsKyDjUJFbLPd8xUW-tn5mhzaKi7iZseIsn-pl4RGoon8NRt0KV75yijgMGkVB8cKCinLQruNM7lW7AxEd7aAaDMnzYddYuCyE2xyB4pJeTNh8TvDFk3cF5-LijADyFTpwjbrg2HJhsdK6xegAo5rg0LyPZFICjN3aMKBbdPRymPT9bz7nmjO-q-YUnOXOHSQhdgd32pkA8e7EpHs=",
+      "rocket": false,
+      "query": "스포티지 NQ5 2.0 디젤 엔진오일세트",
       "checkedAt": "2026-11-24"
     },
     "hyundai-sonata-dn8-engine-oil-turbo": {
@@ -38,186 +398,6 @@
       "image": "https://ads-partners.coupang.com/image1/wf4eSgoO-xP9iQsgwZpaEbyFjqeb1yYae18GjhaSVB-cG6v32jrX1oFrlc0rsl01KkOIGqDp89wIGaCfBG_0JhC8Pvq7wRA2OH1uJgXWrWTpFsZqtOERDscgChhgsKgZubNi5WFWED7XEvewAYXrPEQ6G7YjNgDQEH-RTTmndQl-RFifS7o6uKY74LcIrSCM94oKkEvU-Ni-c92mBSX3RTvquN0kwv8uHsqZL-NRFaUNBG2waRC3Bsa90nJvk4k7Hdc02NGhMyTwTwGahLO8HykMppTbQ32aSzRu_QyuwyGyl5888NByhOoq7Be0M5p88n6Fp0UFWInYHita2su_q-LlpuS58KzmevHP_pr1TQ3V83KFVmvKY0p2sghe6GHvZXKzMrgJ5POcfBhCuHzGMWDU1T6etDUp76QpiDCjIDmtTNdkL12SBijrIuegUoU-v_v32HGAbVB5WAR2gRJvTR3jOmD0mZdD1IK7WIExmqJEc74eVpDOty9h-zGTlZ0OxXxDNo8JHzKiApoJ9zGX5hZYsIWIy_e2",
       "rocket": false,
       "query": "쏘나타 DN8 1.6 가솔린 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-palisade-lx2-engine-oil": {
-      "kind": "oil",
-      "name": "SK 승용차엔진오일 ZIC X5 5W-20 4L",
-      "price": 20000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=7329758234&itemId=21111320238&vendorItemId=92736142291&traceid=V0-153-3e65962f0d60d41b&requestid=20261124151429745227167384&token=31850C%7CGM&pt=0&slot=2",
-      "image": "https://ads-partners.coupang.com/image1/a4Gjw6mJDmD8_b0Ka8_W9Ec6M5El8UsyQMPGJGFs24Lj4fS506Kb4Y1NE4an3PryAnswK8aUa5ZjOxiA5iRhRkSwied85AF36QQVOVAf1e80eKFno4UOn-YhVNazvDvP5YYVbxUsuE1M2QhJgp6yQ4r4X4ZzEOsUZRBouk2b9E4GYhewpNB1qL88jf7OgOiMiz5Nz9zf2fn8ucuaNmEpzLPk5mIUzMumme-cGY6FaMvABaaTSdv5ChVFUvTaiuoyxJWmt2b4ge5KBn1NKYELMGbv59-2M8R0d-KqikdVvJ7JbfiBJsIRqxp9Lxal8sxn0mDq5ysVpCDwOFdi6zV2mwTndbEpUqCGH4o3halLtWoqOf-8m-6Hn3AMfhTzxksuowFI-w_2BMJVuuIYLTuiUwWXldvbgz-gUTVHycLib0tXuaB5RNgBK4jMSUA4GJjRgJs76vJgoiYhZBeRd61Qs6DK-VUrXIfKvGgSwvPPxqtH9MqYt276n9NgKs7XHWFpBK9o-VbH3qhjm8TYt9YqvJNbZCjOGvm9Tf3dTQkwf_Y=",
-      "rocket": false,
-      "query": "엔진오일 5W-20 4L",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-casper-ax1-engine-oil-turbo": {
-      "kind": "set",
-      "name": "캐스퍼 AX1 1.0 가솔린 엔진오일세트 킥스파오 100 0W30 3L",
-      "price": 48470,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9517988240&itemId=28370479623&vendorItemId=95322860961&traceid=V0-153-2ada8e4abff8b61f&requestid=20261124151445691301541022&token=31850C%7CMIXED&pt=0&slot=5",
-      "image": "https://ads-partners.coupang.com/image1/L6_QcP8Oad7MGoIzL71pReqqmoj4dyXo29ZiIXx7qeMEiip-rlxHP7XWbtI4KyXHrtJW6PwWPAA0BiSIaR45ku02_nf-iQbfl2w_2o0E2mzdwA7VQbdzD6Po5S8iQi3b7PO46z-Bfn52RL6ppHHtrl_vibLv3dT7YKIs5Nv7wvmg64d4GVnJ9JjEkbVaTbdW7846Dcboj4jF32cn_VsTYxVIXSNRmSNmx5LURmmylSCIddUgc9faJa2urijyfEYguXjBLBaSN9TKpE-QAr33R6zqz4LCN9kzYqZgVTSYPoQvgsVokhOiSOvBN_6Vwm8_lw1pjdIp34XwUeeRA39UblnpgVlPlj2VbPdxcv0pkymzz22px1gWTZwEEpCu8SLAe6RrbEgKpa9YMmnJeb_kktrOXOW-YOkNz7a3_Fm0XOPuWvCt5knzrO55tmMWGbUW1ETDwWaaltybLjSB335MACwmvxND-ddQZxJvOmjmiQzSmXBhVhlpgI_a0g6OX0k1KXCpYT-OKwsUjj4av8OJJ1Nj5b_W72HUW7yU5jhTBsHOnPQ=",
-      "rocket": false,
-      "query": "캐스퍼 AX1 1.0 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-grandeur-ig-engine-oil-v6": {
-      "kind": "oil",
-      "name": "SK 승용차엔진오일 ZIC X5 5W-20 4L",
-      "price": 20000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=7329758234&itemId=21111320238&vendorItemId=92736142291&traceid=V0-153-3e65962f0d60d41b&requestid=20261124151509803246310697&token=31850C%7CGM&pt=0&slot=2",
-      "image": "https://ads-partners.coupang.com/image1/mN3u985PKED47QRVmBmY6DRFWOzSslTmiSWXT1U0ZKNgkvdlK4dtLjl6w9IXgPSXfz_V0iae0BA7Ptv2hbF6vL5M-liYELMZmOyvkCGZRxVw-NuECNNlBewmGL3giAHWrgwOwcAWgk9CylO_6IhCg4E8l1HzfnzRFwpjvdkqsnhx3_qhpDBuuvWOGiVT8sUECpu1r6aJ76PNf99QncCTzF2wESVtQ-HJfZHZmL_dxe4u768OSlCSn1wZjHQ3DVqSXigp6CLSBOaNr2dtQX4NK-hLQ-hRL7N3e3bW4SPi4wx6qHVnVx_1lYdMuc2_LkfOQDUSaZK1g6OHoPvOWUfRY6r6cM30-Zk35pmYtR_UHAwpRL5Fyx_2nWpvSFdvy4CPaNkV22-IhEBHFsRoqFdtBSGB_vMzutmD5Fav8TqQipN-h0jAck1cfQ0Li0oi7Hp_xknZ3C0G1V5xSqmtVKhYpfbgOYFIUryV9nLXhvVAPcdUec6XVT-tfMy7IppD9usJk2Ya6AZ1VAyma_dKIGJqJlPFnwYmldtmuttfDrlVo0c=",
-      "rocket": false,
-      "query": "엔진오일 5W-20 4L",
-      "checkedAt": "2026-11-24"
-    },
-    "kia-seltos-sp2-engine-oil": {
-      "kind": "set",
-      "name": "더 뉴 셀토스 (SP2) 1.6터보 가솔린 엔진오일세트 ZIC X9 HYBRID 0W20, 0W-20, 1L",
-      "price": 78200,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8955310706&itemId=26198854800&vendorItemId=94105925966&traceid=V0-153-969b4a95e567d1f2&clickBeacon=750a6210-e7ce-11f1-901a-397f73136488%7E3&requestid=20261124151533727093074419&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/ZRO35KejjV-PT7QZZeKzRZRasWpt-KdCadgNVCkeMSNK2tIlhDxoE2JzA0p0TOIIf2jxP_jjXmzsYDkPTatEeaKk7ZWj8zLdYBih9sCb5It1U4K6lZWJoNRo7SxdJtYvGXTv5HjraLQE-4dRXNskhaftxk4OdSzD40zuCj6DUucbEoOTgai-encpptKK_uOJGmujizvl69cMcQma9ODyS7VZLAbX3JnBEUgOft1SZuxkxXlgJzSjH9k_nR2umrRpFOzw-FP5kR3tcm4D3_Ez-XDN_LqYkX094bQpPm69sRbCn1gQaMjNjE_yr1CnCh9qBb33GcNhRnde2IEUcXYvjxHPOx0UISIV9nE3JNZ9LGDUJz8q-3uIYCpeuOM31lUF7Qbdbw8kDCEzBLv1S2vjepH55ALUni5Ji__3kVsQYqHm_fdovUgB0dpqBEfW8tyHV0zU_g1drHdA8GbQWWIPJjNFumiT6gJTQGeUvqWkQejucMFmghyIDDHuUNsUSiUXH3doXwU-FAzQjDLMgSPL0KAPcMS8OA==",
-      "rocket": false,
-      "query": "셀토스 SP2 1.6 가솔린 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "kia-seltos-sp2-engine-oil-mpi": {
-      "kind": "oil",
-      "name": "SK 승용차엔진오일 ZIC X5 5W-20 4L",
-      "price": 20000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=7329758234&itemId=21111320238&vendorItemId=92736142291&traceid=V0-153-3e65962f0d60d41b&requestid=20261124151544304171079955&token=31850C%7CGM&pt=0&slot=2",
-      "image": "https://ads-partners.coupang.com/image1/acuhYGt0hhzyRP6XaY2wN_WU5eTMxWPk2NPomDlOrac_6wrK1UEcVvlRE63h5B6PkkRHkDGD_ZPVCLXsbVyHK1yZeETpxQsmq1eYqolPbX_-Xhip7TL5b3cucMdpf6siryHf-EcuGs-CQpmf3YESrfKqGfgLn-DLbYmbEgPitlzmeuIxXqDB_2sv6lfRpLuElQIWBC7qaVPYr-AnvSXdkdQGGnECKgyv3_ADevXqBhCv1ySEfzMtpGxIqenkH7bz1mBHVeAw2KCyeRv3OptkK3DcQyqNKNGoosv-Aza7W_vdAqmHDPuOyfUR3CHbil0Lm3ygMVl1ALsIeOD0zOgC2QF5cPCSkZDYXYwEne1C5Z_DlOy6o0ARf6bgJEsGJz3Y7TIfwF6Yy0y6v5GloqTkJqwEqTU-hN3GHliBwpViBCcgggq36foDqLvZf9Mifl_zKHHd3Rs5YSql5V0Yy-owlJGTG0Y9cwFHbZHrpHAmDET5aZ_CUKPcsA8c9rCo36zQuxffadxi_aK1hAh7Tz69Q-jrH72rgQZ2ccCxCLw-BQ==",
-      "rocket": false,
-      "query": "엔진오일 5W-20 4L",
-      "checkedAt": "2026-11-24"
-    },
-    "kia-ray-tam-engine-oil": {
-      "kind": "oil",
-      "name": "SK 승용차엔진오일 ZIC X5 5W-20 4L",
-      "price": 20000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=7329758234&itemId=21111320238&vendorItemId=92736142291&traceid=V0-153-3e65962f0d60d41b&requestid=20261124151552163208720118&token=31850C%7CGM&pt=0&slot=2",
-      "image": "https://ads-partners.coupang.com/image1/gjK1JsIKNp2Af8qBgtFOMzLCxLe2Tj_Y2MMIo4HrOq55rUc5UXk7j-cJAdJ4CXgN3skehXAbGvLmjIXgeugjVyHWhlFgxS0mhzhI4pqOmPaTqXvBjOtod_f1bYwgX6L9Kx_YFrzDu2LIuJlD8HpENVVrOEboGAT90Y2WpvPJjUCBNVr5-l-PbBSjJghRLKHoMCZOl01NMDqG_M-qhgG7679B4RC80RkodaD1QDMhLYEC6wfWKFeOh-eDR9fpRIMIaKTwAnLZO3Omi-nZBhltxZ0Cy7iLIvYYV32W_Mnsh1L9pax6wtJVXMzIfW0XgjDv_Kn06QqioIe8zhWARE8c2Flc-lr08xg9qYaJ5IkqYzA_Q-OFI64fE9nZi9coStNgaeoviTbcBJfnLq9l-fOGsjGQnQYvfqf57efSx7fpMkbFXzMkUHuHLNBt5ZagIOhSqb_oOB7eE8IFvragRfkwZQ2UaSHD4XIvzpjWCRg7i9StVuFWdDK5krx8g0wMTY6r2jC1QN0GYFp46EbxA6GNyHzM6iY70hZ9-n44lVNDA0s=",
-      "rocket": false,
-      "query": "엔진오일 5W-20 4L",
-      "checkedAt": "2026-11-24"
-    },
-    "kia-morning-ja-engine-oil": {
-      "kind": "set",
-      "name": "기아 올뉴 모닝 JA 1.0 일반 가솔린 17년형(16-20년식) 킥스 GX7 0W20 3L 엔진오일 오일필터 에어크리너 세트, 0W-20, 3개, 3L",
-      "price": 45200,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785523844&itemId=29297649926&vendorItemId=96213443972&traceid=V0-153-e4fe18bada4ea61d&clickBeacon=818a9be0-e7ce-11f1-b9a1-d6bc5789ed21%7E3&requestid=20261124151554733120609451&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/OWDfmuVE1H1r2jqtOZqSgxPlx0hdHNMoaFzLcILHxmbSjJ8Gtp9IdECImQR0NwFiCj7a9Xu-Wzos007FQQogFfIqH2nPb5oa_pzWOaClfr7zE4ec7a-xoewMANgZbU_4ycfgKMvpsp1zW4yeABWtilNqgut5H6OrL9aBHXmRRygskdzc11ytkYM254ZvuirCdFFqapkz3X9M3CMbGO5RUMiVMNXZSXxvaer8Gxo4HL3PXiQJGCtVNWN516cCpThntNtM5yqh4nfZCVX3RQfn95P4BTYhy2yIjVQso2hnc1E9q2wviAcx6s6BY7GM97luuFlgjsTtnKj14t-DyvSICtQKPCYCETZhQuune2RkSTxA2-SzUEJY5bwwCY4tf4ijO0N08IQgfs-Yf8k97ne6NJpynxSAIFbizKUSjR_KAKa-KGptdwJKbt1JpTPvZ5z6UB1v8ASrpp3JI9MXV13LaHTLn9BM248VAkRS0WXTMhcVPYi4w6gQER_-rakYiMK_nMcna83vV7-Rk5M_PGz05q1yiUCrGfP2bQ==",
-      "rocket": false,
-      "query": "모닝 JA 1.0 가솔린 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "kia-bongo3-pu-engine-oil-diesel": {
-      "kind": "set",
-      "name": "더 뉴 봉고3 21년12월 이후 (PU) 2.5 디젤 엔진오일세트 킥스 GX7 C2C3 5W30, 6L",
-      "price": 71800,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9543687493&itemId=28469967338&vendorItemId=95415710624&traceid=V0-153-23d1256ab7f70e15&clickBeacon=8e2f74b0-e7ce-11f1-9972-6896e3175be6%7E3&requestid=20261124151615930120602694&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/uxLPmIyQD4y_3JSXuzj9dPPsm3sFSeEPXHI7i9PVvZA45LmBgOTyiqN9w16_zsM7WAh7j1rnSd_CoK95BXgHUZOLY62-BPNCHd8wXuVESI3u6cw4CcFBeIpJqLMGgiQdqoXe6JF-1KGmSb0uU2mMfgRXJ8elHwoc-KRw2Vh-vIqqKbdyIvXZHnQAFVP7W-jA7ua06UacNUXQQ75spvU4Oaw-XsCsaHi1UiWjHNeFGTtebwRrR9FWsG8EIo8xqIQRNfVBuYaOT80K5tCj00t2hvQbSAVIlJwYJRShf69ViTSasIHieJoOk-8-GOquL-JRrHSVafBBMT240dd763iYwS-F68JOO6ghyZ1n7KT8YSgk1Q-MS8OsuK_aAZ4u7lEoLKScRcKMACdasy24UfWKS5mePyVtdGo2JlpubanEkZkYaovc6JjYbB_Lvst4FkeeN8rmtzazs2-CFfsiqHs_iE4nyNbCDgKVvpvCnOAYN6cfIGBhOnHgjw57nSbHJyksDwDOaHdpLvHacBKQuBoO7uCx-fY4rfU=",
-      "rocket": false,
-      "query": "봉고3 PU 2.5 디젤 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "kia-bongo3-pu-engine-oil-lpg": {
-      "kind": "oil",
-      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
-      "price": 29900,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=946f5700-e7ce-11f1-9fa1-856f2b81c925%7E3&requestid=20261124151626422304958851&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/ggKZQRQ3wOYxx-AWgsT9APc5gWSl9rYmdwcu8i9xQT9maLVtTanBSsvEc1SfP_6UxFY34ubmkv-yhX9XH_5aTTcReblBdaoacpzq2IxbDMYLPRTw9FumrLYA6MdeK27eczLaDgTmGzC46yuo-og_okpdZ-7321EDJneQYl0l-tNjaQ8-rgpY0GYVpNT4bow3nDq67caiKCoLS0hO9n0kv1dePvugqTwVbTuX-IrZKu9X-cRtO_R5ndqHKLFtOinvcHJnQ2-1YBjA_b7KY4wZ3vmq6h4TW_gzAsPgQc_NiqKaP2CZ4Ie8e6qzdKcdqu_-YJBj6hmHJ2UbCKkzfbxwjWviS-6FlE2eby7ocROaMXlLwzIlS6onM5-rjo2XLHx_hSkriwnU9k3L6Nn3ze91KBQ7qe0XgHICqGisautwdngI3TemNS10G1NC7hJLlIrV45mf9AnwrtH_HMl3E399o2rJroDa6PDp88VafcCDGWTTq4neUUS4F8v2iiw9tJwagW1msJxLgjS4Y8tP1IG1AKaq-6ob",
-      "rocket": false,
-      "query": "엔진오일 0W-30 SP 6L",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-staria-us4-engine-oil-lpg": {
-      "kind": "oil",
-      "name": "GS칼텍스 킥스 GX7 SP 0W - 20 4L+G1 0W20 1L+1L  (합6리터) 합성엔진오일",
-      "price": 43500,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8506602601&itemId=24622040956&vendorItemId=91633146720&traceid=V0-153-a6c5b00081433fd7&requestid=20261124151647682304952137&token=31850C%7CGM&pt=0&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/evg3gfcug-jeVH_FepyHi8OOglrhYu-YlXwhLL3uGMqQAb7q5fBr6SLG1Rgt6in69CHdmAzdIp_ziul6GiFqMx6qpb5coeYW7_n6YUVYgjE6zyUDZkYiY_y8W6fgzXbOSEZC-vIH5Je_cmeyjSR6yg-EyRSS2Z-QyAMG1tRXs-GZo-PNKziYGxHC1VSPKkRqEV2IPzCrD3qgkotvjMNYIMCD38xhMPoJL6pp09I4Q9osqHnLeT2zcvYbQjjd4SslJZcHCUyeoIHXnANNTKbymfHqTYhHMN7kU8x-7C1HhMlk7JokhB73zH4EZmird6TvlUhlSHn3cTx2d67eNsXab1_n368V47pXWrpc6CREjQZstCgJS7XMgS0E6KSDbV1ZhIkPU8aRlcsgVv0KeagbiMuKqR4ihJAnPBpGlDeJwNVtpz25_D4kAyiiti3Uj7M2bZzjWC38Z5TBTJrJgoejah0sdoXAyOOQ4HeFEOyjeFruu0hQoubRSbqIJUbJxtyxTyjZ8KGTeuiTBevs72fJhbPdui1uL75pE-EMpgJgSJvT87fAdUBlWfGLSjw0580sNMOgklny3ULdhy9zuvs_6-88MwdNhGpvruVs2g==",
-      "rocket": false,
-      "query": "엔진오일 0W-20 6L",
-      "checkedAt": "2026-11-24"
-    },
-    "genesis-g80-rg3-engine-oil": {
-      "kind": "set",
-      "name": "제네시스 G80 RG3 2.5 터보 가솔린 20년형(20-26년식) 킥스 GX7 0W30 엔진오일 오일필터 에어크리너 3종세트, 7L, 0W-30, 1세트",
-      "price": 70700,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9797827392&itemId=29337850109&vendorItemId=96251424336&traceid=V0-153-5568f32a2893898c&clickBeacon=af4b8f80-e7ce-11f1-a50a-218337bb1e6f%7E3&requestid=20261124151711460048094569&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/AmWNDtdG3IhTSoQHAoxVAG9PrpfR2EOptgMKm8GQKW72ygENLkRcLMDveBNYQgYMpmEKRjKunDTw9oVye-xeSVVH8gT69atYBMGuarr-Qdo9jSjPDIrylKYeZ-HtmjnaSqPVmTbrUDhoyF0rBwpLjpX4LBDecca2NFbB1uWYiOgth3zS4ee18lypWedosgh9_rMMapVShlET5UQPbSucWNB4fC1xRhc-KDniDBVquViKYDC7ScOYnAJhSI6rk_UQi5jjCIcT1GnQtqXZ_qS1RL81eJKXuwPAJrFBCY5mt91fxJTuBFxhbzKYzPyWHVRpcv-OY54X67R3cQU5ugEnMpOscCIRmUsxZTV2BpBmr3zCMpDKZh3OmAplDJh8R07T-o_U-wCJLGVfE58kee4SzrVMlwtoWwpdpoj9VmVNFtiSjE_CMvLzMBFoK1eho22rReBUHH9fl745aRa9wjB3derrJQwN2uvQNaMCDZmVXyLJy1wPIZ2n_mNkKpxhPmZEFWuTvhHhsgr_OsKwyg_HR7XF2ULKv4U=",
-      "rocket": false,
-      "query": "G80 RG3 2.5 가솔린 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "genesis-gv80-jx1-engine-oil": {
-      "kind": "set",
-      "name": "제네시스 GV80 2.5 터보 가솔린 20/24년형(20-27년식) 킥스 GX7 0W30 엔진오일 오일필터 에어크리너 3종세트, 7L, 0W-30, 1세트",
-      "price": 69700,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9797827106&itemId=29337849420&vendorItemId=96251423626&traceid=V0-153-a82cac67ba816186&clickBeacon=b7388590-e7ce-11f1-a840-0b91dab66d2b%7E3&requestid=20261124151724798124724488&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/DzV3HzEQXPgz6LDTD-4xPW3qWjg605zKYIkzxcN_pAByipRLd9MkNhG4PF6mRZK3uHJKtoyx6nuR9lYElRoGoXLEugajIaInxXY_99P342jPY9UsHCRFqQLvhvUDSwd2qKhb8uiQHNLRkg56XGfk_esC7QeCjchtwiF0mXyQiaYGCynHfBeb4pZEkieOAfYE7TCvcluA07bG51WEVz9bw1fPVgZXMorH0ItGyEsmYC2fgtdTcazolPlPnobBorUFTq72YzqERDQ0RyWlvRhDoNJMvzBm_3ouCDDPQ4cDuyEkvvk35dBOe8D69kQyemBH2Et8gN4gP4RXgSSeqv1JHFxVIrIgmnwaEm214Uiy7zJzmhDqFJSxyefYT2biOi100oWl1S7aYG6fQYiDVY85PLY_DuCIBwx4XZh0n-zKCfsiqBgKDhcFN3TthHPxNn6X4d81_lzr6rlKqMmSs3ojrzOMfyHdSAUI417Mi56UZFoeunpmXnPUDi3iiH9IBrYGj1gELzcYP_2baiXl9bmWFInaWaMdx-xW",
-      "rocket": false,
-      "query": "GV80 2.5 터보 가솔린 엔진오일 필터 세트",
-      "checkedAt": "2026-11-24"
-    },
-    "genesis-gv80-jx1-engine-oil-35t": {
-      "kind": "set",
-      "name": "제네시스 GV80 3.5 터보 가솔린 20/24년형(20-27년식) 킥스 GX7 0W30 엔진오일 오일필터 에어크리너2개 세트, 7L, 0W-30, 1세트",
-      "price": 99990,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9797830334&itemId=29337859297&vendorItemId=96251432412&traceid=V0-153-e94ae584a7e5acfc&clickBeacon=ba6b9d10-e7ce-11f1-863a-032ed98e5514%7E3&requestid=20261124151730164054407495&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/mPEa3yNDlbOhQDlImJkUxJVWJgpNccP0mvVP_uat07TrKljnjMArNf7rSikYPC3n2vxJz2otUEeT0EvoalBhVZw0YwGt29ep4ubZQPq0n2xp53yZTwteGRN2XTXwaxnAlkExa1eqfrQCgCTM5vbRHAetO0puEU1EBYZPubRi2YhokXDHp_k97oOYcMyJdtI4JtGxV3G815V2tH75t3dG1oa8Bu-3XyrUNCAUxnIlwOnqP5WxO5IWtcN2oD0asJGoBBcTf7MjqmdLOkYbzoEzaS3b2l1Xv5e17XX5RDvXdfGRiM4lx2h9AU5z4d_lm7DerSsos2kZ6FUWASkWsBL95wVl3KmvsJ14ZbSMsHa2swBllEfoaAsj3fEDSb5vIjr-kxNZPdTsyPsyxhQ-mXAJRmSWEbeLq5KClHRzNObfeb1D25JgT1P5OhSty52H2_ZMIKReHQ8ofWawxIBErGN_s_hDIa2RDFM1feC0XyUAwU1DLffIArsnSuZXdQFaLzuVO40PoOSnhG2AQylPCKYgMg3yWSCw6fo=",
-      "rocket": false,
-      "query": "GV80 3.5 터보 가솔린 엔진오일 필터 세트",
-      "checkedAt": "2026-11-24"
-    },
-    "genesis-gv70-jk1-engine-oil": {
-      "kind": "set",
-      "name": "제네시스 GV70 2.5 터보 가솔린 21/24년형(21-27년식) 킥스 GX7 0W30 엔진오일 오일필터 에어크리너 3종세트, 7L, 0W-30, 1세트",
-      "price": 85000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9797826988&itemId=29337849097&vendorItemId=96251423350&traceid=V0-153-6ec43c99d55beb36&clickBeacon=bd91e350-e7ce-11f1-a1f6-7eebde814361%7E3&requestid=20261124151735451208726243&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/BmdknvqN0A_5HBDbBoLgFGfquFRyFpd3PlpfW6angS6rU9ANoC05RTYpf-6sokekrAqDkox50ELKJ6A_FPe5gEua1sAwSUtFOFktKsA51WBBsv37bpRS_z_6kayYX4jfJV9d9tqwIBL4ChV020X31PiUdjx5hWQOQhPn5U-9Y2JFK_NqRm2Tfwidq7qA1_pfnlsB-Uxf22RcZtd6xDnF7whIqfwRAeLsHnmh7ABmY8Z7wyVMOQyDx5vmxSvKKYqcWrgK77b3gitgsme3FWZFb2oRl7-GSL5BSFBY5o-oIKQ1wiZLHPPVhcdzvL861AHMEg1zK_yGXUjx5kVUeGRhpUjnhn5OLx_8GkT1fNTJZn-IH1sra514uAVJx28BAMYEOi7wf4LHVwl273MDgI1hGgMMvWJ5Dip6namLADWLLaNvqly2Fdt_TNOZ_AB2qvzC6tHt_cXs6_WFlCuDhra7Eq1mbgxy5y5RN7pmvVBbR46dL48Mij5zdUJXu3G2Z1lcojM-uQ-5sdfh2UCU-ndatQDTS7qBkqmy",
-      "rocket": false,
-      "query": "GV70 2.5 터보 가솔린 엔진오일 필터 세트",
-      "checkedAt": "2026-11-24"
-    },
-    "genesis-gv70-jk1-engine-oil-35t": {
-      "kind": "set",
-      "name": "제네시스 GV70 3.5 터보 가솔린 21/24년형(21-27년식) 킥스 GX7 0W30 엔진오일 오일필터 에어크리너2개 세트, 7L, 0W-30, 1세트",
-      "price": 99990,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9797830322&itemId=29337859201&vendorItemId=96251432353&traceid=V0-153-a34b4cd7c7dbeb64&clickBeacon=c0b08870-e7ce-11f1-a4a7-2b73cb87b113%7E3&requestid=20261124151740685218416141&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/zPI5V3NHWu-8CuypzCJNmLn-JqBL2EAZjiwQwc83hueUsJbxQo-VkCSEn3s_imSBzruh2dtNwPvc9ryDqP4Cvmbhwu0OOMvmWst2ZXfXpuD30buXP8-0Hvth15tf43DoC9KZWorS0YTsZmhRI86NsfAZM3KZamkNJD5kx3f1XLV_kuxk81wQdFiQmV1mj1EbmEDOrUHQKqbIGQpV4Z_QKZpa0fMXku3C4DG58dT3hIN4eOygjz8BxLPNRP6W6XJPuZ6pam8yFR0Kc2gs669CS95h9zWB4qujdSddxWvjap0qgfspPAL8rfutrD-w6LirdppqUhZX8UT4ccy9sIIglVROvRnIu8H3puUnQ8Gz3GbwXdQgmtYn8FratVnAnZkVO7GLYkuVDhJxFD5u0FgVgfyfUFrS5rsZyo858Q5ZBlqOwIdFT0G0tiPggoNpnwyoxWtRCsIDc2QfIfUXmRQ95TrLHd_vWpneNQEBMtrsfBuPkHTH6zwBwLtKSWu63xsyLSn8GQz6c3fhCUln5QJmVxb4BGlUMsQ=",
-      "rocket": false,
-      "query": "GV70 3.5 터보 가솔린 엔진오일 필터 세트",
-      "checkedAt": "2026-11-24"
-    },
-    "kgm-torres-j100-engine-oil": {
-      "kind": "set",
-      "name": "토레스 J100 1.5 가솔린 터보 엔진오일세트 킥스파오 100 0W30 5L",
-      "price": 80190,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9517974284&itemId=28370432543&vendorItemId=95322814673&traceid=V0-153-1060790ac525039d&requestid=20261124151743322184576916&token=31850C%7CGM&pt=0&slot=3",
-      "image": "https://ads-partners.coupang.com/image1/tghK6DoyEC1OpdwBtqsSmjQCgRDKfbRBzLOFDS3_sDfvmQQOFgmSZQKFKc_x75g9DDpItRK3Hdikvhv0bVzNA9vyIaha9MWICSN-GhzdegZMaCWqZpKT1FGB0x10wVLkvSaIYZAkJIzAkWkUDo1HLUeEdQbf8EDBLnrU79hVwEPDX6XobKe9QlyNfR1Tomumt73jm_dOjig1NbWnWdFFaPclqJjTdkJCiXjftJaiANeBy2aTAPZcXdx6o8XEIjvNr-1TI7XZQhte--bO2MgPufaf1F3qjbCGMlIs2Bm8zC82kzVrba07p5-eptT6NBb-uK5JE40BdeyL1aNs2hjF4Td2DkWwcR9h03QMP4B47G7rLeoIBHSq9_BVsTB5T5msnGrw7tWV9Wax_B9bui6yB_x0hzTrXoW8Lts-DgnDEr8K0PkKbLV-Y9PA5n6yxnMh7477wlZ6rfnnLVtVttwB1CoT3i7joBJIcKzSl-D3PhxpLOxpKTKp4lLJdBTN1PgA9cNKenB2_END3LSQ3z-55ZbGZNGC3tK6S-GbmgKHWPo=",
-      "rocket": false,
-      "query": "토레스 J100 1.5 가솔린 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-avante-ad-engine-oil-diesel": {
-      "kind": "set",
-      "name": "아반떼 AD 1.6 디젤 15-18년식 킥스 GX7 C2/C3 5W30 6L 엔진오일 오일필터 에어크리너 3종세트, 5W-30, 1세트, 6L",
-      "price": 59000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785521746&itemId=29297641989&vendorItemId=96213436437&traceid=V0-153-02f46813147c19b2&clickBeacon=ca1d8ed0-e7ce-11f1-ae83-0b62710f793b%7E3&requestid=20261124151756481178325656&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/o7BA3bmPED5v-k5jo7u0bG_SDVpR-F-xQlyBIt50e_8G3ieFkB40NF0OA4I1GcqxV-BI97NHC9QVujyuBEcAuOfJi5RtBw3Xl2stBBJUp2w_-jpxmg1rKWf8S6O3ZWnGwRVYNbSh6OGYICrIk7YqNq7cLgWGkhodon5zF4-C5k00RNlm0EyBG7rztUWgWoZxiaHyGLYh0SOAAh5pLUlVP21Njz69za2Ir_Ffi96wUwoLW5dc9eHrveI4Qd6onvFWolxT5npcMEZzU4QLfKWPa2SUXOxrte3N2Zac9Lnl6MaTogNk89vAkpJgwQ6Obq4usRptJFJ3q4ZpFve-An0GQ9d9iV8varBshNin86pD1eT3RL-0Smco_2tu0TCoJyQB-pHJSQA9ICMDs11wVRXmyt2ayFH5-m-iWvvmhDp6kgWHrDsMDx6DnzbFPS_eonH-vurGUGHdE072FM68pd4HGlLm0U7l2T7_o7sVYIlk2SJ7bTKQGHDR-s5U_lw287LhzepQClFDZN33mWJma3CYMJBIlJT7CWY=",
-      "rocket": false,
-      "query": "아반떼 AD 1.6 디젤 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "genesis-g80-rg3-engine-oil-35t": {
-      "kind": "set",
-      "name": "제네시스 G80 RG3 3.5 터보 가솔린 20년형(20-26년식) 킥스 GX7 0W30 엔진오일 오일필터 에어크리너2개 세트, 7L, 0W-30, 1세트",
-      "price": 99000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9797827433&itemId=29337850204&vendorItemId=96251424375&traceid=V0-153-99d374814ce12a8e&clickBeacon=b27d6e80-e7ce-11f1-bb20-13f1d71cc568%7E3&requestid=20261124151716834287491561&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/xO8-hxLD8dwZVFSaxKrMRAvMpAJAdIf4GtcmV11o-Gcq7enq-TnJqcnvG2CHa0Tgzwj5gXEyy1UvT9_uWYbQ28Yb7ZM7El2rTIwLZa86MVbmw1brBd6CJwOjtjgoxtBJgCFOjFVV9BmlaAFvEF1MKpzcBkwxGXJcGOpiaVcLtwh5pkidWUwzEdqa88Er8yu5OkZn-nhgox3E-FPJpty5iptABUghFLXauWkOmf7d-x8BvIKRNdwIW8p_aQBECNEMazHNHKEW4Y0I-uaEWtoYlAaijmshKkfJbEbLJa98eoa3QnK_ChXgAvPd_8vyTrUzhpeZVmJnRLA-VKjVLEPxEgFGjMGMYLqw7bn1HCLhtidz6UwDDmuBJc8vVOODVudPrpWOLp3KQOKc7oaTePRaBYSHjFY-fMZqYnEuc_9aC_pDBlUjnnKtQeJurUx4orJw_xtA2ynGSgWPO95hulEWyHt4q73d1idp8io812j2auG_wINMW3vmazp40LQTvaiRwovjyu79nngeIReOGN9Wl6qcctU_cRRHXg==",
-      "rocket": false,
-      "query": "G80 RG3 3.5 가솔린 엔진오일세트",
       "checkedAt": "2026-11-24"
     },
     "kia-k8-gl3-engine-oil-v6": {
@@ -240,16 +420,6 @@
       "query": "K8 GL3 1.6 하이브리드 엔진오일세트",
       "checkedAt": "2026-11-24"
     },
-    "hyundai-santafe-tm-engine-oil-diesel": {
-      "kind": "set",
-      "name": "더뉴 싼타페 TM 2.2 디젤 20-23년식 킥스 GX7 C2/C3 5W30 6L 엔진오일 오일필터 에어크리너 3종세트, 5W-30, 1세트, 6L",
-      "price": 59000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785522984&itemId=29297646244&vendorItemId=96213440683&traceid=V0-153-9039e49abc0eb5e7&clickBeacon=275c5dc0-e7ce-11f1-be3b-4f0ff83e97e8%7E3&requestid=20261124151323437081640452&token=31850C%7CMIXED&pt=1&slot=2",
-      "image": "https://ads-partners.coupang.com/image1/fXfsopDkkOEJfqW_fXbYHtArYMqSXiwCBvM0NjRKMixK7Cdcy6D8WhG3msFE1Lr4NNGF_7Oe-LV0tmUJQiT2_6XV-roXHw1n-s9j-Ki6BUV-9iGLoZTUp1bcZ0xtqdfWGTDWAUl4AFXAcNbRcnwbGdVi3IgY4DP7gVu1ogBxuXazACbzwGfmk7Bmo-x1rjoz2xeyfznTg0HlV7HPWjdUxMeBmxehq2gKuqY9WUUFY_VtXuIWYEsl4nrJaJ6F2rkK6gJ0Wd0Kd49uminjejYHOKhcn5KxNf7x6qoQfTss7ieWLwReMfgO1nLU9-e7q2OI5Xi5fdg97qe2PtnI0Xs5BUOraoySM9Ur0XLLAz6iuXGJvs9Lb53uCP2b7cx1-PMXA1RdgxdZYjaAaA_EqAdNcOAYGXRTB-xZuI6TZes9laeGbUia47wmSDqYKfg44viEtLIwCuK2MWeRvdVwDE0isItdZsaXobmIEUlSPCSaojr-qtQdBepZtx7ReQoPKB0zgTstRUOBIBNW7rbBDyAC2SVK-Xgbm-ga",
-      "rocket": false,
-      "query": "싼타페 TM 2.2 디젤 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
     "hyundai-kona-sx2-engine-oil": {
       "kind": "set",
       "name": "디올뉴 코나 SX2 1.6 터보 가솔린 23년 23년식 이후 킥스 GX7 0W20 5L 엔진오일 오일필터 에어크리너 3종세트, 0W-20, 1개, 5L",
@@ -268,16 +438,6 @@
       "image": "https://ads-partners.coupang.com/image1/ErbYALPukjAUt68BEtKM4w1RJVDuYkuebfOO5K9Gzhn7CuMPcIGRX4uVtyCsSzK3MwtmXU4C6_fSL6xWdde9vZpZ_zkwgXdC5FGg1o7n3fb3SV9iJuUxIledgCAE7S8SYLOaX1jDFXveZp7Sb5CJhJz0dQLXaIS3AjMn6TDZiEPcaNkQi-S9yLFVP37da9_k_LkNoR9EmAO-PPR3ivfiwNIAq63QQDc_RG1QQ0VzKGBdj1TpwxVcnhFOcUI-GDKCdtfe7Raefo3US3oeId9q3gGuddcZ-BzbHn9zdU__k0QS1ZykxrUT3ZxiB8s9wNsnZq7_voSKGZxpu3MAGUXFBkC2T7wgDmk9rTT2c_nPsedHTP3NqVY7inYCcVPqTagdGkgv2U82V1DRG6z7tGubF8mfwBwDV1_pgEQ7hRXbMC0clqm3zxLlTMm8a6EV3srSHNtWoCbXwS7JcrRYbagrDz-2_bJoyy811mUwbWLRgoPXoGRQJUbR9GyEKPbCseFqk-kB5tS-LpNQVj9Cab8pu69TQMfngy8=",
       "rocket": false,
       "query": "코나 SX2 2.0 가솔린 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-palisade-lx2-engine-oil-diesel": {
-      "kind": "set",
-      "name": "더 뉴 팰리세이드 (LX2) 2.2 디젤 엔진오일세트 킥스 파오100 0W30 (PAO100) (구) 파오1",
-      "price": 131700,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9207743437&itemId=27195001013&vendorItemId=94105869522&traceid=V0-153-1d57f4a489f6353e&requestid=20261124151432366172028141&token=31850C%7CMIXED&pt=0&slot=7",
-      "image": "https://ads-partners.coupang.com/image1/fyQ0RxwqVkl4EDoZf_A0SLG8YKHbrpY66CfJu-KcQGY0W2YRxEiaboPduSsC-O8c_WW0MfN96n-_egO_MC4v1FE6QKhuJmr1LnYmB9s5LOFhoZIhZglrpUIBGooOQJ0i1zmQ1PLL5lcUoAdU3DwG_V8RhCFtFYdbT7D3DH4ThJFRQAunk0uYil5r87CneXoVWedawjOC5LOcfDI35g0Uoxr7O67fXS6eBvFg0GCHSEjjSXo0KL0mREJICbX3XB7LBDk0Kuhb8zt4Hik2OXXeqRkiJ3yI4HJ9F5sPS8L9hBpigunG6tRAvf0T-peHOdvIhMGs-eJmB6c_TMzbeOoNgpFMxSFjPjjKIG3ok3Imu2HhRs8vIUWMWaftNMNBhXD4Zfgd6Rr1Z4l3OdlYgrXD2W7wZ42QWXPYMljjPKt_w6K204oUl0r5BGCnTEGui5m1eMM1OatakMyTnHZitc-AWau489nkOfy52ysRrBwHjXSTatSId0lQ2mWXM2ijP-b10CJ_hbEoISRpKvbD9Jyiydfdf8r0ZWRYu9skD6WIEppYvA==",
-      "rocket": false,
-      "query": "팰리세이드 LX2 2.2 디젤 엔진오일세트",
       "checkedAt": "2026-11-24"
     },
     "kia-sportage-nq5-engine-oil": {
@@ -300,86 +460,6 @@
       "query": "K8 GL3 2.5 가솔린 엔진오일세트",
       "checkedAt": "2026-11-24"
     },
-    "hyundai-santafe-tm-engine-oil": {
-      "kind": "oil",
-      "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개, 1개, 4L, 0w30",
-      "price": 29900,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&clickBeacon=24217e10-e7ce-11f1-9701-2cddc755d322%7E3&requestid=20261124151318017089228511&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/F-VsNQsAu0KOPbrAF5CY9--xxv8Cax7bMOj9-zI3j21iWRSIxUs5vVGTEuQdju26T7aIwrZcuLUvjUtDvTmWq4hQqz4BEW9UGDNfM6eoQWyc5GZCH8m3w3E-QBmOR6YHeoP7oBqLdlH2DSeZrMvmHgcmlB4zMAPPzDj7C5iYNmSfKjwquU8zAncu33QZnAXqiHge0eJ-V2baKGuJwhdUn7UDCogwlOutW-1EsU7nmk43JEz3Ot1kbQle90Wqs-ZUkntg4_lEW6hikm8RIHYROSQ8GeT5ygV8qgXOHSFd8umctKBffEZ4wxwcVb8462k7g8pILVeBI2K6aIBxN3e9T2R8c89Dvq77uxlBr_L4RUEtUopctzFW8jMmjspoOuulCxlr9PoXXt_jnla1t6KjRsh0jXJqWkN5YKaBbza9K2skXaIJQs_QtZAFT2yxsUnE3KHlujkW9uAQh8B8fj3ABt3TyO8idnD0764q74ND4KBrnv5tB7K9KA-T37JsWEsk56VHJDF8YeDAJdGTBJhrFhMEobwvYg==",
-      "rocket": false,
-      "query": "엔진오일 0W-30 SP 6L",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-tucson-nx4-engine-oil": {
-      "kind": "set",
-      "name": "디올뉴 투싼 NX4 1.6 터보 가솔린 20-26년식 킥스 GX7 0W20 5L 엔진오일 오일필터 에어크리너 3종세트, 0W-20, 1개, 5L",
-      "price": 57600,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785522912&itemId=29297646007&vendorItemId=96213440512&traceid=V0-153-c7dcd7ba33d29f92&clickBeacon=f9776760-e7cd-11f1-a29b-0e11ccc43228%7E3&requestid=20261124151206414109290907&token=31850C%7CMIXED&pt=1&slot=2",
-      "image": "https://ads-partners.coupang.com/image1/igHh1W2ETEfpExzvimK2klZpkoweia8CtSKP-p7bUQnEy_FmbMaPxdBM4FoL70PvQL_68oYh6eUUZcm7_lcJJjyRqlmcgvGWAR9fEscMnqEKhbvRX_6dFXsRe1HTkaBeTK8FoP2PdIj59WBLmfm19ssOROiNZt_WySu9cjK4Nz4Dq1DilgyNg9DFTtNw6dILsRQe_XmPiwTsJJko9YQB9ocmxBcMhmsBoqsQaW5hi97cnpr55YAN4oiJ5kXwWkvXpmG8IpPGu9rWR8-oaNIafI7OFbqh9CD0XoGDlISTjP9aUkZcHzyT2J2cmU2-Iyqp-SpFlGuJ7r3VMevlaw3IUDwd6h4-FML3WJ1tYhZ_vPI8SCt5u3gB4oZdpxpMUgz7AMg4gbmWJspupUf_dR2z_rN1rggnelw3YJXIhXzqX3O48cyxX8Ynev3V_KAhb-UkxUFKjAgxZyv70sMty46IwoGY9OzInL--ZI-K20jYSNLetdi8hivJaVQC-nS8HkE8WtZOGO9LmnmSV_YIGnDDBeYqYMTirUo=",
-      "rocket": false,
-      "query": "투싼 NX4 1.6 가솔린 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-tucson-nx4-engine-oil-diesel": {
-      "kind": "set",
-      "name": "디올뉴 투싼 NX4 2.0 디젤 20-26년식 킥스 GX7 C2/C3 5W30 6L 엔진오일 오일필터 에어크리너 3종세트, 5W-30, 1세트, 6L",
-      "price": 59000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785522877&itemId=29297645935&vendorItemId=96213440414&traceid=V0-153-dd59c86ab6b8779c&clickBeacon=fc9cc340-e7cd-11f1-820e-b0b7a545b356%7E3&requestid=20261124151211719287495236&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/oMddoAIe4JtKU7vloP1nN5bznSxDMKPRUrpJ9u_5MxkqAfzzmZOzIjSAlzIXoLf1sshWUz2vwnlAynOae8Fc7oA6dh2ZSI_NSQT9r2pDcxPMITyKsqbn4tdeHJk8BHGIkLsvzz6emZCZOyf6LtiuA7f5P75tLXUiPO1_OE5njgm0J58dPx_MBfSrfTxDDyoZ7JiLYNqrd0PP2a1tnailKYnADj4uYLw8mUkdYvwuvZreXRCIHzB_kuqvq-lDYXldUeD2mdHDwPtiKDex2zz8P09h9K8vpGZxBSs7RER1yjxG0E9_JCSyShWzh_avwZUTaNrNdGMAMTySfrKcIHscRvuBAjFchOHrqB_WuyZUJlj6IxSSsLzBM9FxtBpt1Qx49iejyfU2NurYXucIv3aZNyx85HW5ejsp3G2-qBDfZi2AcQQW93CJeK8f6muIvpD3R29paSi7EVqT6_ek6i3suoQFqWpCHGrzzZrohE8CMJOAg1NoU-XA4xpJkSKj2-eUE1usBgGwd5KUCzAMkBEeZuWAoK5wzV4=",
-      "rocket": false,
-      "query": "투싼 NX4 2.0 디젤 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-tucson-nx4-engine-oil-hybrid": {
-      "kind": "set",
-      "name": "디올뉴 투싼 NX4 1.6 터보 하이브리드 20-26년식 킥스 HYBRID 0W20 5L 엔진오일 오일필터 에어크리너 3종세트, 0W-20, 1개, 5L",
-      "price": 60200,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785522868&itemId=29297645906&vendorItemId=96213440385&traceid=V0-153-abcc6df4ac9c3799&clickBeacon=ffc63dd0-e7cd-11f1-8d88-d1fb093826b6%7E3&requestid=20261124151217021150853111&token=31850C%7CMIXED&pt=1&slot=2",
-      "image": "https://ads-partners.coupang.com/image1/_lccRXwVrtKtPH6g_g4oJc8daHsATkOtBknmcHNqcl876BnhE12AHMDX0NG3m1-XQvn9Pq6SoG85RSMyJ8hW7C-RMB6GpUVRrrSXz-WCrU4o-I2h0JLn915DARld25iVPy5KQ5jmAGhEeJJOCSyW4KJ8fPQbl1Mkl-TWznwL2UG43dj40qKfb8Cf1NsqFUFd3cBS9sPXNCcyjvK4Yr0R5mJHAa1vR1fMOOiSWDAxQJA8GINXO05O8eLMsFEM8V3u7OtGukHkixWQBiI4qcycfXIiIw8I1DpP__24Q8MJ3mSUyVBsYLMS0rIK-JMNZqteKJx8cynIKXSbKbIhfUE_oIICCUAcZoMx_mFBFP0UTxHfDpGJ4j5APEHbS-RtEQOUvdgikO-d_dB-hu72mgZwoodZwtPo1x5pAKgp40hVv3BeHKZ6F1AA_NMbfhemiooFtiirFj2_JGNVPg7SdtQ9Cval0QKn1WpJiBo4ENLuNn3uNNOBXYaDUYimiOrmlg3ojHYDqV3FRRTR2AqtUfy8NIqzx7fDIMzm",
-      "rocket": false,
-      "query": "투싼 NX4 1.6 하이브리드 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-santafe-mx5-engine-oil": {
-      "kind": "set",
-      "name": "더뉴 싼타페 MX5 2.5 터보 가솔린 20-23년식 킥스 GX7 0W30 6L 엔진오일 오일필터 에어크리너 3종세트, 0W-30, 6개, 6L",
-      "price": 67000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785522937&itemId=29297646067&vendorItemId=96213440568&traceid=V0-153-027915e8f333ae39&clickBeacon=2dc5e820-e7ce-11f1-bfc1-6edf21ae2eee%7E3&requestid=20261124151334187288877209&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/kQ1Givnkuk-Ex4_okWB49DUI4yg_8o05cput3CgwF8w7RR4gjCHV8NTrQu1nCy0ab5M7QZP1XNL9NuoHexPePb6Vlk5W9eUo4ahIhxOsEVVAvrqnbXNbFELwJbrPu7hVj7iPKOzW5jmXp9Hr5Er_SMqlvulWMHNF3_kit17p4mzGmQliglVft_uJG1eH7dbhEsKhFrTIO5M_0w499R7g-QbOna5ATJLUDmyINFfA7gw_5mYEUC5kyl5quDeual_SGPblJNqJ9ldcPvy9SwPnqtfTIW5vUYZitarqxrdQmH1ctP5fb3-e35r8jK2aNUE-QXMM2_BYcCSOaWw57uqb2-UwIjXpxp11cuXdXVvT9A9sCc2iZFJyVM9sGDSDY141cSHfJBy-HJftL_OFaSNzpz6gOSYEAgNcGN1R0WcARiBgVtPtsUVxMbQvqxp9TRkqgsCLAIvpT-m-SKVUZBNkdk0X-1v068sc4Nvq0b-DH_TkvMeZ9soD-BDg4DsrHgDFxVIs78qAUZYP2xewsTeOxTsdjp7oQGk2j_hKy2s5TrsRDclYrNJ3Wz-q-Xwf2wDyZ8Mr1cZPXIbK9qApi7geIgGt0g==",
-      "rocket": false,
-      "query": "싼타페 MX5 2.5 가솔린 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-santafe-mx5-engine-oil-hybrid": {
-      "kind": "set",
-      "name": "현대 싼타페 MX5 가솔린 하이브리드 23년~ 킥스 KIXX GX7 SQ 0W20 엔진오일세트",
-      "price": 65500,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9830290233&itemId=29443745932&vendorItemId=96353187511&traceid=V0-153-345623ca142b2d39&requestid=20261124151339496306587661&token=31850C%7CMIXED&pt=0&slot=2",
-      "image": "https://ads-partners.coupang.com/image1/KDr95Xg29_uqpNeGKMVdS04fakcmcttZe6J8pmgh4hKRD7YOTX0s3xS3HdDMaEnOUxZrduu-KrzRO3EGLVzWR54CQW5mrF9jVCT7A0jBr06bc1VRIa41l0K-RKfOd15BV9Jupt0zC-GNa0uwhp1h2zTNb1vuiKhy7hx7Inp9vmOj1qGPTqMAf_c8sPiZqFWlaqy3y3RDU0wq48sNmieEHpZsWTRzZKAqSsm60fkPv27Xn4ZufCoWUqjwsr0L4oAzv9nrzdXA7tr26KE1E6I-KyioLa3XR1roSkuY9MpiQaEXA3-J1WZg2KoQCqPx0heGr0fXpyGSTkDmCnEBN-KnIzK9e9Jo5ASFWogfvovzxARUab4atw0IqV7e22LFgPR7cWn23IgRgosRetijAu9M279D2yOKSTJf0EdqAvsDO2WyuHOzYCYh3KIL4w2_OsR441n_PgrTvxPjox1MXhp6-ds71z0HCGK7IAtRjAlmeE7f9qWQYSzJAaq8MggNF6D8ah9etBF5zmgm5SOXnULm1wGx8snjgfeRkyXPi6k4_Kop8A==",
-      "rocket": false,
-      "query": "싼타페 MX5 1.6 하이브리드 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "kia-carnival-ka4-engine-oil": {
-      "kind": "set",
-      "name": "기아 4세대 카니발 KA4 3.5 가솔린 20/24년형(20-26년식) 킥스 GX7 0W20 7L 엔진오일 오일필터 에어크리너 세트, 0W-20, 1개, 7L",
-      "price": 73100,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785523136&itemId=29297647001&vendorItemId=96213441198&traceid=V0-153-82027bf5e88c07b4&clickBeacon=dcecbb90-e7cd-11f1-8745-f3bcfe6774ed%7E3&requestid=20261124151118552114066845&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/bXNSWmDWPs-7U-W4bemZjrjFWHgbs6B_L6bUL7iwduP2_RydFIt_FtimY8VzmMY6djRtmm7rQSlcpUbmbTBFZujd_63FEWMkpBOHiIe6ZXNO2s3HWx2OFKEhkuMcuQoCaB5eHgmPD6TLTMll9Y-RZ0SUCzqDSDp2XbzDts29uZ2Vnq1ipOBa2-bBmBn89Th8ofxE2-ZZqwSqcn63o-AyHU6vRCsVZ04G1MTTm-IZaewx3vy9Z19bCp0cBYvx48GSs6DSprhJQMofAXa5QSuAZZMdJ0dhJBugkDxrAeB1UUfFih2dmfFPIpB_l688qsvIFpF4sA7m3GFLpqPq9UAVQqxyuT9TrRnniDZQt7IucW0vky5yT2UlR3zkIx4ARYtEQ0TxwBI75v4XA6ecVX2QrfvK3zo1_WF6BujIqKFi1KtoPn8OXUSl_mJEojbHLsBlyPzVxLxREUSZn5v-EcnpvkQcLD8wZ7unw5tJHYIcqcLGT4gr-IAH3U0Auy2lbz15TLlr2Xy1aV01LXUcnTnIaWduBPFexVb9",
-      "rocket": false,
-      "query": "카니발 KA4 3.5 가솔린 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "kia-carnival-ka4-engine-oil-diesel": {
-      "kind": "set",
-      "name": "기아 4세대 카니발 KA4 2.2 디젤 20/24년형(20-26년식) 킥스 GX7 C2/C3 5W30 6L 엔진오일 오일필터 에어크리너 세트, 5W-30, 1세트, 6L",
-      "price": 58890,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785523096&itemId=29297646780&vendorItemId=96213441129&traceid=V0-153-0749b23e5f33777b&clickBeacon=e0139e10-e7cd-11f1-8b52-f819af27edba%7E3&requestid=20261124151123841043071958&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/NtstyPzcxo-bu6iENqzDhBgF23HIJvrrZ-ZYSMe0yRc05zB4ZK1aa83Pv2THztGbfm9SjL03-LnVGtQX2OI2HycooI05lkbx2vRFjIy03QuPqCqgqlMumEcFjdw6wqHAfHC10_FZPkH2CHlrEQAHhUm1YNqbHFcOAIftJqjmslMsP_zw4aVNHp36rRR6BHLMRkMCoZM1Vz1j3bxYE49Arnxy0db-BRk7IO5Xc-z1ymKDrDTIYZhUeeS-wlr-8_VPvCB0J_oo_fO_1LEo9dW4RMJ3oeE8FCKucrZsE81qWGO7grJsJ5JD1AlNTglrYVa7fySa6NZKwO5UX4OMyBOCt_xJ-0p1A3J_SuQtMWMtOhP7hZ23NxeUJiqzi95PtQELde8VqUOuZTiBK5CxldgkPzgtltPMYl7lzpLmsAZ7NFxPdiCdDvx_hMuHyGNmMyhz2fraVdq8Bg6alYdn2PZz5zTOJ7uyAreq6HgVhyJU6lo4wrqaMd_876m1LgCduLYQS-wxJClYgMLm0hGwm8bXdYDjMPo5ZTIS",
-      "rocket": false,
-      "query": "카니발 KA4 2.2 디젤 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
     "kia-k5-dl3-engine-oil-turbo": {
       "kind": "set",
       "name": "기아 3세대 K5 DL3 1.6 터보 가솔린 20/23년형(19-26년식) 킥스 GX7 0W20 5L 엔진오일 오일필터 에어크리너 세트, 0W-20, 5개, 5L",
@@ -390,16 +470,6 @@
       "query": "K5 1.6 터보 가솔린 엔진오일 필터 세트",
       "checkedAt": "2026-11-24"
     },
-    "kia-k5-dl3-engine-oil-lpg": {
-      "kind": "set",
-      "name": "기아 3세대 K5 DL3 2.0 LPG 20/23년형(19-26년식) 킥스 GX7 0W20 5L 엔진오일 오일필터 에어크리너 세트, 0W-20, 1개, 5L",
-      "price": 57600,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785522344&itemId=29297643928&vendorItemId=96213438317&traceid=V0-153-c82d35227722a486&clickBeacon=f19dd240-e7cd-11f1-af2d-f47d9111e17d%7E3&requestid=20261124151153252301545606&token=31850C%7CMIXED&pt=1&slot=3",
-      "image": "https://ads-partners.coupang.com/image1/7X03NJE2hDn1zrOc7Zif3vqIMnZyVzYwB1quneJGC4DbqeR707Q301AwK15upIzICB-vcOKIHkGU2htU9epZIjKJcFPGSEWvel3YIFCY4JnD9f63Z32SbgaDvQA--Lbxrzt_61w1UBi_FwMSbt4fTtavFqCDnqAaX2ti5dzZyp9-AeJZ1rVwQvGD42noniQhI_cqxOfQZxrLYC-mPQeI6cBsght1RhpiGgRHCMo5s2IYV8582H9z_9BY0VuQAvp_Vi545F3gTwecGi5SZ_B9RZ_DjMfu4C3xNykByvcWpaU9uDHZGrWoyNNUGBEIC-EmhGvbSNhfLCDEiikZ6igJZRg7yZZninMjm0cWCzXb7T9izV1j4bFO6RrNpsndDgQ7fl3ool02wP7aov21kiQ0uUqFSfoGvqNSw2qLTwazO1cicEsfBIrV8MR-wLGxh7r3ShYdYObPVbbaNzYIKQFKW8wEu0MjF0C6b_AHR9e7G7h0rP931MOfarEc2TFoVc3ATDxeTzZxv91f3heNkuB1Ada0nezNDcWv",
-      "rocket": false,
-      "query": "K5 DL3 2.0 LPG 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
     "hyundai-avante-cn7-engine-oil": {
       "kind": "set",
       "name": "올뉴 아반떼 CN7 N라인포함 1.6 가솔린 20-26년식 킥스 GX7 0W20 4L 엔진오일 오일필터 에어크리너 3종세트, 0W-20, 1개, 4L",
@@ -408,36 +478,6 @@
       "image": "https://ads-partners.coupang.com/image1/etXd6gGMvo7uvHgNerjy2DKU4yjigbBb6wMCCl4hJ2VflXUFmzjlHHuvGLEH7Gm_mDzRDUzbZlVKL4YWwKIUOopMTy6DQASApwjnpVbfcug-aNuLMNIuFOVck0ulGHDECla7_AzVSxiupxueiNOU6Um90aNy8tZ8xJd3oT8bgvTOyeryZ1ooK75mpAEfVkh08o8pQp2b5We8rTrVgNRNUjcQ3Co3zPgbMP1gYBReoG1bKzn1LQ2NfjgRmlvPpdfxVTKsT-mtPyLFclho-6PHV6MUqsDHG1S2BJxAuMMdMBZNlPnGFD-MBsgZu6Qx_uH4nN8pYeRedLhoJxThGs3u3qNNic5DL_nzoB2Q89w1nwJA1UJrn188W_MIzPz7Ujy2h7Oe4lZfxvpNKJTgaHM5D2qTrhKE0HQDgdKuhvudFmE5gS-ffQLC0TbAMBchYQytNc5BniLZ3ZjK1cWlhlXqnlXmuJMgTIJP06MTytQwMZcBrMUGCxQfePt49UhBnACtf-aFuajn8Bn1FMpSanM4pg2kNh0n_Npeeg==",
       "rocket": false,
       "query": "아반떼 CN7 1.6 가솔린 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-avante-cn7-engine-oil-lpg": {
-      "kind": "oil",
-      "name": "SK 승용차엔진오일 ZIC X5 5W-20 4L",
-      "price": 20000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=7329758234&itemId=21111320238&vendorItemId=92736142291&traceid=V0-153-3e65962f0d60d41b&requestid=20261124151232983147197666&token=31850C%7CGM&pt=0&slot=2",
-      "image": "https://ads-partners.coupang.com/image1/yFjgEwiVNrU0x_M_yJm3V3Uu9NNGVUU4oW3qLvSYsXUw9xJ3Z4dI-pk7mi-E9hGFd89Co7vO6HIhX31spGFNefP288B31NDhFbsUSzLMF64ab8BTrgvvEZYfqyUBICKwaQngRnkrZcHiAU5CZPE1dpAllxc_5zs-OX2PMDsi7I3HsTHcIYDQgh9-xRKsP46vUwEKZXOsF9vz3m9mQXfRtyQVKwGC2prBGbApQPYZ_VeEyfyr778hOkYih79kTcdQ1uNzCUj7WUz7cE2pUGm3S3lykDpzQtLxV-4I1LtclcEEi2PKcsTJmmwgaErUqPLBurKoSz2tyjbs1BD_dPhodXeyTh_QpiL5YdWl4vsjj49le9Ntxrf7Axkt4cTNd93c51MGoTpOGuTbrWPiPitkLOd9hIWKsrJnnp6W1H6kfrXCCfR6azPyZc7ADvAa2iU9H3nSyMHIP0ysfUo2Zfp6x9QKWv6YEE9CIwQJ72uVDvdyQe9tsQiw7tauRmpWN1OZRiH0xIlRFDJw2BffE9fcTm466X8iHN5PZJRilIFy1VQ=",
-      "rocket": false,
-      "query": "엔진오일 5W-20 4L",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-avante-cn7-engine-oil-hybrid": {
-      "kind": "set",
-      "name": "올뉴 아반떼 CN7 1.6 하이브리드 20-26년식 킥스 HYBRID 0W20 엔진오일 오일필터 에어크리너 3종세트, 4L, 0W-20, 1개",
-      "price": 52500,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785518053&itemId=29297625307&vendorItemId=96213420336&traceid=V0-153-9e5fef612e8e8951&clickBeacon=0e0cb8b0-e7ce-11f1-918e-60758df0ee17%7E3&requestid=20261124151240975087521206&token=31850C%7CMIXED&pt=1&slot=4",
-      "image": "https://ads-partners.coupang.com/image1/3qY2mhWS_xAE7CQN3rIQruXbsZRYLfTv1KG3j66yBOXL676_A8qw9a563vGrEkdjk6fRLh8RZnBKbOFiMXaomYE9deaJpX6DMnhi_ufzihprl5dknU1gUa9s7G33CM2P-CgL2CWeBh6s7rGPs-R81ebnxjyWqwQX4Rc3pIEa2KMzoTrvHglpBSsDXsnr-kseIys9se9jQm6b3D9dbMqpkg0C7O4cD0Wqej-dFHOa1iqCSde7xDyCb9pDYR1ebSAXCg-ZJUE54mn0hwoI4a_aaupy1pIk3X5JnOjjQ_7SeW4fEiu--poBmmhZHLRK5FyQ5iCcXEVXA60EcjDxWzWVwBhUtJa3nkX3Acy_Qod5tsbtSq_nO09vTuUgvck7_k8jBzvkWNxXxbi173LrXmRiM1gPpeVId8uyu6yEDZ5VBgfeMwig4soozgYmlvY1Tkrz8K09D4tMtS5ZeEtO-aS6QQh3jIoVm0enRp7wgvAzOiGQUg67ZuTZ-Wk_Ao93yprGVWPOVLTubWUHImbCbFylHyBnrgsWYeTaWA==",
-      "rocket": false,
-      "query": "아반떼 CN7 1.6 하이브리드 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
-    "hyundai-avante-cn7-engine-oil-n": {
-      "kind": "set",
-      "name": "아반떼 N 2.0 터보 가솔린 20-26년식 킥스 GX7 0W30 6L 엔진오일 오일필터 에어크리너 3종세트, 0W-30, 6개, 6L",
-      "price": 67000,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785521619&itemId=29297641570&vendorItemId=96213435997&traceid=V0-153-b8741cc875b3bf53&clickBeacon=12c5fb00-e7ce-11f1-94e3-2dd3a4840d22%7E3&requestid=20261124151248899115712133&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/I_22tuJnyL1FtbGmI8ENbax0Dl9UbaicgEu40Q9Hb-yStJQvH_e7nSbpaQQVMOPLQZcWAKpfeHy19t4Dq5ZQzC2-XKkbtFBRnrvijrHJSsAGSethIHzpUPGMJ_Z0C-vspYkuUzMTReqS302UlUJd5aFSlEGUClyyoIxiF-IT8cT_2VQT-KoQE053-ftqROZV04lRMtF3SAwzOvFtoNFB3uLlhihv5CP5oT3FAQ_j4BGuVmql7O-4ycQCxHLwrUSXZ8GSmzWc1NpTRpaVuULx89LBcr_-06GQ1R7BjXrE1jgBPjzzrS4zrmFeiooEXc9hdR5HFh5dW9QMy_LaBDU9ebEXrt2BMxFKI8EiadbG23bIqXr2q3M_R0aeawizJB-2GG-w700q0UISKrn-WtVvY-ie8OrcSNSolo8TNbgfrH7xBva2BAziFFw_eNmkmuVWftg-tFGSSl4akkJSFwebnXPwNSh05zvRVbyE-k8e_9uCF-VmHwkOcBP-UZGiu7VS_5Hssmi9xjGeO_2QsTDo0nnUnklSW-o=",
-      "rocket": false,
-      "query": "아반떼 2.0 터보 엔진오일 필터 세트",
       "checkedAt": "2026-11-24"
     },
     "hyundai-grandeur-gn7-engine-oil": {
@@ -460,16 +500,6 @@
       "query": "그랜저 GN7 3.5 가솔린 엔진오일세트",
       "checkedAt": "2026-11-24"
     },
-    "hyundai-grandeur-gn7-engine-oil-hybrid": {
-      "kind": "set",
-      "name": "디올뉴 그랜저 GN7 1.6 터보 하이브리드 23년형 22년식 이후 킥스 HYBRID 0W20 5L 엔진오일 오일필터 에어크리너 3종세트, 0W-20, 1개, 5L",
-      "price": 60200,
-      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9785521498&itemId=29297641227&vendorItemId=96213435742&traceid=V0-153-f122b49d28ebd4c5&clickBeacon=1dbef890-e7ce-11f1-8435-8e4a1a2e271a%7E3&requestid=20261124151307327323542455&token=31850C%7CMIXED&pt=1&slot=1",
-      "image": "https://ads-partners.coupang.com/image1/A6_odjGD23H8EUFRA3puVmfDbrAheYKn7i5LJFto4giICWun1UZLFa5zrQ66f1kBe5FffGjdbOYJlvCjLgTwgZOeGZRu0HvYxTbWMdWu9kdItoOSVnUxLCR3_GkxfpbuuN2LP4wNNwh4IpehzbfQkcnMj26q7uh8x6A__7ZaSM2HBqlDEKaWkkcnTowfUnU80tB2R4b4uN2KVIs3ImZpWL9LoDrGjns9Ki_r7jDuOTbbI76v-6wObrGqbtcZePW6-fDR0zXGdqOBpSTnDKad5Vnk2q_NsmUZxT-kkAx8-k8sDP8IsbPMKzY148eDqrfwiguy9IHK20Iwk-tCLmn-EnQTB8A0tfKRWXu0jvdo4u7-BvLxDOTUyCzB-XjNo2OmtQK3eH4Juz-BRvHpQwh8YCId0Mj_KxUHfbbEb0Yb72BpFQhNK8GcG8yKEV4_BqfJC9jBVes6pktzGEAwnNAx84ngg0bY_K9BJKSba64qQ2GsROHS17kvBmBLGt80av5IBFhGN1lKUt7FOIi3jUEeBvVKewhI0i8k",
-      "rocket": false,
-      "query": "그랜저 GN7 1.6 하이브리드 엔진오일세트",
-      "checkedAt": "2026-11-24"
-    },
     "hyundai-avante-cn7-engine-oil-turbo": {
       "kind": "set",
       "name": "올뉴 아반떼 CN7 N라인 1.6 터보 가솔린 20-26년식 킥스 GX7 0W20 4L 엔진오일 오일필터 에어크리너 3종세트, 0W-20, 4개, 4L",
@@ -489,7 +519,490 @@
       "rocket": false,
       "query": "그랜저 GN7 3.5 LPG 엔진오일세트",
       "checkedAt": "2026-11-24"
+    },
+    "kia-k5-dl3-engine-oil": {
+      "kind": "set",
+      "name": "[한국쉘정품]k5 DL3 2.0가솔린 쉘울트라0W20(5L)엔진오일세트365-3020",
+      "price": 116500,
+      "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=6348517905&itemId=13348742701&vendorItemId=80603917467&traceid=V0-153-9503c3c16eefd2fc&requestid=20261124170947632089224472&token=31850C%7CMIXED&pt=0&slot=10",
+      "image": "https://ads-partners.coupang.com/image1/rZOT9NETgnbjFKZdrTjFCdB0ynd0MhveFmjNsyf_P7yMuq1bUPqCcMe3A7RUgmdh8F90GFqh56SNyPDOw3kw2zosO7KJASvI8WxBEythdPcohavyxsSR8ku7D0rcw_RxqJs71LxUT9enDN4ahqXHg1_5yKe5iC2knxHhvorqqP3tOB-VO4t4tB5VPhnMaC3yRufn5mUWdX7MTtaGTUAa16nWiXcn07JNwgnnwkZGM-S7QkjIndAP9_mwhkZqGe_QW7asJWeKlSQtobjOyK6wCgNL_TS3QWm4k5NT76gxrhep4TdQSADMlslJ7nDC_fj96FCFvSmht0xmVTc0CyCLmyNmoyjsdYcBYtYC4VZh10lztGtZ8v-bkhshYqRv42TksYYf8vlyOJ5P4MypIVL9IJ0d2mtdoPfL7VNRbMfGJIPohHsLdkrUiBP948ff8aNNmAbuJojsolDJq4j4pQ3-WGtvwRvf3vpbriQtgbDDR8c1n5TZcNofGK9aA_VM40J4fpljB71NZr2t5lNKyO-5g9eiqWPr61BK4rqI2znPfmirOAWQ3g==",
+      "rocket": false,
+      "query": "K5 DL3 2.0 가솔린 엔진오일세트",
+      "checkedAt": "2026-11-24"
     }
   },
-  "_설명": "엔진오일별 쿠팡 추천 상품 (scripts/pick-coupang-oil.mjs가 만듦, 손으로 고치지 않음). price는 checkedAt 날짜 기준"
+  "_설명": "엔진오일별 쿠팡 추천 상품 (scripts/pick-coupang-oil.mjs가 만듦, 손으로 고치지 않음). price는 checkedAt 날짜 기준",
+  "oilTiers": {
+    "checkedAt": "2026-11-24",
+    "byPart": {
+      "kia-sorento-mq4-engine-oil": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 5.8
+      },
+      "kia-sorento-mq4-engine-oil-diesel": {
+        "key": "?|diesel",
+        "visc": null,
+        "diesel": true,
+        "need": 5.6
+      },
+      "kia-carnival-ka4-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 6.1
+      },
+      "kia-carnival-ka4-engine-oil-diesel": {
+        "key": "5W-30|diesel",
+        "visc": "5W-30",
+        "diesel": true,
+        "need": 5.6
+      },
+      "kia-carnival-ka4-engine-oil-hybrid": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "kia-k5-dl3-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.3
+      },
+      "kia-k5-dl3-engine-oil-turbo": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "kia-k5-dl3-engine-oil-lpg": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.3
+      },
+      "kia-k5-dl3-engine-oil-hybrid": {
+        "key": "0W-16|gas",
+        "visc": "0W-16",
+        "diesel": false,
+        "need": 4.3
+      },
+      "hyundai-tucson-nx4-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "hyundai-tucson-nx4-engine-oil-diesel": {
+        "key": "5W-30|diesel",
+        "visc": "5W-30",
+        "diesel": true,
+        "need": 5.6
+      },
+      "hyundai-tucson-nx4-engine-oil-hybrid": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "hyundai-avante-cn7-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 3.8
+      },
+      "hyundai-avante-cn7-engine-oil-lpg": {
+        "key": "5W-20|gas",
+        "visc": "5W-20",
+        "diesel": false,
+        "need": 3.6
+      },
+      "hyundai-avante-cn7-engine-oil-turbo": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "hyundai-avante-cn7-engine-oil-hybrid": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 3.8
+      },
+      "hyundai-avante-cn7-engine-oil-n": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 5.2
+      },
+      "hyundai-grandeur-gn7-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 5.8
+      },
+      "hyundai-grandeur-gn7-engine-oil-v6": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 6.1
+      },
+      "hyundai-grandeur-gn7-engine-oil-lpg": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 6.1
+      },
+      "hyundai-grandeur-gn7-engine-oil-hybrid": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "hyundai-santafe-tm-engine-oil": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 5.8
+      },
+      "hyundai-santafe-tm-engine-oil-diesel": {
+        "key": "5W-30|diesel",
+        "visc": "5W-30",
+        "diesel": true,
+        "need": 5.6
+      },
+      "hyundai-santafe-tm-engine-oil-hybrid": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "hyundai-santafe-mx5-engine-oil": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 5.8
+      },
+      "hyundai-santafe-mx5-engine-oil-hybrid": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "hyundai-sonata-dn8-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.3
+      },
+      "hyundai-sonata-dn8-engine-oil-turbo": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "hyundai-sonata-dn8-engine-oil-hybrid": {
+        "key": "0W-16|gas",
+        "visc": "0W-16",
+        "diesel": false,
+        "need": 4.3
+      },
+      "hyundai-kona-sx2-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "hyundai-kona-sx2-engine-oil-2-0": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.3
+      },
+      "hyundai-kona-sx2-engine-oil-hybrid": {
+        "key": "0W-16|gas",
+        "visc": "0W-16",
+        "diesel": false,
+        "need": 3.8
+      },
+      "hyundai-palisade-lx2-engine-oil": {
+        "key": "5W-20|gas",
+        "visc": "5W-20",
+        "diesel": false,
+        "need": 6.5
+      },
+      "hyundai-palisade-lx2-engine-oil-diesel": {
+        "key": "0W-30|diesel",
+        "visc": "0W-30",
+        "diesel": true,
+        "need": 6.5
+      },
+      "hyundai-casper-ax1-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 3.1
+      },
+      "hyundai-casper-ax1-engine-oil-turbo": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 3.6
+      },
+      "hyundai-grandeur-ig-engine-oil": {
+        "key": "0W-20|diesel",
+        "visc": "0W-20",
+        "diesel": true,
+        "need": 5.8
+      },
+      "hyundai-grandeur-ig-engine-oil-v6": {
+        "key": "5W-20|gas",
+        "visc": "5W-20",
+        "diesel": false,
+        "need": 6.5
+      },
+      "kia-sportage-nq5-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "kia-sportage-nq5-engine-oil-hybrid": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "kia-sportage-nq5-engine-oil-diesel": {
+        "key": "?|diesel",
+        "visc": null,
+        "diesel": true,
+        "need": 5.6
+      },
+      "kia-seltos-sp2-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "kia-seltos-sp2-engine-oil-mpi": {
+        "key": "5W-20|gas",
+        "visc": "5W-20",
+        "diesel": false,
+        "need": 4
+      },
+      "kia-ray-tam-engine-oil": {
+        "key": "5W-20|gas",
+        "visc": "5W-20",
+        "diesel": false,
+        "need": 2.9
+      },
+      "kia-morning-ja-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 3.1
+      },
+      "kia-k8-gl3-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 5.8
+      },
+      "kia-k8-gl3-engine-oil-v6": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 6.1
+      },
+      "kia-k8-gl3-engine-oil-hybrid": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "kia-bongo3-pu-engine-oil-diesel": {
+        "key": "?|diesel",
+        "visc": null,
+        "diesel": true,
+        "need": 7.4
+      },
+      "kia-bongo3-pu-engine-oil-lpg": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 6.4
+      },
+      "hyundai-staria-us4-engine-oil-diesel": {
+        "key": "0W-30|diesel",
+        "visc": "0W-30",
+        "diesel": true,
+        "need": 6.5
+      },
+      "hyundai-staria-us4-engine-oil-lpg": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 6.1
+      },
+      "hyundai-staria-us4-engine-oil-hybrid": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 4.8
+      },
+      "kia-niro-sg2-engine-oil": {
+        "key": "0W-16|gas",
+        "visc": "0W-16",
+        "diesel": false,
+        "need": 3.8
+      },
+      "genesis-g80-rg3-engine-oil": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 6.2
+      },
+      "genesis-g80-rg3-engine-oil-35t": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 7
+      },
+      "genesis-gv80-jx1-engine-oil": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 6.2
+      },
+      "genesis-gv80-jx1-engine-oil-35t": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 7
+      },
+      "genesis-gv70-jk1-engine-oil": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 6.2
+      },
+      "genesis-gv70-jk1-engine-oil-35t": {
+        "key": "0W-30|gas",
+        "visc": "0W-30",
+        "diesel": false,
+        "need": 7
+      },
+      "kgm-torres-j100-engine-oil": {
+        "key": "0W-30|diesel",
+        "visc": "0W-30",
+        "diesel": true,
+        "need": 4.5
+      },
+      "hyundai-avante-ad-engine-oil": {
+        "key": "0W-20|diesel",
+        "visc": "0W-20",
+        "diesel": true,
+        "need": 3.8
+      },
+      "hyundai-avante-ad-engine-oil-diesel": {
+        "key": "5W-30|diesel",
+        "visc": "5W-30",
+        "diesel": true,
+        "need": 5.3
+      },
+      "kia-k3-bd-engine-oil": {
+        "key": "0W-20|gas",
+        "visc": "0W-20",
+        "diesel": false,
+        "need": 3.8
+      },
+      "kia-k3-bd-engine-oil-turbo": {
+        "key": "5W-30|gas",
+        "visc": "5W-30",
+        "diesel": false,
+        "need": 4
+      }
+    },
+    "tiers": {
+      "0W-30|gas": {
+        "value": {
+          "name": "현대 엑스티어 G90 SP/GF-6 0W30 4L 가솔린 엔진오일 100% 합성유 1개",
+          "price": 29900,
+          "liters": 4,
+          "gradeShown": true,
+          "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9465877209&itemId=28170271226&vendorItemId=94777293764&traceid=V0-153-7d414ee52a333b7f&requestid=20261124170555968109539512&token=31850C%7CGM&pt=0&slot=1",
+          "image": "https://ads-partners.coupang.com/image1/VrhDku0zkO5PN8qrVqhqXsZiWp-1NE8bMz8SILrv1tVhmUif-SmnkiqdxteDybQ-2tDkuF-Zyx_AA9Icnsuc_V7_vsAC3x1uvUQuo6cqmgAV3DAQyLoq-Xq0ObGlJpA4ob86xu2YuzKnNhhRiAnyVnOMw1ecYiWZt-vfHf8O6k9r3jCmwQkUgsqJgNmlyUYeyGKMnfLGgUUM8PjsNDYNpOhqwTyrF_MyuVNV9ICS7LREvSiP9jeFZpJ013uM6aFjqKS53h3NlKln18id3MwPuwmaEegBg7l8iLeu-sHQJIUNXkgQ7bbB1WXrWZ_FUP4QTReoexmTKcr2BIgRqwL5Yq7iVrYyDljGWZ4nlU8l35aHOAr_ZxFGLFK5q7i9O7MkgrVbvpR8oU_KmhLX7xbyfzJkFcaILaZe1wB7MglqMeSivSVGmLvkrVhpScrKmae11Lvh_WZ6SfYj1l0-u3slME2eCWBCrtV97HOf-h7PFZykB4jPMSCDJhTtnRZuoILXz7qpAQAcWJhb5szpO2w443QW_rXXzJOj3bFrDeuc",
+          "rocket": false
+        },
+        "premium": {
+          "name": "캐스트롤 엣지 0W30 1L 합성엔진오일",
+          "price": 18200,
+          "liters": 1,
+          "gradeShown": false,
+          "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9783125396&itemId=29289339919&vendorItemId=96205583236&traceid=V0-153-10977c9a3c00a9c1&requestid=20261124170604087323547055&token=31850C%7CMIXED&pt=0&slot=7",
+          "image": "https://ads-partners.coupang.com/image1/sE-ofvMFTIaQJE5qsG11u8RDpITFTYeCuqT-u4Z_Bv4AusW1_sRoOcYjSlkEszf0uEdKKYK2Ia4gNJzZKP2K7bT5x12ZoRojPHhYbhICINKkzH57swbX27kEMbVxicwVODLR_JzL8ycKQIycxCNf6Jk-9i2rzezy8txwL8EZBvEwLAxMchYAQCpMSgm0JjCGvEf-KWMzsRakN6hQa4VxKlYv1vMTGQrQ9Rg3gXBZbDzEx8zaXOdFbX2CERgL8EBxVYu0BPYxFuRKcQaNWrshtZW-1aYHoR1L0zxkEJ8-Fn4VhDlagSLnFtQuFXgVhEQdAh9dZZdZSSoZQjH7esUPCapDpud7X4QEp5-gG4s3EwI4E0zy1FTytACDiqOik1MsHmYXKPe6B0vq7J6RB6qA8d8w50QvgowfIM6Ima_rHVt6aRXHxJAIjqw6ezpA8v6M1A3yESq6IzKFejEHtPsbu6hP-4LAjKbOCcm5k9bi8kZPbQcreHygYzy4XgFYZT49zQ-hrm73rHLTq-F-qNLz4zfRSTgEDY6Bll2wdb8Wx7tXe43S",
+          "rocket": false
+        }
+      },
+      "?|diesel": {},
+      "0W-20|gas": {
+        "value": {
+          "name": "킥스 Kixx GX7(구 G1) SQ 0W20 4리터",
+          "price": 61900,
+          "liters": 4,
+          "gradeShown": true,
+          "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9254920751&itemId=27526200726&vendorItemId=92743072483&traceid=V0-153-2db3bc73627585ba&requestid=20261124170627928281368415&token=31850C%7CMIXED&pt=0&slot=7",
+          "image": "https://ads-partners.coupang.com/image1/oc64YD0mlJ0kAKhcoW2t0gAOh-kOe6cgsCw4WbYHq6BpJ6o3yMPL0OaMCWXa3ri7Am-TUt4GpRtz4jzzEf7LW15K_2l4fd_OmJW7bKbXf3SXnVUmIkuOyJbhc6ww90maqadBz_L-gI1oyooCIZ1t6LKxT1q_XLqsoS6ynZITXXw690jgplsxgpbOKeUfh8UGEOcp9qjsr5C-dHaep0k0uD84wTyOMxwxpPl_cV_-jGcqrA6HwSGelHQwL5dcDHmn2mPhpRDYzzBpJVeqgxNTVUWkNPRtMbYSZ357imMOLlFH82YelwvVSVNhKHv19ejxldxC2V8GvMZAN9qAa59R8y89xFXOBogkpH8FGSeJ1_dglomQHRycgWAjyk7-SL3CrRQg9dMfUvnX4-PFhVIMdjzRc9WXIjxxTKAIwQ9Gz25PiCxiealLK1ZBSmGdRNuPaBTndhQAnyjyy6Zxtcy01WOrs6Y8ALN7yhmt9sNGJ9dEbXysHvPlgeUE7DX48A9lvhcXZIRbH8SiySyiHJR3jtaih_sksG3IxuWYBhprdy5ZmF1qvJ5mKUU3Ezm97MVvlSQlm25Rho7vzd-qU6fhPGXFXSmxNmByKzJGC7Psiw==",
+          "rocket": false
+        },
+        "premium": {
+          "name": "쉘 코리아 힐릭스 울트라 0W20 1LX6EA (6L)",
+          "price": 96000,
+          "liters": 6,
+          "gradeShown": false,
+          "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8460256075&itemId=26751433793&vendorItemId=93722467213&traceid=V0-153-4f8ad25575bd8d7a&requestid=20261124170638444256574343&token=31850C%7CMIXED&pt=0&slot=10",
+          "image": "https://ads-partners.coupang.com/image1/4FZs3V5uCCeS-6EL4KbNXfJ0z_t8r1j1-3fOXGHDux7E7n63dOANiXH4Xe1rcGEGdSRWdIvNX5SpSTiVR7azYTl7qco-mq0nEQYNIZCzLHH7GEow8I4Aw7ObkmFciH-O9UPVfFR8El9_RnK8GwqJ1cNV1QImlK2jsLTlnAjsvEluMYhsmd5Vp5ogc_9mx7B9mrsteghQH2YH2A6VlCsuvp-cep86zMYnf4eKMZtGVU15NQTco2R1DjBJpBoGJryhQFI-25L4NxjXmNBw_mG18R76YAgOXCsoCts_MqplhXlztuT9QYjmPkZCfsF6XUnKddP8hX2h4qh2KGEri6-qHcGyWpffKcvAPZzUXC9AGpWHbnD1OeD2NDzn0WGwU2uusiVcJOiiAQHQkKQMK0yFICsObWUBLoiXxggchK5L0_a7wrxCckU1atdEu2t1GAj-sRkPUrkHqx-kFgNGmouo5KHKLSaDf8BsIeOGda6FZD3ZLooprDfInsxdshEoqd2gI6nZH_2ebCsE2yA0JI4XsTWvMYUjcdY0AbS8wUvCgrB7YecvyelCcNhxzZBKny09rlSLzymTsQxuSbR1jSHUG8YxkTuKrg==",
+          "rocket": false
+        }
+      },
+      "5W-30|diesel": {},
+      "0W-16|gas": {},
+      "5W-20|gas": {
+        "value": {
+          "name": "에쓰오일 세븐 soil7 RED ECO SP 5W20 4리터 고성능 합성 가솔린 엔진오일, 4L, 5w20, 1개",
+          "price": 24900,
+          "liters": 4,
+          "gradeShown": true,
+          "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8725436781&itemId=25347745770&vendorItemId=92342223337&traceid=V0-153-1385f29f96625b5b&clickBeacon=1906d470-e7de-11f1-9372-799c662d2d70%7E3&requestid=20261124170731319043074652&token=31850C%7CMIXED&pt=1&slot=2",
+          "image": "https://ads-partners.coupang.com/image1/BvO8cSIP-SM8UGWYBqGE4ERZA7mfY00rxDbxtTj22gXzTHZ2tU0lxccR4N_omXyNXRVOhLCjJ6rKdoEff2nbfvh1EFvrZTVy37DShLKg-NqZwiDNI8wTLrjvvrXHkRP6zT6TfWoU0cWBgCUFOuEGK_9eIqi7IZvRboUB_avMCqERTB5ELutBldiIBKoRADLpY3NcfC8gWyP2OBxLMAX002BvJK8w0lMwrUev7V1bRTf4dJVO1EaLwYux6U9felHIzFgc15ik2o0cRNvFlnNooRrDxEclB_J9m4AFuJN8lxSzHMMM9So0T9yluLsLxeBdkrHqVs1sX4iIYJqNYMAFfSShUSHBxV3I3Mn7LwjVznADHMXV7FCIj-xe0Ftfn6J4GJ2NLu0fDwWaEY9u6oJzRY95PRkxz9REPSXSO_FxwZkFgdXiWcT2zTRTMZ00ebOZ7TdMB5fX6mZe__0xlo23StvVX9MVJZvoH-no9ORwa0WEkOi3szRIUxSns_lNg0cO6krAJ21FkKZG2Zbeql2yDfDEUlI63B8=",
+          "rocket": false
+        },
+        "premium": {
+          "name": "Castrol Edge  5W-20 고급 완전 합성 모터 오일 5L",
+          "price": 104000,
+          "liters": 5,
+          "gradeShown": false,
+          "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=8913669055&itemId=26620847110&vendorItemId=93593805535&traceid=V0-153-4176794f598bce85&requestid=20261124170736562133101753&token=31850C%7CGM&pt=0&slot=2",
+          "image": "https://ads-partners.coupang.com/image1/OHykXIB-Nc-JpghgOPS1tVrDUGnZgJmlibxgzxatROd2VkNIKVcQ-ehY-xmM1Qxh0bYiGw_ABkW_BZI3Mh6ZVnAulUXosXDMn8Ol1Rz_L-YSwtet77KV5dYVcvm_WKXLaD4Oh1SYdFnO5K0crHMenWPFob165OAlN98lqVe_ZrKi8id5L_Bo6p9v6cSZ8OKkzyEyH65YOaRB-cy3lP1k8DeSFQ__gmL_pZ0mtJZ-a5xd5SKNgQ9UiE8mZ7DrYQUUA0GEyF9MAiiNpkcPMy5q1SL8UEYNkurQM4amMw7Picf6MrFHxUhCrx7_Sqwg4SF9s5HQFy285etxK72IiYDgqAwjl3h91wSfznfz-5aFXR_xk9mUcndtQKiUF5wc01Frqx05eXnukIxr69vfsKu6RJXKkoJQkOQxLDs2NqyjViPMfaAWpdX5w4pYx06WsA828U_K7GHrTmS74KqjUrRPhegOosXkjSvFeZ1i0cJKQHZWbXw2YEzyhRbsfQo9AucEi6y19G1KDFE3ujxsV7v8v-GLQMmMLLiAysco4imeT5g=",
+          "rocket": false
+        }
+      },
+      "0W-30|diesel": {},
+      "0W-20|diesel": {},
+      "5W-30|gas": {
+        "value": {
+          "name": "지크 ZIC X7 5W-30 SQ 4L 합성엔진오일",
+          "price": 20800,
+          "liters": 4,
+          "gradeShown": true,
+          "url": "https://link.coupang.com/re/AFFSDP?lptag=AF7354533&pageKey=9832788087&itemId=29451778666&vendorItemId=96360986692&traceid=V0-153-7cf2664a68db5c76&requestid=20261124170821075072229053&token=31850C%7CMIXED&pt=0&slot=10",
+          "image": "https://ads-partners.coupang.com/image1/VE3iFaD8YfFDQBkrVHWSe8ze6vx8aCxQNeHnPvAVa_THlm5uOEvGwVSMVcJTsPV4a4ViyLsFP3wv8BLjdkvPBpZ3LbtXRLnLWLAChKLc7gPXQgmHsuSUkQeveJWAzeNVDab3spj4FYoSP77qwQQwtR-j2HLsdLLFF6_b49eu2b7VlWnG6VcY_fB6pm2bx_by4h4g3yaeJT2gsJSWEeAHZsz0Yvl6Nt2u7OYzKSixN0bm4nyWKXs5rMWe27KCzfnzOrQNDcoSoxvV41FB9zTa_TH0SzbGiE8R1cutyrHrxgqMsZgzTVKU3F4U68EOIJxkGkH3HabUz9r_l21LDJC4L0J7IAfazt0ZynUG35IYTboUttQfBUOPTJXEUUC4AxgxGfoi_F5ll4yWez04HFTUqH-rpc61CjGZkcRoVfaPEmc4X1XIuWQzfEFGEI99e6lDad3a-ydoHRi5ZFpuWnzx9MdYj2oJ-yErWcr-m32y_PoKImccKUic7_FEYQrnsgv17BLmNghLQYESBu6SMAJr7POKosG1R6j7ZZEMeVYKI18lnMXJkA==",
+          "rocket": false
+        }
+      }
+    }
+  }
 }

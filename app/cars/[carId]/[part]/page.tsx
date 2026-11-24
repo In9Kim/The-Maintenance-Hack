@@ -18,7 +18,8 @@ import {
 } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
-import { coupangChoicesFor, naverShoppingFor } from "@/lib/coupang-links"
+import { coupangChoicesFor, naverShoppingFor, oilTiersFor } from "@/lib/coupang-links"
+import { OilTiers } from "@/components/cars/OilTiers"
 import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
 import { TrackRecent } from "@/components/recent/Recent"
 import { carPhoto } from "@/lib/car-photos"
@@ -148,6 +149,7 @@ export default async function PartPage({ params }: Props) {
                 )
               )}
               {naverShoppingFor(part) && <NaverCompareLink url={naverShoppingFor(part)!.url} carId={car.id} partId={part.id} />}
+              <OilTiers rows={oilTiersFor(part)} carId={car.id} partId={part.id} />
             </div>
           ) : (
             <p className="mt-4 rounded-[10px] bg-muted px-3 py-2.5 text-[14px] leading-relaxed text-muted-foreground">
@@ -221,6 +223,27 @@ export default async function PartPage({ params }: Props) {
               className="mt-1.5 inline-flex min-h-[40px] items-center text-[14px] font-semibold underline underline-offset-4"
             >
               SK ZIC에서 차량번호로 확인하기
+            </OutboundLink>
+          </div>
+        )}
+        {/^(현대|기아|제네시스)$/.test(car.brand) && part.category !== "oil" && part.category !== "fluid" && (
+          <div className="mt-3 rounded-[12px] border border-border bg-card px-4 py-3 text-[14px] leading-relaxed">
+            <p className="font-semibold">순정 품번·순정 가격을 직접 확인하려면</p>
+            <p className="mt-0.5 text-[13px] text-muted-foreground">
+              현대모비스 &lsquo;부품 간단 검색&rsquo;에서 제조사·모델을 고르고{" "}
+              <b className="text-foreground">
+                {part.category === "brake" ? "패드 키트" : part.category === "battery" ? "배터리" : part.category === "spark" ? "플러그" : part.category === "wiper" ? "와이퍼" : /에어컨|캐빈/.test(part.name) ? "에어 필터" : "에어 클리너"}
+              </b>
+              {" "}로 검색하면 품번과 직영점 가격이 나와요. 같은 부품에 품번이 여러 개면 엔진·트림에 따라 다르니 판매처에 차대번호로 확인하세요.
+            </p>
+            <OutboundLink
+              href="https://www.mobis-as.com/simple_search_part.do"
+              target="other"
+              carId={car.id}
+              partId={part.id}
+              className="mt-1.5 inline-flex min-h-[40px] items-center text-[14px] font-semibold underline underline-offset-4"
+            >
+              현대모비스에서 순정 품번 찾기
             </OutboundLink>
           </div>
         )}

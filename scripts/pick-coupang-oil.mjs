@@ -17,7 +17,7 @@ import { createHmac } from "node:crypto"
 const OUT = "data/coupang-picks.json"
 const PATH = "/v2/providers/affiliate_open_api/apis/openapi/products/search"
 
-function env(name) {
+export function env(name) {
   if (process.env[name]) return process.env[name]
   if (!existsSync(".env.local")) return ""
   for (const line of readFileSync(".env.local", "utf8").split(/\r?\n/)) {
@@ -37,7 +37,7 @@ const OIL_BRANDS = /킥스|KIXX|지크|ZIC|엑스티어|XTEER|에스오일|S-OIL
 /** 우리 데이터에 없는 옛 세대 코드 (상품명에 있으면 다른 세대) */
 const LEGACY_CODES = ["HD", "MD", "LF", "YF", "NF", "TL", "QL", "SL", "UM", "XM", "YP", "TF", "JF", "HG", "DM", "DH", "OS", "SK3", "TA", "EV"]
 const isTurbo = (s) => /T-?GDi|터보|\d\.\dT\b|TGDI/i.test(s)
-const OTHER_MAKERS = /쌍용|KGM|토요타|도요타|TOYOTA|렉서스|혼다|닛산|르노|쉐보레|GM대우|BMW|벤츠|아우디|폭스바겐|볼보|포드/i
+const OTHER_MAKERS = /쌍용|KGM|토요타|도요타|TOYOTA|렉서스|혼다|닛산|르노|쉐보레|GM대우|BMW|벤츠|아우디|폭스바겐|볼보|포드|재규어|랜드로버|미니|포르쉐|링컨|지프|푸조|시트로엥|마세라티|테슬라|크라이슬러|캐딜락/i
 
 /** 상품명의 연식 범위 (두 자리 연도). "20-23년식" → [20,23], "21년식 이후" → [21,99], "(04~)" → [4,99] */
 export function yearsOf(title) {
@@ -76,9 +76,9 @@ export function setMatches(title, { model, alias = [], code, years, visc, grade,
   // 같은 연료 엔진이 여러 개면(아반떼 1.6·1.6T·2.0T) 상품명에 배기량이 꼭 있어야
   if (sameFuelMulti && disp && !td) return false
   // 가솔린 오일 자리에 디젤 규격(C2·C3) 오일 세트는 제외
-  if (grade === "SP" && /C2|C3/.test(title.toUpperCase()) && !/SP|SQ/i.test(title)) return false
+  if ((grade === "SP" || fuel === "가솔린") && /C2|C3/.test(title.toUpperCase()) && !/SP|SQ/i.test(title)) return false
   if (isTurbo(title) && turbo === false && /터보|T-?GDi/i.test(title)) return false
-  if (turbo && /MPI/i.test(title)) return false
+  if (turbo && /\bMPI\b/i.test(title)) return false
   // 같은 연료에 터보·비터보가 함께 있으면(아반떼 1.6 ↔ 1.6T) 터보 엔진은 상품명에 터보 표시가 있어야
   if (turbo && sameFuelMulti && !isTurbo(title)) return false
   if (/공임/.test(title)) return false
@@ -110,11 +110,11 @@ export function oilMatches(title, { visc, grade, carNames }) {
   if (!visc || !t.includes(norm(visc))) return false
   if (grade && !new RegExp(`\\b${grade}\\b`, "i").test(title.replace(/GF-6A?/i, "SP"))) return false
   if (!/\b[4-7]\s*L\b|[4-7]리터/i.test(title)) return false
-  if (/급유기|주유기|펌프|교환기|코팅제|첨가제/.test(title) || OTHER_MAKERS.test(title) || !OIL_BRANDS.test(title)) return false
+  if (/급유기|주유기|펌프|교환기|코팅제|첨가제|세트|필터/.test(title) || OTHER_MAKERS.test(title) || !OIL_BRANDS.test(title)) return false
   return !carNames.some((n) => n.length >= 2 && t.includes(norm(n)))
 }
 
-async function search(keyword, ak, sk) {
+export async function search(keyword, ak, sk) {
   const query = `keyword=${encodeURIComponent(keyword)}&limit=10`
   const d = new Date()
   const p = (x) => String(x).padStart(2, "0")
@@ -148,7 +148,7 @@ async function main() {
 
   for (const car of cars) {
     for (const part of car.parts.filter((p) => p.category === "oil")) {
-      if (!all && out.picks[part.id]) continue
+      const prev = out.picks[part.id]
       const engine = part.engine ?? (car.engineTypes.length === 1 ? car.engineTypes[0] : "")
       const code = car.generation.split(/\s/)[0]
       const ctx = {
@@ -156,7 +156,7 @@ async function main() {
         code: /^[A-Z][A-Z0-9]{1,4}$/.test(code) ? code : "",
         visc: viscosityOf(part.spec) ?? viscosityOf(part.coupangKeyword ?? ""),
         grade: gradeOf(part.spec),
-        grades: [...new Set(part.spec.match(/C[235]/g) ?? [])],
+        grades: [...new Set(part.spec.match(/\bC[235]\b/g) ?? [])],
         fuel: fuelOf(`${engine} ${part.name}`),
         disp: displacementOf(engine) ?? displacementOf(part.spec),
         turbo: engine ? isTurbo(engine) : null,
@@ -168,6 +168,11 @@ async function main() {
       ctx.alias = ALIAS[car.model] ?? []
       ctx.years = carYears(car.yearRange)
       ctx.need = Number(part.spec.match(/(\d+(?:\.\d)?)\s*L\b/)?.[1] ?? 0) || null
+      // 이미 고른 상품: 지금 규칙으로 다시 검사만 하고(검색 없이) 통과하면 그대로 둔다.
+      // 쿠팡 검색 결과는 날마다 바뀌어서, 다시 검색하면 멀쩡한 상품을 잃을 수 있다.
+      const prevOk = prev && (prev.kind === "set" ? setMatches(prev.name, ctx) : oilMatches(prev.name, ctx))
+      if (prev && !prevOk) console.log(`↺ ${part.id} 이전 상품이 지금 규칙에 안 맞아 다시 찾음: ${prev.name.slice(0, 50)}`)
+      if (prevOk && !all) continue
       let pick = null
       const seen = new Map()
       const run = async (q) => {
@@ -212,6 +217,9 @@ async function main() {
         }
         picked++
         console.log(`✔ ${part.id} [${pick.kind}] ${pick.item.productName.slice(0, 60)}`)
+      } else if (prevOk) {
+        picked++
+        console.log(`= ${part.id} 새 검색엔 없지만 이전 상품 유지: ${prev.name.slice(0, 50)}`)
       } else {
         delete out.picks[part.id]
         none++
