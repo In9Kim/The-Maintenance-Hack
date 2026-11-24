@@ -21,6 +21,7 @@ import { EngineTabs } from "@/components/cars/EngineTabs"
 import { recallsForCar } from "@/lib/recalls/data"
 import { engineGroups } from "@/lib/engines"
 import { coupangChoicesFor } from "@/lib/coupang-links"
+import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { CarDiagram, type DiagramPart } from "@/components/cars/CarDiagram"
 import { CarPhoto } from "@/components/cars/CarPhoto"
@@ -44,7 +45,10 @@ function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
   if (!links.length) return null
   return (
     <div className="mt-1.5 space-y-1">
-      {links.map((l) => (
+      {links.map((l) =>
+        l.kind === "pick" ? (
+          <CoupangPickCard key={l.url} pick={l} carId={car.id} partId={part.id} compact />
+        ) : (
         <OutboundLink
           key={l.url}
           href={l.url}
@@ -57,7 +61,8 @@ function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
           {l.title}
           <span className="font-normal text-muted-foreground no-underline">{l.sub}</span>
         </OutboundLink>
-      ))}
+        )
+      )}
     </div>
   )
 }
@@ -156,7 +161,7 @@ export default async function CarPage({ params }: Props) {
   const ev = isElectric(car)
   const diagramParts: DiagramPart[] = car.parts.map((p) => {
     const c = partCost(p)
-    const link = coupangChoicesFor(p).at(-1)
+    const choices = coupangChoicesFor(p)
     return {
       id: p.id,
       name: p.name,
@@ -166,7 +171,8 @@ export default async function CarPage({ params }: Props) {
       dealer: c.dealer,
       self: c.self,
       zone: zoneOf(p),
-      coupang: link ? { url: link.url, title: link.title, sub: link.sub } : undefined,
+      cat: p.category,
+      choices,
     }
   })
   const zoneOrder: ZoneId[] = ["engine", "front", "rear", "cabin", "wiper"]

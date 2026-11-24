@@ -8,6 +8,7 @@
  */
 import raw from "@/data/coupang-links.json"
 import searchRaw from "@/data/coupang-search-links.json"
+import picksRaw from "@/data/coupang-picks.json"
 import type { CarModel, MaintenancePart } from "@/types"
 
 import type { CoupangSpecLink } from "./coupang-check"
@@ -47,23 +48,74 @@ export function coupangSearchFor(part: MaintenancePart): CoupangSearchLink | und
 /** 화면에 보여 줄 쿠팡 링크: 규격 확인 상품(있으면) → 검색 링크 */
 export interface CoupangChoice {
   url: string
-  kind: "product" | "spec" | "car"
+  kind: "pick" | "product" | "spec" | "car"
   title: string
   sub: string
+  /** pick 전용: 가격·이미지·안내 */
+  price?: number
+  priceDate?: string
+  image?: string
+  note?: string
+}
+
+/**
+ * 엔진오일 "이거 사면 돼요" 상품 (data/coupang-picks.json, scripts/pick-coupang-oil.mjs가 쿠팡 검색 API로 고름)
+ *  - set: 그 차·엔진 전용 오일+오일필터 세트
+ *  - oil: 같은 점도·등급의 오일 단품 (필요량을 따로 안내)
+ */
+export interface CoupangPick {
+  kind: "set" | "oil"
+  name: string
+  price: number
+  url: string
+  image?: string
+  rocket?: boolean
+  query: string
+  checkedAt: string
+}
+const PICKS = ((picksRaw as { picks?: Record<string, CoupangPick> }).picks ?? {}) as Record<string, CoupangPick>
+
+export function coupangPickFor(part: MaintenancePart): CoupangPick | undefined {
+  return PICKS[part.id]
+}
+
+/** 규격에서 필요한 오일 양 (예: "5.8L") */
+export function oilAmount(part: MaintenancePart): string | null {
+  return part.spec.match(/(\d+(?:\.\d)?)\s*L/)?.[1] ?? null
 }
 
 export function coupangChoicesFor(part: MaintenancePart): CoupangChoice[] {
-  const out: CoupangChoice[] = coupangLinksFor(part).map((l) => ({
-    url: l.url,
-    kind: "product",
-    title: "규격 맞는 상품 보기 (쿠팡)",
-    sub: l.product,
-  }))
+  const out: CoupangChoice[] = []
+  const pick = coupangPickFor(part)
+  if (pick) {
+    const need = oilAmount(part)
+    out.push({
+      url: pick.url,
+      kind: "pick",
+      title: pick.kind === "set" ? "이 세트 사면 돼요 (쿠팡)" : "이 오일 사면 돼요 (쿠팡)",
+      sub: pick.name,
+      price: pick.price,
+      priceDate: pick.checkedAt,
+      image: pick.image,
+      note:
+        pick.kind === "set"
+          ? "엔진오일 + 오일필터가 함께 든 차종 전용 세트예요. 상품명의 연식·엔진이 내 차와 같은지 한 번 더 보세요."
+          : `규격(점도·등급)이 맞는 오일이에요.${need ? ` 필요량은 ${need}L라 용량이 모자라면 1L를 더 사세요.` : ""} 오일필터는 따로 필요해요.`,
+    })
+  }
+  out.push(
+    ...coupangLinksFor(part).map<CoupangChoice>((l) => ({
+      url: l.url,
+      kind: "product",
+      title: "규격 맞는 상품 보기 (쿠팡)",
+      sub: l.product,
+    }))
+  )
   const s = coupangSearchFor(part)
   if (s) {
     out.push(
       s.kind === "spec"
-        ? { url: s.url, kind: "spec", title: "이 규격 상품 찾기 (쿠팡)", sub: `“${s.query}” 검색` }
+        ? { url: s.url, kind: "spec", title: pick ? "다른 상품 더 보기 (쿠팡)" : "이 규격 상품 찾기 (쿠팡)", sub: `“${s.query}” 검색` }
         : { url: s.url, kind: "car", title: "쿠팡에서 찾기", sub: "구매 전 순정 품번·규격을 꼭 확인하세요" }
     )
   }

@@ -9,6 +9,8 @@ import Link from "next/link"
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { BodyType, ZoneId } from "@/lib/car-diagram"
 import { OutboundLink } from "@/components/seo/OutboundLink"
+import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
+import type { CoupangChoice } from "@/lib/coupang-links"
 
 export interface DiagramPart {
   id: string
@@ -19,7 +21,16 @@ export interface DiagramPart {
   dealer: number
   self: number
   zone: ZoneId
-  coupang?: { url: string; title: string; sub: string }
+  /** 소모품 분류 (oil·filter·spark·battery …): 엔진룸 그림의 부품과 짝짓기 */
+  cat: string
+  choices: CoupangChoice[]
+}
+
+/** 엔진룸 그림 속 부품 → 소모품 찾기 */
+type BayKind = "oil" | "spark" | "air" | "battery"
+const BAY_LABEL: Record<BayKind, string> = { oil: "엔진오일", spark: "점화플러그", air: "에어클리너", battery: "배터리" }
+function bayPart(parts: DiagramPart[], k: BayKind) {
+  return parts.find((p) => p.zone === "engine" && (k === "air" ? p.cat === "filter" : p.cat === k))
 }
 
 interface Props {
@@ -108,6 +119,7 @@ const won = (n: number) => `${n.toLocaleString("ko-KR")}원`
 export function CarDiagram({ carId, carName, body, zones, parts }: Props) {
   const s = SHAPES[body]
   const [zone, setZone] = useState<ZoneId | null>(null)
+  const [sel, setSel] = useState<string | null>(null)
   const [vb, setVb] = useState(FULL)
   const vbRef = useRef(FULL)
   const raf = useRef<number | null>(null)
@@ -140,12 +152,15 @@ export function CarDiagram({ carId, carName, body, zones, parts }: Props) {
     raf.current = requestAnimationFrame(step)
   }, [])
 
+  // 부위를 누르면 그 자리로 확대만 한다 (화면을 아래로 내리지 않음). 첫 소모품을 골라 둔다.
   const open = (z: ZoneId | null) => {
     setZone(z)
+    setSel(z ? parts.find((p) => p.zone === z)?.id ?? null : null)
     animateTo(z ? zoneView(body, z) : FULL)
-    if (z && window.innerWidth < 1024) {
-      setTimeout(() => panelRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }), 350)
-    }
+  }
+  const pickBay = (k: BayKind) => {
+    const p = bayPart(parts, k)
+    if (p) setSel(p.id)
   }
 
   useEffect(() => () => {
@@ -196,7 +211,15 @@ export function CarDiagram({ carId, carName, body, zones, parts }: Props) {
             {/* 엔진룸: 확대하면 보닛이 투명해지고 부품이 보인다 */}
             <g style={{ transition: "opacity .4s" }} opacity={zone === "engine" ? 1 : 0}>
               <path d={s.hood} fill="#14213D" opacity={0.08} />
-              <EngineBay x={s.spots.engine[0]} y={s.spots.engine[1]} ev={zones.find((z) => z.id === "engine")?.title === "보닛 아래"} />
+              <EngineBay
+                x={s.spots.engine[0]}
+                y={s.spots.engine[1]}
+                ev={zones.find((z) => z.id === "engine")?.title === "보닛 아래"}
+                active={zone === "engine"}
+                has={(k) => !!bayPart(parts, k)}
+                selected={(k) => bayPart(parts, k)?.id === sel}
+                onPick={pickBay}
+              />
             </g>
 
             {/* 와이퍼 */}
@@ -289,36 +312,66 @@ export function CarDiagram({ carId, carName, body, zones, parts }: Props) {
           <div className="rounded-[18px] border border-border bg-card p-4 sm:p-5">
             <p className="text-[13px] text-muted-foreground">{info?.hint}</p>
             <h3 className="mt-0.5 text-[19px] font-bold">{info?.title} 소모품</h3>
-            <ul className="mt-3 divide-y divide-border">
-              {zoneParts.map((p) => (
-                <li key={p.id} className="py-3 first:pt-1 last:pb-0">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <Link href={p.href} className="font-bold underline decoration-border underline-offset-4 hover:decoration-primary">
-                      {p.name}
-                    </Link>
-                    {p.interval && <span className="shrink-0 text-[12px] text-muted-foreground">{p.interval}</span>}
-                  </div>
-                  <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{p.spec}</p>
-                  <p className="num mt-1.5 text-[14px]">
-                    공식센터 <span className="price-was">{won(p.dealer)}</span>
-                    {" → "}직접 구매 <b className="text-primary">{won(p.self)}</b>
-                  </p>
-                  {p.coupang && (
-                    <OutboundLink
-                      href={p.coupang.url}
-                      target="coupang"
-                      carId={carId}
-                      partId={p.id}
-                      sponsored
-                      className="mt-1 inline-flex min-h-[36px] flex-wrap items-center gap-x-1.5 text-[13px] font-semibold text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary"
+            {zoneParts.length > 1 && (
+              <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={`${info?.title} 소모품 고르기`}>
+                {zoneParts.map((p) => (
+                  <li key={p.id}>
+                    <button
+                      type="button"
+                      onClick={() => setSel(p.id)}
+                      aria-pressed={p.id === sel}
+                      className={`min-h-[36px] rounded-full border px-3 text-[13px] font-semibold transition ${
+                        p.id === sel ? "border-foreground bg-foreground text-background" : "border-border bg-card hover:border-foreground/40"
+                      }`}
                     >
-                      {p.coupang.title}
-                      <span className="font-normal text-muted-foreground no-underline">{p.coupang.sub}</span>
-                    </OutboundLink>
-                  )}
-                </li>
-              ))}
-            </ul>
+                      {p.name.replace(/\s*\+\s*오일필터/, "")}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {zoneParts
+              .filter((p) => p.id === sel)
+              .map((p) => {
+                const pick = p.choices.find((c) => c.kind === "pick")
+                const rest = p.choices.filter((c) => c.kind !== "pick")
+                return (
+                  <div key={p.id} className="mt-4">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <p className="text-[16px] font-bold">{p.name}</p>
+                      {p.interval && <span className="shrink-0 text-[12px] text-muted-foreground">{p.interval}</span>}
+                    </div>
+                    <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{p.spec}</p>
+                    <p className="num mt-1.5 text-[14px]">
+                      공식센터 <span className="price-was">{won(p.dealer)}</span>
+                      {" → "}직접 구매 <b className="text-primary">{won(p.self)}</b>
+                    </p>
+                    {pick && (
+                      <div className="mt-3">
+                        <CoupangPickCard pick={pick} carId={carId} partId={p.id} compact />
+                      </div>
+                    )}
+                    <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
+                      <Link href={p.href} className="inline-flex min-h-[40px] items-center text-[13px] font-semibold underline decoration-border underline-offset-4 hover:decoration-primary">
+                        규격·교체 방법 자세히
+                      </Link>
+                      {rest.slice(0, 1).map((c) => (
+                        <OutboundLink
+                          key={c.url}
+                          href={c.url}
+                          target="coupang"
+                          carId={carId}
+                          partId={p.id}
+                          sponsored
+                          className="inline-flex min-h-[40px] items-center text-[13px] font-semibold text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary"
+                        >
+                          {c.title}
+                        </OutboundLink>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
           </div>
         )}
       </div>
@@ -365,7 +418,48 @@ function Wheel({ cx, cy, r, detail }: { cx: number; cy: number; r: number; detai
   )
 }
 
-function EngineBay({ x, y, ev }: { x: number; y: number; ev: boolean }) {
+function EngineBay({
+  x,
+  y,
+  ev,
+  active,
+  has,
+  selected,
+  onPick,
+}: {
+  x: number
+  y: number
+  ev: boolean
+  active: boolean
+  has: (k: BayKind) => boolean
+  selected: (k: BayKind) => boolean
+  onPick: (k: BayKind) => void
+}) {
+  // 확대된 엔진룸에서 부품을 누르면 그 소모품을 고른다 (고른 부품은 초록 테두리)
+  const hit = (k: BayKind, box: [number, number, number, number]) =>
+    active && has(k) ? (
+      <g
+        role="button"
+        tabIndex={0}
+        aria-label={`${BAY_LABEL[k]} 보기`}
+        aria-pressed={selected(k)}
+        onClick={() => onPick(k)}
+        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), onPick(k))}
+        className="cursor-pointer outline-none"
+      >
+        <rect
+          x={box[0]}
+          y={box[1]}
+          width={box[2]}
+          height={box[3]}
+          rx={5}
+          fill="transparent"
+          stroke={selected(k) ? "#0B7A53" : "#94A3B8"}
+          strokeWidth={selected(k) ? 1.8 : 0.8}
+          strokeDasharray={selected(k) ? undefined : "3 2"}
+        />
+      </g>
+    ) : null
   return (
     <g fontSize={7} fontWeight={700}>
       {ev ? (
@@ -379,6 +473,7 @@ function EngineBay({ x, y, ev }: { x: number; y: number; ev: boolean }) {
           <text x={x - 24} y={y + 24} textAnchor="middle" fill="#14213D">
             보조배터리
           </text>
+          {hit("battery", [x - 50, y - 24, 52, 54])}
           <rect x={x + 6} y={y - 10} width={40} height={22} rx={8} fill="#8794A6" stroke="#14213D" />
           <text x={x + 26} y={y + 24} textAnchor="middle" fill="#14213D">
             감속기
@@ -409,6 +504,10 @@ function EngineBay({ x, y, ev }: { x: number; y: number; ev: boolean }) {
           <text x={x + 39} y={y - 17} textAnchor="middle" fill="#14213D">
             배터리
           </text>
+          {hit("spark", [x - 30, y - 36, 50, 22])}
+          {hit("oil", [x + 2, y - 13, 44, 50])}
+          {hit("air", [x - 66, y - 18, 34, 40])}
+          {hit("battery", [x + 25, y - 26, 30, 32])}
         </>
       )}
     </g>

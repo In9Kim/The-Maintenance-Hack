@@ -19,6 +19,7 @@ import {
 import { formatPrice } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
 import { coupangChoicesFor } from "@/lib/coupang-links"
+import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AffiliateNotice, Breadcrumbs, EstimateNote, JsonLd } from "@/components/seo/Shared"
 import { ReceiptCard } from "@/components/home/ReceiptCard"
@@ -124,7 +125,10 @@ export default async function PartPage({ params }: Props) {
           {specLinks.length > 0 ? (
             <div className="mt-4 space-y-2">
               <AffiliateNotice />
-              {specLinks.map((l) => (
+              {specLinks.map((l) =>
+                l.kind === "pick" ? (
+                  <CoupangPickCard key={l.url} pick={l} carId={car.id} partId={part.id} />
+                ) : (
                 <OutboundLink
                   key={l.url}
                   href={l.url}
@@ -137,7 +141,8 @@ export default async function PartPage({ params }: Props) {
                   <span className="block text-[15px] font-bold">{l.title}</span>
                   <span className="mt-0.5 block text-[13px] opacity-90">{l.sub}</span>
                 </OutboundLink>
-              ))}
+                )
+              )}
             </div>
           ) : (
             <p className="mt-4 rounded-[10px] bg-muted px-3 py-2.5 text-[14px] leading-relaxed text-muted-foreground">
