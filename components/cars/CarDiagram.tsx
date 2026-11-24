@@ -346,7 +346,7 @@ export function CarDiagram({ carId, carName, body, zones, parts }: Props) {
                     </div>
                     <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{p.spec}</p>
                     <p className="num mt-1.5 text-[14px]">
-                      공식센터 <span className="price-was">{won(p.dealer)}</span>
+                      공식센터(추정) <span className="price-was">{won(p.dealer)}</span>
                       {" → "}직접 구매 <b className="text-primary">{won(p.self)}</b>
                     </p>
                     {pick && (

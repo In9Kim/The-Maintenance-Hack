@@ -86,8 +86,8 @@ export function intervalText(part: MaintenancePart): string | null {
 /** 금액 기준 문구: 데이터를 마지막으로 고친 달 (data/vehicles.json updatedAt) */
 export function priceBasis(car: CarModel): string {
   const m = car.updatedAt?.match(/^(\d{4})-(\d{2})/)
-  const when = m ? `부품가 ${m[1]}년 ${Number(m[2])}월 시세 기준` : "부품가는 시세 기준 예상치"
-  return `공임나라 표준 공임 · ${when}`
+  const when = m ? `${m[1]}년 ${Number(m[2])}월` : ""
+  return `공식센터 금액은 부품값·공임에 공식센터 마진을 반영해 계산한 추정치예요. 부품값·공임도 ${when ? `${when} 기준 ` : ""}예상치라 실제 견적과 다를 수 있어요.`
 }
 
 /** 계산기 페이지로 이 차종을 미리 선택해서 보내는 링크 */

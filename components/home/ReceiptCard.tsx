@@ -27,7 +27,7 @@ export function ReceiptCard({
       <p className="text-[13px] font-semibold text-muted-foreground">{title}</p>
       <dl className="num mt-3 space-y-2.5 text-[15px]">
         <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-          <dt>공식센터</dt>
+          <dt>공식센터 <span className="text-[12px] font-normal text-muted-foreground">(추정)</span></dt>
           <dd className="price-was">{won(dealer)}</dd>
           {dealerNote && <dd className="w-full text-right text-[12px] text-muted-foreground">{dealerNote}</dd>}
         </div>

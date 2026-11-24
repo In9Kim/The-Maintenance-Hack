@@ -83,7 +83,7 @@ function SiteFooter() {
           <p className="font-semibold">데이터 출처</p>
           <ul className="mt-2 space-y-1.5 text-muted-foreground">
             <li>규격·교체 주기: 제조사 취급설명서</li>
-            <li>공임: 공임나라 표준 공임 기준</li>
+            <li>부품값·공임·공식센터 가격: 시세를 바탕으로 한 추정치 (실제 영수증으로 확인한 것은 "실제로 달아 본 상품"에 따로 표시)</li>
             <li>리콜: 국토교통부·자동차리콜센터</li>
             <li>정비소·세차장 위치: 카카오 로컬</li>
           </ul>

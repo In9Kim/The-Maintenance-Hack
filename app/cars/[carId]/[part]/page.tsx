@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return pageMetadata({
     // 검색 결과에서 잘리지 않게 핵심(차종·소모품·비용·절약액)만. 비교 문구는 설명에 있음
     title: `${partSeoTitle(car, part)} | 정비핵`,
-    description: `${name} ${title} 규격은 ${part.spec}. 공식센터 예상 ${formatPrice(c.dealer)}, 쿠팡 부품+공임나라 공임 ${formatPrice(c.self)}으로 약 ${c.savingsPercent}% 절약할 수 있습니다.${intervalText(part) ? ` 교체 주기 ${intervalText(part)}.` : ""}`,
+    description: `${name} ${title} 규격은 ${part.spec}. 공식센터 추정 ${formatPrice(c.dealer)}, 쿠팡 부품+공임나라 공임 ${formatPrice(c.self)}으로 약 ${c.savingsPercent}% 절약할 수 있습니다.${intervalText(part) ? ` 교체 주기 ${intervalText(part)}.` : ""}`,
     path: `/cars/${car.id}/${partSlug(car, part)}`,
   })
 }
@@ -83,7 +83,7 @@ export default async function PartPage({ params }: Props) {
     },
     {
       q: `${name} ${title} 교체 비용은 얼마인가요?`,
-      a: `공식센터는 부품 ${formatPrice(part.dealerPartPrice)} + 공임 ${formatPrice(part.dealerLaborCost)}으로 약 ${formatPrice(c.dealer)}, 쿠팡에서 부품을 사고 공임나라에서 교체하면 약 ${formatPrice(c.self)}입니다.`,
+      a: `공식센터는 부품 ${formatPrice(part.dealerPartPrice)} + 공임 ${formatPrice(part.dealerLaborCost)}으로 약 ${formatPrice(c.dealer)}로 추정돼요(실제 견적은 센터마다 달라요). 쿠팡에서 부품을 사고 공임나라에서 교체하면 약 ${formatPrice(c.self)}예요.`,
     },
     ...(interval
       ? [{ q: `${name} ${title} 교체 주기는?`, a: `일반적으로 ${interval}마다 교체를 권장합니다. 주행 환경에 따라 달라질 수 있습니다.` }]

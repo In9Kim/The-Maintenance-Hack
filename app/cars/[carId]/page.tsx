@@ -83,7 +83,7 @@ function PartsList({ car, parts }: { car: CarModel; parts: MaintenancePart[] }) 
         <span>항목</span>
         <span>규격</span>
         <span>교체 주기</span>
-        <span className="text-right">공식센터</span>
+        <span className="text-right">공식센터(추정)</span>
         <span className="text-right">직접 구매+공임나라</span>
       </div>
       <ul className="divide-y divide-border">
@@ -109,7 +109,7 @@ function PartsList({ car, parts }: { car: CarModel; parts: MaintenancePart[] }) 
               </div>
               <div className="hidden text-[14px] text-muted-foreground sm:block">{interval ?? "-"}</div>
               <div className="num mt-2 text-[14px] sm:mt-0 sm:text-right">
-                <span className="mr-1.5 text-muted-foreground sm:hidden">공식센터</span>
+                <span className="mr-1.5 text-muted-foreground sm:hidden">공식센터(추정)</span>
                 <span className="price-was sm:text-foreground sm:no-underline">{formatPrice(c.dealer)}</span>
               </div>
               <div className="num mt-2 text-right text-[15px] sm:mt-0">
