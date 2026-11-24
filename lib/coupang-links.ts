@@ -122,4 +122,14 @@ export function coupangChoicesFor(part: MaintenancePart): CoupangChoice[] {
   return out
 }
 
+/**
+ * 네이버쇼핑 검색 링크 (가격 비교용). 네이버는 쇼핑 검색 API를 새로 내주지 않아서 가격을 가져오지 못하고,
+ * 같은 검색어로 네이버쇼핑 결과를 열어 사용자가 직접 비교하게 한다. 제휴 링크가 아니라 수수료는 없다.
+ */
+export function naverShoppingFor(part: MaintenancePart): { url: string; query: string } | undefined {
+  const query = coupangPickFor(part)?.query.replace(/엔진오일 필터 세트/, "엔진오일세트") ?? coupangSearchFor(part)?.query ?? part.coupangKeyword
+  if (!query) return undefined
+  return { url: `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(query)}`, query }
+}
+
 export { checkCoupangLink } from "./coupang-check"

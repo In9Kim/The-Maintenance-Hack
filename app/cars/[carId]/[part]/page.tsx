@@ -18,7 +18,8 @@ import {
 } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
-import { coupangChoicesFor } from "@/lib/coupang-links"
+import { coupangChoicesFor, naverShoppingFor } from "@/lib/coupang-links"
+import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
 import { TrackRecent } from "@/components/recent/Recent"
 import { carPhoto } from "@/lib/car-photos"
 import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
@@ -146,6 +147,7 @@ export default async function PartPage({ params }: Props) {
                 </OutboundLink>
                 )
               )}
+              {naverShoppingFor(part) && <NaverCompareLink url={naverShoppingFor(part)!.url} carId={car.id} partId={part.id} />}
             </div>
           ) : (
             <p className="mt-4 rounded-[10px] bg-muted px-3 py-2.5 text-[14px] leading-relaxed text-muted-foreground">

@@ -20,7 +20,8 @@ import { ReceiptCard } from "@/components/home/ReceiptCard"
 import { EngineTabs } from "@/components/cars/EngineTabs"
 import { recallsForCar } from "@/lib/recalls/data"
 import { engineGroups } from "@/lib/engines"
-import { coupangChoicesFor } from "@/lib/coupang-links"
+import { coupangChoicesFor, naverShoppingFor } from "@/lib/coupang-links"
+import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
 import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { CarDiagram, type DiagramPart } from "@/components/cars/CarDiagram"
@@ -64,6 +65,7 @@ function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
         </OutboundLink>
         )
       )}
+      {naverShoppingFor(part) && <NaverCompareLink url={naverShoppingFor(part)!.url} carId={car.id} partId={part.id} />}
     </div>
   )
 }
@@ -174,6 +176,7 @@ export default async function CarPage({ params }: Props) {
       zone: zoneOf(p),
       cat: p.category,
       choices,
+      naver: naverShoppingFor(p)?.url,
     }
   })
   const zoneOrder: ZoneId[] = ["engine", "front", "rear", "cabin", "wiper"]

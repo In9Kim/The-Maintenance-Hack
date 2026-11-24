@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import type { BodyType, ZoneId } from "@/lib/car-diagram"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
+import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
 import type { CoupangChoice } from "@/lib/coupang-links"
 
 export interface DiagramPart {
@@ -24,6 +25,8 @@ export interface DiagramPart {
   /** 소모품 분류 (oil·filter·spark·battery …): 엔진룸 그림의 부품과 짝짓기 */
   cat: string
   choices: CoupangChoice[]
+  /** 네이버쇼핑 같은 검색어 링크 */
+  naver?: string
 }
 
 /** 엔진룸 그림 속 부품 → 소모품 찾기 */
@@ -368,6 +371,7 @@ export function CarDiagram({ carId, carName, body, zones, parts }: Props) {
                           {c.title}
                         </OutboundLink>
                       ))}
+                      {p.naver && <NaverCompareLink url={p.naver} carId={carId} partId={p.id} />}
                     </div>
                   </div>
                 )
