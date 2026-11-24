@@ -20,6 +20,9 @@
 	// 무료 방문 분석은 Cloudflare 대시보드 > Workers > maintenance-hack > Metrics 에서 확인
 	"observability": { "enabled": true },
 	// 운영 도메인 (Cloudflare Registrar에서 구매, 2026-11-24). www와 workers.dev는 middleware.ts에서 jungbihack.com으로 넘김
+	// routes가 있으면 workers.dev가 기본으로 꺼지므로 명시적으로 켠다 (예전 주소 → 301, 미리보기 주소 유지)
+	"workers_dev": true,
+	"preview_urls": true,
 	"routes": [
 		{ "pattern": "jungbihack.com", "custom_domain": true },
 		{ "pattern": "www.jungbihack.com", "custom_domain": true }
