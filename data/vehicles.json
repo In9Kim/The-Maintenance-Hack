@@ -97,12 +97,13 @@
           "id": "kia-sorento-mq4-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 400mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 24000,
           "laborCost": 0,
           "dealerPartPrice": 46000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "쏘렌토 MQ4 와이퍼 블레이드"
+          "coupangKeyword": "쏘렌토 MQ4 와이퍼 블레이드",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "kia-sorento-mq4-spark-plug",
@@ -232,19 +233,20 @@
           "id": "kia-carnival-ka4-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "운전석 700mm / 조수석 500mm",
+          "spec": "운전석 650mm · 조수석 500mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 26000,
           "laborCost": 0,
           "dealerPartPrice": 50000,
           "dealerLaborCost": 10000,
           "intervalMonths": 12,
-          "coupangKeyword": "카니발 KA4 와이퍼"
+          "coupangKeyword": "카니발 KA4 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "kia-carnival-ka4-battery",
           "name": "배터리",
           "category": "battery",
-          "spec": "90Ah 일반형",
+          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
           "coupangPrice": 88000,
           "laborCost": 15000,
           "dealerPartPrice": 175000,
@@ -371,13 +373,14 @@
           "id": "kia-k5-dl3-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "운전석 650mm / 조수석 430mm",
+          "spec": "운전석 650mm · 조수석 400mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 20000,
           "laborCost": 0,
           "dealerPartPrice": 42000,
           "dealerLaborCost": 10000,
           "intervalMonths": 12,
-          "coupangKeyword": "K5 DL3 와이퍼"
+          "coupangKeyword": "K5 DL3 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "kia-k5-dl3-spark-plug",
@@ -395,7 +398,7 @@
           "id": "kia-k5-dl3-battery",
           "name": "배터리 (AGM)",
           "category": "battery",
-          "spec": "AGM 70Ah",
+          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
           "coupangPrice": 88000,
           "laborCost": 15000,
           "dealerPartPrice": 168000,
@@ -518,25 +521,27 @@
           "id": "hyundai-tucson-nx4-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "운전석 650mm / 조수석 450mm",
+          "spec": "운전석 650mm · 조수석 400mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 22000,
           "laborCost": 0,
           "dealerPartPrice": 44000,
           "dealerLaborCost": 10000,
           "intervalMonths": 12,
-          "coupangKeyword": "투싼 NX4 와이퍼"
+          "coupangKeyword": "투싼 NX4 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "hyundai-tucson-nx4-battery",
           "name": "배터리 (AGM)",
           "category": "battery",
-          "spec": "AGM 70Ah (ISS 차량용)",
+          "spec": "일반 80Ah (트림에 따라 AGM 70Ah, AGM 80Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 88000,
           "laborCost": 15000,
           "dealerPartPrice": 172000,
           "dealerLaborCost": 26000,
           "intervalMonths": 48,
-          "coupangKeyword": "투싼 NX4 AGM 배터리"
+          "coupangKeyword": "투싼 NX4 AGM 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -673,13 +678,14 @@
           "id": "hyundai-avante-cn7-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "운전석 600mm / 조수석 400mm",
+          "spec": "운전석 600mm · 조수석 450mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 18000,
           "laborCost": 0,
           "dealerPartPrice": 38000,
           "dealerLaborCost": 10000,
           "intervalMonths": 12,
-          "coupangKeyword": "아반떼 CN7 와이퍼"
+          "coupangKeyword": "아반떼 CN7 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "hyundai-avante-cn7-spark-plug",
@@ -697,13 +703,14 @@
           "id": "hyundai-avante-cn7-battery",
           "name": "배터리",
           "category": "battery",
-          "spec": "60Ah 일반형",
+          "spec": "일반 62Ah (트림에 따라 AGM 60Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 68000,
           "laborCost": 13000,
           "dealerPartPrice": 135000,
           "dealerLaborCost": 22000,
           "intervalMonths": 48,
-          "coupangKeyword": "아반떼 CN7 배터리 60ah"
+          "coupangKeyword": "아반떼 CN7 배터리 60ah",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -836,13 +843,14 @@
           "id": "hyundai-grandeur-gn7-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "운전석 650mm / 조수석 450mm",
+          "spec": "운전석 650mm · 조수석 450mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 24000,
           "laborCost": 0,
           "dealerPartPrice": 48000,
           "dealerLaborCost": 10000,
           "intervalMonths": 12,
-          "coupangKeyword": "그랜저 GN7 와이퍼"
+          "coupangKeyword": "그랜저 GN7 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "hyundai-grandeur-gn7-spark-plug",
@@ -860,13 +868,14 @@
           "id": "hyundai-grandeur-gn7-battery",
           "name": "배터리 (AGM)",
           "category": "battery",
-          "spec": "AGM 90Ah (ISS 차량용)",
+          "spec": "AGM 70Ah (트림에 따라 AGM 80Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 102000,
           "laborCost": 15000,
           "dealerPartPrice": 198000,
           "dealerLaborCost": 30000,
           "intervalMonths": 48,
-          "coupangKeyword": "그랜저 GN7 AGM 배터리 90ah"
+          "coupangKeyword": "그랜저 GN7 AGM 배터리 90ah",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -1029,12 +1038,13 @@
           "id": "hyundai-santafe-tm-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "AGM 70Ah (트림에 따라 AGM 80Ah, AGM 95Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 95000,
           "laborCost": 15000,
           "dealerPartPrice": 185000,
           "dealerLaborCost": 28000,
-          "coupangKeyword": "싼타페 TM 배터리"
+          "coupangKeyword": "싼타페 TM 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -1134,25 +1144,27 @@
           "id": "hyundai-santafe-mx5-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "운전석 650mm / 조수석 450mm",
+          "spec": "운전석 650mm · 조수석 450mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 24000,
           "laborCost": 0,
           "dealerPartPrice": 46000,
           "dealerLaborCost": 10000,
           "intervalMonths": 12,
-          "coupangKeyword": "싼타페 MX5 와이퍼"
+          "coupangKeyword": "싼타페 MX5 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "hyundai-santafe-mx5-battery",
           "name": "배터리 (AGM)",
           "category": "battery",
-          "spec": "AGM 80Ah (ISS 차량용)",
+          "spec": "AGM 60Ah (트림에 따라 AGM 70Ah, AGM 80Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 95000,
           "laborCost": 15000,
           "dealerPartPrice": 185000,
           "dealerLaborCost": 28000,
           "intervalMonths": 48,
-          "coupangKeyword": "싼타페 MX5 AGM 배터리 80ah"
+          "coupangKeyword": "싼타페 MX5 AGM 배터리 80ah",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -1441,12 +1453,13 @@
           "id": "hyundai-sonata-dn8-wiper",
           "name": "와이퍼 블레이드",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 450mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 22000,
           "laborCost": 0,
           "dealerPartPrice": 44000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "쏘나타 DN8 와이퍼"
+          "coupangKeyword": "쏘나타 DN8 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "hyundai-sonata-dn8-spark-plug",
@@ -1494,12 +1507,13 @@
           "id": "hyundai-sonata-dn8-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "AGM 70Ah (트림에 따라 일반 80Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 85000,
           "laborCost": 15000,
           "dealerPartPrice": 165000,
           "dealerLaborCost": 26000,
-          "coupangKeyword": "쏘나타 DN8 배터리"
+          "coupangKeyword": "쏘나타 DN8 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -1615,12 +1629,13 @@
           "id": "hyundai-kona-sx2-wiper",
           "name": "와이퍼 블레이드",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 400mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 20000,
           "laborCost": 0,
           "dealerPartPrice": 40000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "코나 SX2 와이퍼"
+          "coupangKeyword": "코나 SX2 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "hyundai-kona-sx2-spark-plug",
@@ -1668,12 +1683,13 @@
           "id": "hyundai-kona-sx2-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "AGM 60Ah (트림에 따라 AGM 70Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 72000,
           "laborCost": 13000,
           "dealerPartPrice": 140000,
           "dealerLaborCost": 24000,
-          "coupangKeyword": "코나 SX2 배터리"
+          "coupangKeyword": "코나 SX2 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -1773,12 +1789,13 @@
           "id": "hyundai-palisade-lx2-wiper",
           "name": "와이퍼 블레이드",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 500mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 26000,
           "laborCost": 0,
           "dealerPartPrice": 48000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "팰리세이드 LX2 와이퍼"
+          "coupangKeyword": "팰리세이드 LX2 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "hyundai-palisade-lx2-spark-plug",
@@ -1798,12 +1815,13 @@
           "id": "hyundai-palisade-lx2-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "AGM 80Ah (트림에 따라 AGM 70Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 105000,
           "laborCost": 15000,
           "dealerPartPrice": 200000,
           "dealerLaborCost": 30000,
-          "coupangKeyword": "팰리세이드 LX2 배터리"
+          "coupangKeyword": "팰리세이드 LX2 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -1903,12 +1921,13 @@
           "id": "hyundai-casper-ax1-wiper",
           "name": "와이퍼 블레이드",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 550mm · 조수석 400mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 15000,
           "laborCost": 0,
           "dealerPartPrice": 32000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "캐스퍼 와이퍼"
+          "coupangKeyword": "캐스퍼 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "hyundai-casper-ax1-spark-plug",
@@ -1942,12 +1961,13 @@
           "id": "hyundai-casper-ax1-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "일반 44Ah · 차마다 달라 기존 배터리 라벨 확인",
           "coupangPrice": 65000,
           "laborCost": 13000,
           "dealerPartPrice": 125000,
           "dealerLaborCost": 22000,
-          "coupangKeyword": "캐스퍼 배터리"
+          "coupangKeyword": "캐스퍼 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -2047,12 +2067,13 @@
           "id": "hyundai-grandeur-ig-wiper",
           "name": "와이퍼 블레이드",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 450mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 24000,
           "laborCost": 0,
           "dealerPartPrice": 46000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "그랜저 IG 와이퍼"
+          "coupangKeyword": "그랜저 IG 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "hyundai-grandeur-ig-spark-plug",
@@ -2086,12 +2107,13 @@
           "id": "hyundai-grandeur-ig-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "일반 74Ah (트림에 따라 AGM 70Ah, AGM 80Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 98000,
           "laborCost": 15000,
           "dealerPartPrice": 190000,
           "dealerLaborCost": 28000,
-          "coupangKeyword": "그랜저 IG 배터리"
+          "coupangKeyword": "그랜저 IG 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -2207,12 +2229,13 @@
           "id": "kia-sportage-nq5-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 450mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 22000,
           "laborCost": 0,
           "dealerPartPrice": 44000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "스포티지 NQ5 와이퍼 블레이드"
+          "coupangKeyword": "스포티지 NQ5 와이퍼 블레이드",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "kia-sportage-nq5-spark-plug",
@@ -2351,12 +2374,13 @@
           "id": "kia-seltos-sp2-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 600mm · 조수석 450mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 20000,
           "laborCost": 0,
           "dealerPartPrice": 40000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "셀토스 SP2 와이퍼 블레이드"
+          "coupangKeyword": "셀토스 SP2 와이퍼 블레이드",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "kia-seltos-sp2-spark-plug",
@@ -2467,12 +2491,13 @@
           "id": "kia-ray-tam-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 550mm · 조수석 400mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 15000,
           "laborCost": 0,
           "dealerPartPrice": 32000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "레이 TAM 와이퍼 블레이드"
+          "coupangKeyword": "레이 TAM 와이퍼 블레이드",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "kia-ray-tam-spark-plug",
@@ -2568,12 +2593,13 @@
           "id": "kia-morning-ja-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 600mm · 조수석 350mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 15000,
           "laborCost": 0,
           "dealerPartPrice": 32000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "모닝 JA 와이퍼 블레이드"
+          "coupangKeyword": "모닝 JA 와이퍼 블레이드",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "kia-morning-ja-spark-plug",
@@ -2713,12 +2739,13 @@
           "id": "kia-k8-gl3-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 400mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 24000,
           "laborCost": 0,
           "dealerPartPrice": 48000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "K8 GL3 와이퍼 블레이드"
+          "coupangKeyword": "K8 GL3 와이퍼 블레이드",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "kia-k8-gl3-spark-plug",
@@ -2885,12 +2912,13 @@
           "id": "kia-bongo3-pu-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 550mm · 조수석 450mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 18000,
           "laborCost": 0,
           "dealerPartPrice": 38000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "봉고3 PU 와이퍼 블레이드"
+          "coupangKeyword": "봉고3 PU 와이퍼 블레이드",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "kia-bongo3-pu-spark-plug-lpg",
@@ -3068,12 +3096,13 @@
           "id": "hyundai-staria-us4-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "AGM 80Ah (트림에 따라 일반 100Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 100000,
           "laborCost": 15000,
           "dealerPartPrice": 190000,
           "dealerLaborCost": 28000,
-          "coupangKeyword": "스타리아 배터리"
+          "coupangKeyword": "스타리아 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -3158,12 +3187,13 @@
           "id": "kia-niro-sg2-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 400mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 20000,
           "laborCost": 0,
           "dealerPartPrice": 40000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "니로 SG2 와이퍼 블레이드"
+          "coupangKeyword": "니로 SG2 와이퍼 블레이드",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "kia-niro-sg2-spark-plug",
@@ -3178,17 +3208,6 @@
           "coupangKeyword": "니로 SG2 하이브리드 점화플러그",
           "engine": "G1.6 GDi 하이브리드",
           "source": "기아 디 올 뉴 니로(SG2) 2025 취급설명서 '정기 점검(통상 조건)'"
-        },
-        {
-          "id": "kia-niro-sg2-battery",
-          "name": "배터리 (12V)",
-          "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
-          "coupangPrice": 90000,
-          "laborCost": 15000,
-          "dealerPartPrice": 175000,
-          "dealerLaborCost": 26000,
-          "coupangKeyword": "니로 SG2 하이브리드 12V 배터리"
         }
       ]
     },
@@ -3245,12 +3264,13 @@
           "id": "hyundai-ioniq5-ne-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 450mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 24000,
           "laborCost": 0,
           "dealerPartPrice": 46000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "아이오닉5 와이퍼 블레이드"
+          "coupangKeyword": "아이오닉5 와이퍼 블레이드",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "hyundai-ioniq5-ne-12v-battery",
@@ -3401,12 +3421,13 @@
           "id": "genesis-g80-rg3-wiper",
           "name": "와이퍼 블레이드",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 400mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 30000,
           "laborCost": 0,
           "dealerPartPrice": 60000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "G80 RG3 와이퍼"
+          "coupangKeyword": "G80 RG3 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "genesis-g80-rg3-spark-plug",
@@ -3546,12 +3567,13 @@
           "id": "genesis-gv80-jx1-wiper",
           "name": "와이퍼 블레이드",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 450mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 30000,
           "laborCost": 0,
           "dealerPartPrice": 60000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "GV80 JX1 와이퍼"
+          "coupangKeyword": "GV80 JX1 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "genesis-gv80-jx1-spark-plug",
@@ -3691,12 +3713,13 @@
           "id": "genesis-gv70-jk1-wiper",
           "name": "와이퍼 블레이드",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 450mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 28000,
           "laborCost": 0,
           "dealerPartPrice": 56000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "GV70 JK1 와이퍼"
+          "coupangKeyword": "GV70 JK1 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "genesis-gv70-jk1-spark-plug",
@@ -3938,12 +3961,13 @@
           "id": "hyundai-avante-ad-wiper",
           "name": "와이퍼 블레이드",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 400mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 18000,
           "laborCost": 0,
           "dealerPartPrice": 38000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "아반떼 AD 와이퍼"
+          "coupangKeyword": "아반떼 AD 와이퍼",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "hyundai-avante-ad-spark-plug",
@@ -3963,12 +3987,13 @@
           "id": "hyundai-avante-ad-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "일반 62Ah (트림에 따라 AGM 70Ah, 일반 74Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 70000,
           "laborCost": 13000,
           "dealerPartPrice": 130000,
           "dealerLaborCost": 22000,
-          "coupangKeyword": "아반떼 AD 배터리"
+          "coupangKeyword": "아반떼 AD 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-24 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -4081,13 +4106,14 @@
           "id": "kia-k3-bd-wiper",
           "name": "와이퍼 블레이드 (전면)",
           "category": "wiper",
-          "spec": "차종 전용 (기존 블레이드 길이 확인)",
+          "spec": "운전석 650mm · 조수석 400mm (구매 전 기존 블레이드 길이 확인)",
           "coupangPrice": 16000,
           "laborCost": 0,
           "dealerPartPrice": 34000,
           "dealerLaborCost": 10000,
           "intervalMonths": 12,
-          "coupangKeyword": "K3 BD 와이퍼 블레이드"
+          "coupangKeyword": "K3 BD 와이퍼 블레이드",
+          "source": "불스원(와이퍼 제조사) 국산차 와이퍼 사이즈 조견표, 2026-11-24 확인. 제조사 취급설명서에는 길이 표기 없음"
         },
         {
           "id": "kia-k3-bd-spark-plug",
