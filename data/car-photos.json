@@ -4,379 +4,582 @@
     "kia-sorento-mq4": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Kia_Sorento_MQ4_front_view_%28South_Korea%29_01.png/1280px-Kia_Sorento_MQ4_front_view_%28South_Korea%29_01.png",
       "width": 1024,
-      "height": 682,
+      "height": 640,
       "title": "File:Kia Sorento MQ4 front view (South Korea) 01.png",
       "page": "https://commons.wikimedia.org/wiki/File:Kia_Sorento_MQ4_front_view_(South_Korea)_01.png",
       "author": "차,또바기",
       "license": "CC BY 3.0",
       "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
       "confidence": "high",
-      "local": "/cars/kia-sorento-mq4.webp",
-      "localSmall": "/cars/kia-sorento-mq4-480.webp"
+      "local": "/cars/kia-sorento-mq4-studio.webp",
+      "localSmall": "/cars/kia-sorento-mq4-studio-480.webp",
+      "original": {
+        "local": "/cars/kia-sorento-mq4.webp",
+        "localSmall": "/cars/kia-sorento-mq4-480.webp",
+        "width": 1024,
+        "height": 682
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "kia-carnival-ka4": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/00_Kia_Carnival_%28KA4%29_1.jpg/1280px-00_Kia_Carnival_%28KA4%29_1.jpg",
       "width": 1024,
-      "height": 673,
+      "height": 640,
       "title": "File:00 Kia Carnival (KA4) 1.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:00_Kia_Carnival_(KA4)_1.jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/kia-carnival-ka4.webp",
-      "localSmall": "/cars/kia-carnival-ka4-480.webp"
+      "local": "/cars/kia-carnival-ka4-studio.webp",
+      "localSmall": "/cars/kia-carnival-ka4-studio-480.webp",
+      "original": {
+        "local": "/cars/kia-carnival-ka4.webp",
+        "localSmall": "/cars/kia-carnival-ka4-480.webp",
+        "width": 1024,
+        "height": 673
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "kia-k5-dl3": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/0_Kia_K5_%28DL3%29_1.jpg/1280px-0_Kia_K5_%28DL3%29_1.jpg",
       "width": 1024,
-      "height": 639,
+      "height": 640,
       "title": "File:0 Kia K5 (DL3) 1.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:0_Kia_K5_(DL3)_1.jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/kia-k5-dl3.webp",
-      "localSmall": "/cars/kia-k5-dl3-480.webp"
+      "local": "/cars/kia-k5-dl3-studio.webp",
+      "localSmall": "/cars/kia-k5-dl3-studio-480.webp",
+      "original": {
+        "local": "/cars/kia-k5-dl3.webp",
+        "localSmall": "/cars/kia-k5-dl3-480.webp",
+        "width": 1024,
+        "height": 639
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-tucson-nx4": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/0_Hyundai_Tucson_%28NX4%29.jpg/1280px-0_Hyundai_Tucson_%28NX4%29.jpg",
       "width": 1024,
-      "height": 635,
+      "height": 640,
       "title": "File:0 Hyundai Tucson (NX4).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:0_Hyundai_Tucson_(NX4).jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-tucson-nx4.webp",
-      "localSmall": "/cars/hyundai-tucson-nx4-480.webp"
+      "local": "/cars/hyundai-tucson-nx4-studio.webp",
+      "localSmall": "/cars/hyundai-tucson-nx4-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-tucson-nx4.webp",
+        "localSmall": "/cars/hyundai-tucson-nx4-480.webp",
+        "width": 1024,
+        "height": 635
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-avante-cn7": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/00_Hyundai_Avante_%28CN7%29_%28cropped%29.jpg/1280px-00_Hyundai_Avante_%28CN7%29_%28cropped%29.jpg",
       "width": 1024,
-      "height": 644,
+      "height": 640,
       "title": "File:00 Hyundai Avante (CN7) (cropped).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:00_Hyundai_Avante_(CN7)_(cropped).jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-avante-cn7.webp",
-      "localSmall": "/cars/hyundai-avante-cn7-480.webp"
+      "local": "/cars/hyundai-avante-cn7-studio.webp",
+      "localSmall": "/cars/hyundai-avante-cn7-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-avante-cn7.webp",
+        "localSmall": "/cars/hyundai-avante-cn7-480.webp",
+        "width": 1024,
+        "height": 644
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-grandeur-gn7": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/00_Hyundai_Grandeur_%28GN7%29.jpg/1280px-00_Hyundai_Grandeur_%28GN7%29.jpg",
       "width": 1024,
-      "height": 670,
+      "height": 640,
       "title": "File:00 Hyundai Grandeur (GN7).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:00_Hyundai_Grandeur_(GN7).jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-grandeur-gn7.webp",
-      "localSmall": "/cars/hyundai-grandeur-gn7-480.webp"
+      "local": "/cars/hyundai-grandeur-gn7-studio.webp",
+      "localSmall": "/cars/hyundai-grandeur-gn7-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-grandeur-gn7.webp",
+        "localSmall": "/cars/hyundai-grandeur-gn7-480.webp",
+        "width": 1024,
+        "height": 670
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-santafe-tm": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Hyundai_Santa_Fe_Calligraphy_2.5T_TM_FL_Creamy_White_Pearl_%281%29.jpg/1280px-Hyundai_Santa_Fe_Calligraphy_2.5T_TM_FL_Creamy_White_Pearl_%281%29.jpg",
       "width": 1024,
-      "height": 768,
+      "height": 640,
       "title": "File:Hyundai Santa Fe Calligraphy 2.5T TM FL Creamy White Pearl (1).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Hyundai_Santa_Fe_Calligraphy_2.5T_TM_FL_Creamy_White_Pearl_(1).jpg",
       "author": "Damian B Oh",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-santafe-tm.webp",
-      "localSmall": "/cars/hyundai-santafe-tm-480.webp"
+      "local": "/cars/hyundai-santafe-tm-studio.webp",
+      "localSmall": "/cars/hyundai-santafe-tm-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-santafe-tm.webp",
+        "localSmall": "/cars/hyundai-santafe-tm-480.webp",
+        "width": 1024,
+        "height": 768
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-santafe-mx5": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/2023_Hyundai_Santa_Fe_%28MX5%29_1.jpg/1280px-2023_Hyundai_Santa_Fe_%28MX5%29_1.jpg",
       "width": 1024,
-      "height": 668,
+      "height": 640,
       "title": "File:2023 Hyundai Santa Fe (MX5) 1.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:2023_Hyundai_Santa_Fe_(MX5)_1.jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-santafe-mx5.webp",
-      "localSmall": "/cars/hyundai-santafe-mx5-480.webp"
+      "local": "/cars/hyundai-santafe-mx5-studio.webp",
+      "localSmall": "/cars/hyundai-santafe-mx5-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-santafe-mx5.webp",
+        "localSmall": "/cars/hyundai-santafe-mx5-480.webp",
+        "width": 1024,
+        "height": 668
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "tesla-model3-highland": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Tesla_Model_3_Highland_Diamond_Black_%281%29.jpg/1280px-Tesla_Model_3_Highland_Diamond_Black_%281%29.jpg",
       "width": 1024,
-      "height": 768,
+      "height": 640,
       "title": "File:Tesla Model 3 Highland Diamond Black (1).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Tesla_Model_3_Highland_Diamond_Black_(1).jpg",
       "author": "Damian B Oh",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/tesla-model3-highland.webp",
-      "localSmall": "/cars/tesla-model3-highland-480.webp"
+      "local": "/cars/tesla-model3-highland-studio.webp",
+      "localSmall": "/cars/tesla-model3-highland-studio-480.webp",
+      "original": {
+        "local": "/cars/tesla-model3-highland.webp",
+        "localSmall": "/cars/tesla-model3-highland-480.webp",
+        "width": 1024,
+        "height": 768
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "tesla-modely": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Tesla_Model_Y_Juniper_Stealth_Grey_%285%29.jpg/1280px-Tesla_Model_Y_Juniper_Stealth_Grey_%285%29.jpg",
       "width": 1024,
-      "height": 768,
+      "height": 640,
       "title": "File:Tesla Model Y Juniper Stealth Grey (5).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Tesla_Model_Y_Juniper_Stealth_Grey_(5).jpg",
       "author": "Damian B Oh",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/tesla-modely.webp",
-      "localSmall": "/cars/tesla-modely-480.webp"
+      "local": "/cars/tesla-modely-studio.webp",
+      "localSmall": "/cars/tesla-modely-studio-480.webp",
+      "original": {
+        "local": "/cars/tesla-modely.webp",
+        "localSmall": "/cars/tesla-modely-480.webp",
+        "width": 1024,
+        "height": 768
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-sonata-dn8": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/0_Hyundai_Sonata_%28DN8%29_fl_1.jpg/1280px-0_Hyundai_Sonata_%28DN8%29_fl_1.jpg",
       "width": 1024,
-      "height": 641,
+      "height": 640,
       "title": "File:0 Hyundai Sonata (DN8) fl 1.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:0_Hyundai_Sonata_(DN8)_fl_1.jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-sonata-dn8.webp",
-      "localSmall": "/cars/hyundai-sonata-dn8-480.webp"
+      "local": "/cars/hyundai-sonata-dn8-studio.webp",
+      "localSmall": "/cars/hyundai-sonata-dn8-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-sonata-dn8.webp",
+        "localSmall": "/cars/hyundai-sonata-dn8-480.webp",
+        "width": 1024,
+        "height": 641
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-kona-sx2": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/0_Hyundai_Kona_%28SX2%29_2.jpg/1280px-0_Hyundai_Kona_%28SX2%29_2.jpg",
       "width": 1024,
-      "height": 742,
+      "height": 640,
       "title": "File:0 Hyundai Kona (SX2) 2.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:0_Hyundai_Kona_(SX2)_2.jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-kona-sx2.webp",
-      "localSmall": "/cars/hyundai-kona-sx2-480.webp"
+      "local": "/cars/hyundai-kona-sx2-studio.webp",
+      "localSmall": "/cars/hyundai-kona-sx2-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-kona-sx2.webp",
+        "localSmall": "/cars/hyundai-kona-sx2-480.webp",
+        "width": 1024,
+        "height": 742
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-palisade-lx2": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Hyundai_Palisade_LX2_PE_Shimmering_Silver_Metallic_%285%29.jpg/1280px-Hyundai_Palisade_LX2_PE_Shimmering_Silver_Metallic_%285%29.jpg",
       "width": 1024,
-      "height": 768,
+      "height": 640,
       "title": "File:Hyundai Palisade LX2 PE Shimmering Silver Metallic (5).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Hyundai_Palisade_LX2_PE_Shimmering_Silver_Metallic_(5).jpg",
       "author": "Damian B Oh",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-palisade-lx2.webp",
-      "localSmall": "/cars/hyundai-palisade-lx2-480.webp"
+      "local": "/cars/hyundai-palisade-lx2-studio.webp",
+      "localSmall": "/cars/hyundai-palisade-lx2-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-palisade-lx2.webp",
+        "localSmall": "/cars/hyundai-palisade-lx2-480.webp",
+        "width": 1024,
+        "height": 768
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-casper-ax1": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/00_Hyundai_Casper_%28cropped%29.jpg/1280px-00_Hyundai_Casper_%28cropped%29.jpg",
       "width": 1024,
-      "height": 716,
+      "height": 640,
       "title": "File:00 Hyundai Casper (cropped).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:00_Hyundai_Casper_(cropped).jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-casper-ax1.webp",
-      "localSmall": "/cars/hyundai-casper-ax1-480.webp"
+      "local": "/cars/hyundai-casper-ax1-studio.webp",
+      "localSmall": "/cars/hyundai-casper-ax1-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-casper-ax1.webp",
+        "localSmall": "/cars/hyundai-casper-ax1-480.webp",
+        "width": 1024,
+        "height": 716
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-grandeur-ig": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Hyundai_Grandeur_Calligraphy_IG_FL_Midnight_Black_Pearl_%284%29.jpg/1280px-Hyundai_Grandeur_Calligraphy_IG_FL_Midnight_Black_Pearl_%284%29.jpg",
       "width": 1024,
-      "height": 768,
+      "height": 640,
       "title": "File:Hyundai Grandeur Calligraphy IG FL Midnight Black Pearl (4).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Hyundai_Grandeur_Calligraphy_IG_FL_Midnight_Black_Pearl_(4).jpg",
       "author": "Damian B Oh",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-grandeur-ig.webp",
-      "localSmall": "/cars/hyundai-grandeur-ig-480.webp"
+      "local": "/cars/hyundai-grandeur-ig-studio.webp",
+      "localSmall": "/cars/hyundai-grandeur-ig-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-grandeur-ig.webp",
+        "localSmall": "/cars/hyundai-grandeur-ig-480.webp",
+        "width": 1024,
+        "height": 768
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "kia-sportage-nq5": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/2023_Kia_Sportage_%28NQ5%29_in_White%2C_front_left.jpg/1280px-2023_Kia_Sportage_%28NQ5%29_in_White%2C_front_left.jpg",
       "width": 1024,
-      "height": 674,
+      "height": 640,
       "title": "File:2023 Kia Sportage (NQ5) in White, front left.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:2023_Kia_Sportage_(NQ5)_in_White,_front_left.jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/kia-sportage-nq5.webp",
-      "localSmall": "/cars/kia-sportage-nq5-480.webp"
+      "local": "/cars/kia-sportage-nq5-studio.webp",
+      "localSmall": "/cars/kia-sportage-nq5-studio-480.webp",
+      "original": {
+        "local": "/cars/kia-sportage-nq5.webp",
+        "localSmall": "/cars/kia-sportage-nq5-480.webp",
+        "width": 1024,
+        "height": 674
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "kia-seltos-sp2": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Kia_Seltos_SP2_PE_Pluton_Blue_%281%29.jpg/1280px-Kia_Seltos_SP2_PE_Pluton_Blue_%281%29.jpg",
       "width": 1024,
-      "height": 768,
+      "height": 640,
       "title": "File:Kia Seltos SP2 PE Pluton Blue (1).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Kia_Seltos_SP2_PE_Pluton_Blue_(1).jpg",
       "author": "Damian B Oh",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/kia-seltos-sp2.webp",
-      "localSmall": "/cars/kia-seltos-sp2-480.webp"
+      "local": "/cars/kia-seltos-sp2-studio.webp",
+      "localSmall": "/cars/kia-seltos-sp2-studio-480.webp",
+      "original": {
+        "local": "/cars/kia-seltos-sp2.webp",
+        "localSmall": "/cars/kia-seltos-sp2-480.webp",
+        "width": 1024,
+        "height": 768
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "kia-ray-tam": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Kia_Ray_TAM_PE2_Astro_Gray_%281%29.jpg/1280px-Kia_Ray_TAM_PE2_Astro_Gray_%281%29.jpg",
       "width": 1024,
-      "height": 768,
+      "height": 640,
       "title": "File:Kia Ray TAM PE2 Astro Gray (1).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Kia_Ray_TAM_PE2_Astro_Gray_(1).jpg",
       "author": "Damian B Oh",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/kia-ray-tam.webp",
-      "localSmall": "/cars/kia-ray-tam-480.webp"
+      "local": "/cars/kia-ray-tam-studio.webp",
+      "localSmall": "/cars/kia-ray-tam-studio-480.webp",
+      "original": {
+        "local": "/cars/kia-ray-tam.webp",
+        "localSmall": "/cars/kia-ray-tam-480.webp",
+        "width": 1024,
+        "height": 768
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "kia-morning-ja": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Kia_Morning_JA_PE_Milky_Beige_%281%29.jpg/1280px-Kia_Morning_JA_PE_Milky_Beige_%281%29.jpg",
       "width": 1024,
-      "height": 768,
+      "height": 640,
       "title": "File:Kia Morning JA PE Milky Beige (1).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Kia_Morning_JA_PE_Milky_Beige_(1).jpg",
       "author": "Damian B Oh",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/kia-morning-ja.webp",
-      "localSmall": "/cars/kia-morning-ja-480.webp"
+      "local": "/cars/kia-morning-ja-studio.webp",
+      "localSmall": "/cars/kia-morning-ja-studio-480.webp",
+      "original": {
+        "local": "/cars/kia-morning-ja.webp",
+        "localSmall": "/cars/kia-morning-ja-480.webp",
+        "width": 1024,
+        "height": 768
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "kia-k8-gl3": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/0_Kia_K8_16.jpg/1280px-0_Kia_K8_16.jpg",
       "width": 1024,
-      "height": 671,
+      "height": 640,
       "title": "File:0 Kia K8 16.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:0_Kia_K8_16.jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/kia-k8-gl3.webp",
-      "localSmall": "/cars/kia-k8-gl3-480.webp"
+      "local": "/cars/kia-k8-gl3-studio.webp",
+      "localSmall": "/cars/kia-k8-gl3-studio-480.webp",
+      "original": {
+        "local": "/cars/kia-k8-gl3.webp",
+        "localSmall": "/cars/kia-k8-gl3-480.webp",
+        "width": 1024,
+        "height": 671
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "kia-bongo3-pu": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/00_kia_bongo3_truck_1.jpg/1280px-00_kia_bongo3_truck_1.jpg",
       "width": 1024,
-      "height": 687,
+      "height": 640,
       "title": "File:00 kia bongo3 truck 1.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:00_kia_bongo3_truck_1.jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/kia-bongo3-pu.webp",
-      "localSmall": "/cars/kia-bongo3-pu-480.webp"
+      "local": "/cars/kia-bongo3-pu-studio.webp",
+      "localSmall": "/cars/kia-bongo3-pu-studio-480.webp",
+      "original": {
+        "local": "/cars/kia-bongo3-pu.webp",
+        "localSmall": "/cars/kia-bongo3-pu-480.webp",
+        "width": 1024,
+        "height": 687
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-staria-us4": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/0_Hyundai_Staria_2.jpg/1280px-0_Hyundai_Staria_2.jpg",
       "width": 1024,
-      "height": 681,
+      "height": 640,
       "title": "File:0 Hyundai Staria 2.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:0_Hyundai_Staria_2.jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-staria-us4.webp",
-      "localSmall": "/cars/hyundai-staria-us4-480.webp"
+      "local": "/cars/hyundai-staria-us4-studio.webp",
+      "localSmall": "/cars/hyundai-staria-us4-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-staria-us4.webp",
+        "localSmall": "/cars/hyundai-staria-us4-480.webp",
+        "width": 1024,
+        "height": 681
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "kia-niro-sg2": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/0_Kia_Niro_%28SG2%29.jpg/1280px-0_Kia_Niro_%28SG2%29.jpg",
       "width": 1024,
-      "height": 662,
+      "height": 640,
       "title": "File:0 Kia Niro (SG2).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:0_Kia_Niro_(SG2).jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/kia-niro-sg2.webp",
-      "localSmall": "/cars/kia-niro-sg2-480.webp"
+      "local": "/cars/kia-niro-sg2-studio.webp",
+      "localSmall": "/cars/kia-niro-sg2-studio-480.webp",
+      "original": {
+        "local": "/cars/kia-niro-sg2.webp",
+        "localSmall": "/cars/kia-niro-sg2-480.webp",
+        "width": 1024,
+        "height": 662
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-ioniq5-ne": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Hyundai_IONIQ_5_NE_PE_Digital_Teal_Green_Pearl_%281%29.jpg/1280px-Hyundai_IONIQ_5_NE_PE_Digital_Teal_Green_Pearl_%281%29.jpg",
       "width": 1024,
-      "height": 768,
+      "height": 640,
       "title": "File:Hyundai IONIQ 5 NE PE Digital Teal Green Pearl (1).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Hyundai_IONIQ_5_NE_PE_Digital_Teal_Green_Pearl_(1).jpg",
       "author": "Damian B Oh",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-ioniq5-ne.webp",
-      "localSmall": "/cars/hyundai-ioniq5-ne-480.webp"
+      "local": "/cars/hyundai-ioniq5-ne-studio.webp",
+      "localSmall": "/cars/hyundai-ioniq5-ne-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-ioniq5-ne.webp",
+        "localSmall": "/cars/hyundai-ioniq5-ne-480.webp",
+        "width": 1024,
+        "height": 768
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "genesis-g80-rg3": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/2020_Genesis_G80_%28RG3%29_1.jpg/1280px-2020_Genesis_G80_%28RG3%29_1.jpg",
       "width": 1024,
-      "height": 658,
+      "height": 640,
       "title": "File:2020 Genesis G80 (RG3) 1.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:2020_Genesis_G80_(RG3)_1.jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/genesis-g80-rg3.webp",
-      "localSmall": "/cars/genesis-g80-rg3-480.webp"
+      "local": "/cars/genesis-g80-rg3-studio.webp",
+      "localSmall": "/cars/genesis-g80-rg3-studio-480.webp",
+      "original": {
+        "local": "/cars/genesis-g80-rg3.webp",
+        "localSmall": "/cars/genesis-g80-rg3-480.webp",
+        "width": 1024,
+        "height": 658
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "genesis-gv80-jx1": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Genesis_GV80_JX1_Vik_Black_%2819%29.jpg/1280px-Genesis_GV80_JX1_Vik_Black_%2819%29.jpg",
       "width": 1024,
-      "height": 768,
+      "height": 640,
       "title": "File:Genesis GV80 JX1 Vik Black (19).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Genesis_GV80_JX1_Vik_Black_(19).jpg",
       "author": "Damian B Oh",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/genesis-gv80-jx1.webp",
-      "localSmall": "/cars/genesis-gv80-jx1-480.webp"
+      "local": "/cars/genesis-gv80-jx1-studio.webp",
+      "localSmall": "/cars/genesis-gv80-jx1-studio-480.webp",
+      "original": {
+        "local": "/cars/genesis-gv80-jx1.webp",
+        "localSmall": "/cars/genesis-gv80-jx1-480.webp",
+        "width": 1024,
+        "height": 768
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "genesis-gv70-jk1": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Genesis_GV70_IAA_2021_1X7A0228.jpg/1280px-Genesis_GV70_IAA_2021_1X7A0228.jpg",
       "width": 1024,
-      "height": 555,
+      "height": 640,
       "title": "File:Genesis GV70 IAA 2021 1X7A0228.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Genesis_GV70_IAA_2021_1X7A0228.jpg",
       "author": "Alexander Migl",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/genesis-gv70-jk1.webp",
-      "localSmall": "/cars/genesis-gv70-jk1-480.webp"
+      "local": "/cars/genesis-gv70-jk1-studio.webp",
+      "localSmall": "/cars/genesis-gv70-jk1-studio-480.webp",
+      "original": {
+        "local": "/cars/genesis-gv70-jk1.webp",
+        "localSmall": "/cars/genesis-gv70-jk1-480.webp",
+        "width": 1024,
+        "height": 555
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "kgm-torres-j100": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/0_SsangYong_Torres_1.jpg/1280px-0_SsangYong_Torres_1.jpg",
       "width": 1024,
-      "height": 686,
+      "height": 640,
       "title": "File:0 SsangYong Torres 1.jpg",
       "page": "https://commons.wikimedia.org/wiki/File:0_SsangYong_Torres_1.jpg",
       "author": "Benespit",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/kgm-torres-j100.webp",
-      "localSmall": "/cars/kgm-torres-j100-480.webp"
+      "local": "/cars/kgm-torres-j100-studio.webp",
+      "localSmall": "/cars/kgm-torres-j100-studio-480.webp",
+      "original": {
+        "local": "/cars/kgm-torres-j100.webp",
+        "localSmall": "/cars/kgm-torres-j100-480.webp",
+        "width": 1024,
+        "height": 686
+      },
+      "edited": "배경 제거·크기 통일"
     },
     "hyundai-avante-ad": {
       "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Hyundai_Avante_AD_PE_Intense_Blue_%282%29.jpg/1280px-Hyundai_Avante_AD_PE_Intense_Blue_%282%29.jpg",
       "width": 1024,
-      "height": 768,
+      "height": 640,
       "title": "File:Hyundai Avante AD PE Intense Blue (2).jpg",
       "page": "https://commons.wikimedia.org/wiki/File:Hyundai_Avante_AD_PE_Intense_Blue_(2).jpg",
       "author": "Damian B Oh",
       "license": "CC BY-SA 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "confidence": "high",
-      "local": "/cars/hyundai-avante-ad.webp",
-      "localSmall": "/cars/hyundai-avante-ad-480.webp"
+      "local": "/cars/hyundai-avante-ad-studio.webp",
+      "localSmall": "/cars/hyundai-avante-ad-studio-480.webp",
+      "original": {
+        "local": "/cars/hyundai-avante-ad.webp",
+        "localSmall": "/cars/hyundai-avante-ad-480.webp",
+        "width": 1024,
+        "height": 768
+      },
+      "edited": "배경 제거·크기 통일"
     }
   }
 }

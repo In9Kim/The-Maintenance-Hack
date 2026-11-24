@@ -32,7 +32,7 @@ export function CarPhoto({ photo, alt, priority = false, className = "" }: { pho
         ) : (
           photo.license
         )}
-        , Wikimedia Commons
+        , Wikimedia Commons{photo.edited ? ` (정비핵이 ${photo.edited})` : ""}
       </figcaption>
     </figure>
   )
@@ -61,7 +61,7 @@ export function PhotoCredits({ items }: { items: { name: string; photo: Photo }[
   if (!items.length) return null
   return (
     <details className="mt-10 text-[12px] text-muted-foreground">
-      <summary className="min-h-[44px] cursor-pointer content-center font-semibold">차량 사진 출처 (Wikimedia Commons)</summary>
+      <summary className="min-h-[44px] cursor-pointer content-center font-semibold">차량 사진 출처 (Wikimedia Commons, 정비핵이 배경 제거·크기 통일)</summary>
       <ul className="space-y-1 leading-snug">
         {items.map(({ name, photo }) => (
           <li key={photo.page}>

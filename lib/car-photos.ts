@@ -17,6 +17,9 @@ export interface CarPhoto {
   /** public/cars/ 에 저장한 사본 (1024px / 480px webp) */
   local: string
   localSmall: string
+  /** 원본을 고쳤으면 무엇을 했는지 (CC BY-SA: 변경 사항 표시) */
+  edited?: string
+  original?: { local: string; localSmall: string; width: number; height: number }
 }
 
 const PHOTOS = ((raw as { photos?: Record<string, CarPhoto> }).photos ?? {}) as Record<string, CarPhoto>

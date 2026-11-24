@@ -18,7 +18,7 @@ export default function Page() {
       label: `${c.model} ${c.generation.replace(/\s*\(.*?\)\s*/g, "")} · ${c.yearRange}`,
       name: carShortName(c),
       photo: p?.localSmall,
-      credit: p ? `사진: ${p.author} / ${p.license}` : undefined,
+      credit: p ? `사진: ${p.author} / ${p.license}${p.edited ? ` (${p.edited})` : ""}` : undefined,
       engines: c.engineTypes,
       parts: c.parts.map((x) => ({
         slug: partSlug(c, x),
