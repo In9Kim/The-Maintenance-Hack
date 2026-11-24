@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     // 확인 코드는 공개되는 값이라 코드에 둬도 됨 (환경변수가 있으면 그 값 우선)
     google: process.env.GOOGLE_SITE_VERIFICATION || "ZryKbedW7fZaETe8XMndNVYhb0oUfSzHwg_VvBw6DYo",
     other: {
-      "naver-site-verification": process.env.NAVER_SITE_VERIFICATION || "ef50a55f45ad98a7c3767a1ba755e4131bfc3bd0",
+      "naver-site-verification": process.env.NAVER_SITE_VERIFICATION || "bfcd854eaa8b45ecf8ff448314396874339da11b",
     },
   },
 }
