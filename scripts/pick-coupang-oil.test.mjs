@@ -57,3 +57,15 @@ test("신형 첫해만 겹치면 제외", () => {
   const tm = { model: "싼타페", code: "TM", years: [20, 23], visc: "0W-30", grade: "SP", fuel: "가솔린", disp: "2.5", turbo: true, multi: true, codes: ["TM", "MX5"] }
   assert.ok(!setMatches("디올뉴 싼타페 2.5 터보 가솔린 23-26년식 킥스 GX7 0W30 6L 엔진오일 오일필터", tm))
 })
+
+test("같은 연료 엔진이 여러 개면 배기량 필수, 가솔린 자리에 디젤 규격 제외", () => {
+  const n = { model: "아반떼", code: "CN7", years: [20, 99], visc: "0W-30", grade: "SP", fuel: "가솔린", disp: "2.0", turbo: true, multi: true, sameFuelMulti: true, codes: ["CN7", "AD"] }
+  assert.ok(!setMatches("아반떼 CN7 20-23년 킥스 KIXX PAO C2/C3 0W30 엔진오일 필터세트", n))
+  assert.ok(setMatches("아반떼 N CN7 2.0 터보 가솔린 킥스 PAO SP 0W30 엔진오일 필터세트", n))
+})
+
+test("터보 엔진 자리에 비터보 세트 제외", () => {
+  const t = { model: "아반떼", code: "CN7", years: [20, 99], visc: "0W-20", grade: "SP", fuel: "가솔린", disp: "1.6", turbo: true, multi: true, sameFuelMulti: true, codes: ["CN7"] }
+  assert.ok(!setMatches("올뉴 아반떼 CN7 N라인포함 1.6 가솔린 20-26년식 킥스 GX7 0W20 4L 엔진오일 오일필터", t))
+  assert.ok(setMatches("아반떼 CN7 N라인 1.6 터보 가솔린 킥스 GX7 0W20 엔진오일 오일필터 세트", t))
+})

@@ -10,14 +10,7 @@ type Part = { id: string; category: string; spec: string; source?: string; engin
 type Car = { id: string; engineTypes: string[]; parts: Part[] }
 const cars = ((raw as { cars?: Car[] }).cars ?? (raw as unknown as Car[])) as Car[]
 
-const PENDING = new Set<string>([
-  "kia-carnival-ka4",
-  "kia-k5-dl3",
-  "hyundai-tucson-nx4",
-  "hyundai-avante-cn7",
-  "hyundai-grandeur-gn7",
-  "hyundai-santafe-mx5",
-])
+const PENDING = new Set<string>([])
 
 const oils = (c: Car) => c.parts.filter((p) => p.category === "oil")
 

@@ -56,7 +56,7 @@ const overlap = (a, b) => !!a && !!b && a[0] <= b[1] && b[0] <= a[1]
 const overlapStrict = (a, b) => overlap(a, b) && !(b[1] !== 99 && a[0] >= b[1])
 
 /** 차종 전용 세트 상품이 이 차·엔진에 맞는지 */
-export function setMatches(title, { model, alias = [], code, years, visc, grade, grades = [], fuel, disp, turbo, multi, codes = [] }) {
+export function setMatches(title, { model, alias = [], code, years, visc, grade, grades = [], fuel, disp, turbo, multi, sameFuelMulti, codes = [] }) {
   const t = norm(title)
   const hasModel = [model, ...alias].some((m) => t.includes(norm(m)))
   const hasCode = !!code && t.includes(norm(code))
@@ -73,8 +73,14 @@ export function setMatches(title, { model, alias = [], code, years, visc, grade,
   const td = displacementOf(title)
   if (disp && td && td !== disp) return false
   if (!disp && td && multi) return false
+  // 같은 연료 엔진이 여러 개면(아반떼 1.6·1.6T·2.0T) 상품명에 배기량이 꼭 있어야
+  if (sameFuelMulti && disp && !td) return false
+  // 가솔린 오일 자리에 디젤 규격(C2·C3) 오일 세트는 제외
+  if (grade === "SP" && /C2|C3/.test(title.toUpperCase()) && !/SP|SQ/i.test(title)) return false
   if (isTurbo(title) && turbo === false && /터보|T-?GDi/i.test(title)) return false
   if (turbo && /MPI/i.test(title)) return false
+  // 같은 연료에 터보·비터보가 함께 있으면(아반떼 1.6 ↔ 1.6T) 터보 엔진은 상품명에 터보 표시가 있어야
+  if (turbo && sameFuelMulti && !isTurbo(title)) return false
   if (/공임/.test(title)) return false
   return /세트|필터/.test(title)
 }
@@ -155,6 +161,7 @@ async function main() {
         disp: displacementOf(engine) ?? displacementOf(part.spec),
         turbo: engine ? isTurbo(engine) : null,
         multi: car.parts.filter((p) => p.category === "oil").length > 1,
+        sameFuelMulti: car.parts.filter((p) => p.category === "oil" && fuelOf(`${p.engine ?? ""} ${p.name}`) === fuelOf(`${engine} ${part.name}`)).length > 1,
         carNames,
         codes,
       }

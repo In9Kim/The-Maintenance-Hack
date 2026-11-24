@@ -213,8 +213,28 @@
     },
     "hyundai-avante-cn7-engine-oil": {
       "kind": "spec",
-      "query": "아반떼 CN7 엔진오일 0W-20",
-      "url": "https://link.coupang.com/a/iUR2o1RWHk"
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2KS1seO"
+    },
+    "hyundai-avante-cn7-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2KS1seO"
+    },
+    "hyundai-avante-cn7-engine-oil-lpg": {
+      "kind": "spec",
+      "query": "엔진오일 5W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2Kv1WHA"
+    },
+    "hyundai-avante-cn7-engine-oil-n": {
+      "kind": "spec",
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2KWhbJ6"
+    },
+    "hyundai-avante-cn7-engine-oil-turbo": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2KS1seO"
     },
     "hyundai-avante-cn7-spark-plug": {
       "kind": "car",
@@ -303,8 +323,23 @@
     },
     "hyundai-grandeur-gn7-engine-oil": {
       "kind": "spec",
-      "query": "그랜저 GN7 엔진오일 0W-30",
-      "url": "https://link.coupang.com/a/iUR2vljElw"
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2KS1seO"
+    },
+    "hyundai-grandeur-gn7-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2KS1seO"
+    },
+    "hyundai-grandeur-gn7-engine-oil-lpg": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2KS1seO"
+    },
+    "hyundai-grandeur-gn7-engine-oil-v6": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2KS1seO"
     },
     "hyundai-grandeur-gn7-spark-plug": {
       "kind": "car",
@@ -538,8 +573,13 @@
     },
     "hyundai-santafe-mx5-engine-oil": {
       "kind": "spec",
-      "query": "싼타페 MX5 엔진오일 0W-30",
-      "url": "https://link.coupang.com/a/iUR2H4qvWS"
+      "query": "엔진오일 0W-30 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2KWhbJ6"
+    },
+    "hyundai-santafe-mx5-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2QKQji8"
     },
     "hyundai-santafe-mx5-wiper": {
       "kind": "car",
@@ -743,8 +783,18 @@
     },
     "hyundai-tucson-nx4-engine-oil": {
       "kind": "spec",
-      "query": "투싼 NX4 엔진오일 0W-20",
-      "url": "https://link.coupang.com/a/iUR2oF0PGm"
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2ErhlpA"
+    },
+    "hyundai-tucson-nx4-engine-oil-diesel": {
+      "kind": "spec",
+      "query": "디젤 엔진오일 C5 5W-30",
+      "url": "https://link.coupang.com/a/iVV2EnpPOu"
+    },
+    "hyundai-tucson-nx4-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2ErhlpA"
     },
     "hyundai-tucson-nx4-wiper": {
       "kind": "car",
@@ -863,8 +913,18 @@
     },
     "kia-carnival-ka4-engine-oil": {
       "kind": "spec",
-      "query": "카니발 KA4 3.5 엔진오일 5W-30 6L",
-      "url": "https://link.coupang.com/a/iUR2b2ANXw"
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2ErhlpA"
+    },
+    "kia-carnival-ka4-engine-oil-diesel": {
+      "kind": "spec",
+      "query": "디젤 엔진오일 C5 5W-30",
+      "url": "https://link.coupang.com/a/iVV2EnpPOu"
+    },
+    "kia-carnival-ka4-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2ErhlpA"
     },
     "kia-carnival-ka4-wiper": {
       "kind": "car",
@@ -893,8 +953,23 @@
     },
     "kia-k5-dl3-engine-oil": {
       "kind": "spec",
-      "query": "K5 3세대 엔진오일 0W-20",
-      "url": "https://link.coupang.com/a/iUR2irmyyG"
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2ErhlpA"
+    },
+    "kia-k5-dl3-engine-oil-hybrid": {
+      "kind": "spec",
+      "query": "엔진오일 0W-16 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2Eg8GpE"
+    },
+    "kia-k5-dl3-engine-oil-lpg": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2ErhlpA"
+    },
+    "kia-k5-dl3-engine-oil-turbo": {
+      "kind": "spec",
+      "query": "엔진오일 0W-20 API SP 합성유",
+      "url": "https://link.coupang.com/a/iVV2ErhlpA"
     },
     "kia-k5-dl3-spark-plug": {
       "kind": "car",
