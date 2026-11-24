@@ -31,7 +31,7 @@ import {
 } from "./lib/common.mjs"
 import { CENTER_BASE, CENTER_DETAIL_PATH, CENTER_LIST_PATH, parseCenterDetail, parseCenterList, parseCenterTotal } from "./lib/center.mjs"
 
-const UA = "MaintenanceHackBot/1.0 (+https://maintenance-hack.wwe9459.workers.dev; recall list, twice a day)"
+const UA = "MaintenanceHackBot/1.0 (+https://jungbihack.com; recall list, twice a day)"
 const RECENT_DAYS = parseInt(process.env.CENTER_RECENT_DAYS ?? "", 10) || 45
 const MAX_DETAILS = parseInt(process.env.CENTER_MAX_DETAILS ?? "", 10) || 400
 const MAX_PAGES = 200

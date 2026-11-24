@@ -6,7 +6,7 @@ import { CAR_DATA, getCarById } from "@/lib/data/cars"
  * 배포 주소. 배포 후 .env(.local) 또는 Vercel 환경변수에
  * NEXT_PUBLIC_SITE_URL=https://내도메인 을 넣으면 사이트맵·canonical에 반영됩니다.
  */
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://maintenance-hack.wwe9459.workers.dev").replace(/\/$/, "")
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://jungbihack.com").replace(/\/$/, "")
 
 /** "kia-sorento-mq4-engine-oil" → "engine-oil" */
 export function partSlug(car: CarModel, part: MaintenancePart): string {

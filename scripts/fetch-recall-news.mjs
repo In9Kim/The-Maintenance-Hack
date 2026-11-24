@@ -31,7 +31,7 @@ import {
   validateExtraction,
 } from "./lib/news.mjs"
 
-const UA = "MaintenanceHackBot/1.0 (+https://maintenance-hack.wwe9459.workers.dev; recall news, 1 request/day)"
+const UA = "MaintenanceHackBot/1.0 (+https://jungbihack.com; recall news, 1 request/day)"
 const MODELS = (process.env.GEMINI_MODELS || "gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash-lite")
   .split(",")
   .map((s) => s.trim())
