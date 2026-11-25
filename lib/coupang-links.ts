@@ -107,7 +107,7 @@ export function coupangChoicesFor(part: MaintenancePart): CoupangChoice[] {
     ...coupangLinksFor(part).map<CoupangChoice>((l) => ({
       url: l.url,
       kind: "product",
-      title: "규격 맞는 상품 보기 (쿠팡)",
+      title: "쿠팡에서 가격 보기",
       sub: l.product,
     }))
   )
@@ -115,8 +115,8 @@ export function coupangChoicesFor(part: MaintenancePart): CoupangChoice[] {
   if (s) {
     out.push(
       s.kind === "spec"
-        ? { url: s.url, kind: "spec", title: pick ? "다른 상품 더 보기 (쿠팡)" : "이 규격 상품 찾기 (쿠팡)", sub: `“${s.query}” 검색` }
-        : { url: s.url, kind: "car", title: "쿠팡에서 찾기", sub: "구매 전 순정 품번·규격을 꼭 확인하세요" }
+        ? { url: s.url, kind: "spec", title: pick ? "다른 상품 더 보기 (쿠팡)" : "쿠팡에서 이 규격 가격 보기", sub: `“${s.query}” 검색` }
+        : { url: s.url, kind: "car", title: "쿠팡에서 가격 보기", sub: "이 차종에 맞는 상품 검색 결과" }
     )
   }
   return out

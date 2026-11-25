@@ -118,12 +118,13 @@ export default async function PartPage({ params }: Props) {
           dealerNote={`부품 ${formatPrice(part.dealerPartPrice)} + 공임 ${formatPrice(part.dealerLaborCost)}`}
           selfNote={`부품 ${formatPrice(part.coupangPrice)} + 공임 ${formatPrice(part.laborCost)}`}
           basis={priceBasis(car)}
+          buy={specLinks[0] ? { href: specLinks[0].url, carId: car.id, partId: part.id } : undefined}
         />
 
         {/* 준비하기: 규격 → (맞는 상품) → 공임나라 */}
         <section aria-labelledby="buy" className="rounded-2xl border border-border bg-card p-5">
           <h2 id="buy" className="text-[17px] font-bold">{title} 준비하기</h2>
-          <p className="mt-3 text-[13px] font-semibold text-muted-foreground">이 규격으로 사세요</p>
+          <p className="mt-3 text-[13px] font-semibold text-primary">① 이 규격으로 부품 사기</p>
           <p className="mt-1 text-[16px] font-semibold leading-relaxed">{part.spec}</p>
           {part.partNumber && <p className="mt-1 text-[14px] text-muted-foreground">참고 품번 {part.partNumber}</p>}
 
@@ -148,28 +149,28 @@ export default async function PartPage({ params }: Props) {
                 </OutboundLink>
                 )
               )}
+              <p className="text-[12px] leading-relaxed text-muted-foreground">
+                주문 전에 상품명의 연식·품번이 내 차와 같은지 한 번 보세요. 헷갈리면{" "}
+                <Link href="/check" className="font-semibold text-primary underline underline-offset-2">30초 호환 확인</Link>
+              </p>
               {naverShoppingFor(part) && <NaverCompareLink url={naverShoppingFor(part)!.url} carId={car.id} partId={part.id} />}
               <OilTiers rows={oilTiersFor(part)} carId={car.id} partId={part.id} />
             </div>
           ) : (
-            <p className="mt-4 rounded-[10px] bg-muted px-3 py-2.5 text-[14px] leading-relaxed text-muted-foreground">
-              규격을 확인한 상품 링크는 아직 없어요. 위 규격과 차대번호로 맞는 부품을 고르세요.
-            </p>
+            <>
+              <p className="mt-4 rounded-[10px] bg-muted px-3 py-2.5 text-[14px] leading-relaxed text-muted-foreground">
+                규격을 확인한 상품 링크는 아직 없어요. 위 규격과 차대번호로 맞는 부품을 고르세요.
+              </p>
+              <Link href="/check" className="mt-2 inline-block text-[13px] font-semibold text-primary underline underline-offset-2">
+                사려는 상품이 내 차에 맞는지 30초 확인
+              </Link>
+            </>
           )}
 
-          <Link
-            href="/check"
-            className="mt-3 flex min-h-[48px] items-center justify-between gap-3 rounded-[10px] border border-primary/30 bg-[#ECFDF3] px-4 py-2.5 text-[14px] transition hover:border-primary"
-          >
-            <span>
-              <b className="block text-foreground">사려는 상품이 내 차에 맞을까?</b>
-              <span className="text-[13px] text-muted-foreground">차대번호와 상품 링크로 30초 만에 확인</span>
-            </span>
-            <span aria-hidden className="shrink-0 font-bold text-primary">확인하기</span>
-          </Link>
+          <p className="mt-6 border-t border-border pt-4 text-[13px] font-semibold text-muted-foreground">② 공임나라에서 장착</p>
           <Link
             href="/near"
-            className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-[10px] bg-foreground px-5 text-[15px] font-bold text-background transition hover:brightness-125 active:translate-y-px"
+            className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-[10px] border border-input bg-card px-5 text-[15px] font-bold text-foreground transition hover:bg-muted active:translate-y-px"
           >
             <svg aria-hidden viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" /></svg>
             근처 공임나라에서 교체하기

@@ -1,3 +1,5 @@
+import { OutboundLink } from "@/components/seo/OutboundLink"
+
 /** 견적서 해독 영수증: 공식센터 금액(추정) → 직접 구매+공임나라 → 아끼는 돈 + 절약률 배지 */
 export function ReceiptCard({
   title,
@@ -7,6 +9,7 @@ export function ReceiptCard({
   basis,
   dealerNote,
   selfNote,
+  buy,
   className = "",
 }: {
   title: string
@@ -18,6 +21,8 @@ export function ReceiptCard({
   /** 행 아래 작은 내역 (예: "부품 92,000원 + 공임 28,000원") */
   dealerNote?: string
   selfNote?: string
+  /** 첫 화면에서 바로 부품을 사러 갈 수 있게 직접 구매 행 아래에 쿠팡 버튼 */
+  buy?: { href: string; carId: string; partId: string }
   className?: string
 }) {
   const won = (n: number) => `${n.toLocaleString("ko-KR")}원`
@@ -37,6 +42,21 @@ export function ReceiptCard({
           <dt>{selfLabel}</dt>
           <dd className="font-semibold">{won(self)}</dd>
           {selfNote && <dd className="w-full text-right text-[12px] text-muted-foreground">{selfNote}</dd>}
+          {buy && (
+            <dd className="w-full pt-1.5">
+              <OutboundLink
+                href={buy.href}
+                target="coupang"
+                carId={buy.carId}
+                partId={buy.partId}
+                sponsored
+                className="flex h-11 w-full items-center justify-center rounded-[10px] bg-primary text-[15px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px"
+              >
+                쿠팡에서 부품 가격 보기
+              </OutboundLink>
+              <span className="mt-1 block text-right text-[11px] text-muted-foreground">쿠팡 파트너스 링크라 구매 시 수수료를 받아요</span>
+            </dd>
+          )}
         </div>
       </dl>
       <div className="num mt-4 flex items-baseline justify-between border-t-[1.5px] border-dashed border-input pt-4">

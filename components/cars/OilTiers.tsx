@@ -44,11 +44,11 @@ export function OilTiers({ rows, carId, partId }: { rows: OilTierRow[]; carId: s
                 </li>
               ))}
             </ul>
-            <div className="mt-1.5 flex flex-wrap gap-x-4">
-              <OutboundLink href={r.item.url} target="coupang" carId={carId} partId={partId} sponsored className="inline-flex min-h-[36px] items-center text-[13px] font-semibold text-primary underline underline-offset-2">
-                쿠팡에서 보기
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
+              <OutboundLink href={r.item.url} target="coupang" carId={carId} partId={partId} sponsored className="inline-flex h-10 items-center rounded-[10px] bg-primary px-4 text-[14px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px">
+                쿠팡에서 가격 보기
               </OutboundLink>
-              <OutboundLink href={naverSearchUrl(naverQueryOf(r.item.name))} target="naver" carId={carId} partId={partId} className="inline-flex min-h-[36px] items-center text-[13px] font-semibold text-[#027A48] underline underline-offset-2">
+              <OutboundLink href={naverSearchUrl(naverQueryOf(r.item.name))} target="naver" carId={carId} partId={partId} className="inline-flex min-h-[36px] items-center text-[12px] text-muted-foreground underline underline-offset-2">
                 네이버 같은 상품 가격
               </OutboundLink>
             </div>

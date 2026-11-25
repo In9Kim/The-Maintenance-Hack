@@ -58,10 +58,9 @@ function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
           carId={car.id}
           partId={part.id}
           sponsored
-          className="inline-flex min-h-[32px] flex-wrap items-center gap-x-1.5 text-[13px] font-semibold text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary"
+          className="mr-2 mt-1 inline-flex h-9 items-center rounded-[8px] bg-primary px-3.5 text-[13px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px"
         >
-          {l.title}
-          <span className="font-normal text-muted-foreground no-underline">{l.sub}</span>
+          {l.title.startsWith("다른") ? "다른 상품 보기" : "쿠팡 가격 보기"}
         </OutboundLink>
         )
       )}

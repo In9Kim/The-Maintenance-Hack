@@ -28,8 +28,8 @@ export function CoupangPickCard({ pick, carId, partId, compact = false }: { pick
             </span>
           )}
         </span>
-        <span aria-hidden className="shrink-0 rounded-lg bg-primary px-2.5 py-1.5 text-[12px] font-bold text-primary-foreground">
-          보기
+        <span aria-hidden className="shrink-0 rounded-lg bg-primary px-3 py-2 text-[13px] font-bold text-primary-foreground">
+          쿠팡 보기
         </span>
       </OutboundLink>
       {pick.note && !compact && <p className="mt-2 text-[12px] leading-relaxed text-muted-foreground">{pick.note}</p>}
