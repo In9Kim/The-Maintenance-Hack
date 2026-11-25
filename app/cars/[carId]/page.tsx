@@ -17,6 +17,7 @@ import {
 import { formatPrice } from "@/lib/utils"
 import { AffiliateNotice, Breadcrumbs, EstimateNote, JsonLd } from "@/components/seo/Shared"
 import { ReceiptCard } from "@/components/home/ReceiptCard"
+import { GuideLinks } from "@/components/cars/GuideLinks"
 import { EngineTabs } from "@/components/cars/EngineTabs"
 import { recallsForCar } from "@/lib/recalls/data"
 import { engineGroups } from "@/lib/engines"
@@ -292,6 +293,7 @@ export default async function CarPage({ params }: Props) {
         </Link>
       </div>
 
+      <GuideLinks car={car} />
       <EstimateNote />
 
       <JsonLd

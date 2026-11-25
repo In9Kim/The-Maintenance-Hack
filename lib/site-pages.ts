@@ -1,4 +1,5 @@
 import { NEAR_KINDS } from "@/lib/near"
+import { fluidGuideFor, GUIDE_PAGES } from "@/lib/data/fluid-guides"
 import type { Recall } from "@/lib/recalls/types"
 import { carShortName, partSlug, seoCars } from "@/lib/seo"
 import { isIndexableMaker, latestDate } from "@/lib/indexing"
@@ -95,5 +96,10 @@ export function sitePages(): SitePage[] {
         (p): SitePage => ({ path: `/cars/${car.id}/${partSlug(car, p)}`, lastModified: car.updatedAt, priority: 0.7, kind: "part" })
       )
     ),
+    // 정비 안내 (주행거리별 목록·미션오일·냉각수) — lib/data/fluid-guides.ts에 데이터가 있는 차종만
+    ...cars.flatMap((car) => {
+      const g = fluidGuideFor(car.id)
+      return g ? GUIDE_PAGES.map((p): SitePage => ({ path: `/cars/${car.id}/${p.slug}`, lastModified: g.checkedAt, priority: 0.7, kind: "part" })) : []
+    }),
   ]
 }

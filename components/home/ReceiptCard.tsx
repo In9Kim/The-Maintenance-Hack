@@ -1,4 +1,5 @@
 import { OutboundLink } from "@/components/seo/OutboundLink"
+import { AFFILIATE_TEXT } from "@/components/seo/Shared"
 
 /** 견적서 해독 영수증: 공식센터 금액(추정) → 직접 구매+공임나라 → 아끼는 돈 + 절약률 배지 */
 export function ReceiptCard({
@@ -54,7 +55,7 @@ export function ReceiptCard({
               >
                 쿠팡에서 부품 가격 보기
               </OutboundLink>
-              <span className="mt-1 block text-right text-[11px] text-muted-foreground">쿠팡 파트너스 링크라 구매 시 수수료를 받아요</span>
+              <span className="mt-1.5 block text-[11px] leading-snug text-muted-foreground">{AFFILIATE_TEXT}</span>
             </dd>
           )}
         </div>

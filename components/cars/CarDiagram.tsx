@@ -11,6 +11,7 @@ import type { BodyType, ZoneId } from "@/lib/car-diagram"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
 import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
+import { AFFILIATE_TEXT } from "@/components/seo/Shared"
 import type { CoupangChoice } from "@/lib/coupang-links"
 
 export interface DiagramPart {
@@ -366,13 +367,14 @@ export function CarDiagram({ carId, carName, body, zones, parts }: Props) {
                           carId={carId}
                           partId={p.id}
                           sponsored
-                          className="inline-flex min-h-[40px] items-center text-[13px] font-semibold text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary"
+                          className="inline-flex h-10 items-center rounded-[10px] bg-primary px-4 text-[14px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px"
                         >
-                          {c.title}
+                          쿠팡에서 가격 보기
                         </OutboundLink>
                       ))}
                       {p.naver && <NaverCompareLink url={p.naver} carId={carId} partId={p.id} />}
                     </div>
+                    {p.choices.length > 0 && <p className="mt-2 text-[11px] leading-snug text-muted-foreground">{AFFILIATE_TEXT}</p>}
                   </div>
                 )
               })}

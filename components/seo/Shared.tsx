@@ -45,10 +45,13 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
  * 제휴 링크 고지 (공정위 추천·보증 심사지침: 확정적 표현, 소비자가 쉽게 보는 위치)
  * 제휴 링크가 실제로 있는 화면에서, 그 링크 바로 위에 둔다.
  */
+/** 쿠팡 파트너스 공식 대가성 문구 (쿠팡 링크 가까이에 둔다) */
+export const AFFILIATE_TEXT = "이 게시물은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
+
 export function AffiliateNotice({ className = "" }: { className?: string }) {
   return (
     <p className={`rounded-[10px] bg-muted px-3 py-2 text-[13px] leading-relaxed text-muted-foreground ${className}`}>
-      이 페이지의 상품 링크는 쿠팡 파트너스 활동의 일환으로, 구매가 발생하면 일정액의 수수료를 제공받습니다.
+      {AFFILIATE_TEXT}
     </p>
   )
 }

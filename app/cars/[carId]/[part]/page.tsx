@@ -27,6 +27,7 @@ import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AffiliateNotice, Breadcrumbs, EstimateNote, JsonLd } from "@/components/seo/Shared"
 import { ReceiptCard } from "@/components/home/ReceiptCard"
+import { GuideLinks } from "@/components/cars/GuideLinks"
 
 export const dynamicParams = false
 
@@ -71,6 +72,14 @@ export default async function PartPage({ params }: Props) {
   // 엔진별 소모품이면 같은 엔진(+공통) 소모품만 "다른 소모품"으로
   const otherParts = car.parts.filter((p) => p.id !== part.id && (!part.engine || !p.engine || p.engine === part.engine))
   const specLinks = coupangChoicesFor(part)
+  // 엔진오일: 규격 문구에서 용량 부분만 ("3.8L (오일필터 교환 포함)") — 명세서 오일 양 확인용
+  const qtyText = part.category === "oil" ? part.spec.split(" · ").map((s) => s.trim()).find((s) => /\d(\.\d)?\s*L\b/.test(s)) : undefined
+  const oilQty = qtyText
+    ? (() => {
+        const ls = [...qtyText.matchAll(/(\d+(?:\.\d)?)\s*L\b/g)].map((m) => Number(m[1]))
+        return { text: qtyText, first: ls[0], max: Math.max(...ls) }
+      })()
+    : null
   const slug = partSlug(car, part)
   const sameOnOtherCars = seoCars()
     .filter((oc) => oc.id !== car.id)
@@ -108,6 +117,21 @@ export default async function PartPage({ params }: Props) {
       <p className="mt-2 text-[15px] text-muted-foreground">
         {car.yearRange} · {part.engine ?? car.engineTypes.join(" / ")}
       </p>
+      {oilQty && (
+        <div className="mt-4 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-3 text-[14px] leading-relaxed text-foreground">
+          <p>
+            <b>필요한 엔진오일 양: {oilQty.text}</b>
+          </p>
+          <p className="mt-0.5 text-[13px] text-muted-foreground">
+            {oilQty.max <= 4
+              ? "4L 한 통으로 채울 수 있는 양이에요. "
+              : oilQty.first <= 4
+                ? "기본 용량은 4L 한 통으로 채울 수 있고, 괄호 안 연식은 4L 한 통으로는 모자라요. "
+                : "4L 한 통으로는 모자라요. "}
+            정비소 명세서의 오일 양이 이보다 많으면 실제로 몇 L 넣었는지 물어보세요.
+          </p>
+        </div>
+      )}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-start lg:gap-10">
         {/* 비용: 영수증 */}
@@ -331,6 +355,7 @@ export default async function PartPage({ params }: Props) {
         </section>
       )}
 
+      <GuideLinks car={car} />
       <EstimateNote />
 
       <JsonLd
