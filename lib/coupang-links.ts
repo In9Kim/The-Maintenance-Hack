@@ -59,12 +59,14 @@ export interface CoupangChoice {
 }
 
 /**
- * 엔진오일 "이거 사면 돼요" 상품 (data/coupang-picks.json, scripts/pick-coupang-oil.mjs가 쿠팡 검색 API로 고름)
- *  - set: 그 차·엔진 전용 오일+오일필터 세트
- *  - oil: 같은 점도·등급의 오일 단품 (필요량을 따로 안내)
+ * "이거 사면 돼요" 상품 (data/coupang-picks.json). 고르기는 scripts/pick-coupang-oil.mjs·pick-coupang-parts.mjs,
+ * 가격은 scripts/refresh-coupang-prices.mjs가 매일 갱신 (checkedAt 날짜 기준)
+ *  - set: 그 차·엔진 전용 오일+오일필터 세트 / oil: 같은 점도·등급의 오일 단품 (필요량을 따로 안내)
+ *  - wiper: 운전석·조수석 길이가 규격과 같은 세트 / cabin·air: 상품명에 이 차종(또는 순정 품번)이 적힌 필터
  */
 export interface CoupangPick {
-  kind: "set" | "oil"
+  kind: "set" | "oil" | "wiper" | "cabin" | "air"
+  productId?: number | string
   name: string
   price: number
   url: string
@@ -92,7 +94,7 @@ export function coupangChoicesFor(part: MaintenancePart): CoupangChoice[] {
     out.push({
       url: pick.url,
       kind: "pick",
-      title: pick.kind === "set" ? "이 세트 사면 돼요 (쿠팡)" : "이 오일 사면 돼요 (쿠팡)",
+      title: pick.kind === "set" ? "이 세트 사면 돼요 (쿠팡)" : pick.kind === "oil" ? "이 오일 사면 돼요 (쿠팡)" : pick.kind === "wiper" ? "이 와이퍼 사면 돼요 (쿠팡)" : "이 필터 사면 돼요 (쿠팡)",
       sub: pick.name,
       price: pick.price,
       priceDate: pick.checkedAt,
@@ -100,7 +102,11 @@ export function coupangChoicesFor(part: MaintenancePart): CoupangChoice[] {
       note:
         pick.kind === "set"
           ? "엔진오일 + 오일필터가 함께 든 차종 전용 세트예요. 상품명의 연식·엔진이 내 차와 같은지 한 번 더 보세요."
-          : `규격(점도·등급)이 맞는 오일이에요.${need ? ` 필요량은 ${need}L라 용량이 모자라면 1L를 더 사세요.` : ""} 오일필터는 따로 필요해요.`,
+          : pick.kind === "oil"
+            ? `규격(점도·등급)이 맞는 오일이에요.${need ? ` 필요량은 ${need}L라 용량이 모자라면 1L를 더 사세요.` : ""} 오일필터는 따로 필요해요.`
+            : pick.kind === "wiper"
+              ? "운전석·조수석 길이가 이 차 규격과 같은 세트예요. 사기 전에 지금 달린 블레이드 길이와 한 번 비교하세요."
+              : "상품명에 이 차종(또는 순정 품번)이 적힌 필터예요. 연식·엔진이 내 차와 같은지 상품명에서 한 번 더 보세요.",
     })
   }
   out.push(

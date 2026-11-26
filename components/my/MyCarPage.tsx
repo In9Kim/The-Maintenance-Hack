@@ -18,6 +18,8 @@ import {
 import { authEnabled, enabledProviders, supabase, type Provider } from "@/lib/supabase"
 import { deleteCloudCar, fetchCars, fromRow, mergeGarage, pushCars } from "@/lib/cloud-garage"
 import { track } from "@/lib/track"
+import { OutboundLink } from "@/components/seo/OutboundLink"
+import { AFFILIATE_TEXT } from "@/lib/affiliate"
 
 export interface MyCarOption {
   id: string
@@ -28,7 +30,7 @@ export interface MyCarOption {
   credit?: string
   engines: string[]
   years: number[]
-  parts: { slug: string; name: string; engine?: string; intervalKm?: number; intervalMonths?: number; spec?: string; self?: number }[]
+  parts: { slug: string; name: string; engine?: string; intervalKm?: number; intervalMonths?: number; spec?: string; self?: number; price?: number; shop?: { price: number; date: string; url: string } }[]
 }
 
 const FIELD =
@@ -49,7 +51,7 @@ function snapshot(o: MyCarOption, engine?: string): MyCarSnapshot {
     credit: o.credit,
     parts: o.parts
       .filter((p) => !p.engine || !engine || p.engine === engine)
-      .map(({ slug, name, intervalKm, intervalMonths, spec, self }) => ({ slug, name, intervalKm, intervalMonths, spec, self })),
+      .map(({ slug, name, intervalKm, intervalMonths, spec, self, price, shop }) => ({ slug, name, intervalKm, intervalMonths, spec, self, price, shop })),
   }
 }
 
@@ -514,8 +516,15 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <Link href={`/cars/${my.car.id}/${d.part.slug}`} className="font-bold hover:underline">{d.part.name}</Link>
-                  {d.part.self != null && <span className="num ml-2 text-[14px] font-bold text-primary">{d.part.self.toLocaleString("ko-KR")}원</span>}
                   {d.part.spec && <p className="text-[13px] text-foreground/80">{d.part.spec}</p>}
+                  {d.part.shop ? (
+                    <OutboundLink href={d.part.shop.url} target="coupang" carId={my.car.id} partId={d.part.slug} sponsored className="num mt-1 inline-flex min-h-[32px] items-center gap-1 text-[14px] font-bold text-primary">
+                      쿠팡 {d.part.shop.price.toLocaleString("ko-KR")}원
+                      <span className="text-[11px] font-normal text-muted-foreground">{d.part.shop.date.slice(5).replace("-", "/")} 기준 ›</span>
+                    </OutboundLink>
+                  ) : d.part.price ? (
+                    <p className="num mt-1 text-[13px] text-muted-foreground">부품 예상 {d.part.price.toLocaleString("ko-KR")}원</p>
+                  ) : null}
                   <p className="mt-0.5 text-[13px] text-muted-foreground">
                     {d.record ? `마지막 교체 ${d.record.date.replace(/-/g, ".")}${d.record.km != null ? ` · ${d.record.km.toLocaleString("ko-KR")}km` : ""}` : d.text}
                   </p>
@@ -556,6 +565,8 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
           )
         })}
       </ul>
+
+      {list.some((d) => d.part.shop) && <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">쿠팡 가격은 표시한 날 기준이라 바뀔 수 있어요. {AFFILIATE_TEXT}</p>}
 
       <div className="mt-6 grid gap-2 sm:grid-cols-2">
         <Link href={`/cars/${my.car.id}`} className="flex min-h-[48px] items-center justify-center rounded-[12px] border border-border bg-card text-[14px] font-semibold">내 차 소모품 가격 전체</Link>

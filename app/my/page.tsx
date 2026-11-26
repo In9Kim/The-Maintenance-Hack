@@ -1,5 +1,6 @@
 import { pageMetadata, seoCars, carShortName, partSlug, partCost } from "@/lib/seo"
 import { carPhoto } from "@/lib/car-photos"
+import { coupangPickFor } from "@/lib/coupang-links"
 import { MyCarPage, type MyCarOption } from "@/components/my/MyCarPage"
 
 export const metadata = pageMetadata({
@@ -30,15 +31,19 @@ export default function Page() {
       credit: p ? `사진: ${p.author} / ${p.license}${p.edited ? ` (${p.edited})` : ""}` : undefined,
       engines: c.engineTypes,
       years: yearsOf(c.yearRange),
-      parts: c.parts.map((x) => ({
+      parts: c.parts.map((x) => {
+        const pick = coupangPickFor(x)
+        return {
         slug: partSlug(c, x),
         name: x.name,
         engine: x.engine,
         intervalKm: x.intervalKm,
         intervalMonths: x.intervalMonths,
-        spec: x.spec.split(" · ")[0],
+        spec: x.category === "wiper" ? x.spec.split(" (")[0] : x.spec.split(" · ")[0],
         self: partCost(x).self,
-      })),
+        price: x.coupangPrice,
+        shop: pick ? { price: pick.price, date: pick.checkedAt, url: pick.url } : undefined,
+      }}),
     }
   })
   return <MyCarPage options={options} />

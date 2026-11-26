@@ -14,6 +14,10 @@ export interface MyPartInfo {
   spec?: string
   /** 부품 직접 구매+공임나라 예상 금액 */
   self?: number
+  /** 부품값 예상 (쿠팡 시세 기준 추정) */
+  price?: number
+  /** 쿠팡에서 고른 맞는 상품의 실제 가격 (date 기준) */
+  shop?: { price: number; date: string; url: string }
 }
 
 export interface MyCarSnapshot {
