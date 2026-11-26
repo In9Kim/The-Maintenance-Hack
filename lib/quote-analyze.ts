@@ -110,8 +110,11 @@ export function buildQuotePrompt(car: CompatCar, parts: QuoteCarPart[], year?: n
 ${ref}`
 }
 
-/** Claude 호출 (서버 전용). 키가 없으면 에러 */
-export async function analyzeQuoteImage(base64: string, mediaType: string, prompt: string): Promise<QuoteResult> {
+/** 견적서 분석 모델. 기본 Haiku 5.5 (Opus보다 약 40배 쌈, 2026-11-27 사용자 결정). QUOTE_MODEL로 바꿀 수 있음 */
+export const QUOTE_MODEL = process.env.QUOTE_MODEL || "claude-haiku-5-5"
+
+/** Claude 호출 (서버 전용). 키가 없으면 에러. lean: 모델이 effort·fallbacks 옵션을 거부하면 빼고 다시 보낼 때 */
+export async function analyzeQuoteImage(base64: string, mediaType: string, prompt: string, lean = false): Promise<QuoteResult> {
   const key = process.env.ANTHROPIC_API_KEY
   if (!key) throw new Error("NO_KEY")
   const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -121,14 +124,14 @@ export async function analyzeQuoteImage(base64: string, mediaType: string, promp
       "x-api-key": key,
       "anthropic-version": "2023-06-01",
       // 안전 분류기가 거절하면 서버에서 다른 모델로 다시 시도
-      "anthropic-beta": "server-side-fallback-2026-07-01",
+      ...(lean ? {} : { "anthropic-beta": "server-side-fallback-2026-07-01" }),
     },
     signal: AbortSignal.timeout(90_000),
     body: JSON.stringify({
-      model: process.env.QUOTE_MODEL || "claude-opus-5-5",
+      model: QUOTE_MODEL,
       max_tokens: 16000,
-      fallbacks: "default",
-      output_config: { effort: "medium", format: { type: "json_schema", schema: QUOTE_SCHEMA } },
+      ...(lean ? {} : { fallbacks: "default" }),
+      output_config: { ...(lean ? {} : { effort: "medium" }), format: { type: "json_schema", schema: QUOTE_SCHEMA } },
       messages: [
         {
           role: "user",
@@ -142,6 +145,8 @@ export async function analyzeQuoteImage(base64: string, mediaType: string, promp
   })
   if (!res.ok) {
     const body = await res.text().catch(() => "")
+    // 이 모델이 받지 않는 옵션(effort·fallbacks)이면 빼고 한 번 더
+    if (!lean && res.status === 400 && /effort|fallback|beta/i.test(body)) return analyzeQuoteImage(base64, mediaType, prompt, true)
     throw new Error(`HTTP ${res.status} ${body.slice(0, 300)}`)
   }
   const data = (await res.json()) as { stop_reason?: string; content?: { type: string; text?: string }[] }
