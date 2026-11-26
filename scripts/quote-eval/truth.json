@@ -1,0 +1,45 @@
+{
+  "_설명": "가상 견적서 정답. kw: 항목 이름 정규식, kind/verdict: 허용 값 목록, parts/labor: 적힌 금액(null = 적혀 있지 않거나 0). optional: 있어도 없어도 되는 항목",
+  "car": "kia-k3-bd",
+  "pii": ["홍길동", "010-1234-5678", "12가3456", "김철수", "010-9876-5432", "KNAF000000X000000", "34나5678"],
+  "cases": [
+    {
+      "file": "1-autoq.png",
+      "readable": true,
+      "items": [
+        { "kw": "엔진\\s*오일", "kind": ["done", "recommended"], "parts": 78000, "labor": 22000, "verdict": ["gongim"] },
+        { "kw": "에어컨", "kind": ["done", "recommended"], "parts": 25000, "labor": 11000, "verdict": ["gongim"] },
+        { "kw": "패드", "kind": ["done", "recommended"], "parts": 98000, "labor": 44000, "verdict": ["gongim"] },
+        { "kw": "와이퍼", "kind": ["done", "recommended"], "parts": 33000, "labor": null, "verdict": ["gongim"] },
+        { "kw": "ECU|소프트웨어", "kind": ["done", "recommended"], "parts": null, "labor": null, "verdict": ["center"] },
+        { "kw": "하부\\s*암|로어\\s*암|부싱", "kind": ["recommended"], "parts": null, "labor": null, "verdict": ["gongim", "ask"] },
+        { "kw": "브레이크\\s*(액|오일)", "kind": ["recommended"], "parts": null, "labor": null, "verdict": ["gongim", "ask"] }
+      ],
+      "optional": []
+    },
+    {
+      "file": "2-bluehands.png",
+      "readable": true,
+      "items": [
+        { "kw": "배터리\\s*교체|배터리$|배터리 교환", "kind": ["recommended"], "parts": 165000, "labor": 15000, "verdict": ["gongim"] },
+        { "kw": "변속기|미션", "kind": ["recommended"], "parts": 120000, "labor": 55000, "verdict": ["gongim", "ask"] },
+        { "kw": "점화\\s*플러그", "kind": ["recommended"], "parts": 64000, "labor": 40000, "verdict": ["gongim"] },
+        { "kw": "진단", "kind": ["recommended", "inspection"], "verdict": ["center", "ask"] }
+      ],
+      "optional": ["배터리", "타이어", "냉각수", "미션", "변속기", "점검"]
+    },
+    {
+      "file": "3-local.png",
+      "readable": true,
+      "items": [
+        { "kw": "냉각수|부동액", "kind": ["done", "recommended"], "parts": 35000, "labor": 30000, "verdict": ["gongim"] },
+        { "kw": "인젝터", "kind": ["done", "recommended"], "parts": null, "labor": 88000, "verdict": ["ask"] },
+        { "kw": "카본", "kind": ["done", "recommended"], "parts": 45000, "labor": 50000, "verdict": ["ask"] },
+        { "kw": "범퍼|판금|도장", "kind": ["done", "recommended"], "parts": null, "labor": 250000, "verdict": ["center"] },
+        { "kw": "패드", "kind": ["done", "recommended"], "parts": 42000, "labor": 33000, "verdict": ["gongim"] }
+      ],
+      "optional": []
+    },
+    { "file": "4-notquote.png", "readable": false, "items": [], "optional": [] }
+  ]
+}

@@ -1,0 +1,29 @@
+# 견적서 분석 모델 비교 (가상 견적서 4장, scripts/quote-eval). 손으로만 실행, 결과는 실행 화면 요약(Summary)에 표로.
+# 필요한 시크릿: ANTHROPIC_API_KEY (운영 Worker와 같은 키). 한 번 돌릴 때 비용은 대략 수백 원.
+name: Quote model eval
+
+on:
+  workflow_dispatch:
+    inputs:
+      models:
+        description: "비교할 모델 (쉼표로)"
+        default: "claude-opus-5-5,claude-sonnet-5-5,claude-haiku-5-5"
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+      - name: Run eval
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MODELS: ${{ inputs.models }}
+        run: node scripts/quote-eval/run.mjs "$MODELS"
