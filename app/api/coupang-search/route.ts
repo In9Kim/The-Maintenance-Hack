@@ -10,7 +10,13 @@ import { coupangPickFor } from "@/lib/coupang-links"
 /** 여러 부품에 두루 붙는 말 (구별에 쓰지 않음) */
 const GENERIC = new Set(["브레이크", "엔진", "필터", "블레이드", "전면", "앞", "뒤", "전", "후", "세트", "12V", "4개", "프론트", "리어", "좌", "우", "좌우"])
 /** 견적서에 흔한 다른 이름 (상품명에는 이쪽으로 적힌 경우가 많음) */
-const ALIAS: Record<string, string[]> = { 하부암: ["로어암", "로워암", "컨트롤암"], 쇽업소버: ["쇼바", "쇼크업소버"], 점화플러그: ["플러그"], 미션오일: ["ATF", "오토미션오일"] }
+const ALIAS: Record<string, string[]> = { 하부암: ["로어암", "로워암", "컨트롤암"], 쇽업소버: ["쇼바", "쇼크업소버"], 점화플러그: ["플러그"], 미션오일: ["ATF", "오토미션오일"], 배터리: ["밧데리", "AGM", "CMF", "DIN"] }
+/** 부품 검색에 같이 걸리는 공구·다른 부품 (점화플러그 렌치, 점화코일 세트, 습기건조기 등) */
+const NOT_PART = /렌치|소켓|점화\s*코일|코일\s*\d|습기|건조기|스포일러|에어댐|사이드\s*스[커컷]|도어\s*모듈|충전기|점프|단자|와이퍼/
+/** 차종 전용이라 상품명에 차 이름이 있어야 믿을 수 있는 부품 (배터리는 규격 공용 상품이 많아 제외) */
+const CAR_SPECIFIC = new Set(["brake", "spark"])
+/** 현대·기아 세대 코드 (상품명에 다른 세대 코드만 있으면 그 세대용) */
+const GEN_CODES = /\b(BL|XM|UM|MQ4|TD|HD|MD|AD|CN7|YD|BD|JF|DL3|LF|YF|NF|DN8|HG|IG|GN7|TL|NX4|QL|NQ5|SL|KA4|YP|VQ|DM|TM|MX5|SP2|JA|TAM|SG2|DE|GL3|YG|TF)\b/g
 
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams
@@ -35,6 +41,30 @@ export async function GET(req: NextRequest) {
     const all = await coupangSearch(keyword, 10)
     let kept = relevant(all)
     let items = kept.length >= 3 ? kept : all
+    if (part && ["battery", "brake", "spark"].includes(part.category)) {
+      // 배터리·브레이크·점화플러그: 관련 없는 상품으로 채우지 않는다 (적으면 적은 대로)
+      const front = /\(전\)|앞/.test(part.name)
+      const rear = /\(후\)|뒤/.test(part.name)
+      const model = car.model.replace(/\s/g, "")
+      const both = /앞뒤|앞,뒤|앞\/뒤/
+      const genCode = /^[A-Z][A-Z0-9]{1,4}$/.test(code) ? code.toUpperCase() : ""
+      items = kept.filter((x) => {
+        const n = x.name.replace(/\s/g, "")
+        if (NOT_PART.test(x.name)) return false
+        if (CAR_SPECIFIC.has(part.category) && !n.includes(model)) return false
+        // 같은 차 이름의 다른 세대 상품 (쏘렌토 MQ4에 '구형 BL'·'UM' 패드) 제외: 세대 코드가 적혀 있는데 우리 코드가 없으면
+        if (CAR_SPECIFIC.has(part.category) && genCode) {
+          const codes: string[] = x.name.toUpperCase().match(GEN_CODES) ?? []
+          if (codes.length && !codes.includes(genCode)) return false
+        }
+        // 앞·뒤 한쪽만인 상품 걸러내기 (앞뒤 세트는 둘 다 통과)
+        const frontOnly = /앞|전륜|전브레이크/.test(n) && !/뒤|뒷|후륜/.test(n)
+        const rearOnly = /뒤|뒷|후륜/.test(n) && !/앞|전륜/.test(n)
+        if (front && rearOnly && !both.test(n)) return false
+        if (rear && frontOnly && !both.test(n)) return false
+        return true
+      })
+    }
     if (!part) {
       // 직접 적은 검색어: 맞는 상품이 없으면 쿠팡이 엉뚱한 상품(샴푸 등)을 돌려줌 → 관련 있는 것만. 없으면 다른 이름으로 한 번 더
       const alt = base.length ? ALIAS[base[base.length - 1]]?.[0] : undefined
