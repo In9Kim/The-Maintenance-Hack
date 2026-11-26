@@ -71,6 +71,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
   const [cloudError, setCloudError] = useState("")
   const accountRef = useRef<Account | null>(null)
   const [providers, setProviders] = useState<Provider[]>([])
+  const [guest, setGuest] = useState(false) // '로그인 없이 이 폰에만' 을 고름
   useEffect(() => {
     if (authEnabled()) enabledProviders().then(setProviders)
   }, [])
@@ -161,7 +162,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
   const active = garage.cars.find((c) => c.id === garage.active)
   const showRegister = adding !== null || !active
   // 처음 온 사람(차 없음·비로그인): 로그인을 먼저 보여 주고, 등록 양식은 '로그인 없이' 쓰는 길로
-  const loginFirst = !account && garage.cars.length === 0 && providers.length > 0
+  const loginFirst = !account && garage.cars.length === 0 && providers.length > 0 && !guest && adding === null
 
   return (
     <div className="mx-auto max-w-2xl px-5 pb-6 pt-6 sm:pt-10">
@@ -197,29 +198,33 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
 
       {showRegister ? (
         <>
-        {loginFirst && (
+        {loginFirst ? (
           <>
             <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[34px]">내 차 등록</h1>
-            <p className="mt-2 text-[15px] text-muted-foreground">로그인하면 차 여러 대를 저장하고, 폰을 바꿔도 그대로예요</p>
-            <div className="mt-5"><LoginButtons providers={providers} /></div>
-            <p className="my-6 flex items-center gap-3 text-[13px] text-muted-foreground before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
-              또는 로그인 없이 이 폰에만 저장
-            </p>
+            <p className="mt-2 text-[15px] text-muted-foreground">차종과 연식만 고르면 맞는 부품과 가격을 보여 드려요</p>
+            <div className="mt-6"><LoginButtons providers={providers} /></div>
+            <p className="mt-2 text-[13px] text-muted-foreground">로그인하면 차 여러 대를 저장하고, 폰을 바꿔도 그대로예요</p>
+            <button
+              onClick={() => setGuest(true)}
+              className="mt-6 flex h-12 w-full items-center justify-center rounded-[10px] border border-border bg-card text-[15px] font-semibold"
+            >
+              로그인 없이 이 폰에만 저장
+            </button>
           </>
-        )}
+        ) : (
         <Register
           key={adding ?? "first"}
-          heading={!loginFirst}
           options={options}
           initialCarId={adding || ""}
           first={garage.cars.length === 0}
-          onCancel={garage.cars.length ? () => setAdding(null) : undefined}
+          onCancel={garage.cars.length ? () => setAdding(null) : guest ? () => setGuest(false) : undefined}
           onSave={(c) => {
             saveCar(c)
             setAdding(null)
             if (window.location.search) window.history.replaceState(null, "", "/my")
           }}
         />
+        )}
         </>
       ) : (
         <Garage key={active!.id} my={active!} loggedIn={!!account} update={saveCar} remove={() => deleteCar(active!.id!)} />
@@ -227,7 +232,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
 
       {cloudError && <p role="alert" className="mt-4 rounded-[10px] bg-[#FEF3F2] px-4 py-3 text-[14px] text-[#B42318]">{cloudError}</p>}
 
-      {authEnabled() && !loginFirst && (
+      {authEnabled() && !loginFirst && !(guest && !account && garage.cars.length === 0) && (
         <AccountBox
           providers={providers}
           account={account}
