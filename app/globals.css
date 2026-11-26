@@ -93,3 +93,11 @@ h1, h2, h3 { letter-spacing: -0.03em; }
 .cd-glow { animation: cd-glow 1.6s ease-in-out infinite; }
 @keyframes cd-wipe { 0%, 100% { transform: rotate(0deg) } 50% { transform: rotate(-38deg) } }
 .cd-wipe { animation: cd-wipe 1.4s ease-in-out 2; }
+
+/* 첫 화면: 차를 등록했으면 내 차만, 아니면 예시 (html[data-car]는 layout의 스크립트가 붙임) */
+html[data-car] .home-guest {
+  display: none;
+}
+html:not([data-car]) .home-mine {
+  display: none;
+}

@@ -99,6 +99,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
       return car ? { ...c, car } : c
     })
     setGarage(g)
+    if (g.cars.length) saveGarage(g) // 최신 부품·쿠팡 가격을 저장해 두면 첫 화면 '내 차'도 같은 값을 씀
     const add = new URLSearchParams(window.location.search).get("add")
     if (add && options.some((o) => o.id === add)) setAdding(add)
     setReady(true)

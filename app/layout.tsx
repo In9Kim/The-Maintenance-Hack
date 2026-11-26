@@ -33,8 +33,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <head>
+        {/* 차를 등록한 사람이면 첫 화면을 그리기 전에 표시 (첫 화면 예시 ↔ 내 차 전환이 깜빡이지 않게, components/home/HomeMyCar.tsx) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var g=JSON.parse(localStorage.getItem("mh_garage")||"null");if((g&&g.cars&&g.cars.length)||localStorage.getItem("mh_my_car"))document.documentElement.dataset.car="1"}catch(e){}`,
+          }}
+        />
         {/* Pretendard: 한글 본문·숫자 정렬용 (쓰는 글자만 내려받는 동적 서브셋, 워커 크기와 무관) */}
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="" />
         <link

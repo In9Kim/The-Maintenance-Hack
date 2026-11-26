@@ -21,12 +21,14 @@ export function CarPicker({
   via = "home_picker",
   cta = "정비 비용 보기",
   hint = "차종을 고르면 비용을 보여드려요",
+  label = "차종 찾기",
 }: {
   cars: PickerCar[]
   path?: string
   via?: string
   cta?: string
   hint?: string
+  label?: string
 }) {
   const router = useRouter()
   const brands = useMemo(() => Array.from(new Set(cars.map((c) => c.brand))), [cars])
@@ -43,7 +45,7 @@ export function CarPicker({
 
   return (
     <form onSubmit={go} className="rounded-2xl border border-border bg-card p-4 sm:p-5">
-      <p className="text-[13px] font-semibold text-muted-foreground">차종 찾기</p>
+      <p className="text-[13px] font-semibold text-muted-foreground">{label}</p>
       <div className="mt-2 grid grid-cols-[0.8fr_1.2fr] gap-2">
         <label className="sr-only" htmlFor={via + "-brand"}>브랜드</label>
         <select

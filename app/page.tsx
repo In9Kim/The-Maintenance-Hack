@@ -1,14 +1,9 @@
 import Link from "next/link";
-import { MyCarCard } from "@/components/home/MyCarCard";
+import { HomeMyCar } from "@/components/home/HomeMyCar";
 import { CarPicker, type PickerCar } from "@/components/home/CarPicker";
-import { ReceiptCard } from "@/components/home/ReceiptCard";
-import {
-  carShortName,
-  pageMetadata,
-  partCost,
-  priceBasis,
-  seoCars,
-} from "@/lib/seo";
+import { carShortName, pageMetadata, partSlug, seoCars } from "@/lib/seo";
+import { coupangPickFor } from "@/lib/coupang-links";
+import { carPhoto } from "@/lib/car-photos";
 import { majorRecalls, fmtDate } from "@/lib/recalls/data";
 import { recallCars, splitCritical } from "@/lib/recalls/highlight";
 
@@ -19,8 +14,8 @@ export const metadata = pageMetadata({
   path: "/",
 });
 
-
-
+/** 등록 안 한 사람에게 보여 줄 예시 차 (실제 데이터) */
+const EXAMPLE_CAR = "kia-sorento-mq4";
 
 export default function Home() {
   const cars = seoCars();
@@ -30,10 +25,14 @@ export default function Home() {
     label: `${c.model} ${c.generation.replace(/\s*\(.*?\)\s*/g, "")} · ${c.yearRange}`,
   }));
 
-  // 첫 화면 예시 영수증: 실제 데이터 (쏘렌토 MQ4 엔진오일)
-  const sorento = cars.find((c) => c.id === "kia-sorento-mq4");
-  const oil = sorento?.parts.find((p) => p.category === "oil");
-  const oilCost = oil ? partCost(oil) : null;
+  const ex = cars.find((c) => c.id === EXAMPLE_CAR);
+  const exEngine = ex?.engineTypes[0];
+  const exParts = (ex?.parts ?? [])
+    .filter((p) => !p.engine || p.engine === exEngine)
+    .map((p) => ({ part: p, pick: coupangPickFor(p) }))
+    .sort((a, b) => Number(!!b.pick) - Number(!!a.pick))
+    .slice(0, 4);
+  const exPhoto = ex ? carPhoto(ex.id) : undefined;
 
   const criticalGroups = splitCritical(majorRecalls(30).groups).critical;
   const top = criticalGroups[0];
@@ -41,40 +40,59 @@ export default function Home() {
 
   return (
     <div>
-      {/* ── 첫 화면: 차종 찾기 ───────────────────────────────── */}
-      <section className="mx-auto grid max-w-5xl gap-8 px-5 pb-12 pt-8 sm:pt-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-14">
-        <div className="min-w-0">
-          <div className="mb-6 max-w-xl">
-            <MyCarCard />
-          </div>
-          <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[40px] sm:leading-[1.25]">
-            정비소 견적, 부품값과 공임으로 나눠 보세요
-          </h1>
-          <div className="mt-6 max-w-xl">
-            <CarPicker cars={pickerCars} />
-          </div>
-        </div>
-        {sorento && oil && oilCost && (
-          <div className="mx-auto w-full max-w-sm lg:mx-0 lg:justify-self-end">
-            <ReceiptCard
-              title={`${carShortName(sorento)} · 엔진오일 교체 예시`}
-              dealer={oilCost.dealer}
-              self={oilCost.self}
-              basis={priceBasis(sorento)}
-            />
-            <Link
-              href={`/cars/${sorento.id}`}
-              className="mt-5 inline-flex min-h-[44px] items-center text-[14px] font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-primary"
-            >
-              쏘렌토 소모품 전체 비용 보기
-            </Link>
-          </div>
-        )}
+      {/* ── 등록한 사람: 내 차만 ── */}
+      <section className="home-mine mx-auto max-w-xl px-5 pb-6 pt-6 sm:pt-10">
+        <HomeMyCar />
       </section>
 
-      {/* ── 꼭 확인할 리콜: 한 줄 ─────────────────────────────── */}
+      {/* ── 등록 안 한 사람(검색엔진 포함): 예시 차 + 등록 유도 ── */}
+      <section className="home-guest mx-auto max-w-xl px-5 pb-6 pt-8 sm:pt-12">
+        <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[36px]">정비소 견적, 부품값과 공임으로 나눠 보세요</h1>
+        <p className="mt-2 text-[15px] text-muted-foreground">내 차를 등록하면 맞는 부품과 가격, 교체 시기를 보여 드려요</p>
+
+        {ex && (
+          <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
+            <div className="flex items-center gap-3 bg-[#14213D] p-4 text-white">
+              <span className="min-w-0 flex-1">
+                <span className="block text-[12px] text-white/60">예시</span>
+                <span className="block text-[18px] font-extrabold">{carShortName(ex)}</span>
+                <span className="block text-[12px] text-white/70">{exEngine}</span>
+              </span>
+              {exPhoto && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={exPhoto.localSmall} alt="" width={160} height={100} className="h-[60px] w-[96px] shrink-0 rounded-md object-cover" />
+              )}
+            </div>
+            <ul className="divide-y divide-border">
+              {exParts.map(({ part, pick }) => (
+                <li key={part.id} className="flex items-center justify-between gap-3 px-4 py-3">
+                  <Link href={`/cars/${ex.id}/${partSlug(ex, part)}`} className="min-w-0 truncate text-[15px] font-semibold">
+                    {part.name}
+                  </Link>
+                  <span className="num shrink-0 text-[14px] font-bold text-primary">
+                    {pick ? `쿠팡 ${pick.price.toLocaleString("ko-KR")}원` : `예상 ${part.coupangPrice.toLocaleString("ko-KR")}원`}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <Link
+          href="/my"
+          className="mt-4 flex h-12 w-full items-center justify-center rounded-[10px] bg-primary text-[16px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px"
+        >
+          내 차 등록하기
+        </Link>
+
+        <div className="mt-10">
+          <CarPicker cars={pickerCars} label="등록 없이 차종만 둘러보기" />
+        </div>
+      </section>
+
+      {/* ── 꼭 확인할 리콜: 한 줄 (등록한 사람은 위 빨간 띠로 내 차 리콜만) ── */}
       {top && (
-        <section className="mx-auto max-w-5xl px-5 pt-8">
+        <section className="home-guest mx-auto max-w-xl px-5 pb-8 pt-4">
           <Link
             href="/recalls"
             className="flex items-center gap-3 rounded-[14px] border border-[#FEDF89] bg-[#FFFAEB] px-4 py-3 transition hover:border-[#F79009]"
