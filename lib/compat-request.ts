@@ -35,6 +35,7 @@ export function parseProductInput(text: string): { url?: string; name?: string }
   const name = t
     .replace(URL_RE, " ")
     .replace(/\[(쿠팡|coupang|네이버|11번가|G마켓)\]/gi, " ")
+    .replace(/쿠팡을\s*추천합니다[!.]?/g, " ")
     .replace(/쿠팡(에서|을 통해)?\s*(확인|보기|구매)하?세요[.!]?/g, " ")
     .replace(/(지금|바로)?\s*(구매|확인)하러\s*가기/g, " ")
     .replace(/\s+/g, " ")

@@ -17,7 +17,12 @@ export interface CheckCar {
   engines: string[]
   /** 이 차에 맞게 고른 쿠팡 상품 (가격은 date 기준) */
   picks: { part: string; engine?: string; name: string; price: number; date: string; url: string }[]
+  /** 부품 고르기 버튼 (쿠팡 검색용) */
+  parts: { slug: string; name: string; engine?: string }[]
 }
+
+interface Item { productId: number; name: string; price: number; url: string; image?: string; rocket: boolean }
+type ItemCheck = { busy: boolean; result?: Result; error?: string }
 
 interface Result {
   compatibility: "YES" | "NO" | "UNCERTAIN"
@@ -48,6 +53,10 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
   const [result, setResult] = useState<Result | null>(null)
+  const [partSel, setPartSel] = useState("")
+  const [q, setQ] = useState("")
+  const [search, setSearch] = useState<{ busy: boolean; items: Item[]; pickId: number | null; error?: string } | null>(null)
+  const [checks, setChecks] = useState<Record<number, ItemCheck>>({})
 
   // 등록한 내 차가 있으면 미리 골라 둔다
   useEffect(() => {
@@ -68,13 +77,43 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
   const parsed = parseProductInput(product)
   const ok = !!car && (!!parsed.name || !!parsed.url) && !busy
 
-  const paste = async () => {
+  /** 쿠팡 검색 (화면 안에서): 부품 버튼 또는 직접 입력 */
+  const doSearch = async (opt: { part?: string; q?: string }) => {
+    if (!car) return
+    setSearch({ busy: true, items: [], pickId: null })
+    setChecks({})
+    track({ type: "nav", carId: car.id, meta: { via: "check_search", part: opt.part ?? null } })
+    const sp = new URLSearchParams({ carId: car.id, ...(opt.part ? { part: opt.part } : { q: opt.q ?? "" }) })
     try {
-      const t = await navigator.clipboard.readText()
-      if (t) setProduct(t)
+      const r = await fetch(`/api/coupang-search?${sp}`)
+      const j = await r.json()
+      if (!r.ok) setSearch({ busy: false, items: [], pickId: null, error: j.error })
+      else setSearch({ busy: false, items: j.items ?? [], pickId: j.pickId ?? null })
     } catch {
-      setError("붙여넣기 권한이 없어요. 입력칸을 길게 눌러 붙여 넣어 주세요.")
+      setSearch({ busy: false, items: [], pickId: null, error: "인터넷 연결을 확인하고 다시 시도해 주세요." })
     }
+  }
+
+  const verify = async (text: string): Promise<{ result?: Result; error?: string }> => {
+    if (!car) return { error: "차종을 먼저 골라 주세요." }
+    try {
+      const r = await fetch("/api/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ carId: car.id, year: year ? Number(year) : undefined, engine: engine || undefined, product: text }),
+      })
+      const j = await r.json()
+      return r.ok ? { result: j as Result } : { error: j.error ?? "확인하지 못했어요. 잠시 뒤 다시 시도해 주세요." }
+    } catch {
+      return { error: "인터넷 연결을 확인하고 다시 시도해 주세요." }
+    }
+  }
+
+  const checkItem = async (it: Item) => {
+    setChecks((c) => ({ ...c, [it.productId]: { busy: true } }))
+    track({ type: "report", carId: car?.id, meta: { via: "check_item" } })
+    const r = await verify(it.name)
+    setChecks((c) => ({ ...c, [it.productId]: { busy: false, ...r } }))
   }
 
   const submit = async (e: React.FormEvent) => {
@@ -84,20 +123,10 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
     setError("")
     setResult(null)
     track({ type: "report", carId: car.id, meta: { via: "check_submit" } })
-    try {
-      const r = await fetch("/api/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ carId: car.id, year: year ? Number(year) : undefined, engine: engine || undefined, product }),
-      })
-      const j = await r.json()
-      if (!r.ok) setError(j.error ?? "확인하지 못했어요. 잠시 뒤 다시 시도해 주세요.")
-      else setResult(j as Result)
-    } catch {
-      setError("인터넷 연결을 확인하고 다시 시도해 주세요.")
-    } finally {
-      setBusy(false)
-    }
+    const r = await verify(product)
+    if (r.error) setError(r.error)
+    else if (r.result) setResult(r.result)
+    setBusy(false)
   }
 
   return (
@@ -110,12 +139,12 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
         </div>
         <div className="mt-2 grid grid-cols-[0.8fr_1.2fr] gap-2">
           <label className="sr-only" htmlFor="ck-brand">브랜드</label>
-          <select id="ck-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setYear(""); setEngine(""); setResult(null) }}>
+          <select id="ck-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setYear(""); setEngine(""); setResult(null); setSearch(null); setPartSel("") }}>
             <option value="">브랜드</option>
             {brands.map((b) => <option key={b}>{b}</option>)}
           </select>
           <label className="sr-only" htmlFor="ck-car">차종</label>
-          <select id="ck-car" className={FIELD} value={carId} disabled={!brand} onChange={(e) => { setCarId(e.target.value); setYear(""); setEngine(""); setResult(null) }}>
+          <select id="ck-car" className={FIELD} value={carId} disabled={!brand} onChange={(e) => { setCarId(e.target.value); setYear(""); setEngine(""); setResult(null); setSearch(null); setPartSel("") }}>
             <option value="">차종</option>
             {cars.filter((c) => c.brand === brand).map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
           </select>
@@ -161,10 +190,98 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
         </div>
       )}
 
-      {/* ③ 다른 상품 확인 */}
-      <form onSubmit={submit} className="mt-4 rounded-2xl border border-border bg-card p-4">
-        <p className="text-[15px] font-bold">다른 상품이면 붙여 넣으세요</p>
-        <p className="mt-0.5 text-[13px] text-muted-foreground">쿠팡 앱 상품 화면 → <b>공유</b> → <b>복사</b> 후 여기 붙여넣기. 상품명이나 품번만 적어도 돼요</p>
+      {/* ③ 화면 안에서 쿠팡 검색 → 고른 상품이 맞는지 바로 확인 (앱 이동 없음) */}
+      {car && (
+        <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+          <p className="text-[15px] font-bold">다른 상품 찾아서 확인하기</p>
+          <p className="mt-0.5 text-[13px] text-muted-foreground">부품을 누르면 쿠팡 상품이 나와요. [내 차에 맞나?]를 누르면 바로 확인해요</p>
+          <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
+            {car.parts
+              .filter((p) => !p.engine || !engine || p.engine === engine)
+              .map((p) => (
+                <button
+                  key={p.slug}
+                  onClick={() => {
+                    setPartSel(p.slug)
+                    doSearch({ part: p.slug })
+                  }}
+                  className={`h-10 shrink-0 rounded-full px-3.5 text-[14px] font-semibold ${partSel === p.slug ? "bg-foreground text-background" : "border border-border bg-card"}`}
+                >
+                  {p.name.replace(/\s*\(.*?\)/g, "")}
+                </button>
+              ))}
+          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              if (q.trim().length >= 2) {
+                setPartSel("")
+                doSearch({ q })
+              }
+            }}
+            className="mt-2 grid grid-cols-[1fr_auto] gap-2"
+          >
+            <label className="sr-only" htmlFor="ck-q">직접 찾기</label>
+            <input id="ck-q" className={FIELD} placeholder="직접 찾기 (예: 브레이크 디스크)" value={q} onChange={(e) => setQ(e.target.value)} />
+            <button type="submit" className="h-12 rounded-[10px] bg-foreground px-4 text-[14px] font-bold text-background">찾기</button>
+          </form>
+
+          {search?.busy && <div className="mt-3 h-40 animate-pulse rounded-[12px] bg-muted" />}
+          {search?.error && <p role="alert" className="mt-3 rounded-[10px] bg-[#FEF3F2] px-3.5 py-2.5 text-[14px] text-[#B42318]">{search.error}</p>}
+          {search && !search.busy && !search.error && search.items.length === 0 && (
+            <p className="mt-3 text-[14px] text-muted-foreground">검색 결과가 없어요. 다른 말로 찾아보세요.</p>
+          )}
+          {search && !search.busy && search.items.length > 0 && (
+            <ul className="mt-3 space-y-2">
+              {search.items.map((it) => {
+                const c = checks[it.productId]
+                const v = c?.result ? VERDICT[c.result.compatibility] ?? VERDICT.UNCERTAIN : null
+                return (
+                  <li key={it.productId} className="rounded-[12px] border border-border p-3">
+                    <div className="flex gap-3">
+                      {it.image && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={it.image} alt="" width={64} height={64} loading="lazy" className="h-16 w-16 shrink-0 rounded-lg bg-white object-contain ring-1 ring-border" />
+                      )}
+                      <span className="min-w-0 flex-1">
+                        {search.pickId === it.productId && <span className="mb-0.5 inline-block rounded bg-primary px-1.5 text-[11px] font-bold text-primary-foreground">정비핵 추천</span>}
+                        <span className="line-clamp-2 block text-[13px] leading-snug">{it.name}</span>
+                        <span className="num mt-0.5 block text-[15px] font-bold">
+                          {it.price.toLocaleString("ko-KR")}원{it.rocket && <span className="ml-1 text-[11px] font-semibold text-[#0073E9]">로켓</span>}
+                        </span>
+                      </span>
+                    </div>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      <button onClick={() => checkItem(it)} disabled={c?.busy} className="h-10 rounded-[8px] border border-border text-[13px] font-semibold disabled:opacity-60">
+                        {c?.busy ? "확인하는 중…" : "내 차에 맞나?"}
+                      </button>
+                      <OutboundLink href={it.url} target="coupang" carId={car.id} sponsored className="flex h-10 items-center justify-center rounded-[8px] bg-primary text-[13px] font-bold text-primary-foreground">
+                        쿠팡에서 보기
+                      </OutboundLink>
+                    </div>
+                    {c?.error && <p className="mt-2 text-[13px] text-[#B42318]">{c.error}</p>}
+                    {c?.result && v && (
+                      <div className={`mt-2 rounded-[10px] border px-3 py-2.5 ${v.cls}`}>
+                        <p className="text-[14px] font-bold">{v.label}</p>
+                        <p className="mt-0.5 text-[13px] leading-relaxed text-foreground">{c.result.parts_analysis[0]?.reason ?? c.result.conclusion}</p>
+                      </div>
+                    )}
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+          {search && search.items.length > 0 && (
+            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">가격은 지금 쿠팡 검색 기준이에요. AI 판정은 참고용이고 하루 횟수 제한이 있어요. {AFFILIATE_TEXT}</p>
+          )}
+        </div>
+      )}
+
+      {/* ④ 쿠팡에서 이미 고른 상품: 공유 글 붙여넣기 (보조) */}
+      <details className="mt-4 rounded-2xl border border-border bg-card p-4">
+        <summary className="cursor-pointer text-[15px] font-bold">쿠팡에서 이미 고른 상품이 있나요?</summary>
+      <form onSubmit={submit} className="mt-2">
+        <p className="text-[13px] text-muted-foreground">쿠팡 앱 상품 화면 → <b>공유</b> → <b>복사</b> 후 아래 칸을 길게 눌러 붙여넣기. 상품명이나 품번만 적어도 돼요</p>
         <label className="sr-only" htmlFor="ck-product">상품</label>
         <textarea
           id="ck-product"
@@ -179,11 +296,8 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
             {parsed.name ? <>상품명: <b className="text-foreground">{parsed.name.slice(0, 60)}</b></> : "링크에서 상품명을 읽어 볼게요"}
           </p>
         )}
-        <div className="mt-3 grid grid-cols-[auto_1fr] gap-2">
-          <button type="button" onClick={paste} className="h-12 rounded-[10px] border border-border px-4 text-[14px] font-semibold">
-            붙여넣기
-          </button>
-          <button type="submit" disabled={!ok} className="h-12 rounded-[10px] bg-primary text-[16px] font-bold text-primary-foreground disabled:cursor-not-allowed disabled:bg-[#9BB8AD]">
+        <div className="mt-3">
+          <button type="submit" disabled={!ok} className="h-12 w-full rounded-[10px] bg-primary text-[16px] font-bold text-primary-foreground disabled:cursor-not-allowed disabled:bg-[#9BB8AD]">
             {busy ? "확인하는 중…" : !car ? "차종을 먼저 골라 주세요" : "내 차에 맞는지 확인"}
           </button>
         </div>
@@ -202,6 +316,7 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
           </details>
         )}
       </form>
+      </details>
 
       {result && <ResultView r={result} carId={car?.id} onReset={() => setResult(null)} />}
     </div>

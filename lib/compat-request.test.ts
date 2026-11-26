@@ -32,3 +32,8 @@ test("AI에 넘기는 차량 정보·근거: 고른 엔진의 규격만, 품번 
 test("엔진을 안 고르면 후보를 모두 적고 그렇다고 밝힌다", () => {
   assert.match(buildCompatRequest(car).vehicle.engine_spec, /엔진 미선택/)
 })
+test("쿠팡 앱 공유 글 실제 형식 (쿠팡을 추천합니다!)", () => {
+  const r = parseProductInput("쿠팡을 추천합니다!\n 평화발레오 브레이크 디스크 K3 18년1월 이전 일반 가솔린 차량 앞-2062\n https://link.coupang.com/a/iZDfSpNFgy")
+  assert.equal(r.name, "평화발레오 브레이크 디스크 K3 18년1월 이전 일반 가솔린 차량 앞-2062")
+  assert.equal(r.url, "https://link.coupang.com/a/iZDfSpNFgy")
+})

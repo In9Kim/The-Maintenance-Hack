@@ -1,4 +1,4 @@
-import { pageMetadata, seoCars, carShortName } from "@/lib/seo"
+import { pageMetadata, seoCars, carShortName, partSlug } from "@/lib/seo"
 import { Breadcrumbs, JsonLd } from "@/components/seo/Shared"
 import { CheckPage, type CheckCar } from "@/components/check/CheckPage"
 import { RecallFaq, faqJsonLd } from "@/components/recalls/RecallParts"
@@ -40,6 +40,7 @@ export default function Page() {
     name: carShortName(c),
     years: yearsOf(c.yearRange),
     engines: c.engineTypes,
+    parts: c.parts.map((p) => ({ slug: partSlug(c, p), name: p.name, engine: p.engine })),
     picks: c.parts.flatMap((p) => {
       const k = coupangPickFor(p)
       return k ? [{ part: p.name, engine: p.engine, name: k.name, price: k.price, date: k.checkedAt, url: k.url }] : []
