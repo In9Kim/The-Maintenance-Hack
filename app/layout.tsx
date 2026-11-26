@@ -49,6 +49,8 @@ export default function RootLayout({
         />
         {/* metadata.alternates는 페이지별 canonical 설정이 덮어써서 RSS 링크는 여기 직접 둔다 */}
         <link rel="alternate" type="application/rss+xml" title="정비핵 최근 리콜·차종 정보" href={`${SITE_URL}/rss.xml`} />
+        {/* 구글 애드센스 (사이트 소유 확인 + 승인 후 광고). 광고 위치는 애드센스 화면에서 관리 */}
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8012730685624274" crossOrigin="anonymous" />
       </head>
       <body className="pb-[calc(57px+env(safe-area-inset-bottom))] md:pb-0">
         <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[60] focus:rounded-md focus:bg-card focus:px-3 focus:py-2 focus:text-sm focus:shadow">
