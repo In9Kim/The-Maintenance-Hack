@@ -15,7 +15,7 @@ import {
   type MyCar,
   type MyCarSnapshot,
 } from "@/lib/my-car"
-import { authEnabled, supabase } from "@/lib/supabase"
+import { authEnabled, enabledProviders, supabase, type Provider } from "@/lib/supabase"
 import { deleteCloudCar, fetchCars, fromRow, mergeGarage, pushCars } from "@/lib/cloud-garage"
 import { track } from "@/lib/track"
 
@@ -237,8 +237,12 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
 
 function AccountBox({ account, onSignedOut }: { account: Account | null; onSignedOut: () => void }) {
   const [busy, setBusy] = useState(false)
+  const [providers, setProviders] = useState<Provider[]>([])
+  useEffect(() => {
+    enabledProviders().then(setProviders)
+  }, [])
 
-  const signIn = async (provider: "kakao" | "google") => {
+  const signIn = async (provider: Provider) => {
     setBusy(true)
     track({ type: "nav", meta: { via: `login_${provider}` } })
     const sb = await supabase()
@@ -287,19 +291,21 @@ function AccountBox({ account, onSignedOut }: { account: Account | null; onSigne
     )
   }
 
+  if (!providers.length) return null
+
   return (
     <section className="mt-10 rounded-[14px] border border-border bg-card p-4">
       <p className="text-[15px] font-semibold">로그인하면 차 여러 대를 폰 바꿔도 그대로</p>
       <div className="mt-3 grid gap-2">
-        <button
+        {providers.includes("kakao") && <button
           onClick={() => signIn("kakao")}
           disabled={busy}
           className="flex h-12 items-center justify-center gap-2 rounded-[10px] bg-[#FEE500] text-[15px] font-semibold text-black/85 disabled:opacity-60"
         >
           <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden><path fill="currentColor" d="M12 3.5C6.75 3.5 2.5 6.86 2.5 11c0 2.65 1.75 4.98 4.38 6.31l-.9 3.3c-.08.3.26.54.52.37l3.93-2.6c.51.06 1.03.1 1.57.1 5.25 0 9.5-3.36 9.5-7.48S17.25 3.5 12 3.5z" /></svg>
           카카오로 시작하기
-        </button>
-        <button
+        </button>}
+        {providers.includes("google") && <button
           onClick={() => signIn("google")}
           disabled={busy}
           className="flex h-12 items-center justify-center gap-2 rounded-[10px] border border-border bg-white text-[15px] font-semibold text-black/85 disabled:opacity-60"
@@ -311,7 +317,7 @@ function AccountBox({ account, onSignedOut }: { account: Account | null; onSigne
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15A10.96 10.96 0 0 0 12 1 11 11 0 0 0 2.18 7.07l3.65 2.84C6.7 7.31 9.13 5.38 12 5.38z" />
           </svg>
           구글로 시작하기
-        </button>
+        </button>}
       </div>
       <p className="mt-2 text-[12px] text-muted-foreground">
         로그인 없이도 이 폰에서는 그대로 쓸 수 있어요 · <Link href="/privacy" className="underline underline-offset-2">개인정보 처리방침</Link>
