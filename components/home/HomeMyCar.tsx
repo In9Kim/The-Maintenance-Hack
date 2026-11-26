@@ -2,16 +2,12 @@
 
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { dueList, loadGarage, saveGarage, type DueState, type Garage } from "@/lib/my-car"
+import { dueList, loadGarage, saveGarage, type Garage } from "@/lib/my-car"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
+import { CarDiagram } from "@/components/cars/CarDiagram"
+import type { DiagramData } from "@/lib/diagram-data"
 
-const BADGE: Record<DueState, { label: string; cls: string }> = {
-  over: { label: "교체 시기 지남", cls: "bg-[#FEF3F2] text-[#B42318]" },
-  soon: { label: "곧 교체", cls: "bg-[#FFF6ED] text-[#B54708]" },
-  ok: { label: "여유", cls: "bg-[#ECFDF3] text-[#067647]" },
-  unknown: { label: "기록 필요", cls: "bg-muted text-muted-foreground" },
-}
 
 /**
  * 첫 화면 '내 차' (등록한 사람만). 등록 여부는 layout의 작은 스크립트가 <html data-car>로 먼저 표시해서
@@ -19,6 +15,27 @@ const BADGE: Record<DueState, { label: string; cls: string }> = {
  */
 export function HomeMyCar() {
   const [g, setG] = useState<Garage | null>(null)
+  const [diagram, setDiagram] = useState<DiagramData | null>(null)
+  const activeCar = g?.cars.find((c) => c.id === g.active)
+  const carId = activeCar?.car.id
+  const engine = activeCar?.engine
+
+  useEffect(() => {
+    if (!carId) return
+    let alive = true
+    setDiagram(null)
+    fetch(`/api/car-diagram/${carId}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: DiagramData | null) => {
+        if (!alive || !d) return
+        // 내 차 엔진의 부품만
+        setDiagram({ ...d, parts: d.parts.filter((p) => !p.engine || !engine || p.engine === engine) })
+      })
+      .catch(() => {})
+    return () => {
+      alive = false
+    }
+  }, [carId, engine])
 
   useEffect(() => {
     const read = () => {
@@ -37,8 +54,8 @@ export function HomeMyCar() {
   if (!my) return null
 
   const list = dueList(my)
-  const urgent = list.filter((d) => d.state === "over" || d.state === "soon").length
-  const anyShop = list.some((d) => d.part.shop)
+  const urgentList = list.filter((d) => d.state === "over" || d.state === "soon")
+  const unknownCount = list.filter((d) => d.state === "unknown").length
 
   return (
     <div>
@@ -72,33 +89,44 @@ export function HomeMyCar() {
         )}
       </Link>
 
-      <p className="mt-5 text-[16px] font-bold">
-        {urgent > 0 ? `지금 챙길 소모품 ${urgent}개` : list.every((d) => d.state === "unknown") ? "내 차 소모품 가격" : "당장 교체할 소모품은 없어요"}
-      </p>
-      <ul className="mt-2 divide-y divide-border rounded-[14px] border border-border bg-card">
-        {list.map((d) => {
-          const b = BADGE[d.state]
-          return (
-            <li key={d.part.slug} className="flex items-center gap-3 px-4 py-3">
-              <span className="min-w-0 flex-1">
-                <Link href={`/cars/${my.car.id}/${d.part.slug}`} className="block truncate text-[15px] font-semibold">
-                  {d.part.name}
-                </Link>
+      {/* 급한 소모품만 (최대 3개). 전체 목록·교체 기록은 마이에서 */}
+      {urgentList.length > 0 ? (
+        <>
+          <p className="mt-5 text-[16px] font-bold">지금 챙길 소모품 {urgentList.length}개</p>
+          <ul className="mt-2 divide-y divide-border rounded-[14px] border border-border bg-card">
+            {urgentList.slice(0, 3).map((d) => (
+              <li key={d.part.slug} className="flex items-center gap-3 px-4 py-3">
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[15px] font-semibold">{d.part.name}</span>
+                  <span className="block text-[12px] font-semibold text-[#B54708]">{d.text}</span>
+                </span>
                 {d.part.shop ? (
-                  <OutboundLink href={d.part.shop.url} target="coupang" carId={my.car.id} partId={d.part.slug} sponsored className="num inline-flex min-h-[28px] items-center gap-1 text-[14px] font-bold text-primary">
+                  <OutboundLink href={d.part.shop.url} target="coupang" carId={my.car.id} partId={d.part.slug} sponsored className="num shrink-0 rounded-lg bg-primary px-3 py-2 text-[13px] font-bold text-primary-foreground">
                     쿠팡 {d.part.shop.price.toLocaleString("ko-KR")}원
-                    <span className="text-[11px] font-normal text-muted-foreground">{d.part.shop.date.slice(5).replace("-", "/")} ›</span>
                   </OutboundLink>
-                ) : d.part.price ? (
-                  <span className="num block text-[13px] text-muted-foreground">부품 예상 {d.part.price.toLocaleString("ko-KR")}원</span>
-                ) : null}
-              </span>
-              <span className={`shrink-0 rounded-full px-2.5 py-1 text-[12px] font-semibold ${b.cls}`}>{d.state === "unknown" ? b.label : d.text}</span>
-            </li>
-          )
-        })}
-      </ul>
-      {anyShop && <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">쿠팡 가격은 표시한 날 기준이라 바뀔 수 있어요. {AFFILIATE_TEXT}</p>}
+                ) : (
+                  <Link href={`/cars/${my.car.id}/${d.part.slug}`} className="shrink-0 text-[13px] font-semibold text-primary">가격 보기 ›</Link>
+                )}
+              </li>
+            ))}
+          </ul>
+          {urgentList.some((d) => d.part.shop) && <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>}
+        </>
+      ) : (
+        <Link href="/my" className="mt-4 flex items-center justify-between rounded-[12px] bg-muted px-4 py-3 text-[14px]">
+          <span>{unknownCount > 0 ? `교체 날짜를 넣으면 시기를 알려 드려요 (${unknownCount}개)` : "당장 교체할 소모품은 없어요"}</span>
+          <span aria-hidden className="text-muted-foreground">›</span>
+        </Link>
+      )}
+
+      {/* 내 차 부품 위치 도면: 부위를 누르면 부품·가격 */}
+      <div className="mt-5">
+        {diagram ? (
+          <CarDiagram carId={diagram.carId} carName={diagram.carName} body={diagram.body} zones={diagram.zones} parts={diagram.parts} />
+        ) : (
+          <div className="h-[260px] animate-pulse rounded-2xl bg-muted" />
+        )}
+      </div>
 
       <div className="mt-4 grid grid-cols-2 gap-2">
         <Link href="/my" className="flex min-h-[48px] items-center justify-center rounded-[12px] border border-border bg-card text-[14px] font-semibold">

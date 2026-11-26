@@ -25,10 +25,10 @@ import { coupangChoicesFor, naverShoppingFor } from "@/lib/coupang-links"
 import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
 import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
 import { OutboundLink } from "@/components/seo/OutboundLink"
-import { CarDiagram, type DiagramPart } from "@/components/cars/CarDiagram"
+import { CarDiagram } from "@/components/cars/CarDiagram"
+import { diagramFor } from "@/lib/diagram-data"
 import { CarPhoto } from "@/components/cars/CarPhoto"
 import { carPhoto } from "@/lib/car-photos"
-import { bodyTypeOf, isElectric, zoneLabel, zoneOf, type ZoneId } from "@/lib/car-diagram"
 import type { CarModel, MaintenancePart } from "@/types"
 
 function totalsOf(parts: MaintenancePart[]) {
@@ -159,29 +159,7 @@ export default async function CarPage({ params }: Props) {
   const engineId = (e: string) => `engine-${e.replace(/[^\w가-힣]+/g, "-")}`
 
   // 부품 위치 도면
-  const body = bodyTypeOf(car)
-  const ev = isElectric(car)
-  const diagramParts: DiagramPart[] = car.parts.map((p) => {
-    const c = partCost(p)
-    const choices = coupangChoicesFor(p)
-    return {
-      id: p.id,
-      name: p.name,
-      spec: p.spec,
-      href: `/cars/${car.id}/${partSlug(car, p)}`,
-      interval: intervalText(p) ?? undefined,
-      dealer: c.dealer,
-      self: c.self,
-      zone: zoneOf(p),
-      cat: p.category,
-      choices,
-      naver: naverShoppingFor(p)?.url,
-    }
-  })
-  const zoneOrder: ZoneId[] = ["engine", "front", "rear", "cabin", "wiper"]
-  const diagramZones = zoneOrder
-    .filter((z) => diagramParts.some((p) => p.zone === z))
-    .map((z) => ({ id: z, ...zoneLabel(z, { ev, body }) }))
+  const diagram = diagramFor(car)
 
   return (
     <div className="mx-auto max-w-5xl px-5 pb-6 pt-6 sm:pt-10">
@@ -277,7 +255,7 @@ export default async function CarPage({ params }: Props) {
       <section className="mt-12">
         <h2 className="text-[20px] font-bold sm:text-[24px]">부품 위치로 보기</h2>
         <div className="mt-4" />
-        <CarDiagram carId={car.id} carName={name} body={body} zones={diagramZones} parts={diagramParts} />
+        <CarDiagram carId={car.id} carName={name} body={diagram.body} zones={diagram.zones} parts={diagram.parts} />
       </section>
 
       <Link

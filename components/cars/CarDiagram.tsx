@@ -11,13 +11,15 @@ import type { BodyType, ZoneId } from "@/lib/car-diagram"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
 import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
-import { AFFILIATE_TEXT } from "@/components/seo/Shared"
+import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import type { CoupangChoice } from "@/lib/coupang-links"
 
 export interface DiagramPart {
   id: string
   name: string
   spec: string
+  /** 엔진별 부품이면 엔진 이름 (첫 화면에서 내 차 엔진만 보여 줄 때) */
+  engine?: string
   href: string
   interval?: string
   dealer: number
