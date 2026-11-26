@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 const TABS = [
   { href: "/", label: "홈", match: (p: string) => p === "/" || p.startsWith("/cars") || p === "/calculator", icon: "M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" },
   { href: "/near", label: "정비소", match: (p: string) => p.startsWith("/near"), icon: "M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21zm0-9a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" },
-  { href: "/my", label: "마이", match: (p: string) => p.startsWith("/my") || p.startsWith("/info") || p === "/check" || p.startsWith("/recalls") || p === "/privacy", icon: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20a7.5 7.5 0 0 1 15 0" },
+  { href: "/my", label: "마이", match: (p: string) => p.startsWith("/my") || p.startsWith("/info") || p === "/check" || p === "/quote" || p.startsWith("/recalls") || p === "/privacy", icon: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20a7.5 7.5 0 0 1 15 0" },
 ]
 
 export function BottomNav() {

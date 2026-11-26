@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import type { BodyType, ZoneId } from "@/lib/car-diagram"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
+import { LiveCoupang } from "@/components/cars/LiveCoupang"
 import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import type { CoupangChoice } from "@/lib/coupang-links"
@@ -352,11 +353,13 @@ export function CarDiagram({ carId, carName, body, zones, parts }: Props) {
                       공식센터(추정) <span className="price-was">{won(p.dealer)}</span>
                       {" → "}직접 구매 <b className="text-primary">{won(p.self)}</b>
                     </p>
-                    {pick && (
-                      <div className="mt-3">
+                    <div className="mt-3">
+                      {pick ? (
                         <CoupangPickCard pick={pick} carId={carId} partId={p.id} compact />
-                      </div>
-                    )}
+                      ) : (
+                        <LiveCoupang carId={carId} part={p.href.split("/").pop() ?? ""} partId={p.id} />
+                      )}
+                    </div>
                     <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
                       <Link href={p.href} className="inline-flex min-h-[40px] items-center text-[13px] font-semibold underline decoration-border underline-offset-4 hover:decoration-primary">
                         규격·교체 방법 자세히
@@ -371,7 +374,7 @@ export function CarDiagram({ carId, carName, body, zones, parts }: Props) {
                           sponsored
                           className="inline-flex h-10 items-center rounded-[10px] bg-primary px-4 text-[14px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px"
                         >
-                          쿠팡에서 가격 보기
+                          {pick ? "다른 상품 보기" : "쿠팡에서 더 보기"}
                         </OutboundLink>
                       ))}
                       {p.naver && <NaverCompareLink url={p.naver} carId={carId} partId={p.id} />}

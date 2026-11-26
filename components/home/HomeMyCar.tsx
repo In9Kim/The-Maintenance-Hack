@@ -128,6 +128,14 @@ export function HomeMyCar() {
         )}
       </div>
 
+      <Link href="/quote" className="mt-4 flex items-center gap-3 rounded-[14px] border border-primary/30 bg-[#F6FEF9] px-4 py-3">
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold">정비소 견적서 받으셨어요?</span>
+          <span className="block text-[13px] text-muted-foreground">사진 올리면 공임나라로 아낄 항목을 찾아 드려요</span>
+        </span>
+        <span aria-hidden className="text-primary">›</span>
+      </Link>
+
       <div className="mt-4 grid grid-cols-2 gap-2">
         <Link href="/my" className="flex min-h-[48px] items-center justify-center rounded-[12px] border border-border bg-card text-[14px] font-semibold">
           교체 기록 관리

@@ -249,6 +249,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
 
       <nav aria-label="마이 메뉴" className="mt-4 divide-y divide-border rounded-[14px] border border-border bg-card">
         {[
+          { href: "/quote", label: "견적서 사진으로 아낄 항목 찾기 (AI)" },
           { href: "/check", label: "이 부품 내 차에 맞을까? (AI 확인)" },
           { href: "/recalls", label: "자동차 리콜 정보" },
           { href: "/info", label: "데이터 출처·이용 안내" },
@@ -472,18 +473,17 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
   return (
     <>
       <section className="overflow-hidden rounded-2xl bg-[#14213D] text-white">
-        <div className="flex items-center gap-4 p-5">
+        <div className="flex items-center gap-3 px-4 py-3.5">
           <div className="min-w-0 flex-1">
-            <p className="text-[13px] text-white/60">내 차</p>
-            <h1 className="mt-0.5 text-[22px] font-extrabold leading-tight sm:text-[26px]">{my.car.name}</h1>
+            <h1 className="text-[20px] font-extrabold leading-tight sm:text-[24px]">{my.car.name}</h1>
             {(my.year || my.engine) && <p className="mt-1 text-[13px] text-white/70">{[my.year && `${my.year}년형`, my.engine].filter(Boolean).join(" · ")}</p>}
           </div>
           {my.car.photo && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={my.car.photo} alt="" width={160} height={100} className="h-[84px] w-[134px] shrink-0 rounded-lg object-cover" />
+            <img src={my.car.photo} alt="" width={160} height={100} className="h-[56px] w-[90px] shrink-0 rounded-md object-cover" />
           )}
         </div>
-        <div className="flex items-center justify-between gap-3 border-t border-white/10 bg-black/20 px-5 py-3.5">
+        <div className="flex items-center justify-between gap-3 border-t border-white/10 bg-black/20 px-4 py-1.5">
           <span className="text-[14px] text-white/70">주행거리 <span className="text-[12px]">({my.kmDate.slice(5).replace("-", "/")} 기준)</span></span>
           {editKm ? (
             <span className="flex items-center gap-2">
@@ -491,7 +491,7 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
               <button onClick={saveKm} className="h-10 rounded-lg bg-primary px-3 text-[14px] font-bold">저장</button>
             </span>
           ) : (
-            <button onClick={() => setEditKm(true)} className="num flex min-h-[44px] items-center gap-1.5 text-[22px] font-bold">
+            <button onClick={() => setEditKm(true)} className="num flex min-h-[44px] items-center gap-1.5 text-[18px] font-bold">
               {my.km > 0 ? (
                 <>
                   {my.km.toLocaleString("ko-KR")}<span className="text-[14px] font-normal text-white/70">km</span>
@@ -506,7 +506,7 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
       </section>
       {my.car.credit && <p className="mt-1.5 text-right text-[11px] text-muted-foreground">{my.car.credit}</p>}
 
-      <p className="mt-6 text-[15px] font-semibold">
+      <p className="mt-5 text-[15px] font-semibold">
         {urgent > 0 ? `지금 챙길 소모품이 ${urgent}개 있어요` : unknown === list.length ? "마지막으로 교체한 날짜를 넣어 주세요" : unknown > 0 ? "기록한 소모품 중엔 당장 교체할 게 없어요" : "당장 교체할 소모품은 없어요"}
       </p>
       {unknown > 0 && <p className="mt-1 text-[13px] text-muted-foreground">부품을 누르면 교체 날짜를 넣을 수 있어요</p>}
@@ -531,11 +531,9 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
                 className="flex cursor-pointer items-center gap-3 px-4 py-3"
               >
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[15px] font-semibold">
-                    {d.part.name}
-                    {spec && <span className="ml-1.5 text-[12px] font-normal text-muted-foreground">{spec}</span>}
-                  </span>
+                  <span className="block truncate text-[15px] font-semibold">{d.part.name}</span>
                   <span className="num block truncate text-[13px] text-muted-foreground">
+                    {spec && <>{spec} · </>}
                     {d.part.shop ? (
                       <span onClick={(e) => e.stopPropagation()}>
                       <OutboundLink
@@ -555,7 +553,7 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
                     {d.record && <> · {d.record.date.slice(2).replace(/-/g, ".")} 교체</>}
                   </span>
                 </span>
-                <span className={`shrink-0 rounded-full px-2.5 py-1 text-[12px] font-semibold ${st.cls}`}>{d.record ? d.text : st.label}</span>
+                {d.record && <span className={`shrink-0 rounded-full px-2.5 py-1 text-[12px] font-semibold ${st.cls}`}>{d.text}</span>}
                 <span aria-hidden className={`shrink-0 text-[14px] text-muted-foreground transition ${isOpen ? "rotate-180" : ""}`}>⌄</span>
               </div>
               {isOpen && (
