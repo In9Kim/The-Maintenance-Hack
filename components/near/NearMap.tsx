@@ -9,6 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { KAKAO_JS_KEY } from "@/lib/kakao"
 import { distanceText, haversine, keepPlace, nearKind, type KakaoPlace } from "@/lib/near"
 import { track } from "@/lib/track"
+import { usePartsCheck } from "@/components/near/PartsBeforeVisit"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare global {
@@ -98,6 +99,7 @@ function pinHtml(n: number, color: string, active: boolean) {
 /** kind는 정규식을 담고 있어 서버→브라우저로 넘길 수 없으므로 주소 이름(slug)만 받는다 */
 export function NearMap({ slug }: { slug: string }) {
   const kind = nearKind(slug)!
+  const partsCheck = usePartsCheck(slug)
   const mapEl = useRef<HTMLDivElement>(null)
   const mapRef = useRef<any>(null)
   const overlays = useRef<any[]>([])
@@ -309,6 +311,7 @@ export function NearMap({ slug }: { slug: string }) {
 
   return (
     <div>
+      {partsCheck.node}
       <form onSubmit={searchArea} className="flex gap-2">
         <label htmlFor="near-area" className="sr-only">
           동네 또는 역 이름
@@ -435,7 +438,10 @@ export function NearMap({ slug }: { slug: string }) {
                       href={`https://map.kakao.com/link/to/${encodeURIComponent(p.place_name)},${p.y},${p.x}`}
                       target="_blank"
                       rel="noopener"
-                      onClick={() => track({ type: "outbound", target: "kakaomap", meta: { kind: kind.slug, action: "route" } })}
+                      onClick={(e) => {
+                        track({ type: "outbound", target: "kakaomap", meta: { kind: kind.slug, action: "route" } })
+                        partsCheck.intercept(e, `https://map.kakao.com/link/to/${encodeURIComponent(p.place_name)},${p.y},${p.x}`)
+                      }}
                       className="inline-flex min-h-[36px] items-center rounded-lg bg-foreground px-3 text-[13px] font-bold text-background hover:brightness-125"
                     >
                       길찾기

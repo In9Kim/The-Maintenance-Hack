@@ -18,7 +18,7 @@ const SOURCES = [
 const TOOLS = [
   { href: "/cars", label: "차종별 정비 비용" },
   { href: "/calculator", label: "정비 비용 계산기" },
-  { href: "/check", label: "차대번호로 부품 호환 확인" },
+  { href: "/check", label: "이 부품 내 차에 맞을까? (AI 확인)" },
   { href: "/near/carwash", label: "근처 세차장" },
 ]
 

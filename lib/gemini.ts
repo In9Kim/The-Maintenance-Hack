@@ -353,11 +353,14 @@ ${fixedLines.length ? `[이미 확정된 값]\n${fixedLines.join("\n")}` : ""}
 }
 
 export async function verifyCompatibility(
-  vin: string,
+  /** 차대번호. 차종·연식으로 고른 경우(lib/compat-request.ts)는 null */
+  vin: string | null,
   productInfo: string,
   category?: string,
   /** 확정된 차량 정보. 있으면 AI가 차량을 다시 해석하지 않고 이 정보로만 판정 */
-  fixedSpec?: VehicleSpec
+  fixedSpec?: VehicleSpec,
+  /** 정비핵 데이터의 이 차 규격·순정 품번 (대조 근거) */
+  reference?: string
 ): Promise<CompatibilityResult> {
   // temperature=0: 창의성 배제, 동일 입력에 항상 동일한 사실 기반 판정 출력
   const model = getModel({ responseMimeType: "application/json", temperature: 0 })
@@ -386,7 +389,7 @@ export async function verifyCompatibility(
    - 58101-XXXXX / 58302-XXXXX 계열 = 기아/현대 순정 브레이크패드 (전/후)
    - 16546-XXXXX / 28113-XXXXX 계열 = 에어클리너 필터
 
-[VIN 자릿수 해석 규칙]
+${vin ? `[VIN 자릿수 해석 규칙]
 - 1~3번째(WMI): 제조국·제조사 코드. KNA/KNB/KMH/KMJ = 한국 기아·현대, WBA = BMW 독일, 1HG = Honda 미국
 - 4~8번째(VDS): 차종·바디·엔진 코드 (제조사별 상이)
 - 9번째: 검증 자리 (Check digit)
@@ -400,19 +403,25 @@ VIN: KNAF241BEKA856318
 → 정답: 2019년형 기아 올 뉴 K3 (BD, 3세대)
 (주의: KNA WMI를 쏘렌토·스포티지 등으로 잘못 분류하면 심각한 오류임)
 
-[판정 기준]
+` : ""}[판정 기준]
 - YES: OEM 품번 일치, 규격(직경·두께·용량 등) 완전 일치, 해당 차종 전용 제품임이 명확
 - NO: 규격 불일치, 다른 차종 전용 부품, 엔진 형식 미지원
 - UNCERTAIN: 범용(OE 호환) 제품으로 트림·연식별 추가 확인 필요, 정보 부족
 
 [입력 데이터]
-차대번호(VIN): ${vin}
+${vin ? `차대번호(VIN): ${vin}` : "차대번호: 받지 않음 (사용자가 차종·연식·엔진을 직접 고름)"}
 ${
   fixedSpec
     ? `[확정 차량 정보 — 차대번호를 다시 해석하지 말고 이 정보를 그대로 사용할 것. vehicle_spec에도 그대로 적을 것]
 - 모델: ${fixedSpec.manufacturer_model}
 - 연식: ${fixedSpec.production_year}
 - 엔진: ${fixedSpec.engine_spec}`
+    : ""
+}
+${
+  reference
+    ? `[정비핵 데이터 — 이 차의 소모품 규격·순정 품번 (제조사 취급설명서 기준). 상품과 같은 부품의 규격·품번을 여기서 찾아 대조할 것. 여기 없는 값은 지어내지 말고 '확인 필요']
+${reference}`
     : ""
 }
 ${categoryLine}

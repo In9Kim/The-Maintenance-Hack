@@ -7,8 +7,7 @@ import { usePathname } from "next/navigation"
 export const NAV = [
   { href: "/cars", label: "차종별 비용", match: (p: string) => p.startsWith("/cars") },
   { href: "/near", label: "근처 정비소", match: (p: string) => p.startsWith("/near") },
-  { href: "/recalls", label: "리콜", match: (p: string) => p.startsWith("/recalls") },
-  { href: "/my", label: "마이", match: (p: string) => p.startsWith("/my") || p.startsWith("/info") },
+  { href: "/my", label: "마이", match: (p: string) => p.startsWith("/my") || p.startsWith("/info") || p.startsWith("/recalls") || p === "/check" },
 ]
 
 /** 로고: 영수증 한 장 (견적서를 다시 쓴다는 뜻) */

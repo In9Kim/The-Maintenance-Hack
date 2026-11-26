@@ -5,6 +5,8 @@ import { getFixedVehicleSpec } from "@/lib/vehicle-spec"
 import { softenResult } from "@/lib/compat-wording"
 import { createHash } from "crypto"
 import { checkLimit, countUse, PER_USER } from "@/lib/verify-limit"
+import { getSeoCar } from "@/lib/seo"
+import { buildCompatRequest, parseProductInput } from "@/lib/compat-request"
 
 const VIN_REGEX = /^[A-HJ-NPR-Z0-9]{17}$/i
 // Block SSRF to private/loopback ranges
@@ -75,21 +77,38 @@ async function extractProductInfoFromUrl(url: string): Promise<string | null> {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { vin, productUrl, productText, productCategory } = body as {
+    const { vin, carId, year, engine, product } = body as {
       vin?: string
+      carId?: string
+      year?: number
+      engine?: string
+      product?: string
       productUrl?: string
       productText?: string
       productCategory?: string
     }
+    let { productUrl, productText } = body as { productUrl?: string; productText?: string }
+    const { productCategory } = body as { productCategory?: string }
+
+    // 차종·연식으로 고른 경우 (차대번호 없음): 붙여 넣은 글에서 상품명·링크를 나눔
+    const car = typeof carId === "string" ? getSeoCar(carId) : undefined
+    if (carId && !car) return NextResponse.json({ error: "차종을 다시 골라 주세요." }, { status: 400 })
+    const req2 = car ? buildCompatRequest(car, Number.isInteger(year) && year! > 1980 && year! < 2100 ? year : undefined, typeof engine === "string" ? engine : undefined) : null
+    if (car) {
+      const p = parseProductInput(typeof product === "string" ? product : "")
+      productText = p.name
+      productUrl = p.url
+      if (!p.name && !p.url) return NextResponse.json({ error: "쿠팡에서 공유한 글이나 상품 링크, 상품명을 넣어 주세요.", needsManualInput: true }, { status: 400 })
+    }
 
     // Validate VIN
-    if (!vin || !VIN_REGEX.test(vin.trim())) {
+    if (!car && (!vin || !VIN_REGEX.test(vin.trim()))) {
       return NextResponse.json(
         { error: "올바른 차대번호(VIN) 17자리를 입력해주세요. (I, O, Q 제외 영숫자)" },
         { status: 400 }
       )
     }
-    const normalizedVin = vin.trim().toUpperCase()
+    const normalizedVin = car ? "" : vin!.trim().toUpperCase()
 
     // Validate and sanitize product info
     let productInfo = typeof productText === "string" ? productText.trim().slice(0, 500) : ""
@@ -134,7 +153,7 @@ export async function POST(req: NextRequest) {
       typeof productCategory === "string" && productCategory.trim() ? productCategory.trim() : undefined
 
     // ── Cache-Aside: 구글시트 캐시 조회 ────────────────────────────────
-    const vinPrefix = makeVinPrefix(normalizedVin)
+    const vinPrefix = req2 ? req2.cacheKey : makeVinPrefix(normalizedVin)
     const useSheets = sheetsEnabled()
 
     let result
@@ -153,7 +172,7 @@ export async function POST(req: NextRequest) {
     let saveVehicle: (() => Promise<void>) | undefined
     if (result) {
       // 캐시 적중: 저장된 차량 정보가 있으면 표시만 맞춘다 (AI 호출 없음)
-      const saved = useSheets ? await lookupVehicleSpec(vinPrefix) : null
+      const saved = req2 ? req2.vehicle : useSheets ? await lookupVehicleSpec(vinPrefix) : null
       if (saved) result = { ...result, vehicle_spec: saved }
     } else {
       // 캐시 미스 = AI를 실제로 부름 → 하루 조회 제한 확인 (캐시 결과는 세지 않음)
@@ -173,16 +192,20 @@ export async function POST(req: NextRequest) {
       }
       after(() => countUse(ip))
       // 차량 정보 확정(저장본 또는 새로 해석) → 그 정보로 부품만 판정
-      const fixed = await getFixedVehicleSpec(normalizedVin)
-      saveVehicle = fixed?.save
-      result = await verifyCompatibility(normalizedVin, productInfo, safeCategory, fixed?.spec)
+      if (req2) {
+        result = await verifyCompatibility(null, productInfo, safeCategory, req2.vehicle, req2.reference)
+      } else {
+        const fixed = await getFixedVehicleSpec(normalizedVin)
+        saveVehicle = fixed?.save
+        result = await verifyCompatibility(normalizedVin, productInfo, safeCategory, fixed?.spec)
+      }
     }
 
     // 단정 표현 순화 + 결론에 확인 안내 (예전 캐시 결과에도 적용)
     result = softenResult(result)
 
     // 응답 후 백그라운드 저장: 캐시(미스일 때) + 행동 기록 (VIN은 해시만 — 개인정보 미저장)
-    const vinHash = createHash("sha256").update(normalizedVin).digest("hex").slice(0, 16)
+    const vinHash = car ? null : createHash("sha256").update(normalizedVin).digest("hex").slice(0, 16)
     const finalResult = result
     after(async () => {
       if (saveVehicle) await saveVehicle()
@@ -195,6 +218,7 @@ export async function POST(req: NextRequest) {
         meta: {
           cacheHit,
           vinHash,
+          carId: car?.id ?? null,
           category: safeCategory ?? null,
           product: productInfo.slice(0, 120),
           compatibility: finalResult.compatibility,

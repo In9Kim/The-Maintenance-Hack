@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/seo/Shared"
 import { NearMap } from "@/components/near/NearMap"
+import { PartsBeforeVisit } from "@/components/near/PartsBeforeVisit"
 import { NEAR_KINDS, type NearKind } from "@/lib/near"
 
 const href = (k: NearKind) => (k.slug === "gongim" ? "/near" : `/near/${k.slug}`)
@@ -33,6 +34,10 @@ export function NearPage({ kind }: { kind: NearKind }) {
           })}
         </ul>
       </nav>
+
+      <div className="mt-5">
+        <PartsBeforeVisit kind={kind.slug} />
+      </div>
 
       <div className="mt-5">
         <NearMap key={kind.slug} slug={kind.slug} />

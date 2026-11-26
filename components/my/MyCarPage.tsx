@@ -249,7 +249,8 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
 
       <nav aria-label="마이 메뉴" className="mt-4 divide-y divide-border rounded-[14px] border border-border bg-card">
         {[
-          { href: "/check", label: "차대번호로 부품 호환 확인" },
+          { href: "/check", label: "이 부품 내 차에 맞을까? (AI 확인)" },
+          { href: "/recalls", label: "자동차 리콜 정보" },
           { href: "/info", label: "데이터 출처·이용 안내" },
           { href: "/privacy", label: "개인정보 처리방침" },
         ].map((m) => (
