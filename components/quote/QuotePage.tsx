@@ -6,6 +6,8 @@ import { loadMyCar } from "@/lib/my-car"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
+import { LiveCoupang } from "@/components/cars/LiveCoupang"
+import { quoteSearchWord } from "@/lib/quote-analyze"
 import { addItem, hasItem, loadShopList, removeItem, saveShopList, type ShopItem } from "@/lib/shop-list"
 
 export interface QuoteCar {
@@ -75,6 +77,16 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   const [error, setError] = useState("")
   const [result, setResult] = useState<Result | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+  const [elapsed, setElapsed] = useState(0)
+  const [openShop, setOpenShop] = useState<number[]>([])
+
+  // 분석 중 경과 시간 (진행 단계 표시용)
+  useEffect(() => {
+    if (!busy) return
+    setElapsed(0)
+    const t = setInterval(() => setElapsed((s) => s + 1), 1000)
+    return () => clearInterval(t)
+  }, [busy])
 
   useEffect(() => {
     const my = loadMyCar()
@@ -190,8 +202,9 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
               disabled={!car || !preview || busy}
               className="mt-2 h-12 w-full rounded-[10px] bg-primary text-[16px] font-bold text-primary-foreground disabled:cursor-not-allowed disabled:bg-[#9BB8AD]"
             >
-              {busy ? "읽는 중… (30초쯤 걸려요)" : !car ? "차종을 먼저 골라 주세요" : "공임나라로 아낄 수 있는 것 찾기"}
+              {busy ? "분석 중…" : !car ? "차종을 먼저 골라 주세요" : "공임나라로 아낄 수 있는 것 찾기"}
             </button>
+            {busy && <Progress sec={elapsed} />}
             {error && <p role="alert" className="mt-3 rounded-[10px] bg-[#FEF3F2] px-3.5 py-2.5 text-[14px] text-[#B42318]">{error}</p>}
             <p className="mt-3 text-[12px] leading-relaxed text-muted-foreground">
               하루 1번 무료 · 사진은 저장하지 않아요. 이름·전화번호·차량번호는 결과에 남기지 않아요. AI 결과는 참고용이에요.
@@ -237,6 +250,17 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
                       {hasItem(list, itemOf(it)) ? "✓ 정비소 리스트에 담음" : "+ 정비소에 보여줄 리스트에 담기"}
                     </button>
                   )}
+                  {it.verdict === "gongim" && !it.ours && car && quoteSearchWord(it.name).length >= 2 && (
+                    openShop.includes(i) ? (
+                      <div className="mt-2">
+                        <LiveCoupang carId={car.id} q={quoteSearchWord(it.name)} partId={`quote-${quoteSearchWord(it.name)}`} />
+                      </div>
+                    ) : (
+                      <button onClick={() => setOpenShop((o) => [...o, i])} className="ml-2 mt-2 min-h-[36px] rounded-full border border-border px-3 text-[13px] font-semibold">
+                        쿠팡 부품값 보기
+                      </button>
+                    )
+                  )}
                   {it.verdict === "gongim" && it.ours && car && (
                     <div className="mt-2 rounded-[10px] bg-muted px-3 py-2.5">
                       <p className="num text-[13px]">
@@ -270,7 +294,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
             </Link>
           )}
           <div className="mt-4 grid grid-cols-2 gap-2">
-            <button onClick={() => setResult(null)} className="h-12 rounded-[10px] border border-border bg-card text-[14px] font-semibold">
+            <button onClick={() => { setResult(null); setOpenShop([]) }} className="h-12 rounded-[10px] border border-border bg-card text-[14px] font-semibold">
               다른 견적서
             </button>
             <Link href="/near" className="flex h-12 items-center justify-center rounded-[10px] bg-foreground text-[14px] font-semibold text-background">
@@ -282,6 +306,35 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
           </p>
         </section>
       )}
+    </div>
+  )
+}
+
+/** 분석 진행 단계 (실제 단계를 받는 게 아니라 경과 시간으로 보여 줌. 보통 40~60초) */
+const STEPS = [
+  { at: 0, text: "사진 보내는 중" },
+  { at: 6, text: "견적서 글자 읽는 중" },
+  { at: 20, text: "항목을 하나씩 나누는 중" },
+  { at: 35, text: "공임나라로 할 수 있는지 판단하는 중" },
+  { at: 55, text: "거의 다 됐어요" },
+]
+function Progress({ sec }: { sec: number }) {
+  const cur = STEPS.filter((s) => sec >= s.at).length - 1
+  const pct = Math.min(95, Math.round((sec / 60) * 100))
+  return (
+    <div className="mt-3 rounded-[12px] bg-muted p-3.5" aria-live="polite">
+      <div className="h-1.5 overflow-hidden rounded-full bg-border">
+        <div className="h-full rounded-full bg-primary transition-[width] duration-1000" style={{ width: `${pct}%` }} />
+      </div>
+      <ul className="mt-3 space-y-1">
+        {STEPS.map((s, i) => (
+          <li key={s.text} className={`text-[13px] ${i < cur ? "text-muted-foreground line-through" : i === cur ? "font-bold" : "text-muted-foreground/60"}`}>
+            {i < cur ? "✓ " : i === cur ? "• " : "  "}
+            {s.text}
+          </li>
+        ))}
+      </ul>
+      <p className="num mt-2 text-[12px] text-muted-foreground">{sec}초 · 보통 1분 안쪽이에요. 화면을 닫지 말아 주세요</p>
     </div>
   )
 }

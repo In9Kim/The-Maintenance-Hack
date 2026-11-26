@@ -20,3 +20,12 @@ test("개인정보를 출력하지 말라는 지시가 들어 있다", () => ass
 test("출력 형식: 판정은 세 가지뿐", () => {
   assert.deepEqual(QUOTE_SCHEMA.properties.items.items.properties.verdict.enum, ["gongim", "center", "ask"])
 })
+
+test("quoteSearchWord: 작업·위치 말은 빼고 부품 이름만", async () => {
+  const { quoteSearchWord } = await import("./quote-analyze.ts")
+  assert.equal(quoteSearchWord("프론트 하부암(좌/우) 교환 요망"), "프론트 하부암")
+  assert.equal(quoteSearchWord("쇽업소버 교환"), "쇽업소버")
+  assert.equal(quoteSearchWord("워터펌프교체"), "워터펌프")
+  assert.equal(quoteSearchWord("라디에이터 호스, 워터 호스 교환"), "라디에이터 호스")
+  assert.equal(quoteSearchWord("미션오일 4L 교환 권장"), "미션오일")
+})

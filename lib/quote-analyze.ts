@@ -66,6 +66,20 @@ export const QUOTE_SCHEMA = {
   additionalProperties: false,
 }
 
+const ACTION = /(교환|교체|점검|수리|작업|추천|권고|권장|필요|요망|정비|탈부착|탈착|보충|조정|진단)$/
+const STOP = new Set(["및", "좌", "우", "좌우", "좌/우", "앞", "뒤", "전", "후", "LH", "RH", "1EA", "2EA", "세트", "SET", "부품", "공임"])
+
+/** 견적서 항목 이름 → 쿠팡 검색어 ("프론트 하부암(좌/우) 교환 요망" → "프론트 하부암") */
+export function quoteSearchWord(name: string): string {
+  const words = name
+    .split(/[,·]/)[0]
+    .replace(/\(.*?\)|\[.*?\]/g, " ")
+    .split(/[\s,·/]+/)
+    .map((w) => w.replace(ACTION, "").replace(ACTION, "").trim())
+    .filter((w) => w.length >= 1 && !STOP.has(w) && !STOP.has(w.toUpperCase()) && !/^\d+(EA|개|L)?$/i.test(w))
+  return words.slice(0, 3).join(" ").slice(0, 30)
+}
+
 /** AI에 넘길 지시문 (화면의 'AI에게 이렇게 물어봐요'와 같은 내용) */
 export function buildQuotePrompt(car: CompatCar, parts: QuoteCarPart[], year?: number, engine?: string): string {
   const eng = engine && car.engineTypes.includes(engine) ? engine : undefined
