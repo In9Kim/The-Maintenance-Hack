@@ -5,7 +5,7 @@ import { MyCarPage, type MyCarOption } from "@/components/my/MyCarPage"
 export const metadata = pageMetadata({
   title: "내 차 소모품 교체 시기 관리 - 가입 없이 엔진오일·와이퍼 교체 알림 | 정비핵",
   description:
-    "차종과 주행거리, 마지막 교체 날짜만 적으면 엔진오일·와이퍼·에어컨필터·브레이크패드 교체 시기를 계산해 드려요. 가입 없이 이 기기에만 저장됩니다.",
+    "차종과 주행거리, 마지막 교체 날짜만 적으면 엔진오일·와이퍼·에어컨필터·브레이크패드 교체 시기를 계산해 드려요. 가입 없이도 쓸 수 있고, 로그인하면 차 여러 대를 계정에 저장해요.",
   path: "/my",
 })
 

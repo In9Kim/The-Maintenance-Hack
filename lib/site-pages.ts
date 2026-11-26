@@ -48,6 +48,7 @@ export function sitePages(): SitePage[] {
     { path: "/", priority: 1, kind: "home" },
     { path: "/check", priority: 0.9, kind: "check" },
     { path: "/info", priority: 0.3, kind: "info" },
+    { path: "/privacy", priority: 0.1, kind: "info" },
     ...NEAR_KINDS.map((k): SitePage => ({ path: k.slug === "gongim" ? "/near" : `/near/${k.slug}`, priority: 0.7, kind: "near" })),
     { path: "/calculator", lastModified: carsUpdated, priority: 0.8, kind: "calculator" },
     { path: "/cars", lastModified: carsUpdated, priority: 0.9, kind: "cars" },

@@ -221,6 +221,12 @@ export default async function CarPage({ params }: Props) {
             >
               {recallCount > 0 ? `리콜 ${recallCount}건` : "리콜 정보"}
             </Link>
+            <Link
+              href={`/my?add=${car.id}`}
+              className="inline-flex min-h-[36px] items-center rounded-full bg-foreground px-3.5 text-[13px] font-semibold text-background hover:brightness-110"
+            >
+              + 내 차로 저장
+            </Link>
           </div>
           {photo && <CarPhoto photo={photo} alt={`${name} 외관`} priority className="mt-6" />}
         </div>

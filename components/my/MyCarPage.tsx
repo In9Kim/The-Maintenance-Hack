@@ -1,8 +1,22 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
-import { dueList, loadMyCar, saveMyCar, today, type DueState, type MyCar, type MyCarSnapshot } from "@/lib/my-car"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import {
+  dueList,
+  loadGarage,
+  newCarId,
+  removeCar,
+  saveGarage,
+  today,
+  upsertCar,
+  type DueState,
+  type Garage as GarageData,
+  type MyCar,
+  type MyCarSnapshot,
+} from "@/lib/my-car"
+import { authEnabled, supabase } from "@/lib/supabase"
+import { deleteCloudCar, fetchCars, fromRow, mergeGarage, pushCars } from "@/lib/cloud-garage"
 import { track } from "@/lib/track"
 
 export interface MyCarOption {
@@ -44,35 +58,172 @@ const num = (s: string) => {
   return Number.isFinite(n) ? n : 0
 }
 
+interface Account {
+  name: string
+  provider: string
+}
+
 export function MyCarPage({ options }: { options: MyCarOption[] }) {
   const [ready, setReady] = useState(false)
-  const [my, setMy] = useState<MyCar | null>(null)
+  const [garage, setGarage] = useState<GarageData>({ cars: [], active: "" })
+  const [adding, setAdding] = useState<string | null>(null) // 차 추가 화면 (값 = 미리 고른 차종 id, "" = 처음부터)
+  const [account, setAccount] = useState<Account | null>(null)
+  const [cloudError, setCloudError] = useState("")
+  const accountRef = useRef<Account | null>(null)
 
+  const rebuild = useCallback(
+    (carId: string, engine?: string) => {
+      const o = options.find((x) => x.id === carId)
+      return o ? snapshot(o, engine) : null
+    },
+    [options],
+  )
+
+  const apply = useCallback((g: GarageData) => {
+    setGarage(g)
+    saveGarage(g)
+  }, [])
+
+  // 처음: 이 기기 차고 읽기 (부품 정보는 최신 데이터로 갈아 끼움) + ?add=차종id
   useEffect(() => {
-    const v = loadMyCar()
-    // 저장된 차 정보는 최신 데이터(교체 주기)로 갈아 끼운다
-    if (v) {
-      const o = options.find((x) => x.id === v.car.id)
-      if (o) v.car = snapshot(o, v.engine)
-    }
-    setMy(v)
+    const g = loadGarage()
+    g.cars = g.cars.map((c) => {
+      const car = rebuild(c.car.id, c.engine)
+      return car ? { ...c, car } : c
+    })
+    setGarage(g)
+    const add = new URLSearchParams(window.location.search).get("add")
+    if (add && options.some((o) => o.id === add)) setAdding(add)
     setReady(true)
-  }, [options])
+  }, [options, rebuild])
 
-  const update = (v: MyCar | null) => {
-    setMy(v)
-    saveMyCar(v)
+  // 로그인 상태 따라가기. 로그인하면 이 기기의 차를 계정에 올리고 계정의 차 목록으로 맞춘다
+  useEffect(() => {
+    if (!authEnabled()) return
+    let off = () => {}
+    let alive = true
+    supabase().then((sb) => {
+      const { data } = sb.auth.onAuthStateChange((event, session) => {
+        if (!alive) return
+        const u = session?.user
+        const acc = u
+          ? { name: (u.user_metadata?.name as string) || (u.user_metadata?.full_name as string) || u.email || "회원", provider: u.app_metadata?.provider ?? "" }
+          : null
+        const was = accountRef.current
+        accountRef.current = acc
+        setAccount(acc)
+        if (acc && (event === "SIGNED_IN" || event === "INITIAL_SESSION") && !was) {
+          // 콜백 처리 뒤 주소의 ?code= 정리
+          if (window.location.search.includes("code=")) window.history.replaceState(null, "", "/my")
+          setTimeout(async () => {
+            try {
+              const rows = await fetchCars()
+              const remote = rows.map((r) => fromRow(r, rebuild)).filter((c): c is MyCar => !!c)
+              const { garage: merged, upload } = mergeGarage(loadGarage(), remote)
+              await pushCars(upload)
+              apply(merged)
+              setCloudError("")
+            } catch {
+              setCloudError("계정에서 차 목록을 못 불러왔어요. 잠시 뒤 다시 열어 주세요.")
+            }
+          }, 0)
+        }
+      })
+      off = () => data.subscription.unsubscribe()
+    })
+    return () => {
+      alive = false
+      off()
+    }
+  }, [rebuild, apply])
+
+  const cloud = (p: Promise<unknown>) =>
+    p.then(
+      () => setCloudError(""),
+      () => setCloudError("계정에 저장하지 못했어요. 인터넷 연결을 확인해 주세요."),
+    )
+
+  const saveCar = (c: MyCar) => {
+    apply(upsertCar(garage, c))
+    if (accountRef.current) cloud(pushCars([c]))
+  }
+  const deleteCar = (id: string) => {
+    apply(removeCar(garage, id))
+    if (accountRef.current) cloud(deleteCloudCar(id))
   }
 
   if (!ready) return <div className="mx-auto max-w-2xl px-5 py-10"><div className="h-64 animate-pulse rounded-2xl bg-muted" /></div>
 
+  const active = garage.cars.find((c) => c.id === garage.active)
+  const showRegister = adding !== null || !active
+
   return (
     <div className="mx-auto max-w-2xl px-5 pb-6 pt-6 sm:pt-10">
-      {my ? <Garage my={my} update={update} /> : <Register options={options} onSave={update} />}
-      <nav aria-label="마이 메뉴" className="mt-10 divide-y divide-border rounded-[14px] border border-border bg-card">
+      {garage.cars.length > 0 && (
+        <div className="-mx-5 mb-4 flex gap-2 overflow-x-auto px-5 pb-1" role="tablist" aria-label="내 차 목록">
+          {garage.cars.map((c) => {
+            const on = adding === null && c.id === garage.active
+            return (
+              <button
+                key={c.id}
+                role="tab"
+                aria-selected={on}
+                onClick={() => {
+                  setAdding(null)
+                  apply({ ...garage, active: c.id! })
+                }}
+                className={`h-10 shrink-0 rounded-full px-4 text-[14px] font-semibold ${on ? "bg-foreground text-background" : "border border-border bg-card"}`}
+              >
+                {c.car.name}
+              </button>
+            )
+          })}
+          <button
+            onClick={() => setAdding("")}
+            aria-selected={adding !== null}
+            role="tab"
+            className={`h-10 shrink-0 rounded-full px-4 text-[14px] font-semibold ${adding !== null ? "bg-foreground text-background" : "border border-dashed border-border text-muted-foreground"}`}
+          >
+            + 차 추가
+          </button>
+        </div>
+      )}
+
+      {showRegister ? (
+        <Register
+          key={adding ?? "first"}
+          options={options}
+          initialCarId={adding || ""}
+          first={garage.cars.length === 0}
+          onCancel={garage.cars.length ? () => setAdding(null) : undefined}
+          onSave={(c) => {
+            saveCar(c)
+            setAdding(null)
+            if (window.location.search) window.history.replaceState(null, "", "/my")
+          }}
+        />
+      ) : (
+        <Garage key={active!.id} my={active!} loggedIn={!!account} update={saveCar} remove={() => deleteCar(active!.id!)} />
+      )}
+
+      {cloudError && <p role="alert" className="mt-4 rounded-[10px] bg-[#FEF3F2] px-4 py-3 text-[14px] text-[#B42318]">{cloudError}</p>}
+
+      {authEnabled() && (
+        <AccountBox
+          account={account}
+          onSignedOut={() => {
+            accountRef.current = null
+            setAccount(null)
+            apply({ cars: [], active: "" }) // 계정의 차는 이 폰에서 지움 (다시 로그인하면 돌아옴)
+          }}
+        />
+      )}
+
+      <nav aria-label="마이 메뉴" className="mt-4 divide-y divide-border rounded-[14px] border border-border bg-card">
         {[
           { href: "/check", label: "차대번호로 부품 호환 확인" },
           { href: "/info", label: "데이터 출처·이용 안내" },
+          { href: "/privacy", label: "개인정보 처리방침" },
         ].map((m) => (
           <Link key={m.href} href={m.href} className="flex min-h-[52px] items-center justify-between px-4 text-[15px]">
             {m.label}
@@ -84,10 +235,108 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
   )
 }
 
-function Register({ options, onSave }: { options: MyCarOption[]; onSave: (v: MyCar) => void }) {
+function AccountBox({ account, onSignedOut }: { account: Account | null; onSignedOut: () => void }) {
+  const [busy, setBusy] = useState(false)
+
+  const signIn = async (provider: "kakao" | "google") => {
+    setBusy(true)
+    track({ type: "nav", meta: { via: `login_${provider}` } })
+    const sb = await supabase()
+    const { error } = await sb.auth.signInWithOAuth({ provider, options: { redirectTo: `${window.location.origin}/my` } })
+    if (error) {
+      setBusy(false)
+      alert("로그인을 시작하지 못했어요. 잠시 뒤 다시 시도해 주세요.")
+    }
+  }
+
+  const signOut = async () => {
+    const sb = await supabase()
+    await sb.auth.signOut()
+    onSignedOut()
+  }
+
+  const withdraw = async () => {
+    if (!confirm("탈퇴하면 계정에 저장한 차와 교체 기록이 모두 지워지고 되돌릴 수 없어요. 탈퇴할까요?")) return
+    setBusy(true)
+    const sb = await supabase()
+    const { error } = await sb.rpc("delete_my_account")
+    if (error) {
+      setBusy(false)
+      alert("탈퇴 처리에 실패했어요. 잠시 뒤 다시 시도해 주세요.")
+      return
+    }
+    await sb.auth.signOut({ scope: "local" })
+    onSignedOut()
+    setBusy(false)
+    alert("탈퇴했어요. 그동안 이용해 주셔서 고맙습니다.")
+  }
+
+  if (account) {
+    return (
+      <section className="mt-10 rounded-[14px] border border-border bg-card p-4">
+        <p className="text-[15px] font-semibold">
+          {account.name}
+          <span className="ml-1.5 text-[13px] font-normal text-muted-foreground">{account.provider === "kakao" ? "카카오" : account.provider === "google" ? "구글" : ""} 로그인 중</span>
+        </p>
+        <p className="mt-0.5 text-[13px] text-muted-foreground">차 목록과 교체 기록이 계정에 저장돼요</p>
+        <div className="mt-3 flex gap-4 text-[13px]">
+          <button onClick={signOut} disabled={busy} className="min-h-[40px] font-semibold underline underline-offset-4">로그아웃</button>
+          <button onClick={withdraw} disabled={busy} className="min-h-[40px] text-muted-foreground underline underline-offset-4">회원 탈퇴</button>
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <section className="mt-10 rounded-[14px] border border-border bg-card p-4">
+      <p className="text-[15px] font-semibold">로그인하면 차 여러 대를 폰 바꿔도 그대로</p>
+      <div className="mt-3 grid gap-2">
+        <button
+          onClick={() => signIn("kakao")}
+          disabled={busy}
+          className="flex h-12 items-center justify-center gap-2 rounded-[10px] bg-[#FEE500] text-[15px] font-semibold text-black/85 disabled:opacity-60"
+        >
+          <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden><path fill="currentColor" d="M12 3.5C6.75 3.5 2.5 6.86 2.5 11c0 2.65 1.75 4.98 4.38 6.31l-.9 3.3c-.08.3.26.54.52.37l3.93-2.6c.51.06 1.03.1 1.57.1 5.25 0 9.5-3.36 9.5-7.48S17.25 3.5 12 3.5z" /></svg>
+          카카오로 시작하기
+        </button>
+        <button
+          onClick={() => signIn("google")}
+          disabled={busy}
+          className="flex h-12 items-center justify-center gap-2 rounded-[10px] border border-border bg-white text-[15px] font-semibold text-black/85 disabled:opacity-60"
+        >
+          <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden>
+            <path fill="#4285F4" d="M22.5 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.9a5.05 5.05 0 0 1-2.19 3.31v2.75h3.54c2.07-1.9 3.25-4.71 3.25-8.07z" />
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.54-2.75c-.99.66-2.25 1.05-3.74 1.05-2.87 0-5.3-1.94-6.17-4.55H2.18v2.84A11 11 0 0 0 12 23z" />
+            <path fill="#FBBC05" d="M5.83 14.09A6.6 6.6 0 0 1 5.49 12c0-.73.13-1.43.34-2.09V7.07H2.18A11 11 0 0 0 1 12c0 1.78.43 3.45 1.18 4.93l3.65-2.84z" />
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15A10.96 10.96 0 0 0 12 1 11 11 0 0 0 2.18 7.07l3.65 2.84C6.7 7.31 9.13 5.38 12 5.38z" />
+          </svg>
+          구글로 시작하기
+        </button>
+      </div>
+      <p className="mt-2 text-[12px] text-muted-foreground">
+        로그인 없이도 이 폰에서는 그대로 쓸 수 있어요 · <Link href="/privacy" className="underline underline-offset-2">개인정보 처리방침</Link>
+      </p>
+    </section>
+  )
+}
+
+function Register({
+  options,
+  initialCarId,
+  first,
+  onSave,
+  onCancel,
+}: {
+  options: MyCarOption[]
+  initialCarId: string
+  first: boolean
+  onSave: (v: MyCar) => void
+  onCancel?: () => void
+}) {
   const brands = useMemo(() => Array.from(new Set(options.map((o) => o.brand))), [options])
-  const [brand, setBrand] = useState("")
-  const [carId, setCarId] = useState("")
+  const pre = options.find((o) => o.id === initialCarId)
+  const [brand, setBrand] = useState(pre?.brand ?? "")
+  const [carId, setCarId] = useState(pre?.id ?? "")
   const [engine, setEngine] = useState("")
   const [year, setYear] = useState("")
   const [km, setKm] = useState("")
@@ -99,12 +348,20 @@ function Register({ options, onSave }: { options: MyCarOption[]; onSave: (v: MyC
     e.preventDefault()
     if (!car || !ok) return
     track({ type: "nav", carId: car.id, meta: { via: "my_register" } })
-    onSave({ car: snapshot(car, engine || undefined), engine: engine || undefined, year: year ? Number(year) : undefined, km: num(km), kmDate: today(), records: {} })
+    onSave({
+      id: newCarId(),
+      car: snapshot(car, engine || undefined),
+      engine: engine || undefined,
+      year: year ? Number(year) : undefined,
+      km: num(km),
+      kmDate: today(),
+      records: {},
+    })
   }
 
   return (
     <>
-      <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[34px]">내 차 등록</h1>
+      <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[34px]">{first ? "내 차 등록" : "차 추가"}</h1>
       <p className="mt-2 text-[15px] text-muted-foreground">차종과 연식만 고르면 맞는 부품과 가격을 보여 드려요</p>
       <form onSubmit={submit} className="mt-6 space-y-3 rounded-2xl border border-border bg-card p-4 sm:p-6">
         <div className="grid grid-cols-[0.8fr_1.2fr] gap-2">
@@ -145,14 +402,17 @@ function Register({ options, onSave }: { options: MyCarOption[]; onSave: (v: MyC
           </span>
         </label>
         <button type="submit" disabled={!ok} className="h-12 w-full rounded-[10px] bg-primary text-[16px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px disabled:cursor-not-allowed disabled:bg-[#9BB8AD]">
-          내 차 등록하기
+          {first ? "내 차 등록하기" : "이 차 추가하기"}
         </button>
+        {onCancel && (
+          <button type="button" onClick={onCancel} className="h-11 w-full text-[14px] font-semibold text-muted-foreground">취소</button>
+        )}
       </form>
     </>
   )
 }
 
-function Garage({ my, update }: { my: MyCar; update: (v: MyCar | null) => void }) {
+function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean; update: (v: MyCar) => void; remove: () => void }) {
   const [editKm, setEditKm] = useState(false)
   const [km, setKm] = useState(my.km > 0 ? String(my.km) : "")
   const [editing, setEditing] = useState<string | null>(null)
@@ -263,12 +523,12 @@ function Garage({ my, update }: { my: MyCar; update: (v: MyCar | null) => void }
         <Link href="/near" className="flex min-h-[48px] items-center justify-center rounded-[12px] bg-foreground text-[14px] font-semibold text-background">근처 공임나라 찾기</Link>
       </div>
       <p className="mt-6 text-center text-[13px] text-muted-foreground">
-        이 휴대폰에만 저장돼요.{" "}
+        {loggedIn ? "계정에 저장돼요." : "이 휴대폰에만 저장돼요."}{" "}
         <button
-          onClick={() => confirm("등록한 차와 교체 기록을 지울까요?") && update(null)}
+          onClick={() => confirm(`${my.car.name}와 교체 기록을 지울까요?`) && remove()}
           className="font-semibold underline underline-offset-4"
         >
-          다른 차로 바꾸기
+          이 차 지우기
         </button>
       </p>
     </>

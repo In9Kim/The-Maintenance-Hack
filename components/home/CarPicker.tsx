@@ -43,7 +43,7 @@ export function CarPicker({
 
   return (
     <form onSubmit={go} className="rounded-2xl border border-border bg-card p-4 sm:p-5">
-      <p className="text-[13px] font-semibold text-muted-foreground">내 차 선택</p>
+      <p className="text-[13px] font-semibold text-muted-foreground">차종 찾기</p>
       <div className="mt-2 grid grid-cols-[0.8fr_1.2fr] gap-2">
         <label className="sr-only" htmlFor={via + "-brand"}>브랜드</label>
         <select

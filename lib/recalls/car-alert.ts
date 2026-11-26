@@ -1,13 +1,8 @@
 import { seoCars, carShortName } from "@/lib/seo"
 import { recallsForCar } from "@/lib/recalls/data"
 
-/** 리콜 띠에 필요한 최소 정보: 차종별 리콜 건수와 가장 최근 리콜 */
-export interface CarRecallAlert {
-  count: number
-  latestId: string
-  latestDate: string
-  name: string
-}
+import type { CarRecallAlert } from "./year"
+export type { CarRecallAlert }
 
 let cache: Record<string, CarRecallAlert> | null = null
 
@@ -18,8 +13,16 @@ export function carRecallAlerts(): Record<string, CarRecallAlert> {
   for (const car of seoCars()) {
     const rs = recallsForCar(car.id)
     if (!rs.length) continue
-    const latest = rs.reduce((a, r) => (r.startDate > a.startDate ? r : a))
-    out[car.id] = { count: rs.length, latestId: latest.id, latestDate: latest.startDate, name: carShortName(car) }
+    out[car.id] = {
+      name: carShortName(car),
+      r: rs
+        .map((x): CarRecallAlert["r"][number] => {
+          const froms = x.items.map((i) => i.from).filter(Boolean).sort()
+          const tos = x.items.map((i) => i.to).filter(Boolean).sort()
+          return [x.id, x.startDate, froms[0] ?? "", tos[tos.length - 1] ?? ""]
+        })
+        .sort((a, b) => b[1].localeCompare(a[1])),
+    }
   }
   cache = out
   return out

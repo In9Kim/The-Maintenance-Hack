@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { partDue, dueList, type MyCar } from "./my-car.ts"
+import { partDue, dueList, parseGarage, upsertCar, removeCar, type MyCar } from "./my-car.ts"
 
 const oil = { slug: "engine-oil", name: "엔진오일", intervalKm: 10000, intervalMonths: 12 }
 const wiper = { slug: "wiper", name: "와이퍼", intervalMonths: 6 }
@@ -36,4 +36,27 @@ test("급한 순서로 정렬", () => {
     records: { "engine-oil": { date: "2026-09-01", km: 50000 }, "brake-pad": { date: "2026-01-01", km: 55000 } },
   }
   assert.deepEqual(dueList(my, "2026-11-24").map((d) => d.part.slug), ["engine-oil", "brake-pad", "wiper"])
+})
+
+test("예전 한 대짜리 저장값을 차고로 옮긴다", () => {
+  const old = JSON.stringify({ car: { id: "kia-k3-bd", name: "K3", parts: [] }, km: 1, kmDate: "2026-01-01", records: {} })
+  const g = parseGarage(null, old, () => "u1")
+  assert.equal(g.cars.length, 1)
+  assert.equal(g.active, "u1")
+  assert.equal(g.cars[0].id, "u1")
+})
+
+test("차 추가·삭제와 지금 차 바뀜", () => {
+  const a: MyCar = { id: "a", car: { id: "x", name: "x", parts: [] }, km: 0, kmDate: "2026-01-01", records: {} }
+  const b: MyCar = { ...a, id: "b" }
+  let g = upsertCar(upsertCar({ cars: [], active: "" }, a), b)
+  assert.deepEqual([g.cars.length, g.active], [2, "b"])
+  g = upsertCar(g, { ...a, km: 5 })
+  assert.deepEqual([g.cars.length, g.active, g.cars[0].km], [2, "a", 5])
+  g = removeCar(g, "a")
+  assert.deepEqual([g.cars.length, g.active], [1, "b"])
+})
+
+test("깨진 저장값이면 빈 차고", () => {
+  assert.deepEqual(parseGarage("{bad", null), { cars: [], active: "" })
 })

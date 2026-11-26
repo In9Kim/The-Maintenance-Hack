@@ -1,6 +1,6 @@
 /**
- * "내 차" — 가입 없이 이 기기(localStorage)에만 저장하는 내 차 정보와 교체 시기 계산.
- * 서버에는 아무것도 보내지 않는다.
+ * "내 차" — 차 정보와 교체 시기 계산. 비로그인은 이 기기(localStorage)에만,
+ * 로그인하면 lib/cloud-garage.ts가 계정에도 같이 저장한다.
  */
 
 export const MY_CAR_KEY = "mh_my_car"
@@ -32,6 +32,8 @@ export interface ChangeRecord {
 }
 
 export interface MyCar {
+  /** 차 한 대의 고유 id (uuid). 계정 저장 때 그대로 키로 씀 */
+  id?: string
   car: MyCarSnapshot
   engine?: string
   /** 연식 (등록 때 고름. 예전 기록에는 없음) */
@@ -102,21 +104,76 @@ export function dueList(my: MyCar, now = today()): PartDue[] {
   return my.car.parts.map((p) => partDue(p, my, now)).sort((a, b) => ORDER[a.state] - ORDER[b.state] || b.ratio - a.ratio)
 }
 
-export function loadMyCar(): MyCar | null {
+// ── 차고: 차 여러 대. 비로그인은 이 기기에만, 로그인하면 계정(Supabase)에도 ──
+
+export const GARAGE_KEY = "mh_garage"
+
+export interface Garage {
+  cars: MyCar[]
+  /** 지금 보고 있는 차 id */
+  active: string
+}
+
+export const newCarId = () =>
+  typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0
+        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16)
+      })
+
+/** 저장된 값 → 차고. 예전 한 대짜리(mh_my_car)도 받아 준다 */
+export function parseGarage(rawGarage: string | null, rawOld: string | null, makeId = newCarId): Garage {
   try {
-    const v = JSON.parse(localStorage.getItem(MY_CAR_KEY) ?? "null") as MyCar | null
-    return v && v.car?.id ? v : null
+    const g = JSON.parse(rawGarage ?? "null") as Garage | null
+    if (g && Array.isArray(g.cars)) {
+      const cars = g.cars.filter((c) => c?.car?.id).map((c) => (c.id ? c : { ...c, id: makeId() }))
+      return { cars, active: cars.some((c) => c.id === g.active) ? g.active : cars[0]?.id ?? "" }
+    }
+  } catch {}
+  try {
+    const old = JSON.parse(rawOld ?? "null") as MyCar | null
+    if (old?.car?.id) {
+      const c = { ...old, id: old.id ?? makeId() }
+      return { cars: [c], active: c.id! }
+    }
+  } catch {}
+  return { cars: [], active: "" }
+}
+
+export function loadGarage(): Garage {
+  try {
+    return parseGarage(localStorage.getItem(GARAGE_KEY), localStorage.getItem(MY_CAR_KEY))
   } catch {
-    return null
+    return { cars: [], active: "" }
   }
 }
 
-export function saveMyCar(v: MyCar | null) {
+export function saveGarage(g: Garage) {
   try {
-    if (v) localStorage.setItem(MY_CAR_KEY, JSON.stringify(v))
-    else localStorage.removeItem(MY_CAR_KEY)
+    if (g.cars.length) localStorage.setItem(GARAGE_KEY, JSON.stringify(g))
+    else localStorage.removeItem(GARAGE_KEY)
+    localStorage.removeItem(MY_CAR_KEY) // 예전 키는 옮긴 뒤 지움
     window.dispatchEvent(new Event("mh-my-car"))
   } catch {
     /* 사생활 보호 모드 등: 저장 못 해도 화면은 동작 */
   }
+}
+
+/** 지금 보고 있는 차 (홈 카드·리콜 띠용) */
+export function loadMyCar(): MyCar | null {
+  const g = loadGarage()
+  return g.cars.find((c) => c.id === g.active) ?? null
+}
+
+/** 차 한 대 넣기/고치기 (id 기준). 넣은 차가 지금 차가 된다 */
+export function upsertCar(g: Garage, car: MyCar): Garage {
+  const c = car.id ? car : { ...car, id: newCarId() }
+  const has = g.cars.some((x) => x.id === c.id)
+  return { cars: has ? g.cars.map((x) => (x.id === c.id ? c : x)) : [...g.cars, c], active: c.id! }
+}
+
+export function removeCar(g: Garage, id: string): Garage {
+  const cars = g.cars.filter((c) => c.id !== id)
+  return { cars, active: g.active === id ? cars[0]?.id ?? "" : g.active }
 }

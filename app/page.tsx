@@ -41,7 +41,7 @@ export default function Home() {
 
   return (
     <div>
-      {/* ── 첫 화면: 내 차 선택 ───────────────────────────────── */}
+      {/* ── 첫 화면: 차종 찾기 ───────────────────────────────── */}
       <section className="mx-auto grid max-w-5xl gap-8 px-5 pb-12 pt-8 sm:pt-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-14">
         <div className="min-w-0">
           <div className="mb-6 max-w-xl">
