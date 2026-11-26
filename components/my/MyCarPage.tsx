@@ -459,6 +459,7 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
   const [editKm, setEditKm] = useState(false)
   const [km, setKm] = useState(my.km > 0 ? String(my.km) : "")
   const [editing, setEditing] = useState<string | null>(null)
+  const [open, setOpen] = useState<string | null>(null)
   const list = dueList(my)
   const urgent = list.filter((d) => d.state === "over" || d.state === "soon").length
   const unknown = list.filter((d) => d.state === "unknown").length
@@ -508,58 +509,81 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
       <p className="mt-6 text-[15px] font-semibold">
         {urgent > 0 ? `지금 챙길 소모품이 ${urgent}개 있어요` : unknown === list.length ? "마지막으로 교체한 날짜를 넣어 주세요" : unknown > 0 ? "기록한 소모품 중엔 당장 교체할 게 없어요" : "당장 교체할 소모품은 없어요"}
       </p>
-      {unknown > 0 && <p className="mt-1 text-[13px] text-muted-foreground">기억 안 나면 &ldquo;오늘 교체&rdquo;를 눌러 두고, 다음부터 정확히 관리해도 돼요.</p>}
+      {unknown > 0 && <p className="mt-1 text-[13px] text-muted-foreground">부품을 누르면 교체 날짜를 넣을 수 있어요</p>}
 
-      <ul className="mt-3 space-y-2.5">
+      <ul className="mt-3 divide-y divide-border rounded-[14px] border border-border bg-card">
         {list.map((d) => {
           const st = STATE_STYLE[d.state]
+          const isOpen = open === d.part.slug
+          const spec = shortSpec(d.part.spec)
+          const toggle = () => {
+            setOpen(isOpen ? null : d.part.slug)
+            setEditing(null)
+          }
           return (
-            <li key={d.part.slug} className="rounded-[14px] border border-border bg-card p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <Link href={`/cars/${my.car.id}/${d.part.slug}`} className="font-bold hover:underline">{d.part.name}</Link>
-                  {d.part.spec && <p className="text-[13px] text-foreground/80">{d.part.spec}</p>}
-                  {d.part.shop ? (
-                    <OutboundLink href={d.part.shop.url} target="coupang" carId={my.car.id} partId={d.part.slug} sponsored className="num mt-1 inline-flex min-h-[32px] items-center gap-1 text-[14px] font-bold text-primary">
-                      쿠팡 {d.part.shop.price.toLocaleString("ko-KR")}원
-                      <span className="text-[11px] font-normal text-muted-foreground">{d.part.shop.date.slice(5).replace("-", "/")} 기준 ›</span>
-                    </OutboundLink>
-                  ) : d.part.price ? (
-                    <p className="num mt-1 text-[13px] text-muted-foreground">부품 예상 {d.part.price.toLocaleString("ko-KR")}원</p>
-                  ) : null}
-                  <p className="mt-0.5 text-[13px] text-muted-foreground">
-                    {d.record ? `마지막 교체 ${d.record.date.replace(/-/g, ".")}${d.record.km != null ? ` · ${d.record.km.toLocaleString("ko-KR")}km` : ""}` : d.text}
-                  </p>
-                </div>
-                <span className="shrink-0 text-right">
-                  <span className={`inline-block rounded-full px-2.5 py-1 text-[12px] font-semibold ${st.cls}`}>{st.label}</span>
-                  {d.record && <span className="num mt-1 block text-[13px] font-semibold">{d.text}</span>}
+            <li key={d.part.slug}>
+              <div
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                onClick={toggle}
+                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), toggle())}
+                className="flex cursor-pointer items-center gap-3 px-4 py-3"
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[15px] font-semibold">
+                    {d.part.name}
+                    {spec && <span className="ml-1.5 text-[12px] font-normal text-muted-foreground">{spec}</span>}
+                  </span>
+                  <span className="num block truncate text-[13px] text-muted-foreground">
+                    {d.part.shop ? (
+                      <span onClick={(e) => e.stopPropagation()}>
+                      <OutboundLink
+                        href={d.part.shop.url}
+                        target="coupang"
+                        carId={my.car.id}
+                        partId={d.part.slug}
+                        sponsored
+                        className="font-bold text-primary"
+                      >
+                        쿠팡 {d.part.shop.price.toLocaleString("ko-KR")}원 ›
+                      </OutboundLink>
+                      </span>
+                    ) : d.part.price ? (
+                      <>예상 {d.part.price.toLocaleString("ko-KR")}원</>
+                    ) : null}
+                    {d.record && <> · {d.record.date.slice(2).replace(/-/g, ".")} 교체</>}
+                  </span>
                 </span>
+                <span className={`shrink-0 rounded-full px-2.5 py-1 text-[12px] font-semibold ${st.cls}`}>{d.record ? d.text : st.label}</span>
+                <span aria-hidden className={`shrink-0 text-[14px] text-muted-foreground transition ${isOpen ? "rotate-180" : ""}`}>⌄</span>
               </div>
-              {editing === d.part.slug ? (
-                <RecordForm
-                  initial={d.record ?? { date: today(), km: my.km }}
-                  onCancel={() => setEditing(null)}
-                  onSave={(r) => {
-                    update({ ...my, records: { ...my.records, [d.part.slug]: r } })
-                    setEditing(null)
-                  }}
-                />
-              ) : (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <button
-                    onClick={() => update({ ...my, records: { ...my.records, [d.part.slug]: { date: today(), km: my.km } } })}
-                    className="min-h-[40px] rounded-lg bg-foreground px-3 text-[13px] font-semibold text-background"
-                  >
-                    오늘 교체했어요
-                  </button>
-                  <button onClick={() => setEditing(d.part.slug)} className="min-h-[40px] rounded-lg border border-border px-3 text-[13px] font-semibold">
-                    날짜 직접 입력
-                  </button>
-                  {(d.state === "over" || d.state === "soon") && (
-                    <Link href={`/cars/${my.car.id}/${d.part.slug}`} className="flex min-h-[40px] items-center rounded-lg px-2 text-[13px] font-semibold text-primary">
-                      가격·규격 보기
-                    </Link>
+              {isOpen && (
+                <div className="px-4 pb-3">
+                  {editing === d.part.slug ? (
+                    <RecordForm
+                      initial={d.record ?? { date: today(), km: my.km }}
+                      onCancel={() => setEditing(null)}
+                      onSave={(r) => {
+                        update({ ...my, records: { ...my.records, [d.part.slug]: r } })
+                        setEditing(null)
+                      }}
+                    />
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => update({ ...my, records: { ...my.records, [d.part.slug]: { date: today(), km: my.km } } })}
+                        className="min-h-[40px] rounded-lg bg-foreground px-3 text-[13px] font-semibold text-background"
+                      >
+                        오늘 교체했어요
+                      </button>
+                      <button onClick={() => setEditing(d.part.slug)} className="min-h-[40px] rounded-lg border border-border px-3 text-[13px] font-semibold">
+                        날짜 직접 입력
+                      </button>
+                      <Link href={`/cars/${my.car.id}/${d.part.slug}`} className="flex min-h-[40px] items-center rounded-lg px-2 text-[13px] font-semibold text-primary">
+                        규격·가격 자세히
+                      </Link>
+                    </div>
                   )}
                 </div>
               )}
@@ -585,6 +609,15 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
       </p>
     </>
   )
+}
+
+/** 목록에 쓸 짧은 규격: 모든 부품에 붙는 안내 문구는 빼고, 와이퍼는 "650·400mm"처럼 */
+function shortSpec(spec?: string): string | null {
+  if (!spec) return null
+  const w = spec.match(/운전석\s*(\d+)\s*mm.*?조수석\s*(\d+)\s*mm/)
+  if (w) return `${w[1]}·${w[2]}mm`
+  if (/차종 전용|구매 전|공통|확인/.test(spec) || spec.length > 22) return null
+  return spec.replace(/^SAE\s*/, "")
 }
 
 function RecordForm({ initial, onSave, onCancel }: { initial: { date: string; km?: number }; onSave: (r: { date: string; km?: number }) => void; onCancel: () => void }) {
