@@ -9,6 +9,7 @@
 import raw from "@/data/coupang-links.json"
 import searchRaw from "@/data/coupang-search-links.json"
 import picksRaw from "@/data/coupang-picks.json"
+import batteryRaw from "@/data/battery-fitment.json"
 import type { CarModel, MaintenancePart } from "@/types"
 
 import type { CoupangSpecLink } from "./coupang-check"
@@ -65,7 +66,7 @@ export interface CoupangChoice {
  *  - wiper: 운전석·조수석 길이가 규격과 같은 세트 / cabin·air: 상품명에 이 차종(또는 순정 품번)이 적힌 필터
  */
 export interface CoupangPick {
-  kind: "set" | "oil" | "wiper" | "cabin" | "air"
+  kind: "set" | "oil" | "wiper" | "cabin" | "air" | "battery"
   productId?: number | string
   name: string
   price: number
@@ -78,7 +79,34 @@ export interface CoupangPick {
 const PICKS = ((picksRaw as { picks?: Record<string, CoupangPick> }).picks ?? {}) as Record<string, CoupangPick>
 
 export function coupangPickFor(part: MaintenancePart): CoupangPick | undefined {
+  if (part.category === "battery") {
+    // 배터리는 규격 단위로 골라 둠: 이 차종 적합표에서 절반 넘게 쓰는 규격이 있을 때만 그 상품
+    const main = batteryOptionsFor(part)[0]
+    return main && main.share >= 0.5 ? main.pick : undefined
+  }
   return PICKS[part.id]
+}
+
+/**
+ * 배터리 규격별 상품 (data/battery-fitment.json: 아트라스BX 적합표, scripts/pick-coupang-battery.mjs가 규격마다 상품을 고름).
+ * 같은 차종도 트림마다 규격이 달라서 "라벨이 이 규격이면 → 이 상품"으로 보여 준다.
+ */
+export interface BatteryOption {
+  code: string
+  name: string
+  type: string
+  ah: number
+  /** 적합표의 연식·세부모델 조합 중 비율 (판매 비율 아님) */
+  share: number
+  pick?: CoupangPick
+}
+const BATTERY = ((batteryRaw as { cars?: Record<string, { options: Omit<BatteryOption, "pick">[] }> }).cars ?? {})
+
+export function batteryOptionsFor(part: MaintenancePart): BatteryOption[] {
+  if (part.category !== "battery" || /보조|LFP/.test(part.name)) return []
+  const carId = Object.keys(BATTERY).find((id) => part.id.startsWith(id + "-"))
+  if (!carId) return []
+  return BATTERY[carId].options.map((o) => ({ ...o, pick: PICKS[`battery:${o.code}`] }))
 }
 
 /** 규격에서 필요한 오일 양 (예: "5.8L") */
@@ -94,13 +122,15 @@ export function coupangChoicesFor(part: MaintenancePart): CoupangChoice[] {
     out.push({
       url: pick.url,
       kind: "pick",
-      title: pick.kind === "set" ? "이 세트 사면 돼요 (쿠팡)" : pick.kind === "oil" ? "이 오일 사면 돼요 (쿠팡)" : pick.kind === "wiper" ? "이 와이퍼 사면 돼요 (쿠팡)" : "이 필터 사면 돼요 (쿠팡)",
+      title: pick.kind === "battery" ? "가장 흔한 규격 배터리 (쿠팡)" : pick.kind === "set" ? "이 세트 사면 돼요 (쿠팡)" : pick.kind === "oil" ? "이 오일 사면 돼요 (쿠팡)" : pick.kind === "wiper" ? "이 와이퍼 사면 돼요 (쿠팡)" : "이 필터 사면 돼요 (쿠팡)",
       sub: pick.name,
       price: pick.price,
       priceDate: pick.checkedAt,
       image: pick.image,
       note:
-        pick.kind === "set"
+        pick.kind === "battery"
+          ? `이 차종 적합표에서 가장 많은 ${batteryOptionsFor(part)[0]?.name} 규격이에요. 트림마다 규격이 달라서 지금 달린 배터리 라벨과 같은지 꼭 보세요. 폐배터리 반납 조건이 붙은 상품이 많아요.`
+          : pick.kind === "set"
           ? "엔진오일 + 오일필터가 함께 든 차종 전용 세트예요. 상품명의 연식·엔진이 내 차와 같은지 한 번 더 보세요."
           : pick.kind === "oil"
             ? `규격(점도·등급)이 맞는 오일이에요.${need ? ` 필요량은 ${need}L라 용량이 모자라면 1L를 더 사세요.` : ""} 오일필터는 따로 필요해요.`

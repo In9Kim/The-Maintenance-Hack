@@ -123,12 +123,13 @@
           "id": "kia-sorento-mq4-battery",
           "name": "배터리",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "AGM 70Ah (트림에 따라 AGM 60Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 98000,
           "laborCost": 15000,
           "dealerPartPrice": 192000,
           "dealerLaborCost": 28000,
-          "coupangKeyword": "쏘렌토 MQ4 배터리"
+          "coupangKeyword": "쏘렌토 MQ4 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-27 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -245,13 +246,14 @@
           "id": "kia-carnival-ka4-battery",
           "name": "배터리",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "AGM 80Ah (트림에 따라 AGM 60Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 88000,
           "laborCost": 15000,
           "dealerPartPrice": 175000,
           "dealerLaborCost": 28000,
           "intervalMonths": 48,
-          "coupangKeyword": "카니발 배터리 90ah"
+          "coupangKeyword": "카니발 배터리 90ah",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-27 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -396,13 +398,14 @@
           "id": "kia-k5-dl3-battery",
           "name": "배터리 (AGM)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "AGM 70Ah · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 88000,
           "laborCost": 15000,
           "dealerPartPrice": 168000,
           "dealerLaborCost": 25000,
           "intervalMonths": 48,
-          "coupangKeyword": "K5 DL3 AGM 배터리 70ah"
+          "coupangKeyword": "K5 DL3 AGM 배터리 70ah",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-27 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -2256,12 +2259,13 @@
           "id": "kia-sportage-nq5-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "AGM 70Ah (트림에 따라 AGM 80Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 90000,
           "laborCost": 15000,
           "dealerPartPrice": 175000,
           "dealerLaborCost": 26000,
-          "coupangKeyword": "스포티지 NQ5 배터리"
+          "coupangKeyword": "스포티지 NQ5 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-27 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -2401,12 +2405,13 @@
           "id": "kia-seltos-sp2-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "AGM 70Ah (트림에 따라 AGM 80Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 78000,
           "laborCost": 14000,
           "dealerPartPrice": 150000,
           "dealerLaborCost": 24000,
-          "coupangKeyword": "셀토스 SP2 배터리"
+          "coupangKeyword": "셀토스 SP2 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-27 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -2503,12 +2508,13 @@
           "id": "kia-ray-tam-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "일반 60Ah · 차마다 달라 기존 배터리 라벨 확인",
           "coupangPrice": 62000,
           "laborCost": 12000,
           "dealerPartPrice": 120000,
           "dealerLaborCost": 20000,
-          "coupangKeyword": "레이 TAM 배터리"
+          "coupangKeyword": "레이 TAM 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-27 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -2605,12 +2611,13 @@
           "id": "kia-morning-ja-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "일반 40Ah · 차마다 달라 기존 배터리 라벨 확인",
           "coupangPrice": 60000,
           "laborCost": 12000,
           "dealerPartPrice": 118000,
           "dealerLaborCost": 20000,
-          "coupangKeyword": "모닝 JA 배터리"
+          "coupangKeyword": "모닝 JA 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-27 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -2780,12 +2787,13 @@
           "id": "kia-k8-gl3-battery",
           "name": "배터리 (12V)",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "일반 90Ah (트림에 따라 AGM 80Ah, AGM 70Ah) · 차마다 달라 기존 배터리 라벨 확인 · AGM이 달린 차는 AGM으로 교체",
           "coupangPrice": 100000,
           "laborCost": 15000,
           "dealerPartPrice": 195000,
           "dealerLaborCost": 30000,
-          "coupangKeyword": "K8 GL3 배터리"
+          "coupangKeyword": "K8 GL3 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-27 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },
@@ -2925,12 +2933,13 @@
           "id": "kia-bongo3-pu-battery",
           "name": "배터리",
           "category": "battery",
-          "spec": "차종 전용 (기존 배터리 라벨의 규격 확인)",
+          "spec": "일반 100Ah · 차마다 달라 기존 배터리 라벨 확인",
           "coupangPrice": 100000,
           "laborCost": 15000,
           "dealerPartPrice": 190000,
           "dealerLaborCost": 28000,
-          "coupangKeyword": "봉고3 배터리"
+          "coupangKeyword": "봉고3 배터리",
+          "source": "한국앤컴퍼니(아트라스BX) 배터리 파인더 차종별 적합 목록, 2026-11-27 확인. 교체용 적합표라 출고 순정품과 다를 수 있음"
         }
       ]
     },

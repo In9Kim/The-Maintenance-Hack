@@ -1,0 +1,483 @@
+{
+ "_설명": "차종별 교체용 배터리 규격 (한국앤컴퍼니 아트라스BX 배터리 파인더, 2026-11-27 조회). share = 적합표의 연식·세부모델 조합 중 비율(판매 비율 아님). 교체용 적합표라 출고 순정품과 다를 수 있음 → 화면에서 기존 배터리 라벨 확인 안내",
+ "cars": {
+  "kia-sorento-mq4": {
+   "models": [
+    "더 뉴 쏘렌토(MQ4)",
+    "신형 쏘렌토(MQ4)"
+   ],
+   "options": [
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.82
+    },
+    {
+     "code": "AGM 56020",
+     "name": "AGM60L",
+     "type": "AGM",
+     "ah": 60,
+     "share": 0.18
+    }
+   ]
+  },
+  "kia-carnival-ka4": {
+   "models": [
+    "더 뉴 카니발(KA4)",
+    "카니발(KA4)"
+   ],
+   "options": [
+    {
+     "code": "AGM 58020",
+     "name": "AGM80L",
+     "type": "AGM",
+     "ah": 80,
+     "share": 0.82
+    },
+    {
+     "code": "AGM 56020",
+     "name": "AGM60L",
+     "type": "AGM",
+     "ah": 60,
+     "share": 0.18
+    }
+   ]
+  },
+  "kia-k5-dl3": {
+   "models": [
+    "더 뉴 K5(DL3)",
+    "신형 K5(DL3)"
+   ],
+   "options": [
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 1
+    }
+   ]
+  },
+  "kia-sportage-nq5": {
+   "models": [
+    "더 뉴 스포티지(NQ5)",
+    "디 올 뉴 스포티지(NQ5)"
+   ],
+   "options": [
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.56
+    },
+    {
+     "code": "AGM 58020",
+     "name": "AGM80L",
+     "type": "AGM",
+     "ah": 80,
+     "share": 0.44
+    }
+   ]
+  },
+  "kia-seltos-sp2": {
+   "models": [
+    "더 뉴 셀토스(SP2)",
+    "셀토스(SP2)"
+   ],
+   "options": [
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.81
+    },
+    {
+     "code": "AGM 58020",
+     "name": "AGM80L",
+     "type": "AGM",
+     "ah": 80,
+     "share": 0.19
+    }
+   ]
+  },
+  "kia-ray-tam": {
+   "models": [
+    "더 뉴 레이",
+    "더 뉴 레이 F/L"
+   ],
+   "options": [
+    {
+     "code": "MF 60L",
+     "name": "MF60L",
+     "type": "MF",
+     "ah": 60,
+     "share": 1
+    }
+   ]
+  },
+  "kia-morning-ja": {
+   "models": [
+    "더 뉴 모닝(JA)",
+    "올 뉴 모닝(JA)"
+   ],
+   "options": [
+    {
+     "code": "MF 40FL",
+     "name": "MF40FL",
+     "type": "MF",
+     "ah": 40,
+     "share": 1
+    }
+   ]
+  },
+  "kia-k8-gl3": {
+   "models": [
+    "K8",
+    "더 뉴 K8"
+   ],
+   "options": [
+    {
+     "code": "MF 59043",
+     "name": "DIN90L (59043)",
+     "type": "MF",
+     "ah": 90,
+     "share": 0.44
+    },
+    {
+     "code": "AGM 58020",
+     "name": "AGM80L",
+     "type": "AGM",
+     "ah": 80,
+     "share": 0.35
+    },
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.21
+    }
+   ]
+  },
+  "kia-bongo3-pu": {
+   "models": [
+    "더 뉴 봉고3",
+    "봉고3 트럭(PU)"
+   ],
+   "options": [
+    {
+     "code": "MF 100L",
+     "name": "MF100L",
+     "type": "MF",
+     "ah": 100,
+     "share": 1
+    }
+   ]
+  },
+  "hyundai-tucson-nx4": {
+   "models": [
+    "더 뉴 투싼(NX4 F/L)",
+    "올 뉴 투싼"
+   ],
+   "options": [
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.41
+    },
+    {
+     "code": "AGM 58020",
+     "name": "AGM80L",
+     "type": "AGM",
+     "ah": 80,
+     "share": 0.39
+    },
+    {
+     "code": "MF 90L",
+     "name": "MF90L",
+     "type": "MF",
+     "ah": 90,
+     "share": 0.11
+    },
+    {
+     "code": "AGM 56020",
+     "name": "AGM60L",
+     "type": "AGM",
+     "ah": 60,
+     "share": 0.07
+    }
+   ]
+  },
+  "hyundai-avante-cn7": {
+   "models": [
+    "더 뉴 아반떼",
+    "올 뉴 아반떼"
+   ],
+   "options": [
+    {
+     "code": "MF 56219",
+     "name": "DIN62L (56219)",
+     "type": "MF",
+     "ah": 62,
+     "share": 0.83
+    },
+    {
+     "code": "AGM 56020",
+     "name": "AGM60L",
+     "type": "AGM",
+     "ah": 60,
+     "share": 0.09
+    },
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.08
+    }
+   ]
+  },
+  "hyundai-avante-ad": {
+   "models": [
+    "아반떼 세단 AD"
+   ],
+   "options": [
+    {
+     "code": "MF 56219",
+     "name": "DIN62L (56219)",
+     "type": "MF",
+     "ah": 62,
+     "share": 1
+    }
+   ]
+  },
+  "hyundai-grandeur-gn7": {
+   "models": [
+    "디 올 뉴 그랜저"
+   ],
+   "options": [
+    {
+     "code": "AGM 58020",
+     "name": "AGM80L",
+     "type": "AGM",
+     "ah": 80,
+     "share": 0.55
+    },
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.45
+    }
+   ]
+  },
+  "hyundai-grandeur-ig": {
+   "models": [
+    "그랜저 IG",
+    "더 뉴 그랜저"
+   ],
+   "options": [
+    {
+     "code": "MF 57413",
+     "name": "DIN74L (57413)",
+     "type": "MF",
+     "ah": 74,
+     "share": 0.38
+    },
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.25
+    },
+    {
+     "code": "AGM 58020",
+     "name": "AGM80L",
+     "type": "AGM",
+     "ah": 80,
+     "share": 0.21
+    },
+    {
+     "code": "MF 59043",
+     "name": "DIN90L (59043)",
+     "type": "MF",
+     "ah": 90,
+     "share": 0.14
+    }
+   ]
+  },
+  "hyundai-santafe-tm": {
+   "models": [
+    "더 뉴 싼타페",
+    "싼타페 TM"
+   ],
+   "options": [
+    {
+     "code": "AGM 58020",
+     "name": "AGM80L",
+     "type": "AGM",
+     "ah": 80,
+     "share": 0.42
+    },
+    {
+     "code": "AGM 59521",
+     "name": "AGM95L",
+     "type": "AGM",
+     "ah": 95,
+     "share": 0.31
+    },
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.27
+    }
+   ]
+  },
+  "hyundai-santafe-mx5": {
+   "models": [
+    "디 올 뉴 싼타페(MX5)"
+   ],
+   "options": [
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.5
+    },
+    {
+     "code": "AGM 56020",
+     "name": "AGM60L",
+     "type": "AGM",
+     "ah": 60,
+     "share": 0.42
+    },
+    {
+     "code": "AGM 58020",
+     "name": "AGM80L",
+     "type": "AGM",
+     "ah": 80,
+     "share": 0.07
+    }
+   ]
+  },
+  "hyundai-sonata-dn8": {
+   "models": [
+    "쏘나타 디 엣지",
+    "쏘나타(DN8)"
+   ],
+   "options": [
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.66
+    },
+    {
+     "code": "MF 80L",
+     "name": "MF80L",
+     "type": "MF",
+     "ah": 80,
+     "share": 0.19
+    },
+    {
+     "code": "MF 57413",
+     "name": "DIN74L (57413)",
+     "type": "MF",
+     "ah": 74,
+     "share": 0.15
+    }
+   ]
+  },
+  "hyundai-kona-sx2": {
+   "models": [
+    "디 올 뉴 코나"
+   ],
+   "options": [
+    {
+     "code": "AGM 56020",
+     "name": "AGM60L",
+     "type": "AGM",
+     "ah": 60,
+     "share": 0.81
+    },
+    {
+     "code": "AGM 57020",
+     "name": "AGM70L",
+     "type": "AGM",
+     "ah": 70,
+     "share": 0.19
+    }
+   ]
+  },
+  "hyundai-palisade-lx2": {
+   "models": [
+    "더 뉴 팰리세이드(F/L)",
+    "팰리세이드"
+   ],
+   "options": [
+    {
+     "code": "AGM 58020",
+     "name": "AGM80L",
+     "type": "AGM",
+     "ah": 80,
+     "share": 0.96
+    }
+   ]
+  },
+  "hyundai-casper-ax1": {
+   "models": [
+    "캐스퍼",
+    "캐스퍼(AX1 F/L)"
+   ],
+   "options": [
+    {
+     "code": "MF 54459",
+     "name": "DIN44L (54459)",
+     "type": "MF",
+     "ah": 44,
+     "share": 0.79
+    },
+    {
+     "code": "MF 60038",
+     "name": "DIN100L (60038)",
+     "type": "MF",
+     "ah": 100,
+     "share": 0.21
+    }
+   ]
+  },
+  "hyundai-staria-us4": {
+   "models": [
+    "스타리아"
+   ],
+   "options": [
+    {
+     "code": "AGM 58020",
+     "name": "AGM80L",
+     "type": "AGM",
+     "ah": 80,
+     "share": 0.8
+    },
+    {
+     "code": "MF 100R",
+     "name": "MF100R",
+     "type": "MF",
+     "ah": 100,
+     "share": 0.2
+    }
+   ]
+  }
+ }
+}
