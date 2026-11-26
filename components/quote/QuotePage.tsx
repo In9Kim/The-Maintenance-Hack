@@ -8,6 +8,8 @@ import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
 import { LiveCoupang } from "@/components/cars/LiveCoupang"
 import { quoteSearchWord } from "@/lib/quote-analyze"
+import { authEnabled, enabledProviders, supabase, type Provider } from "@/lib/supabase"
+import { LoginButtons } from "@/components/my/LoginButtons"
 import { addItem, hasItem, loadShopList, removeItem, saveShopList, type ShopItem } from "@/lib/shop-list"
 
 export interface QuoteCar {
@@ -79,6 +81,25 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [elapsed, setElapsed] = useState(0)
   const [openShop, setOpenShop] = useState<number[]>([])
+  // 로그인한 사람만 분석 가능 (계정마다 하루 1번). undefined = 확인 중
+  const [token, setToken] = useState<string | null | undefined>(undefined)
+  const [providers, setProviders] = useState<Provider[]>([])
+
+  useEffect(() => {
+    if (!authEnabled()) return setToken(null)
+    let alive = true
+    let off: (() => void) | undefined
+    enabledProviders().then((p) => alive && setProviders(p))
+    supabase().then(async (sb) => {
+      const { data } = await sb.auth.getSession()
+      if (alive) setToken(data.session?.access_token ?? null)
+      off = sb.auth.onAuthStateChange((_e, s) => setToken(s?.access_token ?? null)).data.subscription.unsubscribe
+    }).catch(() => alive && setToken(null))
+    return () => {
+      alive = false
+      off?.()
+    }
+  }, [])
 
   // 분석 중 경과 시간 (진행 단계 표시용)
   useEffect(() => {
@@ -120,10 +141,11 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
     try {
       const r = await fetch("/api/quote", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify({ carId: car.id, year: year ? Number(year) : undefined, engine: engine || undefined, image: preview, mediaType: "image/jpeg" }),
       })
       const j = await r.json()
+      if (r.status === 401) setToken(null)
       if (!r.ok) setError(j.error ?? "분석하지 못했어요.")
       else if (!j.readable) setError("견적서·점검내역을 읽지 못했어요. 표가 화면에 꽉 차게, 글자가 선명하게 다시 찍어 주세요.")
       else {
@@ -197,17 +219,24 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
             <button onClick={() => fileRef.current?.click()} className="mt-3 h-12 w-full rounded-[10px] border border-dashed border-input text-[15px] font-semibold">
               {preview ? "다른 사진 고르기" : "사진 찍기 / 고르기"}
             </button>
+            {token === null ? (
+              <div className="mt-3 rounded-[12px] bg-muted p-3.5">
+                <p className="text-[14px] font-semibold">로그인하면 하루 1번 분석할 수 있어요</p>
+                <div className="mt-2.5"><LoginButtons providers={providers} next="/quote" /></div>
+              </div>
+            ) : (
             <button
               onClick={analyze}
-              disabled={!car || !preview || busy}
+              disabled={!car || !preview || busy || token === undefined}
               className="mt-2 h-12 w-full rounded-[10px] bg-primary text-[16px] font-bold text-primary-foreground disabled:cursor-not-allowed disabled:bg-[#9BB8AD]"
             >
               {busy ? "분석 중…" : !car ? "차종을 먼저 골라 주세요" : "공임나라로 아낄 수 있는 것 찾기"}
             </button>
+            )}
             {busy && <Progress sec={elapsed} />}
             {error && <p role="alert" className="mt-3 rounded-[10px] bg-[#FEF3F2] px-3.5 py-2.5 text-[14px] text-[#B42318]">{error}</p>}
             <p className="mt-3 text-[12px] leading-relaxed text-muted-foreground">
-              하루 1번 무료 · 사진은 저장하지 않아요. 이름·전화번호·차량번호는 결과에 남기지 않아요. AI 결과는 참고용이에요.
+              로그인하면 하루 1번 무료 · 사진은 저장하지 않아요. 이름·전화번호·차량번호는 결과에 남기지 않아요. AI 결과는 참고용이에요.
             </p>
           </div>
         </>

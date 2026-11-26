@@ -1,5 +1,5 @@
 /**
- * 견적서 분석 하루 제한 (유료 AI라 엄격하게): 한 사람(IP 해시) 하루 1번, 사이트 전체 하루 GLOBAL번.
+ * 견적서 분석 하루 제한 (유료 AI라 엄격하게): 로그인한 사람(계정 id 해시) 하루 1번, 사이트 전체 하루 GLOBAL번.
  * KV(VERIFY_LIMIT)에 날짜별로 센다. KV가 없는 로컬에서는 제한 없음.
  */
 import { createHash } from "crypto"
@@ -22,11 +22,11 @@ async function kv(): Promise<KV | null> {
 }
 
 /** 쓸 수 있으면 바로 1번 센다 (AI 호출 전에 막아야 비용이 안 샘) */
-export async function takeQuote(ip: string): Promise<"ok" | "user" | "global"> {
+export async function takeQuote(who: string): Promise<"ok" | "user" | "global"> {
   const store = await kv()
   if (!store) return "ok"
   const day = kstDay()
-  const uk = `qu:${day}:${createHash("sha256").update(`${day}|${ip}`).digest("hex").slice(0, 20)}`
+  const uk = `qu:${day}:${createHash("sha256").update(`${day}|${who}`).digest("hex").slice(0, 20)}`
   const gk = `qg:${day}`
   const [u, g] = await Promise.all([store.get(uk), store.get(gk)])
   if (Number(g ?? 0) >= QUOTE_GLOBAL) return "global"
@@ -37,11 +37,11 @@ export async function takeQuote(ip: string): Promise<"ok" | "user" | "global"> {
 }
 
 /** 분석이 실패했거나 사진을 못 읽었으면 그 1번은 돌려준다 */
-export async function refundQuote(ip: string): Promise<void> {
+export async function refundQuote(who: string): Promise<void> {
   const store = await kv()
   if (!store) return
   const day = kstDay()
-  const uk = `qu:${day}:${createHash("sha256").update(`${day}|${ip}`).digest("hex").slice(0, 20)}`
+  const uk = `qu:${day}:${createHash("sha256").update(`${day}|${who}`).digest("hex").slice(0, 20)}`
   const gk = `qg:${day}`
   const [u, g] = await Promise.all([store.get(uk), store.get(gk)])
   const ttl = 60 * 60 * 36
