@@ -10,7 +10,7 @@ interface Item { productId: number; name: string; price: number; url: string; im
  * 골라 둔 상품이 없는 부품: 이 차종으로 쿠팡을 바로 검색해 상위 3개를 사진·가격과 함께 보여 준다.
  * (검색 결과라 내 차에 맞는지는 상품명 확인 필요 → /check로 AI 확인 연결)
  */
-export function LiveCoupang({ carId, part, q, partId }: { carId: string; part?: string; q?: string; partId: string }) {
+export function LiveCoupang({ carId, part, q, partId, emptyText }: { carId: string; part?: string; q?: string; partId: string; emptyText?: string }) {
   const [items, setItems] = useState<Item[] | null>(null)
   const [failed, setFailed] = useState(false)
 
@@ -27,9 +27,8 @@ export function LiveCoupang({ carId, part, q, partId }: { carId: string; part?: 
     }
   }, [carId, part, q])
 
-  if (failed) return null
-  if (!items) return <div className="h-[168px] animate-pulse rounded-[12px] bg-muted" />
-  if (!items.length) return null
+  if (!items && !failed) return <div className="h-[168px] animate-pulse rounded-[12px] bg-muted" />
+  if (failed || !items?.length) return emptyText ? <p className="rounded-[10px] bg-muted px-3 py-2.5 text-[13px] leading-relaxed text-muted-foreground">{emptyText}</p> : null
   return (
     <div>
       <p className="text-[12px] font-semibold text-muted-foreground">쿠팡 검색 결과 · 상품명의 차종·연식을 꼭 확인하세요</p>

@@ -253,7 +253,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
                   {it.verdict === "gongim" && !it.ours && car && quoteSearchWord(it.name).length >= 2 && (
                     openShop.includes(i) ? (
                       <div className="mt-2">
-                        <LiveCoupang carId={car.id} q={quoteSearchWord(it.name)} partId={`quote-${quoteSearchWord(it.name)}`} />
+                        <LiveCoupang carId={car.id} q={quoteSearchWord(it.name)} partId={`quote-${quoteSearchWord(it.name)}`} emptyText={`쿠팡에서 맞는 '${quoteSearchWord(it.name)}' 상품을 못 찾았어요. 차종 전용 부품이라 공임나라에 부품 구해 주는지 같이 물어보세요.`} />
                       </div>
                     ) : (
                       <button onClick={() => setOpenShop((o) => [...o, i])} className="ml-2 mt-2 min-h-[36px] rounded-full border border-border px-3 text-[13px] font-semibold">
