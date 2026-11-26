@@ -6,6 +6,7 @@ import { loadMyCar } from "@/lib/my-car"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
+import { addItem, hasItem, loadShopList, removeItem, saveShopList, type ShopItem } from "@/lib/shop-list"
 
 export interface QuoteCar {
   id: string
@@ -124,6 +125,20 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
     }
   }
 
+  // 정비소에 보여줄 리스트 (공임나라 가능 항목을 담음)
+  const [list, setList] = useState<ShopItem[]>([])
+  useEffect(() => {
+    if (result && carId) setList(loadShopList(carId))
+  }, [result, carId])
+  const itemOf = (it: Item): ShopItem => (it.ours ? { slug: it.ours.slug, name: it.ours.name, bought: it.ours.shop?.name } : { name: it.name })
+  const toggleList = (it: Item) => {
+    if (!carId) return
+    const s = itemOf(it)
+    const next = hasItem(list, s) ? removeItem(list, s) : addItem(list, s)
+    setList(next)
+    saveShopList(carId, next)
+  }
+
   const gongim = result?.items.filter((i) => i.verdict === "gongim") ?? []
   const saving = gongim.reduce((s, i) => (i.ours ? s + Math.max(0, i.ours.dealer - i.ours.self) : s), 0)
 
@@ -213,6 +228,15 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
                     <span className={`shrink-0 rounded-full px-2.5 py-1 text-[12px] font-bold ${v.cls}`}>{v.label}</span>
                   </div>
                   <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{it.reason}</p>
+                  {it.verdict === "gongim" && (
+                    <button
+                      onClick={() => toggleList(it)}
+                      aria-pressed={hasItem(list, itemOf(it))}
+                      className={`mt-2 min-h-[36px] rounded-full border px-3 text-[13px] font-semibold ${hasItem(list, itemOf(it)) ? "border-primary bg-primary text-primary-foreground" : "border-primary/40 text-primary"}`}
+                    >
+                      {hasItem(list, itemOf(it)) ? "✓ 정비소 리스트에 담음" : "+ 정비소에 보여줄 리스트에 담기"}
+                    </button>
+                  )}
                   {it.verdict === "gongim" && it.ours && car && (
                     <div className="mt-2 rounded-[10px] bg-muted px-3 py-2.5">
                       <p className="num text-[13px]">
@@ -240,6 +264,11 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
           </ul>
           {result.items.some((i) => i.ours?.shop) && <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>}
 
+          {list.length > 0 && car && (
+            <Link href={`/shop-card?car=${car.id}`} className="mt-4 flex h-14 items-center justify-center rounded-[12px] bg-primary text-[16px] font-bold text-primary-foreground">
+              정비소에 보여줄 리스트 보기 ({list.length}개)
+            </Link>
+          )}
           <div className="mt-4 grid grid-cols-2 gap-2">
             <button onClick={() => setResult(null)} className="h-12 rounded-[10px] border border-border bg-card text-[14px] font-semibold">
               다른 견적서

@@ -81,6 +81,11 @@ export function PartsBeforeVisit({ kind }: { kind: "gongim" | "bluehands" | "aut
       <p className="mt-0.5 text-[13px] text-muted-foreground">{gongim ? "공임나라는 부품을 가져가면 공임만 받아요" : "공식센터 견적의 부품값이 적당한지 확인할 수 있어요"}</p>
       <PartRows my={my} items={items} />
       <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>
+      {gongim && (
+        <Link href="/shop-card" className="mt-3 flex h-11 items-center justify-center rounded-[10px] border border-primary/40 bg-card text-[14px] font-semibold text-primary">
+          정비소에 보여줄 부품 리스트 만들기
+        </Link>
+      )}
     </div>
   )
 }

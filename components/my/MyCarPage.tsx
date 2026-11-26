@@ -250,6 +250,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
       <nav aria-label="마이 메뉴" className="mt-4 divide-y divide-border rounded-[14px] border border-border bg-card">
         {[
           { href: "/quote", label: "견적서 사진으로 아낄 항목 찾기 (AI)" },
+          { href: "/shop-card", label: "정비소에 보여줄 부품 리스트" },
           { href: "/check", label: "이 부품 내 차에 맞을까? (AI 확인)" },
           { href: "/recalls", label: "자동차 리콜 정보" },
           { href: "/info", label: "데이터 출처·이용 안내" },
