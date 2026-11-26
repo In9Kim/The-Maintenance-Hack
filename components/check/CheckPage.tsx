@@ -7,6 +7,8 @@ import { parseProductInput } from "@/lib/compat-request"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
+import { useAuthToken } from "@/components/my/useAuthToken"
+import { LoginButtons } from "@/components/my/LoginButtons"
 
 export interface CheckCar {
   id: string
@@ -22,7 +24,7 @@ export interface CheckCar {
 }
 
 interface Item { productId: number; name: string; price: number; url: string; image?: string; rocket: boolean }
-type ItemCheck = { busy: boolean; result?: Result; error?: string }
+type ItemCheck = { busy: boolean; result?: Result; error?: string; login?: boolean }
 
 interface Result {
   compatibility: "YES" | "NO" | "UNCERTAIN"
@@ -57,6 +59,9 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
   const [q, setQ] = useState("")
   const [search, setSearch] = useState<{ busy: boolean; items: Item[]; pickId: number | null; error?: string } | null>(null)
   const [checks, setChecks] = useState<Record<number, ItemCheck>>({})
+  // AI 확인은 로그인한 사람만 (검색·쿠팡 보기는 로그인 없이)
+  const { token, setToken, providers } = useAuthToken()
+  const [needLogin, setNeedLogin] = useState(false)
 
   // 등록한 내 차가 있으면 미리 골라 둔다
   useEffect(() => {
@@ -94,15 +99,20 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
     }
   }
 
-  const verify = async (text: string): Promise<{ result?: Result; error?: string }> => {
+  const verify = async (text: string): Promise<{ result?: Result; error?: string; login?: boolean }> => {
     if (!car) return { error: "차종을 먼저 골라 주세요." }
+    if (!token) return { login: true }
     try {
       const r = await fetch("/api/verify", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ carId: car.id, year: year ? Number(year) : undefined, engine: engine || undefined, product: text }),
       })
       const j = await r.json()
+      if (r.status === 401) {
+        setToken(null)
+        return { login: true }
+      }
       return r.ok ? { result: j as Result } : { error: j.error ?? "확인하지 못했어요. 잠시 뒤 다시 시도해 주세요." }
     } catch {
       return { error: "인터넷 연결을 확인하고 다시 시도해 주세요." }
@@ -124,6 +134,7 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
     setResult(null)
     track({ type: "report", carId: car.id, meta: { via: "check_submit" } })
     const r = await verify(product)
+    setNeedLogin(!!r.login)
     if (r.error) setError(r.error)
     else if (r.result) setResult(r.result)
     setBusy(false)
@@ -260,6 +271,7 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
                       </OutboundLink>
                     </div>
                     {c?.error && <p className="mt-2 text-[13px] text-[#B42318]">{c.error}</p>}
+                    {c?.login && <LoginBox providers={providers} />}
                     {c?.result && v && (
                       <div className={`mt-2 rounded-[10px] border px-3 py-2.5 ${v.cls}`}>
                         <p className="text-[14px] font-bold">{v.label}</p>
@@ -272,7 +284,7 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
             </ul>
           )}
           {search && search.items.length > 0 && (
-            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">가격은 지금 쿠팡 검색 기준이에요. AI 판정은 참고용이고 하루 횟수 제한이 있어요. {AFFILIATE_TEXT}</p>
+            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">가격은 지금 쿠팡 검색 기준이에요. AI 판정은 로그인하면 하루 3번, 참고용이에요. {AFFILIATE_TEXT}</p>
           )}
         </div>
       )}
@@ -302,6 +314,7 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
           </button>
         </div>
         {error && <p role="alert" className="mt-3 rounded-[10px] bg-[#FEF3F2] px-3.5 py-2.5 text-[14px] text-[#B42318]">{error}</p>}
+        {needLogin && !token && <LoginBox providers={providers} />}
 
         {car && (
           <details className="mt-3 text-[13px] text-muted-foreground">
@@ -351,5 +364,15 @@ function ResultView({ r, carId, onReset }: { r: Result; carId?: string; onReset:
         )}
       </div>
     </section>
+  )
+}
+
+/** AI 확인 전에 로그인 안내 (로그인 후 이 화면으로 돌아옴) */
+function LoginBox({ providers }: { providers: Parameters<typeof LoginButtons>[0]["providers"] }) {
+  return (
+    <div className="mt-2 rounded-[12px] bg-muted p-3.5">
+      <p className="text-[14px] font-semibold">로그인하면 내 차에 맞는지 AI로 확인할 수 있어요 (하루 3번)</p>
+      <div className="mt-2.5"><LoginButtons providers={providers} next="/check" /></div>
+    </div>
   )
 }

@@ -7,6 +7,7 @@ import { createHash } from "crypto"
 import { checkLimit, countUse, PER_USER } from "@/lib/verify-limit"
 import { getSeoCar } from "@/lib/seo"
 import { buildCompatRequest, parseProductInput } from "@/lib/compat-request"
+import { userIdFrom } from "@/lib/auth-user"
 
 const VIN_REGEX = /^[A-HJ-NPR-Z0-9]{17}$/i
 // Block SSRF to private/loopback ranges
@@ -75,6 +76,9 @@ async function extractProductInfoFromUrl(url: string): Promise<string | null> {
 }
 
 export async function POST(req: NextRequest) {
+  // AI 부품 확인은 로그인한 사람만 (계정마다 하루 PER_USER번)
+  const uid = await userIdFrom(req)
+  if (!uid) return NextResponse.json({ error: "부품 확인은 로그인하면 쓸 수 있어요.", login: true }, { status: 401 })
   try {
     const body = await req.json()
     const { vin, carId, year, engine, product } = body as {
@@ -176,7 +180,7 @@ export async function POST(req: NextRequest) {
       if (saved) result = { ...result, vehicle_spec: saved }
     } else {
       // 캐시 미스 = AI를 실제로 부름 → 하루 조회 제한 확인 (캐시 결과는 세지 않음)
-      const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
+      const ip = `u:${uid}`
       const limit = await checkLimit(ip)
       if (!limit.ok) {
         return NextResponse.json(
@@ -184,7 +188,7 @@ export async function POST(req: NextRequest) {
             error:
               limit.reason === "global"
                 ? "오늘은 확인 요청이 많아 AI 판정을 잠시 멈췄어요. 내일 다시 이용해 주세요. 그동안은 차종 페이지의 규격·순정 품번으로 직접 대조할 수 있어요."
-                : `AI 판정은 한 사람당 하루 ${PER_USER}번까지예요. 내일 다시 이용해 주세요. 이미 누가 확인한 같은 차·같은 상품은 횟수와 상관없이 바로 보여 드려요.`,
+                : `AI 판정은 계정마다 하루 ${PER_USER}번까지예요. 내일 다시 이용해 주세요. 이미 누가 확인한 같은 차·같은 상품은 횟수와 상관없이 바로 보여 드려요.`,
             limited: true,
           },
           { status: 429 }

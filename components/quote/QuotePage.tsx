@@ -8,7 +8,7 @@ import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
 import { LiveCoupang } from "@/components/cars/LiveCoupang"
 import { quoteSearchWord } from "@/lib/quote-analyze"
-import { authEnabled, enabledProviders, supabase, type Provider } from "@/lib/supabase"
+import { useAuthToken } from "@/components/my/useAuthToken"
 import { LoginButtons } from "@/components/my/LoginButtons"
 import { addItem, hasItem, loadShopList, removeItem, saveShopList, type ShopItem } from "@/lib/shop-list"
 
@@ -82,24 +82,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   const [elapsed, setElapsed] = useState(0)
   const [openShop, setOpenShop] = useState<number[]>([])
   // 로그인한 사람만 분석 가능 (계정마다 하루 1번). undefined = 확인 중
-  const [token, setToken] = useState<string | null | undefined>(undefined)
-  const [providers, setProviders] = useState<Provider[]>([])
-
-  useEffect(() => {
-    if (!authEnabled()) return setToken(null)
-    let alive = true
-    let off: (() => void) | undefined
-    enabledProviders().then((p) => alive && setProviders(p))
-    supabase().then(async (sb) => {
-      const { data } = await sb.auth.getSession()
-      if (alive) setToken(data.session?.access_token ?? null)
-      off = sb.auth.onAuthStateChange((_e, s) => setToken(s?.access_token ?? null)).data.subscription.unsubscribe
-    }).catch(() => alive && setToken(null))
-    return () => {
-      alive = false
-      off?.()
-    }
-  }, [])
+  const { token, setToken, providers } = useAuthToken()
 
   // 분석 중 경과 시간 (진행 단계 표시용)
   useEffect(() => {
