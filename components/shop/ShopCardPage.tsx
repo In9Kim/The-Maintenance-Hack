@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 import { loadMyCar, type MyCar } from "@/lib/my-car"
+import { MOBIS_SEARCH_URL } from "@/lib/mobis-search"
 import { addItem, hasItem, loadShopList, phoneScript, removeItem, saveShopList, type ShopItem } from "@/lib/shop-list"
 
 export interface ShopCardPart {
@@ -13,6 +14,8 @@ export interface ShopCardPart {
   engine?: string
   /** 정비핵이 골라 둔 쿠팡 상품 이름 (있으면 '산 상품' 기본값) */
   pick?: string
+  /** 현대모비스 부품 간단 검색에 넣을 단어 (현대·기아·제네시스만) */
+  mobis?: string
 }
 
 export interface ShopCardCar {
@@ -180,6 +183,11 @@ export function ShopCardPage({ cars }: { cars: ShopCardCar[] }) {
                         <span className="min-w-0">
                           <span className="block text-[15px] font-semibold">{it.name}</span>
                           {p && <span className="block text-[12px] text-muted-foreground">{p.spec}{p.partNumber ? ` · 순정 품번 ${p.partNumber}` : ""}</span>}
+                          {p && !p.partNumber && p.mobis && (
+                            <a href={MOBIS_SEARCH_URL} target="_blank" rel="noopener noreferrer" className="mt-0.5 block text-[12px] font-semibold text-primary underline underline-offset-2">
+                              순정 품번: 현대모비스에서 &lsquo;{p.mobis}&rsquo; 검색 ›
+                            </a>
+                          )}
                         </span>
                         <button onClick={() => update(removeItem(items, it))} className="shrink-0 text-[13px] text-muted-foreground" aria-label={`${it.name} 빼기`}>
                           빼기

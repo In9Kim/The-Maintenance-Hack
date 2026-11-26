@@ -928,10 +928,9 @@
           "dealerLaborCost": 30000,
           "coupangKeyword": "엔진오일 0W-20 API SP 합성유",
           "engine": "G1.6 T-GDi 하이브리드",
-          "partNumber": "오일필터 26350-2M000",
           "intervalKm": 10000,
           "intervalMonths": 12,
-          "source": "현대 싼타페 하이브리드(TM HEV) 취급설명서 '용량 및 규격'·'정기 점검' · 현대모비스 순정부품 검색 (가혹 조건 5,000km 또는 6개월)"
+          "source": "현대 싼타페 하이브리드(TM HEV) 취급설명서 '용량 및 규격'·'정기 점검' (가혹 조건 5,000km 또는 6개월)"
         },
         {
           "id": "hyundai-santafe-tm-air-filter",
@@ -944,7 +943,7 @@
           "dealerLaborCost": 12000,
           "coupangKeyword": "싼타페 TM 에어클리너 필터",
           "intervalKm": 40000,
-          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (1만 km마다 점검, 4만 km 교체) · 현대모비스 순정부품 검색"
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (1만 km마다 점검, 4만 km 교체)"
         },
         {
           "id": "hyundai-santafe-tm-cabin-filter",
@@ -956,9 +955,8 @@
           "dealerPartPrice": 37510,
           "dealerLaborCost": 10000,
           "coupangKeyword": "97133-L1100",
-          "partNumber": "97133-L1100",
           "intervalKm": 15000,
-          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' · 현대모비스 순정부품 검색 (7인승 2열 에어컨 차량은 화물칸 필터도 함께)"
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (7인승 2열 에어컨 차량은 화물칸 필터도 함께)"
         },
         {
           "id": "hyundai-santafe-tm-brake-pad-front",
@@ -970,8 +968,7 @@
           "dealerPartPrice": 60830,
           "dealerLaborCost": 70000,
           "coupangKeyword": "싼타페 TM 브레이크패드 앞",
-          "partNumber": "58101-P2A00 또는 58101-P2A05 (차대번호로 확인)",
-          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (교체 주기 없이 1만 km마다 점검) · 현대모비스 순정부품 검색"
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (교체 주기 없이 1만 km마다 점검)"
         },
         {
           "id": "hyundai-santafe-tm-brake-pad-rear",
@@ -983,8 +980,7 @@
           "dealerPartPrice": 42790,
           "dealerLaborCost": 65000,
           "coupangKeyword": "싼타페 TM 브레이크패드 뒤",
-          "partNumber": "가솔린·디젤 58302-P2A30 / 하이브리드 58302-P2A31",
-          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (교체 주기 없이 1만 km마다 점검) · 현대모비스 순정부품 검색"
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' (교체 주기 없이 1만 km마다 점검)"
         },
         {
           "id": "hyundai-santafe-tm-wiper",
@@ -995,9 +991,7 @@
           "laborCost": 0,
           "dealerPartPrice": 46000,
           "dealerLaborCost": 10000,
-          "coupangKeyword": "싼타페 TM 와이퍼",
-          "partNumber": "운전석 98350-S1000 · 조수석 98360-S1000 · 후면 98850-C5100",
-          "source": "현대모비스 순정부품 검색"
+          "coupangKeyword": "싼타페 TM 와이퍼"
         },
         {
           "id": "hyundai-santafe-tm-spark-plug",
@@ -1010,9 +1004,8 @@
           "dealerLaborCost": 48000,
           "coupangKeyword": "18875-09085",
           "engine": "G2.5 T-GDi 가솔린",
-          "partNumber": "18875-09085",
           "intervalKm": 75000,
-          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검' · 현대모비스 순정부품 검색"
+          "source": "현대 싼타페(TM) 2021~2023 취급설명서 '용량 및 규격'·'정기 점검'"
         },
         {
           "id": "hyundai-santafe-tm-spark-plug-hybrid",
@@ -1025,9 +1018,8 @@
           "dealerLaborCost": 48000,
           "coupangKeyword": "18875-08085",
           "engine": "G1.6 T-GDi 하이브리드",
-          "partNumber": "18875-08085",
           "intervalKm": 75000,
-          "source": "현대 싼타페 하이브리드(TM HEV) 취급설명서 '용량 및 규격'·'정기 점검' · 현대모비스 순정부품 검색"
+          "source": "현대 싼타페 하이브리드(TM HEV) 취급설명서 '용량 및 규격'·'정기 점검'"
         },
         {
           "id": "hyundai-santafe-tm-battery",

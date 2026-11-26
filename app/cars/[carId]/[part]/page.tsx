@@ -27,6 +27,7 @@ import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AffiliateNotice, Breadcrumbs, EstimateNote, JsonLd } from "@/components/seo/Shared"
 import { ReceiptCard } from "@/components/home/ReceiptCard"
 import { GuideLinks } from "@/components/cars/GuideLinks"
+import { isMobisBrand, mobisKeyword, MOBIS_MODEL_TIP, MOBIS_SEARCH_URL } from "@/lib/mobis-search"
 
 export const dynamicParams = false
 
@@ -68,6 +69,7 @@ export default async function PartPage({ params }: Props) {
   const title = partTitleName(part)
   const c = partCost(part)
   const interval = intervalText(part)
+  const mobisKw = mobisKeyword(part)
   // 엔진별 소모품이면 같은 엔진(+공통) 소모품만 "다른 소모품"으로
   const otherParts = car.parts.filter((p) => p.id !== part.id && (!part.engine || !p.engine || p.engine === part.engine))
   const specLinks = coupangChoicesFor(part)
@@ -258,18 +260,17 @@ export default async function PartPage({ params }: Props) {
                 </OutboundLink>
               </div>
             )}
-            {/^(현대|기아|제네시스)$/.test(car.brand) && part.category !== "oil" && part.category !== "fluid" && (
+            {isMobisBrand(car.brand) && mobisKw && (
               <div className="mt-3 rounded-[12px] border border-border bg-card px-4 py-3 text-[14px] leading-relaxed">
                 <p className="font-semibold">순정 품번·순정 가격을 직접 확인하려면</p>
                 <p className="mt-0.5 text-[13px] text-muted-foreground">
                   현대모비스 &lsquo;부품 간단 검색&rsquo;에서 제조사·모델을 고르고{" "}
-                  <b className="text-foreground">
-                    {part.category === "brake" ? "패드 키트" : part.category === "battery" ? "배터리" : part.category === "spark" ? "플러그" : part.category === "wiper" ? "와이퍼" : /에어컨|캐빈/.test(part.name) ? "에어 필터" : "에어 클리너"}
-                  </b>
-                  {" "}로 검색하면 품번과 직영점 가격이 나와요. 같은 부품에 품번이 여러 개면 엔진·트림에 따라 다르니 판매처에 차대번호로 확인하세요.
+                  <b className="text-foreground">&lsquo;{mobisKw.word}&rsquo;</b>
+                  {mobisKw.verified ? "(띄어쓰기까지 그대로)" : ""}로 검색하면 품번과 직영점 가격이 나와요.
+                  {!mobisKw.verified && " 안 나오면 더 짧은 단어로 검색해 보세요."} {MOBIS_MODEL_TIP} 같은 부품에 품번이 여러 개면 엔진·트림에 따라 다르니 차대번호로 확인하세요.
                 </p>
                 <OutboundLink
-                  href="https://www.mobis-as.com/simple_search_part.do"
+                  href={MOBIS_SEARCH_URL}
                   target="other"
                   carId={car.id}
                   partId={part.id}
