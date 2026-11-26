@@ -4,7 +4,6 @@ import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 import { dueList, loadMyCar, saveMyCar, today, type DueState, type MyCar, type MyCarSnapshot } from "@/lib/my-car"
 import { track } from "@/lib/track"
-import { RecentList } from "@/components/recent/Recent"
 
 export interface MyCarOption {
   id: string
@@ -14,7 +13,8 @@ export interface MyCarOption {
   photo?: string
   credit?: string
   engines: string[]
-  parts: { slug: string; name: string; engine?: string; intervalKm?: number; intervalMonths?: number }[]
+  years: number[]
+  parts: { slug: string; name: string; engine?: string; intervalKm?: number; intervalMonths?: number; spec?: string; self?: number }[]
 }
 
 const FIELD =
@@ -35,7 +35,7 @@ function snapshot(o: MyCarOption, engine?: string): MyCarSnapshot {
     credit: o.credit,
     parts: o.parts
       .filter((p) => !p.engine || !engine || p.engine === engine)
-      .map(({ slug, name, intervalKm, intervalMonths }) => ({ slug, name, intervalKm, intervalMonths })),
+      .map(({ slug, name, intervalKm, intervalMonths, spec, self }) => ({ slug, name, intervalKm, intervalMonths, spec, self })),
   }
 }
 
@@ -69,7 +69,17 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
   return (
     <div className="mx-auto max-w-2xl px-5 pb-6 pt-6 sm:pt-10">
       {my ? <Garage my={my} update={update} /> : <Register options={options} onSave={update} />}
-      <RecentList className="mt-8" />
+      <nav aria-label="마이 메뉴" className="mt-10 divide-y divide-border rounded-[14px] border border-border bg-card">
+        {[
+          { href: "/check", label: "차대번호로 부품 호환 확인" },
+          { href: "/info", label: "데이터 출처·이용 안내" },
+        ].map((m) => (
+          <Link key={m.href} href={m.href} className="flex min-h-[52px] items-center justify-between px-4 text-[15px]">
+            {m.label}
+            <span aria-hidden className="text-muted-foreground">›</span>
+          </Link>
+        ))}
+      </nav>
     </div>
   )
 }
@@ -79,37 +89,45 @@ function Register({ options, onSave }: { options: MyCarOption[]; onSave: (v: MyC
   const [brand, setBrand] = useState("")
   const [carId, setCarId] = useState("")
   const [engine, setEngine] = useState("")
+  const [year, setYear] = useState("")
   const [km, setKm] = useState("")
   const car = options.find((o) => o.id === carId)
   const needEngine = !!car && car.engines.length > 1
-  const ok = !!car && (!needEngine || !!engine) && num(km) > 0
+  const ok = !!car && (!needEngine || !!engine) && (!car.years.length || !!year)
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!car || !ok) return
     track({ type: "nav", carId: car.id, meta: { via: "my_register" } })
-    onSave({ car: snapshot(car, engine || undefined), engine: engine || undefined, km: num(km), kmDate: today(), records: {} })
+    onSave({ car: snapshot(car, engine || undefined), engine: engine || undefined, year: year ? Number(year) : undefined, km: num(km), kmDate: today(), records: {} })
   }
 
   return (
     <>
       <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[34px]">내 차 등록</h1>
-      <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
-        차종과 주행거리를 적어 두면 소모품 교체 시기를 계산해 드려요. 가입은 필요 없고, 이 휴대폰(브라우저)에만 저장돼요.
-      </p>
+      <p className="mt-2 text-[15px] text-muted-foreground">차종과 연식만 고르면 맞는 부품과 가격을 보여 드려요</p>
       <form onSubmit={submit} className="mt-6 space-y-3 rounded-2xl border border-border bg-card p-4 sm:p-6">
         <div className="grid grid-cols-[0.8fr_1.2fr] gap-2">
           <label className="sr-only" htmlFor="my-brand">브랜드</label>
-          <select id="my-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setEngine("") }}>
+          <select id="my-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setEngine(""); setYear("") }}>
             <option value="">브랜드</option>
             {brands.map((b) => <option key={b}>{b}</option>)}
           </select>
           <label className="sr-only" htmlFor="my-car">차종</label>
-          <select id="my-car" className={FIELD} value={carId} disabled={!brand} onChange={(e) => { setCarId(e.target.value); setEngine("") }}>
+          <select id="my-car" className={FIELD} value={carId} disabled={!brand} onChange={(e) => { setCarId(e.target.value); setEngine(""); setYear("") }}>
             <option value="">차종</option>
             {options.filter((o) => o.brand === brand).map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
           </select>
         </div>
+        {car && car.years.length > 0 && (
+          <>
+            <label className="sr-only" htmlFor="my-year">연식</label>
+            <select id="my-year" className={FIELD} value={year} onChange={(e) => setYear(e.target.value)}>
+              <option value="">연식</option>
+              {car.years.map((y) => <option key={y} value={y}>{y}년형</option>)}
+            </select>
+          </>
+        )}
         {needEngine && (
           <>
             <label className="sr-only" htmlFor="my-engine">엔진</label>
@@ -120,28 +138,23 @@ function Register({ options, onSave }: { options: MyCarOption[]; onSave: (v: MyC
           </>
         )}
         <label className="block">
-          <span className="text-[14px] font-semibold">지금 주행거리</span>
+          <span className="text-[14px] font-semibold">지금 주행거리 <span className="font-normal text-muted-foreground">(선택)</span></span>
           <span className="relative mt-1.5 block">
             <input inputMode="numeric" className={FIELD + " pr-12"} placeholder="예: 63,000" value={km ? num(km).toLocaleString("ko-KR") : ""} onChange={(e) => setKm(e.target.value)} />
             <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[15px] text-muted-foreground">km</span>
           </span>
-          <span className="mt-1 block text-[13px] text-muted-foreground">계기판 ODO 숫자예요. 대충 적어도 괜찮아요.</span>
         </label>
         <button type="submit" disabled={!ok} className="h-12 w-full rounded-[10px] bg-primary text-[16px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px disabled:cursor-not-allowed disabled:bg-[#9BB8AD]">
           내 차 등록하기
         </button>
       </form>
-      <ul className="mt-6 space-y-2 text-[14px] leading-relaxed text-muted-foreground">
-        <li>· 마지막으로 교체한 날짜를 넣으면 &ldquo;교체 시기 지남·곧 교체&rdquo;를 알려 드려요.</li>
-        <li>· 서버에 아무것도 보내지 않아요. 휴대폰을 바꾸거나 방문 기록을 지우면 사라져요.</li>
-      </ul>
     </>
   )
 }
 
 function Garage({ my, update }: { my: MyCar; update: (v: MyCar | null) => void }) {
   const [editKm, setEditKm] = useState(false)
-  const [km, setKm] = useState(String(my.km))
+  const [km, setKm] = useState(my.km > 0 ? String(my.km) : "")
   const [editing, setEditing] = useState<string | null>(null)
   const list = dueList(my)
   const urgent = list.filter((d) => d.state === "over" || d.state === "soon").length
@@ -159,7 +172,7 @@ function Garage({ my, update }: { my: MyCar; update: (v: MyCar | null) => void }
           <div className="min-w-0 flex-1">
             <p className="text-[13px] text-white/60">내 차</p>
             <h1 className="mt-0.5 text-[22px] font-extrabold leading-tight sm:text-[26px]">{my.car.name}</h1>
-            {my.engine && <p className="mt-1 text-[13px] text-white/70">{my.engine}</p>}
+            {(my.year || my.engine) && <p className="mt-1 text-[13px] text-white/70">{[my.year && `${my.year}년형`, my.engine].filter(Boolean).join(" · ")}</p>}
           </div>
           {my.car.photo && (
             // eslint-disable-next-line @next/next/no-img-element
@@ -175,8 +188,14 @@ function Garage({ my, update }: { my: MyCar; update: (v: MyCar | null) => void }
             </span>
           ) : (
             <button onClick={() => setEditKm(true)} className="num flex min-h-[44px] items-center gap-1.5 text-[22px] font-bold">
-              {my.km.toLocaleString("ko-KR")}<span className="text-[14px] font-normal text-white/70">km</span>
-              <span className="ml-1 rounded-md bg-white/10 px-2 py-0.5 text-[12px] font-semibold">고치기</span>
+              {my.km > 0 ? (
+                <>
+                  {my.km.toLocaleString("ko-KR")}<span className="text-[14px] font-normal text-white/70">km</span>
+                  <span className="ml-1 rounded-md bg-white/10 px-2 py-0.5 text-[12px] font-semibold">고치기</span>
+                </>
+              ) : (
+                <span className="rounded-md bg-white/10 px-2.5 py-1 text-[14px] font-semibold">입력하기</span>
+              )}
             </button>
           )}
         </div>
@@ -196,6 +215,8 @@ function Garage({ my, update }: { my: MyCar; update: (v: MyCar | null) => void }
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <Link href={`/cars/${my.car.id}/${d.part.slug}`} className="font-bold hover:underline">{d.part.name}</Link>
+                  {d.part.self != null && <span className="num ml-2 text-[14px] font-bold text-primary">{d.part.self.toLocaleString("ko-KR")}원</span>}
+                  {d.part.spec && <p className="text-[13px] text-foreground/80">{d.part.spec}</p>}
                   <p className="mt-0.5 text-[13px] text-muted-foreground">
                     {d.record ? `마지막 교체 ${d.record.date.replace(/-/g, ".")}${d.record.km != null ? ` · ${d.record.km.toLocaleString("ko-KR")}km` : ""}` : d.text}
                   </p>

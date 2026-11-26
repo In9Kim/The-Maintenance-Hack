@@ -3,15 +3,12 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-// "견적서 분석"(Phase 3, 미완성)은 기능이 열릴 때까지 메뉴에서 숨김
-// 휴대폰은 위 메뉴를 숨기고 아래 탭(BottomNav)을 쓴다
+// 휴대폰은 위 메뉴를 숨기고 아래 탭(BottomNav)을 쓴다. 부품 호환 확인·계산기는 메뉴에서 빼고 차종·부품 페이지 안에서 연결
 export const NAV = [
   { href: "/cars", label: "차종별 비용", match: (p: string) => p.startsWith("/cars") },
-  { href: "/calculator", label: "계산기", match: (p: string) => p === "/calculator" },
-  { href: "/check", label: "부품 호환 확인", match: (p: string) => p === "/check" },
   { href: "/near", label: "근처 정비소", match: (p: string) => p.startsWith("/near") },
   { href: "/recalls", label: "리콜", match: (p: string) => p.startsWith("/recalls") },
-  { href: "/my", label: "내 차", match: (p: string) => p === "/my" },
+  { href: "/my", label: "마이", match: (p: string) => p.startsWith("/my") || p.startsWith("/info") },
 ]
 
 /** 로고: 영수증 한 장 (견적서를 다시 쓴다는 뜻) */

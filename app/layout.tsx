@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next"
 import Link from "next/link"
 import { Header } from "@/components/layout/Header"
 import { BottomNav } from "@/components/layout/BottomNav"
+import { RecallBanner } from "@/components/layout/RecallBanner"
+import { carRecallAlerts } from "@/lib/recalls/car-alert"
 import { TrackFrom } from "@/components/seo/TrackFrom"
 import { WebAnalytics } from "@/components/seo/WebAnalytics"
 import "./globals.css"
@@ -46,6 +48,7 @@ export default function RootLayout({
         <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[60] focus:rounded-md focus:bg-card focus:px-3 focus:py-2 focus:text-sm focus:shadow">
           본문 바로가기
         </a>
+        <RecallBanner alerts={carRecallAlerts()} />
         <Header />
         <TrackFrom />
         <WebAnalytics />
@@ -60,39 +63,10 @@ export default function RootLayout({
 function SiteFooter() {
   return (
     <footer className="mt-16 border-t border-border bg-card">
-      <div className="mx-auto grid max-w-5xl gap-8 px-5 py-10 text-sm sm:grid-cols-[1.4fr_1fr_1fr]">
-        <div>
-          <p className="text-base font-bold">정비핵</p>
-          <p className="mt-2 max-w-xs leading-relaxed text-muted-foreground">
-            정비소 견적을 부품값과 공임으로 나눠 보고, 직접 사서 맡기면 얼마인지 계산해 주는 차주용 도구입니다.
-          </p>
-        </div>
-        <nav aria-label="바로가기">
-          <p className="font-semibold">바로가기</p>
-          <ul className="mt-2 space-y-1.5 text-muted-foreground">
-            <li><Link className="hover:text-foreground hover:underline" href="/cars">차종별 정비 비용</Link></li>
-            <li><Link className="hover:text-foreground hover:underline" href="/calculator">정비 비용 계산기</Link></li>
-            <li><Link className="hover:text-foreground hover:underline" href="/recalls">리콜 정보</Link></li>
-            <li><Link className="hover:text-foreground hover:underline" href="/near">근처 공임나라·정비소</Link></li>
-            <li><Link className="hover:text-foreground hover:underline" href="/near/carwash">근처 세차장</Link></li>
-            <li><Link className="hover:text-foreground hover:underline" href="/check">차대번호로 부품 호환 확인</Link></li>
-            <li><Link className="hover:text-foreground hover:underline" href="/my">내 차 교체 시기 관리</Link></li>
-          </ul>
-        </nav>
-        <div>
-          <p className="font-semibold">데이터 출처</p>
-          <ul className="mt-2 space-y-1.5 text-muted-foreground">
-            <li>규격·교체 주기: 제조사 취급설명서</li>
-            <li>부품값·공임·공식센터 가격: 시세를 바탕으로 한 추정치 (실제 영수증으로 확인한 것은 "실제로 달아 본 상품"에 따로 표시)</li>
-            <li>리콜: 국토교통부·자동차리콜센터</li>
-            <li>정비소·세차장 위치: 카카오 로컬</li>
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-border">
-        <p className="mx-auto max-w-5xl px-5 py-4 text-xs text-muted-foreground">
-          부품 가격·공임은 참고용 예상치이며 실제 구매 시 다를 수 있습니다. © 2026 정비핵 (The Maintenance Hack)
-        </p>
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-1 px-5 py-5 text-[13px] text-muted-foreground">
+        <span>© 2026 정비핵</span>
+        <Link className="hover:text-foreground hover:underline" href="/info">데이터 출처·이용 안내</Link>
+        <span>가격은 참고용 추정치예요</span>
       </div>
     </footer>
   )

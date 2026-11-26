@@ -24,7 +24,7 @@ export interface SitePage {
   path: string
   lastModified?: string
   priority: number
-  kind: "home" | "check" | "near" | "calculator" | "cars" | "car" | "recalls" | "maker" | "car-recalls" | "part"
+  kind: "home" | "check" | "near" | "calculator" | "cars" | "car" | "recalls" | "maker" | "car-recalls" | "part" | "info"
   /** RSS 항목 제목·설명 (car·maker·car-recalls만) */
   title?: string
   description?: string
@@ -47,6 +47,7 @@ export function sitePages(): SitePage[] {
   return [
     { path: "/", priority: 1, kind: "home" },
     { path: "/check", priority: 0.9, kind: "check" },
+    { path: "/info", priority: 0.3, kind: "info" },
     ...NEAR_KINDS.map((k): SitePage => ({ path: k.slug === "gongim" ? "/near" : `/near/${k.slug}`, priority: 0.7, kind: "near" })),
     { path: "/calculator", lastModified: carsUpdated, priority: 0.8, kind: "calculator" },
     { path: "/cars", lastModified: carsUpdated, priority: 0.9, kind: "cars" },

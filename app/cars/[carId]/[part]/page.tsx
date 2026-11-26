@@ -21,7 +21,6 @@ import { GONGIM_RESERVATION_URL } from "@/lib/config"
 import { coupangChoicesFor, naverShoppingFor, oilTiersFor } from "@/lib/coupang-links"
 import { OilTiers } from "@/components/cars/OilTiers"
 import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
-import { TrackRecent } from "@/components/recent/Recent"
 import { carPhoto } from "@/lib/car-photos"
 import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
 import { OutboundLink } from "@/components/seo/OutboundLink"
@@ -101,7 +100,6 @@ export default async function PartPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-5xl px-5 pb-6 pt-6 sm:pt-10">
-      <TrackRecent href={`/cars/${car.id}/${partSlug(car, part)}`} title={name.replace(/^(기아|현대|제네시스|테슬라|KGM)\s/, "")} sub={title} img={carPhoto(car.id)?.localSmall} />
       <Breadcrumbs
         items={[
           { href: "/", label: "정비핵" },
@@ -123,12 +121,7 @@ export default async function PartPage({ params }: Props) {
             <b>필요한 엔진오일 양: {oilQty.text}</b>
           </p>
           <p className="mt-0.5 text-[13px] text-muted-foreground">
-            {oilQty.max <= 4
-              ? "4L 한 통으로 채울 수 있는 양이에요. "
-              : oilQty.first <= 4
-                ? "기본 용량은 4L 한 통으로 채울 수 있고, 괄호 안 연식은 4L 한 통으로는 모자라요. "
-                : "4L 한 통으로는 모자라요. "}
-            정비소 명세서의 오일 양이 이보다 많으면 실제로 몇 L 넣었는지 물어보세요.
+            {oilQty.max <= 4 ? "4L 한 통이면 돼요" : oilQty.first <= 4 ? "기본은 4L 한 통, 괄호 안 연식은 모자라요" : "4L 한 통으론 모자라요"}
           </p>
         </div>
       )}
@@ -173,21 +166,14 @@ export default async function PartPage({ params }: Props) {
                 </OutboundLink>
                 )
               )}
-              <p className="text-[12px] leading-relaxed text-muted-foreground">
-                주문 전에 상품명의 연식·품번이 내 차와 같은지 한 번 보세요. 헷갈리면{" "}
-                <Link href="/check" className="font-semibold text-primary underline underline-offset-2">30초 호환 확인</Link>
-              </p>
               {naverShoppingFor(part) && <NaverCompareLink url={naverShoppingFor(part)!.url} carId={car.id} partId={part.id} />}
               <OilTiers rows={oilTiersFor(part)} carId={car.id} partId={part.id} />
             </div>
           ) : (
             <>
-              <p className="mt-4 rounded-[10px] bg-muted px-3 py-2.5 text-[14px] leading-relaxed text-muted-foreground">
-                규격을 확인한 상품 링크는 아직 없어요. 위 규격과 차대번호로 맞는 부품을 고르세요.
+              <p className="mt-4 rounded-[10px] bg-muted px-3 py-2.5 text-[14px] text-muted-foreground">
+                확인된 상품 링크가 아직 없어요. 위 규격으로 고르세요.
               </p>
-              <Link href="/check" className="mt-2 inline-block text-[13px] font-semibold text-primary underline underline-offset-2">
-                사려는 상품이 내 차에 맞는지 30초 확인
-              </Link>
             </>
           )}
 
@@ -237,9 +223,7 @@ export default async function PartPage({ params }: Props) {
         {part.fitted && part.fitted.length > 0 && (
           <div className="mt-3 rounded-[12px] border border-border bg-card px-4 py-3 text-[14px] leading-relaxed">
             <p className="font-semibold">실제로 달아 본 상품</p>
-            <p className="mt-0.5 text-[13px] text-muted-foreground">
-              정비핵 운영자 차량에 실제로 장착한 상품이에요. 주문 내역으로 확인한 것만 적었어요. 내 차에도 맞는지는 연식·트림을 꼭 확인하세요.
-            </p>
+            <p className="mt-0.5 text-[13px] text-muted-foreground">운영자 차에 실제로 단 상품 (주문 내역 기준)</p>
             <ul className="mt-2 space-y-2">
               {part.fitted.map((f) => (
                 <li key={f.item + f.date} className="border-t border-border pt-2 first:border-t-0 first:pt-0">
@@ -254,44 +238,49 @@ export default async function PartPage({ params }: Props) {
             </ul>
           </div>
         )}
-        {part.category === "oil" && (
-          <div className="mt-3 rounded-[12px] border border-border bg-card px-4 py-3 text-[14px] leading-relaxed">
-            <p className="font-semibold">내 차 번호로 한 번 더 확인하고 싶다면</p>
-            <p className="mt-0.5 text-[13px] text-muted-foreground">
-              SK ZIC 엔진오일 추천 페이지에 차량번호를 넣으면 규격·점도·용량을 알려 줘요. 정비핵은 차량번호를 받지 않아요. ZIC 제품 위주로 추천해요.
-            </p>
-            <OutboundLink
-              href="https://www.skzic.com/popup/fpop.html"
-              target="other"
-              carId={car.id}
-              partId={part.id}
-              className="mt-1.5 inline-flex min-h-[40px] items-center text-[14px] font-semibold underline underline-offset-4"
-            >
-              SK ZIC에서 차량번호로 확인하기
-            </OutboundLink>
-          </div>
-        )}
-        {/^(현대|기아|제네시스)$/.test(car.brand) && part.category !== "oil" && part.category !== "fluid" && (
-          <div className="mt-3 rounded-[12px] border border-border bg-card px-4 py-3 text-[14px] leading-relaxed">
-            <p className="font-semibold">순정 품번·순정 가격을 직접 확인하려면</p>
-            <p className="mt-0.5 text-[13px] text-muted-foreground">
-              현대모비스 &lsquo;부품 간단 검색&rsquo;에서 제조사·모델을 고르고{" "}
-              <b className="text-foreground">
-                {part.category === "brake" ? "패드 키트" : part.category === "battery" ? "배터리" : part.category === "spark" ? "플러그" : part.category === "wiper" ? "와이퍼" : /에어컨|캐빈/.test(part.name) ? "에어 필터" : "에어 클리너"}
-              </b>
-              {" "}로 검색하면 품번과 직영점 가격이 나와요. 같은 부품에 품번이 여러 개면 엔진·트림에 따라 다르니 판매처에 차대번호로 확인하세요.
-            </p>
-            <OutboundLink
-              href="https://www.mobis-as.com/simple_search_part.do"
-              target="other"
-              carId={car.id}
-              partId={part.id}
-              className="mt-1.5 inline-flex min-h-[40px] items-center text-[14px] font-semibold underline underline-offset-4"
-            >
-              현대모비스에서 순정 품번 찾기
-            </OutboundLink>
-          </div>
-        )}
+        <details className="mt-3 rounded-[12px] border border-border bg-card px-4 text-[14px] leading-relaxed">
+          <summary className="min-h-[48px] cursor-pointer content-center font-semibold">내 차에 맞는지 직접 더 확인하기</summary>
+          <div className="pb-3 [&>div]:mt-0 [&>div]:border-0 [&>div]:px-0">
+            {part.category === "oil" && (
+              <div className="mt-3 rounded-[12px] border border-border bg-card px-4 py-3 text-[14px] leading-relaxed">
+                <p className="font-semibold">내 차 번호로 한 번 더 확인하고 싶다면</p>
+                <p className="mt-0.5 text-[13px] text-muted-foreground">
+                  SK ZIC 엔진오일 추천 페이지에 차량번호를 넣으면 규격·점도·용량을 알려 줘요. 정비핵은 차량번호를 받지 않아요. ZIC 제품 위주로 추천해요.
+                </p>
+                <OutboundLink
+                  href="https://www.skzic.com/popup/fpop.html"
+                  target="other"
+                  carId={car.id}
+                  partId={part.id}
+                  className="mt-1.5 inline-flex min-h-[40px] items-center text-[14px] font-semibold underline underline-offset-4"
+                >
+                  SK ZIC에서 차량번호로 확인하기
+                </OutboundLink>
+              </div>
+            )}
+            {/^(현대|기아|제네시스)$/.test(car.brand) && part.category !== "oil" && part.category !== "fluid" && (
+              <div className="mt-3 rounded-[12px] border border-border bg-card px-4 py-3 text-[14px] leading-relaxed">
+                <p className="font-semibold">순정 품번·순정 가격을 직접 확인하려면</p>
+                <p className="mt-0.5 text-[13px] text-muted-foreground">
+                  현대모비스 &lsquo;부품 간단 검색&rsquo;에서 제조사·모델을 고르고{" "}
+                  <b className="text-foreground">
+                    {part.category === "brake" ? "패드 키트" : part.category === "battery" ? "배터리" : part.category === "spark" ? "플러그" : part.category === "wiper" ? "와이퍼" : /에어컨|캐빈/.test(part.name) ? "에어 필터" : "에어 클리너"}
+                  </b>
+                  {" "}로 검색하면 품번과 직영점 가격이 나와요. 같은 부품에 품번이 여러 개면 엔진·트림에 따라 다르니 판매처에 차대번호로 확인하세요.
+                </p>
+                <OutboundLink
+                  href="https://www.mobis-as.com/simple_search_part.do"
+                  target="other"
+                  carId={car.id}
+                  partId={part.id}
+                  className="mt-1.5 inline-flex min-h-[40px] items-center text-[14px] font-semibold underline underline-offset-4"
+                >
+                  현대모비스에서 순정 품번 찾기
+                </OutboundLink>
+              </div>
+            )}
+              </div>
+        </details>
       </section>
 
       {/* 자주 묻는 질문 */}

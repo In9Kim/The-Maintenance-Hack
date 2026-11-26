@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { MyCarCard } from "@/components/home/MyCarCard";
-import { RecentList } from "@/components/recent/Recent";
 import { CarPicker, type PickerCar } from "@/components/home/CarPicker";
 import { ReceiptCard } from "@/components/home/ReceiptCard";
 import {
@@ -12,8 +11,6 @@ import {
 } from "@/lib/seo";
 import { majorRecalls, fmtDate } from "@/lib/recalls/data";
 import { recallCars, splitCritical } from "@/lib/recalls/highlight";
-import { SalesRanking } from "@/components/home/SalesRanking"
-import { monthText, salesRanking } from "@/lib/sales-ranking";
 
 export const metadata = pageMetadata({
   title: "엔진오일 교환비용·공임나라 공임비 계산, 차종별 소모품 가격 | 정비핵",
@@ -49,31 +46,13 @@ export default function Home() {
         <div className="min-w-0">
           <div className="mb-6 max-w-xl">
             <MyCarCard />
-            <RecentList className="mt-4" />
           </div>
           <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[40px] sm:leading-[1.25]">
             정비소 견적, 부품값과 공임으로 나눠 보세요
           </h1>
-          <p className="mt-3 max-w-xl text-[16px] leading-relaxed text-muted-foreground">
-            차종을 고르면 소모품 규격과 공식센터·셀프 정비 비용을 한 장에 정리해
-            드려요. 부품은 직접 사고 교체만 맡기면 얼마가 남는지 바로 보입니다.
-          </p>
           <div className="mt-6 max-w-xl">
             <CarPicker cars={pickerCars} />
           </div>
-          <p className="mt-3 text-[13px] text-muted-foreground">
-            국산·수입 {cars.length}개 차종 · 규격은 제조사 취급설명서 기준
-          </p>
-          <Link
-            href="/check"
-            className="mt-5 flex max-w-xl items-center justify-between gap-3 rounded-[14px] border border-primary/30 bg-[#ECFDF3] px-4 py-3 transition hover:border-primary"
-          >
-            <span>
-              <b className="block text-[15px]">사려는 부품이 이미 있나요?</b>
-              <span className="text-[13px] text-muted-foreground">차대번호로 내 차에 맞는지 30초 만에 확인</span>
-            </span>
-            <span aria-hidden className="shrink-0 text-[14px] font-bold text-primary">확인하기</span>
-          </Link>
         </div>
         {sorento && oil && oilCost && (
           <div className="mx-auto w-full max-w-sm lg:mx-0 lg:justify-self-end">
@@ -91,22 +70,6 @@ export default function Home() {
             </Link>
           </div>
         )}
-      </section>
-
-      {/* ── 이번 달 많이 팔린 차 (판매 순위) ─────────────────────── */}
-      <section className="border-y border-border bg-card">
-        <div className="mx-auto max-w-5xl px-5 py-12">
-          <div className="flex items-end justify-between gap-4">
-            <h2 className="text-[20px] font-bold sm:text-[24px]">{monthText(salesRanking().month)} 많이 팔린 차</h2>
-            <Link href="/cars" className="min-h-[44px] content-center text-[14px] font-semibold text-muted-foreground hover:text-foreground">
-              전체 {cars.length}개 차종
-            </Link>
-          </div>
-          <p className="mt-1 text-[14px] text-muted-foreground">국산차 판매 순위예요. 누르면 그 차의 소모품 규격과 정비 비용을 볼 수 있어요.</p>
-          <div className="mt-5">
-            <SalesRanking />
-          </div>
-        </div>
       </section>
 
       {/* ── 꼭 확인할 리콜: 한 줄 ─────────────────────────────── */}

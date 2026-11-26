@@ -10,6 +10,10 @@ export interface MyPartInfo {
   name: string
   intervalKm?: number
   intervalMonths?: number
+  /** 규격 한 줄 (등록 직후 '맞는 부품' 목록용) */
+  spec?: string
+  /** 부품 직접 구매+공임나라 예상 금액 */
+  self?: number
 }
 
 export interface MyCarSnapshot {
@@ -30,6 +34,8 @@ export interface ChangeRecord {
 export interface MyCar {
   car: MyCarSnapshot
   engine?: string
+  /** 연식 (등록 때 고름. 예전 기록에는 없음) */
+  year?: number
   km: number
   /** 주행거리를 적은 날 YYYY-MM-DD */
   kmDate: string

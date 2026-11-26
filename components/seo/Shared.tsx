@@ -60,8 +60,7 @@ export function AffiliateNotice({ className = "" }: { className?: string }) {
 export function EstimateNote() {
   return (
     <p className="mt-10 border-t border-border pt-4 text-[13px] leading-relaxed text-muted-foreground">
-      부품 규격·가격·공임은 참고용 예상치이며 연식·엔진·옵션에 따라 다를 수 있습니다. 구매 전 차량 등록증의 차대번호로 부품
-      번호를 꼭 확인하세요.
+      규격·가격·공임은 참고용 예상치예요. 구매 전 차대번호로 품번을 확인하세요.
     </p>
   )
 }

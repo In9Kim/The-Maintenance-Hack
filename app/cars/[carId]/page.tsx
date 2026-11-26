@@ -28,7 +28,6 @@ import { OutboundLink } from "@/components/seo/OutboundLink"
 import { CarDiagram, type DiagramPart } from "@/components/cars/CarDiagram"
 import { CarPhoto } from "@/components/cars/CarPhoto"
 import { carPhoto } from "@/lib/car-photos"
-import { TrackRecent } from "@/components/recent/Recent"
 import { bodyTypeOf, isElectric, zoneLabel, zoneOf, type ZoneId } from "@/lib/car-diagram"
 import type { CarModel, MaintenancePart } from "@/types"
 
@@ -186,7 +185,6 @@ export default async function CarPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-5xl px-5 pb-6 pt-6 sm:pt-10">
-      <TrackRecent href={`/cars/${car.id}`} title={carShortName(car).replace(/^(기아|현대|제네시스|테슬라|KGM)\s/, "")} img={photo?.localSmall} />
       <Breadcrumbs
         items={[
           { href: "/", label: "정비핵" },
@@ -234,19 +232,9 @@ export default async function CarPage({ params }: Props) {
         />
       </div>
 
-      <section className="mt-12">
-        <h2 className="text-[20px] font-bold sm:text-[24px]">부품 위치로 보기</h2>
-        <p className="mt-1.5 mb-4 text-[14px] leading-relaxed text-muted-foreground">어디에 있는 부품인지 눌러서 확인하고, 그 자리에서 규격과 비용을 보세요.</p>
-        <CarDiagram carId={car.id} carName={name} body={body} zones={diagramZones} parts={diagramParts} />
-      </section>
 
       <section className="mt-12">
         <h2 className="text-[20px] font-bold sm:text-[24px]">항목별 규격과 비용</h2>
-        <p className="mt-1.5 text-[14px] leading-relaxed text-muted-foreground">
-          {multi
-            ? "엔진마다 엔진오일·점화플러그 규격이 달라 엔진별로 나눴어요. 내 차 엔진을 보세요."
-            : "항목을 누르면 규격과 교체 비용을 자세히 볼 수 있어요."}
-        </p>
         {hasLinks && <AffiliateNotice className="mt-4" />}
         {multi ? (
           <div className="mt-5">
@@ -280,18 +268,18 @@ export default async function CarPage({ params }: Props) {
         )}
       </section>
 
-      <div className="mt-8 rounded-2xl border border-border bg-card p-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
-        <div>
-          <p className="font-bold">이번에 바꿀 것만 골라 보세요</p>
-          <p className="mt-1 text-[14px] text-muted-foreground">계산기에서 항목을 체크하면 합계가 바로 바뀌어요.</p>
-        </div>
-        <Link
-          href={calculatorHref(car)}
-          className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-primary px-5 text-[15px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px sm:mt-0 sm:w-auto"
-        >
-          내 정비 항목 계산하기
-        </Link>
-      </div>
+      <section className="mt-12">
+        <h2 className="text-[20px] font-bold sm:text-[24px]">부품 위치로 보기</h2>
+        <div className="mt-4" />
+        <CarDiagram carId={car.id} carName={name} body={body} zones={diagramZones} parts={diagramParts} />
+      </section>
+
+      <Link
+        href={calculatorHref(car)}
+        className="mt-8 flex h-12 w-full items-center justify-center rounded-[10px] border border-border bg-card px-5 text-[15px] font-bold transition hover:bg-muted active:translate-y-px sm:w-auto sm:inline-flex"
+      >
+        바꿀 것만 골라 합계 계산하기
+      </Link>
 
       <GuideLinks car={car} />
       <EstimateNote />
