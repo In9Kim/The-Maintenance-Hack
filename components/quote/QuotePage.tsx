@@ -418,8 +418,8 @@ function PhotoExamples() {
 }
 
 /** 분석 중 화면: 올린 사진 위에 스캔 효과 + 큰 게이지 + 찾은 항목이 하나씩 나타남.
- *  게이지는 경과 시간(Haiku 보통 10초 안팎, 2026-11-27 운영 측정 9.4초)과 실제로 받은 항목 수 중 큰 쪽 */
-const EXPECT = 12
+ *  게이지는 경과 시간(Haiku·effort low 기준 첫 항목 약 3초, 끝까지 약 6초 — 2026-11-27 운영 측정)과 실제로 받은 항목 수 중 큰 쪽 */
+const EXPECT = 6
 function stepText(sec: number, found: number) {
   if (found > 0) return `항목 ${found}개 찾았어요 · 계속 읽는 중`
   if (sec < 2) return "사진 보내는 중"

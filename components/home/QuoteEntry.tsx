@@ -16,7 +16,7 @@ export function QuoteEntry({ compact = false }: { compact?: boolean }) {
       <span className="min-w-0 flex-1">
         <span className="block text-[17px] font-extrabold leading-snug">견적서 받으셨어요?</span>
         <span className="block text-[13px] leading-snug text-white/85">
-          {compact ? "사진 한 장이면 공임나라로 아낄 항목을 찾아 드려요" : "사진 한 장이면 10초 안팎으로 공임나라로 아낄 항목과 금액을 알려 드려요"}
+          {compact ? "사진 한 장이면 공임나라로 아낄 항목을 찾아 드려요" : "사진 한 장이면 몇 초 만에 공임나라로 아낄 항목과 금액을 알려 드려요"}
         </span>
       </span>
       <span aria-hidden className="text-[22px] text-white/80">›</span>
