@@ -98,6 +98,8 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   // 로그인 없이 하루 1번, 로그인하면 하루 3번. undefined = 로그인 확인 중
   const { token, setToken, providers } = useAuthToken()
   const [needLogin, setNeedLogin] = useState(false)
+  // 등록한 내 차로 채웠으면 입력칸 대신 한 줄로 (바꾸기를 누르면 입력칸)
+  const [fromMy, setFromMy] = useState(false)
 
   // 분석 중 경과 시간 (진행 단계 표시용)
   useEffect(() => {
@@ -115,6 +117,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
       setCarId(c.id)
       if (my.year) setYear(String(my.year))
       if (my.engine) setEngine(my.engine)
+      setFromMy(true)
     }
   }, [cars])
 
@@ -182,6 +185,18 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
     <div>
       {!result && (
         <>
+          {fromMy && car ? (
+          <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3">
+            <span className="min-w-0 flex-1">
+              <span className="block text-[12px] text-muted-foreground">내 차</span>
+              <span className="block truncate text-[16px] font-bold">{car.name}</span>
+              <span className="block text-[13px] text-muted-foreground">{[year && `${year}년형`, engine || car.engines[0]].filter(Boolean).join(" · ")}</span>
+            </span>
+            <button onClick={() => setFromMy(false)} className="min-h-[40px] shrink-0 rounded-lg border border-border px-3 text-[13px] font-semibold">
+              다른 차
+            </button>
+          </div>
+          ) : (
           <div className="rounded-2xl border border-border bg-card p-4">
             <p className="text-[15px] font-bold">내 차</p>
             <div className="mt-2 grid grid-cols-[0.8fr_1.2fr] gap-2">
@@ -209,6 +224,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
               </div>
             )}
           </div>
+          )}
 
           <div className="mt-4 rounded-2xl border border-border bg-card p-4">
             <p className="text-[15px] font-bold">견적서·점검내역 사진</p>

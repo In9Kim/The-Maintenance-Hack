@@ -2,40 +2,21 @@
 
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { dueList, loadGarage, saveGarage, type Garage } from "@/lib/my-car"
+import { loadGarage, loadSkipped, nextAction, quickRecord, saveGarage, saveSkipped, today, type Garage, type MyCar, type PartDue } from "@/lib/my-car"
+import { pushIfSignedIn } from "@/lib/cloud-garage"
+import { isCustomCar } from "@/lib/car-catalog"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
-import { CarDiagram } from "@/components/cars/CarDiagram"
-import type { DiagramData } from "@/lib/diagram-data"
-
+import { track } from "@/lib/track"
 
 /**
- * 첫 화면 '내 차' (등록한 사람만). 등록 여부는 layout의 작은 스크립트가 <html data-car>로 먼저 표시해서
- * 예시 화면이 잠깐 보였다 바뀌는 일이 없게 한다 (globals.css .home-guest / .home-mine).
+ * 첫 화면 '내 차' (등록한 사람만) = 오늘 할 일 하나.
+ * 교체 시기가 급한 부품이 있으면 그 부품을 바로 살 수 있게, 기록이 없으면 "언제 갈았어요?"를 버튼으로 하나씩 묻는다.
+ * 차 관리(전체 목록·주행거리·기록)는 마이에서. 등록 여부는 layout의 작은 스크립트가 <html data-car>로 먼저 표시한다.
  */
 export function HomeMyCar() {
   const [g, setG] = useState<Garage | null>(null)
-  const [diagram, setDiagram] = useState<DiagramData | null>(null)
-  const activeCar = g?.cars.find((c) => c.id === g.active)
-  const carId = activeCar?.car.id
-  const engine = activeCar?.engine
-
-  useEffect(() => {
-    if (!carId) return
-    let alive = true
-    setDiagram(null)
-    fetch(`/api/car-diagram/${carId}`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d: DiagramData | null) => {
-        if (!alive || !d) return
-        // 내 차 엔진의 부품만
-        setDiagram({ ...d, parts: d.parts.filter((p) => !p.engine || !engine || p.engine === engine) })
-      })
-      .catch(() => {})
-    return () => {
-      alive = false
-    }
-  }, [carId, engine])
+  const [skipped, setSkipped] = useState<string[]>([])
 
   useEffect(() => {
     const read = () => {
@@ -49,13 +30,24 @@ export function HomeMyCar() {
     return () => window.removeEventListener("mh-my-car", read)
   }, [])
 
-  if (!g) return <div className="h-[420px] animate-pulse rounded-2xl bg-muted" />
-  const my = g.cars.find((c) => c.id === g.active)
+  const my = g?.cars.find((c) => c.id === g.active)
+  useEffect(() => {
+    if (my?.id) setSkipped(loadSkipped(my.id))
+  }, [my?.id])
+
+  if (!g) return <div className="h-[300px] animate-pulse rounded-2xl bg-muted" />
   if (!my) return null
 
-  const list = dueList(my)
-  const urgentList = list.filter((d) => d.state === "over" || d.state === "soon")
-  const unknownCount = list.filter((d) => d.state === "unknown").length
+  const save = (car: MyCar) => {
+    const next = { ...g, cars: g.cars.map((c) => (c.id === car.id ? car : c)) }
+    saveGarage(next)
+    pushIfSignedIn(car)
+  }
+  const skip = (slug: string) => {
+    const s = [...skipped, slug]
+    setSkipped(s)
+    saveSkipped(my.id!, s)
+  }
 
   return (
     <div>
@@ -75,78 +67,135 @@ export function HomeMyCar() {
         </div>
       )}
 
-      <Link href="/my" className="flex items-center gap-4 overflow-hidden rounded-2xl bg-[#14213D] p-5 text-white">
-        <span className="min-w-0 flex-1">
-          <span className="block text-[13px] text-white/60">내 차</span>
-          <span className="mt-0.5 block text-[22px] font-extrabold leading-tight">{my.car.name}</span>
-          <span className="mt-1 block text-[13px] text-white/70">
-            {[my.year && `${my.year}년형`, my.engine, my.km > 0 && `${my.km.toLocaleString("ko-KR")}km`].filter(Boolean).join(" · ")}
-          </span>
-        </span>
+      {/* 차 이름은 한 줄로만 (큰 카드는 마이에서) */}
+      <Link href="/my" className="flex items-center gap-3">
         {my.car.photo && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={my.car.photo} alt="" width={160} height={100} className="h-[76px] w-[120px] shrink-0 rounded-lg object-cover" />
+          <img src={my.car.photo} alt="" width={160} height={100} className="h-10 w-16 shrink-0 rounded-md object-cover" />
         )}
-      </Link>
-
-      {/* 급한 소모품만 (최대 3개). 전체 목록·교체 기록은 마이에서 */}
-      {urgentList.length > 0 ? (
-        <>
-          <p className="mt-5 text-[16px] font-bold">지금 챙길 소모품 {urgentList.length}개</p>
-          <ul className="mt-2 divide-y divide-border rounded-[14px] border border-border bg-card">
-            {urgentList.slice(0, 3).map((d) => (
-              <li key={d.part.slug} className="flex items-center gap-3 px-4 py-3">
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[15px] font-semibold">{d.part.name}</span>
-                  <span className="block text-[12px] font-semibold text-[#B54708]">{d.text}</span>
-                </span>
-                {d.part.shop ? (
-                  <OutboundLink href={d.part.shop.url} target="coupang" carId={my.car.id} partId={d.part.slug} sponsored className="num shrink-0 rounded-lg bg-primary px-3 py-2 text-[13px] font-bold text-primary-foreground">
-                    쿠팡 {d.part.shop.price.toLocaleString("ko-KR")}원
-                  </OutboundLink>
-                ) : (
-                  <Link href={`/cars/${my.car.id}/${d.part.slug}`} className="shrink-0 text-[13px] font-semibold text-primary">가격 보기 ›</Link>
-                )}
-              </li>
-            ))}
-          </ul>
-          {urgentList.some((d) => d.part.shop) && <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>}
-        </>
-      ) : (
-        <Link href="/my" className="mt-4 flex items-center justify-between rounded-[12px] bg-muted px-4 py-3 text-[14px]">
-          <span>{unknownCount > 0 ? `교체 날짜를 넣으면 시기를 알려 드려요 (${unknownCount}개)` : "당장 교체할 소모품은 없어요"}</span>
-          <span aria-hidden className="text-muted-foreground">›</span>
-        </Link>
-      )}
-
-      {/* 내 차 부품 위치 도면: 부위를 누르면 부품·가격 */}
-      <div className="mt-5">
-        {diagram ? (
-          <CarDiagram carId={diagram.carId} carName={diagram.carName} body={diagram.body} zones={diagram.zones} parts={diagram.parts} />
-        ) : (
-          <div className="h-[260px] animate-pulse rounded-2xl bg-muted" />
-        )}
-      </div>
-
-      <Link href="/quote" className="mt-4 flex items-center gap-3 rounded-[14px] border border-primary/30 bg-[#F6FEF9] px-4 py-3">
         <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-bold">정비소 견적서 받으셨어요?</span>
-          <span className="block text-[13px] text-muted-foreground">사진 올리면 공임나라로 아낄 항목을 찾아 드려요</span>
+          <span className="block truncate text-[17px] font-extrabold">{my.car.name}</span>
+          <span className="num block text-[12px] text-muted-foreground">
+            {[my.year && `${my.year}년형`, my.km > 0 ? `${my.km.toLocaleString("ko-KR")}km` : "주행거리 미입력"].filter(Boolean).join(" · ")}
+          </span>
         </span>
-        <span aria-hidden className="text-primary">›</span>
+        <span className="shrink-0 text-[13px] font-semibold text-muted-foreground">관리 ›</span>
       </Link>
 
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        <Link href="/my" className="flex min-h-[48px] items-center justify-center rounded-[12px] border border-border bg-card text-[14px] font-semibold">
-          교체 기록 관리
-        </Link>
-        <Link href="/near" className="flex min-h-[48px] items-center justify-center rounded-[12px] bg-foreground text-[14px] font-semibold text-background">
-          근처 공임나라
-        </Link>
+      <NextCard my={my} skipped={skipped} onSave={save} onSkip={skip} />
+    </div>
+  )
+}
+
+const ASK = [
+  { label: "3개월 안", months: 2 },
+  { label: "6개월쯤 전", months: 6 },
+  { label: "1년쯤 전", months: 12 },
+  { label: "1년 넘음", months: 20 },
+] as const
+
+function NextCard({ my, skipped, onSave, onSkip }: { my: MyCar; skipped: string[]; onSave: (c: MyCar) => void; onSkip: (slug: string) => void }) {
+  const a = nextAction(my, skipped)
+
+  if (a.type === "none") {
+    return (
+      <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+        <p className="text-[16px] font-bold">{my.car.name} 부품 정보는 준비 중이에요</p>
+        <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">
+          등록해 주신 차부터 부품 규격과 가격을 채우고 있어요. 그동안 견적서 분석과 근처 공임나라 찾기는 그대로 쓸 수 있어요.
+        </p>
       </div>
-      <Link href="/cars" className="mt-3 inline-flex min-h-[44px] items-center text-[13px] text-muted-foreground underline underline-offset-4">
-        다른 차종 둘러보기
-      </Link>
+    )
+  }
+
+  if (a.type === "ask") {
+    const d = a.due
+    return (
+      <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+        <p className="text-[13px] text-muted-foreground">교체 시기 계산 · {a.left}개 남음</p>
+        <p className="mt-1 text-[18px] font-extrabold leading-snug">{d.part.name}, 마지막으로 언제 갈았어요?</p>
+        <p className="mt-1 text-[13px] text-muted-foreground">대충 골라도 돼요. 다음 교체 때를 알려 드릴게요</p>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          {ASK.map((o) => (
+            <button
+              key={o.label}
+              onClick={() => {
+                track({ type: "nav", carId: my.car.id, partId: d.part.slug, meta: { via: "home_ask", months: o.months } })
+                onSave({ ...my, records: { ...my.records, [d.part.slug]: quickRecord(my, o.months) } })
+              }}
+              className="min-h-[48px] rounded-[12px] border border-border bg-background text-[15px] font-semibold active:bg-muted"
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
+        <button onClick={() => onSkip(d.part.slug)} className="mt-2 min-h-[44px] w-full text-[14px] font-semibold text-muted-foreground">
+          모르겠어요 · 다음 부품
+        </button>
+        {my.km <= 0 && <p className="mt-1 text-[12px] text-muted-foreground">마이에서 지금 주행거리를 넣으면 더 정확해져요</p>}
+      </div>
+    )
+  }
+
+  if (a.type === "ok") {
+    return (
+      <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+        <p className="text-[16px] font-bold">지금 갈아야 할 부품은 없어요</p>
+        {a.due && (
+          <p className="mt-1 text-[14px] text-muted-foreground">
+            다음은 <b className="text-foreground">{a.due.part.name}</b> · {a.due.text}
+          </p>
+        )}
+        <Link href="/my" className="mt-3 inline-flex min-h-[40px] items-center text-[13px] font-semibold text-primary">교체 기록 전체 보기 ›</Link>
+      </div>
+    )
+  }
+
+  // buy: 가장 급한 부품을 바로 살 수 있게
+  return <BuyCard my={my} due={a.due} more={a.urgent.length - 1} onSave={onSave} />
+}
+
+function BuyCard({ my, due, more, onSave }: { my: MyCar; due: PartDue; more: number; onSave: (c: MyCar) => void }) {
+  const p = due.part
+  const custom = isCustomCar(my.car.id)
+  return (
+    <div className="mt-4 overflow-hidden rounded-2xl border border-[#FEC84B] bg-card">
+      <div className="bg-[#FFFAEB] px-4 py-3">
+        <p className="text-[13px] font-semibold text-[#B54708]">{due.state === "over" ? "교체 시기가 지났어요" : "곧 갈 때예요"} · {due.text}</p>
+        <p className="mt-0.5 text-[19px] font-extrabold leading-snug">{p.name}</p>
+      </div>
+      <div className="p-4">
+        {p.shop ? (
+          <OutboundLink
+            href={p.shop.url}
+            target="coupang"
+            carId={my.car.id}
+            partId={p.slug}
+            sponsored
+            className="num flex h-12 items-center justify-center rounded-[12px] bg-primary text-[16px] font-bold text-primary-foreground"
+          >
+            쿠팡에서 {p.shop.price.toLocaleString("ko-KR")}원에 사기
+          </OutboundLink>
+        ) : !custom ? (
+          <Link href={`/cars/${my.car.id}/${p.slug}`} className="flex h-12 items-center justify-center rounded-[12px] bg-primary text-[16px] font-bold text-primary-foreground">
+            맞는 부품·가격 보기
+          </Link>
+        ) : null}
+        {p.self ? <p className="num mt-2 text-center text-[13px] text-muted-foreground">부품 사 가서 공임나라에 맡기면 약 {p.self.toLocaleString("ko-KR")}원 (추정)</p> : null}
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <button
+            onClick={() => onSave({ ...my, records: { ...my.records, [p.slug]: { date: today(), km: my.km > 0 ? my.km : undefined } } })}
+            className="min-h-[44px] rounded-[10px] border border-border text-[14px] font-semibold"
+          >
+            이미 갈았어요
+          </button>
+          <Link href="/near" className="flex min-h-[44px] items-center justify-center rounded-[10px] bg-foreground text-[14px] font-semibold text-background">
+            근처 공임나라
+          </Link>
+        </div>
+        {more > 0 && <Link href="/my" className="mt-3 inline-flex min-h-[40px] items-center text-[13px] font-semibold text-[#B54708]">갈 때 된 부품 {more}개 더 ›</Link>}
+        {p.shop && <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>}
+      </div>
     </div>
   )
 }

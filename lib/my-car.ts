@@ -181,3 +181,58 @@ export function removeCar(g: Garage, id: string): Garage {
   const cars = g.cars.filter((c) => c.id !== id)
   return { cars, active: g.active === id ? cars[0]?.id ?? "" : g.active }
 }
+
+// ── 다음 할 일: 홈·정비소 화면이 같은 기준으로 "지금 챙길 부품" 하나를 고른다 ──
+
+export type NextAction =
+  | { type: "buy"; due: PartDue; urgent: PartDue[] } // 교체 시기 지남·곧 → 바로 사기
+  | { type: "ask"; due: PartDue; left: number } // 기록 없는 부품 → 마지막 교체 시기를 한 번에 물음
+  | { type: "ok"; due?: PartDue } // 다 기록했고 급한 것 없음 (due = 다음으로 가까운 것)
+  | { type: "none" } // 부품 정보가 없는 차
+
+/** skipped: '모름'을 누른 부품 slug (다시 묻지 않음) */
+export function nextAction(my: MyCar, skipped: string[] = [], now = today()): NextAction {
+  const list = dueList(my, now)
+  if (!list.length) return { type: "none" }
+  const urgent = list.filter((d) => d.state === "over" || d.state === "soon")
+  if (urgent.length) return { type: "buy", due: urgent[0], urgent }
+  // 자주 가는 부품(주기가 짧은 것)부터 묻는다
+  const ask = list
+    .filter((d) => d.state === "unknown" && !d.record && !skipped.includes(d.part.slug))
+    .sort((a, b) => cycleKm(a.part) - cycleKm(b.part))
+  if (ask.length) return { type: "ask", due: ask[0], left: ask.length }
+  return { type: "ok", due: list.find((d) => d.state === "ok") }
+}
+
+const cycleKm = (p: MyPartInfo) => p.intervalKm ?? (p.intervalMonths ? p.intervalMonths * KM_PER_MONTH : 1e9)
+
+/** 한 달 평균 주행거리 추정 (연 1만5천km). 교체 때 주행거리를 모를 때만 씀 */
+export const KM_PER_MONTH = 1250
+
+/** "6개월쯤 전에 갈았어요" 같은 대략 답 → 교체 기록. 지금 주행거리를 알면 그때 주행거리도 추정 */
+export function quickRecord(my: Pick<MyCar, "km">, monthsAgo: number, now = today()): ChangeRecord {
+  const d = new Date(`${now}T00:00:00Z`)
+  d.setUTCMonth(d.getUTCMonth() - monthsAgo) // 달력 기준 N개월 전
+  const date = d.toISOString().slice(0, 10)
+  const km = my.km > 0 ? Math.max(0, Math.round((my.km - monthsAgo * KM_PER_MONTH) / 100) * 100) : undefined
+  return km != null ? { date, km } : { date }
+}
+
+/** '모름'으로 넘긴 부품 (이 기기에만, 차마다) */
+const SKIP_KEY = "mh_skip"
+export function loadSkipped(carId: string): string[] {
+  try {
+    return (JSON.parse(localStorage.getItem(SKIP_KEY) || "{}") as Record<string, string[]>)[carId] ?? []
+  } catch {
+    return []
+  }
+}
+export function saveSkipped(carId: string, slugs: string[]) {
+  try {
+    const all = JSON.parse(localStorage.getItem(SKIP_KEY) || "{}") as Record<string, string[]>
+    all[carId] = slugs
+    localStorage.setItem(SKIP_KEY, JSON.stringify(all))
+  } catch {
+    /* 저장이 막힌 브라우저 */
+  }
+}

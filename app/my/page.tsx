@@ -17,6 +17,7 @@ export default function Page() {
     return {
       id: c.id,
       brand: c.brand,
+      model: c.model,
       label: `${c.model} ${c.generation.replace(/\s*\(.*?\)\s*/g, "")} · ${c.yearRange}`,
       name: carShortName(c),
       photo: p?.localSmall,

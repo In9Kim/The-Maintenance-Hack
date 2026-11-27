@@ -58,3 +58,14 @@ export async function deleteCloudCar(id: string) {
   const { error } = await sb.from("vehicles").delete().eq("id", id)
   if (error) throw error
 }
+
+/** 로그인해 있으면 계정에도 저장 (홈 화면처럼 계정 상태를 따로 안 들고 있는 곳에서 씀). 실패해도 이 기기에는 저장돼 있음 */
+export async function pushIfSignedIn(car: MyCar) {
+  try {
+    const sb = await supabase()
+    const { data } = await sb.auth.getSession()
+    if (data.session) await pushCars([car])
+  } catch {
+    /* 다음에 마이를 열면 다시 맞춤 */
+  }
+}

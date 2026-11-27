@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { partDue, dueList, parseGarage, upsertCar, removeCar, type MyCar } from "./my-car.ts"
+import { partDue, dueList, parseGarage, upsertCar, removeCar, nextAction, quickRecord, type MyCar } from "./my-car.ts"
 
 const oil = { slug: "engine-oil", name: "엔진오일", intervalKm: 10000, intervalMonths: 12 }
 const wiper = { slug: "wiper", name: "와이퍼", intervalMonths: 6 }
@@ -59,4 +59,22 @@ test("차 추가·삭제와 지금 차 바뀜", () => {
 
 test("깨진 저장값이면 빈 차고", () => {
   assert.deepEqual(parseGarage("{bad", null), { cars: [], active: "" })
+})
+
+test("다음 할 일: 급한 부품 → 사기, 기록 없으면 주기 짧은 부품부터 묻기, 모름은 건너뜀", () => {
+  const base: MyCar = { car: { id: "x", name: "x", parts: [pad, wiper, oil] }, km: 61500, kmDate: "2026-11-24", records: {} }
+  const a1 = nextAction(base, [], "2026-11-24")
+  assert.equal(a1.type, "ask")
+  assert.equal(a1.type === "ask" && a1.due.part.slug, "wiper") // 6개월(7,500km 상당) < 엔진오일 10,000km
+  const a2 = nextAction(base, ["wiper"], "2026-11-24")
+  assert.equal(a2.type === "ask" && a2.due.part.slug, "engine-oil")
+  const a3 = nextAction({ ...base, records: { "engine-oil": { date: "2026-09-01", km: 50000 } } }, [], "2026-11-24")
+  assert.equal(a3.type, "buy")
+  assert.equal(a3.type === "buy" && a3.due.part.slug, "engine-oil")
+  assert.equal(nextAction({ ...base, car: { id: "x:쉐보레 트랙스", name: "쉐보레 트랙스", parts: [] } }).type, "none")
+})
+
+test("대략 답 → 기록 (그때 주행거리는 한 달 1,250km로 추정)", () => {
+  assert.deepEqual(quickRecord({ km: 67000 }, 12, "2026-11-27"), { date: "2025-11-27", km: 52000 })
+  assert.deepEqual(quickRecord({ km: 0 }, 6, "2026-11-27"), { date: "2026-05-27" })
 })

@@ -2,15 +2,16 @@
 
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { dueList, loadMyCar, type MyCar, type PartDue } from "@/lib/my-car"
+import { dueList, loadMyCar, nextAction, type MyCar, type PartDue } from "@/lib/my-car"
+import { isCustomCar } from "@/lib/car-catalog"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 
-/** 정비소 가기 전에 챙길 부품: 교체 시기 지난·곧 → 쿠팡 가격 있는 것 순, 최대 3개 */
+/** 정비소 가기 전에 챙길 부품: 교체 시기가 지났거나 곧인 부품만, 최대 3개 (홈과 같은 기준, lib/my-car nextAction).
+ *  기록이 없는 부품은 추천하지 않는다 (예전엔 쿠팡 상품이 있는 부품을 대신 보여 줘서 내 차와 상관없는 추천이 됐음) */
 export function partsToBring(my: MyCar, max = 3): PartDue[] {
-  const list = dueList(my)
-  const rank = (d: PartDue) => (d.state === "over" ? 0 : d.state === "soon" ? 1 : 2) * 2 + (d.part.shop ? 0 : 1)
-  return [...list].sort((a, b) => rank(a) - rank(b)).filter((d) => d.part.shop || d.state === "over" || d.state === "soon").slice(0, max)
+  const a = nextAction(my)
+  return a.type === "buy" ? a.urgent.slice(0, max) : []
 }
 
 function useMyCar() {
@@ -73,8 +74,22 @@ export function PartsBeforeVisit({ kind }: { kind: "gongim" | "bluehands" | "aut
     )
   }
 
+  if (isCustomCar(my.car.id)) return null
   const items = partsToBring(my)
-  if (!items.length) return null
+  if (!items.length) {
+    // 기록이 부족하면 엉뚱한 부품 대신 기록을 넣으라고 안내 (홈에서 버튼으로 바로 답할 수 있음)
+    const unknown = dueList(my).filter((d) => d.state === "unknown").length
+    if (!unknown || !gongim) return null
+    return (
+      <Link href="/" className="flex items-center gap-3 rounded-[14px] border border-primary/30 bg-[#F6FEF9] p-4">
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold">가기 전에 챙길 부품, 알려 드릴까요?</span>
+          <span className="block text-[13px] text-muted-foreground">{my.car.name} 부품을 언제 갈았는지 몇 개만 골라 주세요 (버튼만 누르면 돼요)</span>
+        </span>
+        <span aria-hidden className="text-primary">›</span>
+      </Link>
+    )
+  }
   return (
     <div className="rounded-[14px] border border-primary/30 bg-[#F6FEF9] p-4">
       <p className="text-[15px] font-bold">{gongim ? `${my.car.name}, 가기 전에 부품 먼저 사 두세요` : `${my.car.name} 부품값, 견적과 비교해 보세요`}</p>

@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   dueList,
   loadGarage,
-  newCarId,
   removeCar,
   saveGarage,
   today,
@@ -13,8 +12,9 @@ import {
   type DueState,
   type Garage as GarageData,
   type MyCar,
-  type MyCarSnapshot,
 } from "@/lib/my-car"
+import { isCustomCar } from "@/lib/car-catalog"
+import { RegisterCar, FIELD, num, snapshot, customSnapshot, type MyCarOption } from "@/components/my/RegisterCar"
 import { authEnabled, enabledProviders, supabase, type Provider } from "@/lib/supabase"
 import { deleteCloudCar, fetchCars, fromRow, mergeGarage, pushCars } from "@/lib/cloud-garage"
 import { track } from "@/lib/track"
@@ -22,43 +22,13 @@ import { LoginButtons, takeAfterLogin } from "@/components/my/LoginButtons"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 
-export interface MyCarOption {
-  id: string
-  brand: string
-  label: string
-  name: string
-  photo?: string
-  credit?: string
-  engines: string[]
-  years: number[]
-  parts: { slug: string; name: string; engine?: string; intervalKm?: number; intervalMonths?: number; spec?: string; self?: number; price?: number; shop?: { price: number; date: string; url: string } }[]
-}
-
-const FIELD =
-  "h-12 w-full rounded-[10px] border border-input bg-card px-3.5 text-[16px] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-muted"
+export type { MyCarOption }
 
 const STATE_STYLE: Record<DueState, { label: string; cls: string }> = {
   over: { label: "교체 시기 지남", cls: "bg-[#FEF3F2] text-[#B42318]" },
   soon: { label: "곧 교체", cls: "bg-[#FFF6ED] text-[#B54708]" },
   ok: { label: "여유 있음", cls: "bg-[#ECFDF3] text-[#067647]" },
   unknown: { label: "기록 필요", cls: "bg-muted text-muted-foreground" },
-}
-
-function snapshot(o: MyCarOption, engine?: string): MyCarSnapshot {
-  return {
-    id: o.id,
-    name: o.name,
-    photo: o.photo,
-    credit: o.credit,
-    parts: o.parts
-      .filter((p) => !p.engine || !engine || p.engine === engine)
-      .map(({ slug, name, intervalKm, intervalMonths, spec, self, price, shop }) => ({ slug, name, intervalKm, intervalMonths, spec, self, price, shop })),
-  }
-}
-
-const num = (s: string) => {
-  const n = Number(s.replace(/[^0-9]/g, ""))
-  return Number.isFinite(n) ? n : 0
 }
 
 interface Account {
@@ -81,6 +51,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
 
   const rebuild = useCallback(
     (carId: string, engine?: string) => {
+      if (isCustomCar(carId)) return customSnapshot(carId)
       const o = options.find((x) => x.id === carId)
       return o ? snapshot(o, engine) : null
     },
@@ -198,7 +169,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
             role="tab"
             className={`h-10 shrink-0 rounded-full px-4 text-[14px] font-semibold ${adding !== null ? "bg-foreground text-background" : "border border-dashed border-border text-muted-foreground"}`}
           >
-            + 차 추가
+            + 내 차 추가
           </button>
         </div>
       )}
@@ -219,7 +190,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
             </button>
           </>
         ) : (
-        <Register
+        <RegisterCar
           key={adding ?? "first"}
           options={options}
           initialCarId={adding || ""}
@@ -239,6 +210,22 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
 
       {cloudError && <p role="alert" className="mt-4 rounded-[10px] bg-[#FEF3F2] px-4 py-3 text-[14px] text-[#B42318]">{cloudError}</p>}
 
+      <nav aria-label="안내" className="mt-10">
+        <p className="px-1 text-[13px] font-semibold text-muted-foreground">안내</p>
+        <div className="mt-2 divide-y divide-border rounded-[14px] border border-border bg-card">
+          {[
+            { href: "/info", label: "데이터 출처·이용 안내" },
+            { href: "/privacy", label: "개인정보 처리방침" },
+            { href: "mailto:wwe9459@naver.com?subject=%EC%A0%95%EB%B9%84%ED%95%B5%20%EB%AC%B8%EC%9D%98", label: "문의하기 · 내 차 정보 요청" },
+          ].map((m) => (
+            <Link key={m.href} href={m.href} className="flex min-h-[52px] items-center justify-between px-4 text-[15px]">
+              {m.label}
+              <span aria-hidden className="text-muted-foreground">›</span>
+            </Link>
+          ))}
+        </div>
+      </nav>
+
       {authEnabled() && !loginFirst && !(guest && !account && garage.cars.length === 0) && (
         <AccountBox
           providers={providers}
@@ -250,22 +237,6 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
           }}
         />
       )}
-
-      <nav aria-label="마이 메뉴" className="mt-4 divide-y divide-border rounded-[14px] border border-border bg-card">
-        {[
-          { href: "/quote", label: "견적서 사진으로 아낄 항목 찾기 (AI)" },
-          { href: "/shop-card", label: "정비소에 보여줄 부품 리스트" },
-          { href: "/check", label: "이 부품 내 차에 맞을까? (AI 확인)" },
-          { href: "/recalls", label: "자동차 리콜 정보" },
-          { href: "/info", label: "데이터 출처·이용 안내" },
-          { href: "/privacy", label: "개인정보 처리방침" },
-        ].map((m) => (
-          <Link key={m.href} href={m.href} className="flex min-h-[52px] items-center justify-between px-4 text-[15px]">
-            {m.label}
-            <span aria-hidden className="text-muted-foreground">›</span>
-          </Link>
-        ))}
-      </nav>
     </div>
   )
 }
@@ -325,109 +296,13 @@ function AccountBox({ providers, account, onSignedOut }: { providers: Provider[]
   )
 }
 
-function Register({
-  options,
-  initialCarId,
-  first,
-  heading = true,
-  onSave,
-  onCancel,
-}: {
-  options: MyCarOption[]
-  initialCarId: string
-  first: boolean
-  heading?: boolean
-  onSave: (v: MyCar) => void
-  onCancel?: () => void
-}) {
-  const brands = useMemo(() => Array.from(new Set(options.map((o) => o.brand))), [options])
-  const pre = options.find((o) => o.id === initialCarId)
-  const [brand, setBrand] = useState(pre?.brand ?? "")
-  const [carId, setCarId] = useState(pre?.id ?? "")
-  const [engine, setEngine] = useState("")
-  const [year, setYear] = useState("")
-  const [km, setKm] = useState("")
-  const car = options.find((o) => o.id === carId)
-  const needEngine = !!car && car.engines.length > 1
-  const ok = !!car && (!needEngine || !!engine) && (!car.years.length || !!year)
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!car || !ok) return
-    track({ type: "nav", carId: car.id, meta: { via: "my_register" } })
-    onSave({
-      id: newCarId(),
-      car: snapshot(car, engine || undefined),
-      engine: engine || undefined,
-      year: year ? Number(year) : undefined,
-      km: num(km),
-      kmDate: today(),
-      records: {},
-    })
-  }
-
-  return (
-    <>
-      {heading && (
-        <>
-          <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[34px]">{first ? "내 차 등록" : "차 추가"}</h1>
-          <p className="mt-2 text-[15px] text-muted-foreground">차종과 연식만 고르면 맞는 부품과 가격을 보여 드려요</p>
-        </>
-      )}
-      <form onSubmit={submit} className={`${heading ? "mt-6" : ""} space-y-3 rounded-2xl border border-border bg-card p-4 sm:p-6`}>
-        <div className="grid grid-cols-[0.8fr_1.2fr] gap-2">
-          <label className="sr-only" htmlFor="my-brand">브랜드</label>
-          <select id="my-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setEngine(""); setYear("") }}>
-            <option value="">브랜드</option>
-            {brands.map((b) => <option key={b}>{b}</option>)}
-          </select>
-          <label className="sr-only" htmlFor="my-car">차종</label>
-          <select id="my-car" className={FIELD} value={carId} disabled={!brand} onChange={(e) => { setCarId(e.target.value); setEngine(""); setYear("") }}>
-            <option value="">차종</option>
-            {options.filter((o) => o.brand === brand).map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
-          </select>
-        </div>
-        {car && car.years.length > 0 && (
-          <>
-            <label className="sr-only" htmlFor="my-year">연식</label>
-            <select id="my-year" className={FIELD} value={year} onChange={(e) => setYear(e.target.value)}>
-              <option value="">연식</option>
-              {car.years.map((y) => <option key={y} value={y}>{y}년형</option>)}
-            </select>
-          </>
-        )}
-        {needEngine && (
-          <>
-            <label className="sr-only" htmlFor="my-engine">엔진</label>
-            <select id="my-engine" className={FIELD} value={engine} onChange={(e) => setEngine(e.target.value)}>
-              <option value="">엔진 선택 (오일 규격이 달라요)</option>
-              {car!.engines.map((x) => <option key={x}>{x}</option>)}
-            </select>
-          </>
-        )}
-        <label className="block">
-          <span className="text-[14px] font-semibold">지금 주행거리 <span className="font-normal text-muted-foreground">(선택)</span></span>
-          <span className="relative mt-1.5 block">
-            <input inputMode="numeric" className={FIELD + " pr-12"} placeholder="예: 63,000" value={km ? num(km).toLocaleString("ko-KR") : ""} onChange={(e) => setKm(e.target.value)} />
-            <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[15px] text-muted-foreground">km</span>
-          </span>
-        </label>
-        <button type="submit" disabled={!ok} className="h-12 w-full rounded-[10px] bg-primary text-[16px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px disabled:cursor-not-allowed disabled:bg-[#9BB8AD]">
-          {first ? "내 차 등록하기" : "이 차 추가하기"}
-        </button>
-        {onCancel && (
-          <button type="button" onClick={onCancel} className="h-11 w-full text-[14px] font-semibold text-muted-foreground">취소</button>
-        )}
-      </form>
-    </>
-  )
-}
-
 function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean; update: (v: MyCar) => void; remove: () => void }) {
   const [editKm, setEditKm] = useState(false)
   const [km, setKm] = useState(my.km > 0 ? String(my.km) : "")
   const [editing, setEditing] = useState<string | null>(null)
   const [open, setOpen] = useState<string | null>(null)
+  const custom = isCustomCar(my.car.id)
+  const [showUnknown, setShowUnknown] = useState(false)
   const list = dueList(my)
   const urgent = list.filter((d) => d.state === "over" || d.state === "soon").length
   const unknown = list.filter((d) => d.state === "unknown").length
@@ -473,16 +348,24 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
       </section>
       {my.car.credit && <p className="mt-1.5 text-right text-[11px] text-muted-foreground">{my.car.credit}</p>}
 
+      <Tools />
+
+      {custom ? (
+        <p className="mt-6 rounded-[14px] border border-border bg-card px-4 py-3.5 text-[14px] leading-relaxed text-muted-foreground">
+          이 차는 아직 부품 규격·가격 정보가 없어요. 등록이 많은 차부터 채우고 있어요. 견적서 분석과 근처 공임나라 찾기는 그대로 쓸 수 있어요.
+        </p>
+      ) : (
+      <>
+
       <p className="mt-5 text-[15px] font-semibold">
         {urgent > 0 ? `지금 챙길 소모품이 ${urgent}개 있어요` : unknown === list.length ? "마지막으로 교체한 날짜를 넣어 주세요" : unknown > 0 ? "기록한 소모품 중엔 당장 교체할 게 없어요" : "당장 교체할 소모품은 없어요"}
       </p>
       {unknown > 0 && <p className="mt-1 text-[13px] text-muted-foreground">부품을 누르면 교체 날짜를 넣을 수 있어요</p>}
 
       <ul className="mt-3 divide-y divide-border rounded-[14px] border border-border bg-card">
-        {list.map((d) => {
+        {list.filter((d) => showUnknown || d.state !== "unknown" || unknown === list.length).slice(0, showUnknown ? undefined : unknown === list.length ? 3 : undefined).map((d) => {
           const st = STATE_STYLE[d.state]
           const isOpen = open === d.part.slug
-          const spec = shortSpec(d.part.spec)
           const toggle = () => {
             setOpen(isOpen ? null : d.part.slug)
             setEditing(null)
@@ -500,7 +383,6 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[15px] font-semibold">{d.part.name}</span>
                   <span className="num block truncate text-[13px] text-muted-foreground">
-                    {spec && <>{spec} · </>}
                     {d.part.shop ? (
                       <span onClick={(e) => e.stopPropagation()}>
                       <OutboundLink
@@ -557,10 +439,19 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
         })}
       </ul>
 
+      {!showUnknown && unknown > 0 && (unknown < list.length ? unknown : list.length - 3) > 0 && (
+        <button onClick={() => setShowUnknown(true)} className="mt-2 flex min-h-[48px] w-full items-center justify-center rounded-[12px] border border-dashed border-border text-[14px] font-semibold text-muted-foreground">
+          {unknown < list.length ? `기록 안 한 부품 ${unknown}개 더 보기` : `부품 ${list.length - 3}개 더 보기`}
+        </button>
+      )}
+
       {list.some((d) => d.part.shop) && <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">쿠팡 가격은 표시한 날 기준이라 바뀔 수 있어요. {AFFILIATE_TEXT}</p>}
 
+      </>
+      )}
+
       <div className="mt-6 grid gap-2 sm:grid-cols-2">
-        <Link href={`/cars/${my.car.id}`} className="flex min-h-[48px] items-center justify-center rounded-[12px] border border-border bg-card text-[14px] font-semibold">내 차 소모품 가격 전체</Link>
+        {!custom && <Link href={`/cars/${my.car.id}`} className="flex min-h-[48px] items-center justify-center rounded-[12px] border border-border bg-card text-[14px] font-semibold">내 차 소모품 가격 전체</Link>}
         <Link href="/near" className="flex min-h-[48px] items-center justify-center rounded-[12px] bg-foreground text-[14px] font-semibold text-background">근처 공임나라 찾기</Link>
       </div>
       <p className="mt-6 text-center text-[13px] text-muted-foreground">
@@ -576,13 +467,26 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
   )
 }
 
-/** 목록에 쓸 짧은 규격: 모든 부품에 붙는 안내 문구는 빼고, 와이퍼는 "650·400mm"처럼 */
-function shortSpec(spec?: string): string | null {
-  if (!spec) return null
-  const w = spec.match(/운전석\s*(\d+)\s*mm.*?조수석\s*(\d+)\s*mm/)
-  if (w) return `${w[1]}·${w[2]}mm`
-  if (/차종 전용|구매 전|공통|확인/.test(spec) || spec.length > 22) return null
-  return spec.replace(/^SAE\s*/, "")
+/** 차 카드 바로 아래 도구 4개 (예전엔 맨 아래 목록이라 잘 안 보였음) */
+const TOOLS = [
+  { href: "/quote", label: "견적서 분석", icon: "M7 3h10v18l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5zM10 8h4M10 12h4M10 16h2" },
+  { href: "/shop-card", label: "정비소 리스트", icon: "M9 5h6M9 3h6v4H9zM6 5h-.5A1.5 1.5 0 0 0 4 6.5v13A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 18.5 5H18M8 12l2 2 4-4M8 17h8" },
+  { href: "/check", label: "부품 맞나요?", icon: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4M8.5 11l2 2 3.5-3.5" },
+  { href: "/recalls", label: "리콜 확인", icon: "M12 3 2 20h20zM12 10v4M12 17h.01" },
+]
+function Tools() {
+  return (
+    <nav aria-label="도구" className="mt-4 grid grid-cols-4 gap-2">
+      {TOOLS.map((t) => (
+        <Link key={t.href} href={t.href} className="flex min-h-[76px] flex-col items-center justify-center gap-1.5 rounded-[14px] border border-border bg-card px-1 text-center">
+          <svg viewBox="0 0 24 24" className="h-6 w-6 text-primary" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d={t.icon} />
+          </svg>
+          <span className="text-[12px] font-semibold leading-tight">{t.label}</span>
+        </Link>
+      ))}
+    </nav>
+  )
 }
 
 function RecordForm({ initial, onSave, onCancel }: { initial: { date: string; km?: number }; onSave: (r: { date: string; km?: number }) => void; onCancel: () => void }) {
