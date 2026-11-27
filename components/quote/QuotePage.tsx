@@ -223,14 +223,16 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
             <p className="flex items-center gap-1.5 text-[15px] font-bold">
               견적서 사진
               <InfoTip label="찍는 방법과 이용 안내" align="left">
-                표 전체가 나오게, 글자가 선명하게 찍어 주세요. 로그인 없이 하루 1번, 로그인하면 하루 3번 쓸 수 있어요. 사진은 저장하지 않고, 이름·전화번호·차량번호는 결과에 남기지 않아요. AI 결과는 참고용이에요.
+                로그인 없이 하루 1번, 로그인하면 하루 3번 쓸 수 있어요. 사진은 저장하지 않고, 이름·전화번호·차량번호는 결과에 남기지 않아요. AI 결과는 참고용이에요.
               </InfoTip>
             </p>
             <input ref={fileRef} type="file" accept="image/*" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} />
             {preview ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={preview} alt="올린 견적서" className="mt-3 max-h-[320px] w-full rounded-[10px] bg-muted object-contain" />
-            ) : null}
+            ) : (
+              <PhotoExamples />
+            )}
             <button onClick={() => fileRef.current?.click()} className="mt-3 h-12 w-full rounded-[10px] border border-dashed border-input text-[15px] font-semibold">
               {preview ? "다른 사진 고르기" : "사진 찍기 / 고르기"}
             </button>
@@ -347,6 +349,31 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
         </section>
       )}
     </div>
+  )
+}
+
+/** 찍는 법을 글 대신 사진으로: 잘된 예 1장 + 잘못된 예 2장 (가상 견적서로 만든 이미지, 실제 개인정보 없음) */
+const EXAMPLES = [
+  { src: "/quote-examples/good.webp", ok: true, label: "표 전체가 보이게" },
+  { src: "/quote-examples/cut.webp", ok: false, label: "잘림" },
+  { src: "/quote-examples/blur.webp", ok: false, label: "흐림" },
+]
+function PhotoExamples() {
+  return (
+    <ul className="mt-3 grid grid-cols-3 gap-2" aria-label="견적서 사진 찍는 법">
+      {EXAMPLES.map((e) => (
+        <li key={e.src} className="text-center">
+          <span className={`relative block overflow-hidden rounded-[10px] ring-2 ${e.ok ? "ring-[#12B76A]" : "ring-transparent"}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={e.src} alt={e.ok ? "잘 찍은 견적서 예" : `잘못 찍은 견적서 예: ${e.label}`} width={300} height={400} loading="lazy" className="aspect-[3/4] w-full object-cover" />
+            <span aria-hidden className={`absolute left-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full text-[14px] font-bold text-white ${e.ok ? "bg-[#12B76A]" : "bg-[#D92D20]"}`}>
+              {e.ok ? "✓" : "✕"}
+            </span>
+          </span>
+          <span className={`mt-1 block text-[12px] font-semibold ${e.ok ? "text-[#067647]" : "text-[#B42318]"}`}>{e.label}</span>
+        </li>
+      ))}
+    </ul>
   )
 }
 
