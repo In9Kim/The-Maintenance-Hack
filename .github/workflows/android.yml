@@ -1,0 +1,55 @@
+# 안드로이드 앱(android/, TWA) 빌드. 손으로 실행하면 폰에 바로 깔 수 있는 APK와 Play 업로드용 AAB를 실행 화면 'Artifacts'에 올린다.
+# 필요한 시크릿: ANDROID_KEYSTORE_B64 (업로드 키 파일을 base64로), ANDROID_KEYSTORE_PASSWORD
+# 시크릿이 없으면 서명 안 된 APK만 만든다 (빌드 확인용, 폰 설치 불가)
+name: Android app
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["android/**", ".github/workflows/android.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+        with:
+          gradle-version: "8.14.3"
+      - name: Signing key
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$KS_B64" ]; then
+            echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+            echo "ANDROID_KEYSTORE=$RUNNER_TEMP/upload.jks" >> "$GITHUB_ENV"
+          else
+            echo "::warning::ANDROID_KEYSTORE_B64 시크릿이 없어 서명 안 된 APK만 만듭니다"
+          fi
+      - name: Build
+        working-directory: android
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          VERSION_CODE: ${{ github.run_number }}
+        run: gradle --no-daemon assembleRelease bundleRelease
+      - name: Signing fingerprint (assetlinks.json과 같아야 함)
+        if: env.ANDROID_KEYSTORE != ''
+        run: |
+          APK=$(ls android/app/build/outputs/apk/release/*.apk | head -1)
+          "$ANDROID_HOME"/build-tools/$(ls "$ANDROID_HOME"/build-tools | sort -V | tail -1)/apksigner verify --print-certs "$APK" | grep -i sha-256
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: jungbihack-android-${{ github.run_number }}
+          path: |
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/bundle/release/*.aab
+          retention-days: 30

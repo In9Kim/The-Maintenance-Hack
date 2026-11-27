@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">정비핵</string>
+    <string name="launch_url" translatable="false">https://jungbihack.com/?from=app</string>
+    <string name="provider_authority" translatable="false">com.jungbihack.app.fileprovider</string>
+    <string name="asset_statements" translatable="false">
+        [{
+            \"relation\": [\"delegate_permission/common.handle_all_urls\"],
+            \"target\": {\"namespace\": \"web\", \"site\": \"https://jungbihack.com\"}
+        }]
+    </string>
+</resources>

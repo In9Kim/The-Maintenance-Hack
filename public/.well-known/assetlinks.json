@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.jungbihack.app",
+      "sha256_cert_fingerprints": [
+        "CF:03:0E:F3:7B:94:E8:A2:70:3E:E2:94:B2:40:EB:A3:98:D2:3E:A3:82:24:3F:9E:3E:58:52:67:6E:66:CC:C0"
+      ]
+    }
+  }
+]

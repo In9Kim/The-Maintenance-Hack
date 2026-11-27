@@ -6,6 +6,7 @@ import { RecallBanner } from "@/components/layout/RecallBanner"
 import { carRecallAlerts } from "@/lib/recalls/car-alert"
 import { TrackFrom } from "@/components/seo/TrackFrom"
 import { WebAnalytics } from "@/components/seo/WebAnalytics"
+import { RegisterSW } from "@/components/layout/RegisterSW"
 import "./globals.css"
 import { SITE_URL } from "@/lib/seo"
 
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
   },
 }
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" }
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#14213D" }
 
 export default function RootLayout({
   children,
@@ -60,6 +61,7 @@ export default function RootLayout({
         <Header />
         <TrackFrom />
         <WebAnalytics />
+        <RegisterSW />
         <main id="content" className="min-h-[calc(100vh-3.5rem)]">{children}</main>
         <SiteFooter />
         <BottomNav />
