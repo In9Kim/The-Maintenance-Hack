@@ -113,6 +113,9 @@ ${ref}`
 /** 견적서 분석 모델. 기본 Haiku 5.5 (Opus보다 약 40배 쌈, 2026-11-27 사용자 결정). QUOTE_MODEL로 바꿀 수 있음 */
 export const QUOTE_MODEL = process.env.QUOTE_MODEL || "claude-haiku-5-5"
 
+/** 생각하는 양. "low"가 첫 항목이 빨리 나옴 (medium은 첫 글자까지 약 6초, 2026-11-27 운영 측정). QUOTE_EFFORT로 바꿀 수 있음 */
+export const QUOTE_EFFORT = process.env.QUOTE_EFFORT || "low"
+
 /** Claude 호출 (서버 전용). 키가 없으면 에러. lean: 모델이 effort·fallbacks 옵션을 거부하면 빼고 다시 보낼 때 */
 export async function analyzeQuoteImage(base64: string, mediaType: string, prompt: string, lean = false): Promise<QuoteResult> {
   const key = process.env.ANTHROPIC_API_KEY
@@ -131,7 +134,7 @@ export async function analyzeQuoteImage(base64: string, mediaType: string, promp
       model: QUOTE_MODEL,
       max_tokens: 16000,
       ...(lean ? {} : { fallbacks: "default" }),
-      output_config: { ...(lean ? {} : { effort: "medium" }), format: { type: "json_schema", schema: QUOTE_SCHEMA } },
+      output_config: { ...(lean ? {} : { effort: QUOTE_EFFORT }), format: { type: "json_schema", schema: QUOTE_SCHEMA } },
       messages: [
         {
           role: "user",
@@ -183,7 +186,7 @@ export async function streamQuoteImage(
       max_tokens: 16000,
       stream: true,
       ...(lean ? {} : { fallbacks: "default" }),
-      output_config: { ...(lean ? {} : { effort: "medium" }), format: { type: "json_schema", schema: QUOTE_SCHEMA } },
+      output_config: { ...(lean ? {} : { effort: QUOTE_EFFORT }), format: { type: "json_schema", schema: QUOTE_SCHEMA } },
       messages: [
         {
           role: "user",
