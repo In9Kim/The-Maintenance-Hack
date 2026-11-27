@@ -28,6 +28,7 @@ import { OutboundLink } from "@/components/seo/OutboundLink"
 import { CarDiagram } from "@/components/cars/CarDiagram"
 import { diagramFor } from "@/lib/diagram-data"
 import { CarPhoto } from "@/components/cars/CarPhoto"
+import { PartIcon } from "@/components/PartIcon"
 import { carPhoto } from "@/lib/car-photos"
 import type { CarModel, MaintenancePart } from "@/types"
 
@@ -70,50 +71,43 @@ function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
 }
 
 /**
- * 소모품 목록: 휴대폰은 행마다 카드(가격이 항상 보이게), PC는 표처럼 열을 맞춘 격자.
- * 같은 마크업 하나를 CSS 격자로만 바꿔서 링크가 두 번 나오지 않는다.
+ * 소모품 목록: 한 줄에 그림·이름·주기·가격만. 누르면(details) 규격·구매 링크가 펼쳐진다.
+ * 펼친 내용도 HTML에 들어 있어서 검색엔진은 그대로 읽는다.
  */
-const COLS = "sm:grid-cols-[1.25fr_2fr_1fr_0.9fr_1fr]"
-
 function PartsList({ car, parts }: { car: CarModel; parts: MaintenancePart[] }) {
   return (
     <div className="overflow-hidden rounded-[14px] border border-border bg-card">
-      <div className={`hidden gap-4 border-b border-border bg-muted px-4 py-2.5 text-[13px] font-semibold text-muted-foreground sm:grid ${COLS}`} aria-hidden>
-        <span>항목</span>
-        <span>규격</span>
-        <span>교체 주기</span>
-        <span className="text-right">공식센터(추정)</span>
-        <span className="text-right">직접 구매+공임나라</span>
-      </div>
+      <p className="border-b border-border bg-muted px-4 py-2 text-[12px] text-muted-foreground">
+        <b className="text-primary">초록</b> 부품 사서 공임나라 · <span className="line-through">회색</span> 공식센터(추정)
+      </p>
       <ul className="divide-y divide-border">
         {parts.map((part) => {
           const c = partCost(part)
           const interval = intervalText(part)
           return (
-            <li key={part.id} className={`grid grid-cols-2 gap-x-4 gap-y-1 px-4 py-4 sm:items-start ${COLS}`}>
-              <div className="col-span-2 flex items-start justify-between gap-3 sm:col-span-1 sm:block">
-                <Link href={`/cars/${car.id}/${partSlug(car, part)}`} className="font-bold underline decoration-border underline-offset-4 hover:decoration-primary">
-                  {part.name}
-                </Link>
-                {interval && (
-                  <span className="shrink-0 rounded-full bg-muted px-2.5 py-0.5 text-[12px] font-medium text-muted-foreground sm:hidden">
-                    {interval}
+            <li key={part.id}>
+              <details className="group">
+                <summary className="flex min-h-[64px] cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
+                  <PartIcon name={part.name} size={36} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[15px] font-semibold leading-snug">{part.name}</span>
+                    {interval && <span className="block text-[12px] text-muted-foreground">{interval}</span>}
                   </span>
-                )}
-              </div>
-              <div className="col-span-2 text-[14px] leading-relaxed text-muted-foreground sm:col-span-1">
-                {part.spec}
-                {part.partNumber && <div className="text-[13px]">순정 품번 {part.partNumber}</div>}
-                <SpecLinks car={car} part={part} />
-              </div>
-              <div className="hidden text-[14px] text-muted-foreground sm:block">{interval ?? "-"}</div>
-              <div className="num mt-2 text-[14px] sm:mt-0 sm:text-right">
-                <span className="mr-1.5 text-muted-foreground sm:hidden">공식센터(추정)</span>
-                <span className="price-was sm:text-foreground">{formatPrice(c.dealer)}</span>
-              </div>
-              <div className="num mt-2 text-right text-[15px] sm:mt-0">
-                <span className="font-bold text-primary">{formatPrice(c.self)}</span>
-              </div>
+                  <span className="num shrink-0 text-right">
+                    <span className="block text-[15px] font-bold text-primary">{formatPrice(c.self)}</span>
+                    <span className="price-was block text-[12px] text-muted-foreground">{formatPrice(c.dealer)}</span>
+                  </span>
+                  <span aria-hidden className="shrink-0 text-[16px] text-muted-foreground transition-transform group-open:rotate-90">›</span>
+                </summary>
+                <div className="px-4 pb-4 text-[13px] leading-relaxed text-muted-foreground">
+                  <p>{part.spec}</p>
+                  {part.partNumber && <p>순정 품번 {part.partNumber}</p>}
+                  <SpecLinks car={car} part={part} />
+                  <Link href={`/cars/${car.id}/${partSlug(car, part)}`} className="mt-1 inline-flex min-h-[40px] items-center font-semibold text-foreground">
+                    규격·교체 방법 자세히 ›
+                  </Link>
+                </div>
+              </details>
             </li>
           )
         })}
