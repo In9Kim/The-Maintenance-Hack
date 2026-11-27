@@ -8,7 +8,7 @@ import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
 import { LiveCoupang } from "@/components/cars/LiveCoupang"
-import { quoteSearchWord } from "@/lib/quote-analyze"
+import { needsSpecCheck, quoteSearchWord } from "@/lib/quote-analyze"
 import { useAuthToken } from "@/components/my/useAuthToken"
 import { LoginButtons } from "@/components/my/LoginButtons"
 import { MyCarLine } from "@/components/my/MyCarLine"
@@ -269,9 +269,12 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
                 )}
               </div>
             )}
-            {isG && !it.ours && car && word.length >= 2 && (
+            {isG && !it.ours && needsSpecCheck(it.name) && (
+              <p className="mt-2 rounded-[10px] bg-muted px-3 py-2.5 text-foreground">미션 종류마다 오일 규격이 달라요. 오일까지 공임나라에 맡기는 게 안전해요.</p>
+            )}
+            {isG && !it.ours && !needsSpecCheck(it.name) && car && word.length >= 2 && (
               <div className="mt-2">
-                <LiveCoupang carId={car.id} q={word} partId={`quote-${word}`} emptyText={`쿠팡에서 맞는 '${word}' 상품을 못 찾았어요. 공임나라에 부품을 구해 주는지 같이 물어보세요.`} />
+                <LiveCoupang carId={car.id} q={word} partId={`quote-${word}`} emptyText="쿠팡엔 이 차에 맞는 상품이 없어요. 공임나라에 부품도 구해 달라고 해 보세요." />
               </div>
             )}
           </div>

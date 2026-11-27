@@ -69,15 +69,29 @@ export const QUOTE_SCHEMA = {
 const ACTION = /(교환|교체|점검|수리|작업|추천|권고|권장|필요|요망|정비|탈부착|탈착|보충|조정|진단)$/
 const STOP = new Set(["및", "좌", "우", "좌우", "좌/우", "앞", "뒤", "전", "후", "LH", "RH", "1EA", "2EA", "세트", "SET", "부품", "공임"])
 
-/** 견적서 항목 이름 → 쿠팡 검색어 ("프론트 하부암(좌/우) 교환 요망" → "프론트 하부암") */
+/** 견적서에 쓰는 이름 → 쿠팡 상품명에 흔한 이름 (쿠팡은 '쇽업소버'보다 '쇼바'로 찾아야 나옴) */
+const MARKET: Record<string, string> = { 쇽업소버: "쇼바", 속업소버: "쇼바", 쇼크업소버: "쇼바", 쇼버: "쇼바", 하부암: "로어암", 로워암: "로어암", 엔진브라켓: "엔진미미", 엔진마운트: "엔진미미", 미션마운트: "미션미미" }
+
+/** 견적서 항목 이름 → 쿠팡 검색어 ("프론트하부암어셈블리 교환" → "로어암") */
 export function quoteSearchWord(name: string): string {
   const words = name
     .split(/[,·]/)[0]
     .replace(/\(.*?\)|\[.*?\]/g, " ")
     .split(/[\s,·/]+/)
-    .map((w) => w.replace(ACTION, "").replace(ACTION, "").trim())
-    .filter((w) => w.length >= 1 && !STOP.has(w) && !STOP.has(w.toUpperCase()) && !/^\d+(EA|개|L)?$/i.test(w))
+    .map((w) => {
+      let x = w.replace(ACTION, "").replace(ACTION, "").trim()
+      x = x.replace(/\d+(EA|개)$/i, "")
+      for (let k = 0; k < 2; k++) x = x.replace(/(어셈블리|어셈|ASSY|SET|세트|KIT)$/i, "")
+      x = x.replace(/^(프론트|리어|프런트)(?=.{2,})/, "")
+      return MARKET[x] ?? x
+    })
+    .filter((w) => w.length >= 1 && !STOP.has(w) && !STOP.has(w.toUpperCase()) && !/^\d+(EA|개|L)?$/i.test(w) && !/^(프론트|리어|프런트)$/.test(w))
   return words.slice(0, 3).join(" ").slice(0, 30)
+}
+
+/** 미션오일처럼 차마다 규격이 달라 잘못 사면 위험한 것 (쿠팡 상품을 보여 주지 않음) */
+export function needsSpecCheck(name: string): boolean {
+  return /미션\s*오일|ATF|CVT|변속기\s*오일|디퍼런셜/i.test(name)
 }
 
 /** AI에 넘길 지시문 (화면의 'AI에게 이렇게 물어봐요'와 같은 내용) */

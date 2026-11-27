@@ -23,9 +23,20 @@ test("출력 형식: 판정은 세 가지뿐", () => {
 
 test("quoteSearchWord: 작업·위치 말은 빼고 부품 이름만", async () => {
   const { quoteSearchWord } = await import("./quote-analyze.ts")
-  assert.equal(quoteSearchWord("프론트 하부암(좌/우) 교환 요망"), "프론트 하부암")
-  assert.equal(quoteSearchWord("쇽업소버 교환"), "쇽업소버")
+  assert.equal(quoteSearchWord("프론트 하부암(좌/우) 교환 요망"), "로어암")
+  assert.equal(quoteSearchWord("쇽업소버 교환"), "쇼바")
+  assert.equal(quoteSearchWord("프론트하부암어셈블리"), "로어암")
+  assert.equal(quoteSearchWord("프론트속업소버어셈블리"), "쇼바")
+  assert.equal(quoteSearchWord("라디에이터호스어셈블리2EA(상&하)"), "라디에이터호스")
+  assert.equal(quoteSearchWord("엔진브라켓어셈블리SET"), "엔진미미")
   assert.equal(quoteSearchWord("워터펌프교체"), "워터펌프")
   assert.equal(quoteSearchWord("라디에이터 호스, 워터 호스 교환"), "라디에이터 호스")
   assert.equal(quoteSearchWord("미션오일 4L 교환 권장"), "미션오일")
+})
+
+test("needsSpecCheck: 미션오일·ATF는 규격 확인", async () => {
+  const { needsSpecCheck } = await import("./quote-analyze.ts")
+  assert.equal(needsSpecCheck("미션오일"), true)
+  assert.equal(needsSpecCheck("오토미션 ATF 교환"), true)
+  assert.equal(needsSpecCheck("엔진오일"), false)
 })
