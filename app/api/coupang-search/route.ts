@@ -29,7 +29,9 @@ export async function GET(req: NextRequest) {
   if (!part && q.length < 2) return NextResponse.json({ error: "찾을 부품을 고르거나 적어 주세요." }, { status: 400 })
 
   const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
-  if (!(await allowSearch(ip))) return NextResponse.json({ error: "오늘 검색을 많이 했어요. 내일 다시 이용해 주세요." }, { status: 429 })
+  // 하루 횟수는 쿠팡을 실제로 부를 때만 센다 (같은 검색어는 하루 저장돼서 공짜)
+  let allowed: boolean | undefined
+  const gate = async () => (allowed ??= await allowSearch(ip))
   const partName = part ? part.name.replace(/\s*\(.*?\)/g, "").replace(/\+/g, " ") : ""
   const keyword = part ? `${name} ${partName}` : q.includes(car.model) ? q : `${name} ${q}`
   try {
@@ -38,7 +40,7 @@ export async function GET(req: NextRequest) {
     const words = base.flatMap((w) => [w, ...(ALIAS[w] ?? [])])
     const relevant = (list: Awaited<ReturnType<typeof coupangSearch>>) =>
       words.length ? list.filter((x) => words.some((w) => x.name.replace(/\s/g, "").includes(w))) : list
-    const all = await coupangSearch(keyword, 10)
+    const all = await coupangSearch(keyword, 10, gate)
     let kept = relevant(all)
     let items = kept.length >= 3 ? kept : all
     if (part && ["battery", "brake", "spark"].includes(part.category)) {
@@ -69,8 +71,8 @@ export async function GET(req: NextRequest) {
       // 직접 적은 검색어: 맞는 상품이 없으면 쿠팡이 엉뚱한 상품(샴푸 등)을 돌려줌 → 관련 있는 것만. 없으면 다른 이름으로 한 번 더
       const alt = base.length ? ALIAS[base[base.length - 1]]?.[0] : undefined
       // 세대 코드(BD)를 붙이면 안 나오는 상품이 많아서, 없으면 차 이름만으로 한 번 더
-      if (!kept.length && name !== car.model && !q.includes(car.model)) kept = relevant(await coupangSearch(`${car.model} ${q}`, 10))
-      if (!kept.length && alt) kept = relevant(await coupangSearch(`${car.model} ${alt}`, 10))
+      if (!kept.length && name !== car.model && !q.includes(car.model)) kept = relevant(await coupangSearch(`${car.model} ${q}`, 10, gate))
+      if (!kept.length && alt) kept = relevant(await coupangSearch(`${car.model} ${alt}`, 10, gate))
       // 차 이름이 상품명에 없는 건 다른 용도(낚시용 워터펌프 등)일 가능성이 커서 뺌
       const model = car.model.replace(/\s/g, "")
       const genCode = /^[A-Z][A-Z0-9]{1,4}$/.test(code) ? code.toUpperCase() : ""
@@ -91,7 +93,8 @@ export async function GET(req: NextRequest) {
       { keyword, pickId: pick?.productId ? Number(pick.productId) : null, items },
       { headers: { "Cache-Control": "public, max-age=600" } },
     )
-  } catch {
+  } catch (e) {
+    if (e instanceof Error && e.message === "LIMIT") return NextResponse.json({ error: "오늘 검색을 많이 했어요. 내일 다시 이용해 주세요." }, { status: 429 })
     return NextResponse.json({ error: "쿠팡 검색이 잠시 안 돼요. 조금 뒤 다시 시도해 주세요." }, { status: 502 })
   }
 }

@@ -4,13 +4,15 @@ import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 import { loadMyCar } from "@/lib/my-car"
 import { parseProductInput } from "@/lib/compat-request"
-import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
 import { useAuthToken } from "@/components/my/useAuthToken"
 import { LoginButtons } from "@/components/my/LoginButtons"
 import { MyCarLine } from "@/components/my/MyCarLine"
 import { InfoTip } from "@/components/ui/InfoTip"
+import { ProductRow } from "@/components/cars/LiveCoupang"
+import { PartIcon } from "@/components/PartIcon"
+import { fitsEngine } from "@/lib/quote-analyze"
 
 export interface CheckCar {
   id: string
@@ -20,13 +22,12 @@ export interface CheckCar {
   years: number[]
   engines: string[]
   /** 이 차에 맞게 고른 쿠팡 상품 (가격은 date 기준) */
-  picks: { part: string; engine?: string; name: string; price: number; date: string; url: string }[]
+  picks: { slug: string; name: string; price: number; url: string; image?: string }[]
   /** 부품 고르기 버튼 (쿠팡 검색용) */
   parts: { slug: string; name: string; engine?: string }[]
 }
 
 interface Item { productId: number; name: string; price: number; url: string; image?: string; rocket: boolean }
-type ItemCheck = { busy: boolean; result?: Result; error?: string; login?: boolean }
 
 interface Result {
   compatibility: "YES" | "NO" | "UNCERTAIN"
@@ -57,10 +58,10 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
   const [result, setResult] = useState<Result | null>(null)
-  const [partSel, setPartSel] = useState("")
   const [q, setQ] = useState("")
-  const [search, setSearch] = useState<{ busy: boolean; items: Item[]; pickId: number | null; error?: string } | null>(null)
-  const [checks, setChecks] = useState<Record<number, ItemCheck>>({})
+  const [search, setSearch] = useState<{ busy: boolean; items: Item[]; error?: string } | null>(null)
+  const [found, setFound] = useState<Record<string, Item[]>>({})
+  const [openPart, setOpenPart] = useState<string | null>(null)
   // AI 확인은 로그인한 사람만 (검색·쿠팡 보기는 로그인 없이)
   const { token, setToken, providers } = useAuthToken()
   const [needLogin, setNeedLogin] = useState(false)
@@ -79,25 +80,47 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
   }, [cars])
 
   const car = cars.find((c) => c.id === carId)
-  // 엔진을 골랐으면 그 엔진 상품만 (가솔린 차에 디젤 오일이 보이지 않게)
-  const picks = car ? car.picks.filter((p) => !p.engine || !engine || p.engine === engine) : []
+  // 엔진을 골랐으면 그 엔진 부품만 (가솔린 차에 디젤 오일이 보이지 않게)
+  const parts = useMemo(() => (car ? car.parts.filter((p) => !p.engine || !engine || p.engine === engine) : []), [car, engine])
+  // 부품마다 쿠팡 상품을 미리 찾아 둔다 (골라 둔 상품이 있으면 맨 앞에)
+  useEffect(() => {
+    if (!car) return
+    let alive = true
+    setFound({})
+    setOpenPart(null)
+    for (const p of parts) {
+      const pick = car.picks.find((k) => k.slug === p.slug)
+      fetch(`/api/coupang-search?${new URLSearchParams({ carId: car.id, part: p.slug })}`)
+        .then((r) => (r.ok ? r.json() : { items: [] }))
+        .catch(() => ({ items: [] }))
+        .then((j: { items?: Item[] }) => {
+          const got = (j.items ?? []).filter((x) => (!pick || x.url !== pick.url) && fitsEngine(x.name, engine || (car.engines.length === 1 ? car.engines[0] : undefined)))
+          const list = pick ? [{ productId: -1, name: pick.name, price: pick.price, url: pick.url, image: pick.image, rocket: false }, ...got] : got
+          if (alive) setFound((f) => ({ ...f, [p.slug]: list.slice(0, 3) }))
+        })
+    }
+    return () => {
+      alive = false
+    }
+  }, [car, parts, engine])
+  const loadingParts = parts.some((p) => !found[p.slug])
+  const shown = parts.filter((p) => (found[p.slug]?.length ?? 0) > 0)
   const parsed = parseProductInput(product)
   const ok = !!car && (!!parsed.name || !!parsed.url) && !busy
 
   /** 쿠팡 검색 (화면 안에서): 부품 버튼 또는 직접 입력 */
   const doSearch = async (opt: { part?: string; q?: string }) => {
     if (!car) return
-    setSearch({ busy: true, items: [], pickId: null })
-    setChecks({})
+    setSearch({ busy: true, items: [] })
     track({ type: "nav", carId: car.id, meta: { via: "check_search", part: opt.part ?? null } })
     const sp = new URLSearchParams({ carId: car.id, ...(opt.part ? { part: opt.part } : { q: opt.q ?? "" }) })
     try {
       const r = await fetch(`/api/coupang-search?${sp}`)
       const j = await r.json()
-      if (!r.ok) setSearch({ busy: false, items: [], pickId: null, error: j.error })
-      else setSearch({ busy: false, items: j.items ?? [], pickId: j.pickId ?? null })
+      if (!r.ok) setSearch({ busy: false, items: [], error: j.error })
+      else setSearch({ busy: false, items: j.items ?? [] })
     } catch {
-      setSearch({ busy: false, items: [], pickId: null, error: "인터넷 연결을 확인하고 다시 시도해 주세요." })
+      setSearch({ busy: false, items: [], error: "인터넷 연결을 확인하고 다시 시도해 주세요." })
     }
   }
 
@@ -119,13 +142,6 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
     } catch {
       return { error: "인터넷 연결을 확인하고 다시 시도해 주세요." }
     }
-  }
-
-  const checkItem = async (it: Item) => {
-    setChecks((c) => ({ ...c, [it.productId]: { busy: true } }))
-    track({ type: "report", carId: car?.id, meta: { via: "check_item" } })
-    const r = await verify(it.name)
-    setChecks((c) => ({ ...c, [it.productId]: { busy: false, ...r } }))
   }
 
   const submit = async (e: React.FormEvent) => {
@@ -152,12 +168,12 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
         <p className="text-[15px] font-bold">내 차</p>
         <div className="mt-2 grid grid-cols-[0.8fr_1.2fr] gap-2">
           <label className="sr-only" htmlFor="ck-brand">브랜드</label>
-          <select id="ck-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setYear(""); setEngine(""); setResult(null); setSearch(null); setPartSel("") }}>
+          <select id="ck-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setYear(""); setEngine(""); setResult(null); setSearch(null) }}>
             <option value="">브랜드</option>
             {brands.map((b) => <option key={b}>{b}</option>)}
           </select>
           <label className="sr-only" htmlFor="ck-car">차종</label>
-          <select id="ck-car" className={FIELD} value={carId} disabled={!brand} onChange={(e) => { setCarId(e.target.value); setYear(""); setEngine(""); setResult(null); setSearch(null); setPartSel("") }}>
+          <select id="ck-car" className={FIELD} value={carId} disabled={!brand} onChange={(e) => { setCarId(e.target.value); setYear(""); setEngine(""); setResult(null); setSearch(null) }}>
             <option value="">차종</option>
             {cars.filter((c) => c.brand === brand).map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
           </select>
@@ -179,120 +195,71 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
       </div>
       )}
 
-      {/* ② 이 차에 맞게 골라 둔 상품 (붙여 넣기 전에 먼저) */}
-      {car && picks.length > 0 && !result && (
-        <div className="mt-4 rounded-2xl border border-primary/30 bg-[#F6FEF9] p-4">
-          <p className="flex items-center gap-1.5 text-[15px] font-bold">
-            내 차에 맞는 상품
-            <InfoTip label="고른 기준" align="left">상품명의 규격·차종이 이 차와 맞는 것만 골랐어요. 가격은 표시한 날 쿠팡 기준이라 바뀔 수 있어요.</InfoTip>
-          </p>
-          <ul className="mt-3 divide-y divide-border rounded-[12px] border border-border bg-card">
-            {picks.map((p) => (
-              <li key={p.url}>
-                <OutboundLink href={p.url} target="coupang" carId={car.id} sponsored className="flex items-center gap-3 px-3.5 py-3">
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-[12px] font-semibold text-primary">{p.part}</span>
-                    <span className="line-clamp-1 block text-[13px]">{p.name}</span>
-                  </span>
-                  <span className="num shrink-0 text-right text-[14px] font-bold">
-                    {p.price.toLocaleString("ko-KR")}원
-                    <span className="block text-[11px] font-normal text-muted-foreground">{p.date.slice(5).replace("-", "/")} 기준</span>
-                  </span>
-                </OutboundLink>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>
-        </div>
-      )}
-
-      {/* ③ 화면 안에서 쿠팡 검색 → 고른 상품이 맞는지 바로 확인 (앱 이동 없음) */}
+      {/* ② 내 차 부품: 한 줄에 그림·이름·쿠팡 최저가, 누르면 상품 */}
       {car && (
-        <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+        <div className="mt-4 rounded-2xl border border-border bg-card px-4 pb-3 pt-4">
           <p className="flex items-center gap-1.5 text-[15px] font-bold">
-            다른 상품 확인하기
-            <InfoTip label="사용 방법" align="left">부품을 누르면 쿠팡 상품이 나와요. [내 차에 맞나?]를 누르면 AI가 확인해요 (로그인하면 하루 3번).</InfoTip>
+            내 차 부품
+            <InfoTip label="고른 기준" align="left">이 차 이름으로 쿠팡을 찾아 상품명에 차종이 맞는 것만 보여 줘요. 오른쪽 가격은 맨 위 상품 기준이고 바뀔 수 있어요. 쿠팡에 맞는 상품이 없는 부품은 뺐어요.</InfoTip>
           </p>
-          <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
-            {car.parts
-              .filter((p) => !p.engine || !engine || p.engine === engine)
-              .map((p) => (
-                <button
-                  key={p.slug}
-                  onClick={() => {
-                    setPartSel(p.slug)
-                    doSearch({ part: p.slug })
-                  }}
-                  className={`h-10 shrink-0 rounded-full px-3.5 text-[14px] font-semibold ${partSel === p.slug ? "bg-foreground text-background" : "border border-border bg-card"}`}
-                >
-                  {p.name.replace(/\s*\(.*?\)/g, "")}
-                </button>
-              ))}
-          </div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              if (q.trim().length >= 2) {
-                setPartSel("")
-                doSearch({ q })
-              }
-            }}
-            className="mt-2 grid grid-cols-[1fr_auto] gap-2"
-          >
-            <label className="sr-only" htmlFor="ck-q">직접 찾기</label>
-            <input id="ck-q" className={FIELD} placeholder="직접 찾기 (예: 브레이크 디스크)" value={q} onChange={(e) => setQ(e.target.value)} />
-            <button type="submit" className="h-12 rounded-[10px] bg-foreground px-4 text-[14px] font-bold text-background">찾기</button>
-          </form>
-
-          {search?.busy && <div className="mt-3 h-40 animate-pulse rounded-[12px] bg-muted" />}
-          {search?.error && <p role="alert" className="mt-3 rounded-[10px] bg-[#FEF3F2] px-3.5 py-2.5 text-[14px] text-[#B42318]">{search.error}</p>}
-          {search && !search.busy && !search.error && search.items.length === 0 && (
-            <p className="mt-3 text-[14px] text-muted-foreground">검색 결과가 없어요. 다른 말로 찾아보세요.</p>
-          )}
-          {search && !search.busy && search.items.length > 0 && (
-            <ul className="mt-3 space-y-2">
-              {search.items.map((it) => {
-                const c = checks[it.productId]
-                const v = c?.result ? VERDICT[c.result.compatibility] ?? VERDICT.UNCERTAIN : null
+          {loadingParts ? (
+            <div className="mt-3 h-48 animate-pulse rounded-[12px] bg-muted" />
+          ) : shown.length === 0 ? (
+            <p className="mt-3 text-[14px] text-muted-foreground">쿠팡에서 이 차에 맞는 상품을 찾지 못했어요.</p>
+          ) : (
+            <ul className="mt-2">
+              {shown.map((p) => {
+                const items = found[p.slug] ?? []
+                const on = openPart === p.slug
                 return (
-                  <li key={it.productId} className="rounded-[12px] border border-border p-3">
-                    <div className="flex gap-3">
-                      {it.image && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={it.image} alt="" width={64} height={64} loading="lazy" className="h-16 w-16 shrink-0 rounded-lg bg-white object-contain ring-1 ring-border" />
-                      )}
-                      <span className="min-w-0 flex-1">
-                        {search.pickId === it.productId && <span className="mb-0.5 inline-block rounded bg-primary px-1.5 text-[11px] font-bold text-primary-foreground">정비핵 추천</span>}
-                        <span className="line-clamp-2 block text-[13px] leading-snug">{it.name}</span>
-                        <span className="num mt-0.5 block text-[15px] font-bold">
-                          {it.price.toLocaleString("ko-KR")}원{it.rocket && <span className="ml-1 text-[11px] font-semibold text-[#0073E9]">로켓</span>}
-                        </span>
-                      </span>
-                    </div>
-                    <div className="mt-2 grid grid-cols-2 gap-2">
-                      <button onClick={() => checkItem(it)} disabled={c?.busy} className="h-10 rounded-[8px] border border-border text-[13px] font-semibold disabled:opacity-60">
-                        {c?.busy ? "확인하는 중…" : "내 차에 맞나?"}
-                      </button>
-                      <OutboundLink href={it.url} target="coupang" carId={car.id} sponsored className="flex h-10 items-center justify-center rounded-[8px] bg-primary text-[13px] font-bold text-primary-foreground">
-                        쿠팡에서 보기
-                      </OutboundLink>
-                    </div>
-                    {c?.error && <p className="mt-2 text-[13px] text-[#B42318]">{c.error}</p>}
-                    {c?.login && <LoginBox providers={providers} />}
-                    {c?.result && v && (
-                      <div className={`mt-2 rounded-[10px] border px-3 py-2.5 ${v.cls}`}>
-                        <p className="text-[14px] font-bold">{v.label}</p>
-                        <p className="mt-0.5 text-[13px] leading-relaxed text-foreground">{c.result.parts_analysis[0]?.reason ?? c.result.conclusion}</p>
-                      </div>
+                  <li key={p.slug} className="border-b border-border last:border-0">
+                    <button onClick={() => setOpenPart(on ? null : p.slug)} aria-expanded={on} className="flex min-h-[56px] w-full items-center gap-3 py-2 text-left">
+                      <PartIcon name={p.name} size={36} />
+                      <span className="min-w-0 flex-1 text-[15px] font-semibold leading-snug">{p.name}</span>
+                      <span className="num shrink-0 text-[14px] font-bold">{items[0].price.toLocaleString("ko-KR")}원</span>
+                      <span aria-hidden className={`shrink-0 text-[16px] text-muted-foreground transition-transform ${on ? "rotate-90" : ""}`}>›</span>
+                    </button>
+                    {on && (
+                      <ul className="mb-3 divide-y divide-border rounded-[10px] border border-border">
+                        {items.map((it) => (
+                          <li key={it.productId}>
+                            <ProductRow href={it.url} carId={car.id} partId={p.slug} name={it.name} price={it.price} image={it.image} />
+                          </li>
+                        ))}
+                      </ul>
                     )}
                   </li>
                 )
               })}
             </ul>
           )}
-          {search && search.items.length > 0 && (
-            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              if (q.trim().length >= 2) doSearch({ q })
+            }}
+            className="mt-3 grid grid-cols-[1fr_auto] gap-2"
+          >
+            <label className="sr-only" htmlFor="ck-q">다른 부품 찾기</label>
+            <input id="ck-q" className={FIELD} placeholder="다른 부품 찾기 (예: 브레이크 디스크)" value={q} onChange={(e) => setQ(e.target.value)} />
+            <button type="submit" className="h-12 rounded-[10px] bg-foreground px-4 text-[14px] font-bold text-background">찾기</button>
+          </form>
+          {search?.busy && <div className="mt-3 h-28 animate-pulse rounded-[12px] bg-muted" />}
+          {search?.error && <p role="alert" className="mt-3 rounded-[10px] bg-[#FEF3F2] px-3.5 py-2.5 text-[14px] text-[#B42318]">{search.error}</p>}
+          {search && !search.busy && !search.error && search.items.length === 0 && (
+            <p className="mt-3 text-[14px] text-muted-foreground">이 차에 맞는 상품이 없어요. 다른 말로 찾아보세요.</p>
           )}
+          {search && !search.busy && search.items.length > 0 && (
+            <ul className="mt-3 divide-y divide-border rounded-[10px] border border-border">
+              {search.items.slice(0, 5).map((it) => (
+                <li key={it.productId}>
+                  <ProductRow href={it.url} carId={car.id} partId={`check-${q}`} name={it.name} price={it.price} image={it.image} />
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-2 text-[11px] leading-snug text-muted-foreground">상품명의 연식·엔진이 내 차와 같은지 보세요. {AFFILIATE_TEXT}</p>
         </div>
       )}
 

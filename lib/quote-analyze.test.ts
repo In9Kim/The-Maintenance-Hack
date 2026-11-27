@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { buildQuotePrompt, QUOTE_SCHEMA, type QuoteCarPart } from "./quote-analyze.ts"
+import { buildQuotePrompt, fitsEngine, QUOTE_SCHEMA, type QuoteCarPart } from "./quote-analyze.ts"
 
 const car = { id: "kia-k3-bd", brand: "기아", model: "K3", generation: "BD (2세대)", yearRange: "2018~2024", engineTypes: ["G1.6 가솔린", "G1.6 T-GDi 가솔린 (GT)"], parts: [] }
 const parts: QuoteCarPart[] = [
@@ -39,4 +39,12 @@ test("needsSpecCheck: 미션오일·ATF는 규격 확인", async () => {
   assert.equal(needsSpecCheck("미션오일"), true)
   assert.equal(needsSpecCheck("오토미션 ATF 교환"), true)
   assert.equal(needsSpecCheck("엔진오일"), false)
+})
+
+test("fitsEngine: 터보 아닌 차에 터보 상품은 뺀다", () => {
+  assert.equal(fitsEngine("K3 BD 1.6 터보 가솔린 킥스 세트", "G1.6 가솔린"), false)
+  assert.equal(fitsEngine("K3 BD 1.6(터보X) 가솔린 세트", "G1.6 가솔린"), true)
+  assert.equal(fitsEngine("K3 BD 1.6(터보X) 가솔린 세트", "1.6 터보"), false)
+  assert.equal(fitsEngine("K3 BD 1.6 터보 세트", "1.6 터보"), true)
+  assert.equal(fitsEngine("아무 상품", undefined), true)
 })

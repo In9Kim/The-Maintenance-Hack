@@ -234,3 +234,12 @@ export async function streamQuoteImage(
   if (stop === "error") throw new Error("STREAM_ERROR")
   return JSON.parse(ex.full) as QuoteResult
 }
+
+/** 상품명이 내 엔진과 안 맞으면 false (터보 아닌 차에 "1.6 터보" 상품, 터보 차에 "터보X" 상품). 엔진을 모르면 true */
+export function fitsEngine(productName: string, engine?: string): boolean {
+  if (!engine) return true
+  const turboCar = /터보|T-?GDI/i.test(engine)
+  const noTurbo = /터보\s*X|non-?turbo|NA/i.test(productName)
+  const turbo = /터보|T-?GDI/i.test(productName) && !noTurbo
+  return turboCar ? !noTurbo : !turbo
+}

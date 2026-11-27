@@ -2,19 +2,23 @@
 
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { loadMyCar } from "@/lib/my-car"
 import { CarPicker, type PickerCar } from "@/components/home/CarPicker"
 import { recallsForYear, type CarRecallAlert } from "@/lib/recalls/year"
 
-/** 리콜 화면 맨 위: 등록한 차가 있으면 그 차 리콜로 바로 (다시 고르지 않게), 없으면 차종 고르기. 건수는 맨 위 빨간 띠와 같은 기준(연식) */
+/** 리콜 화면 맨 위: 등록한 차가 있으면 그 차 리콜 화면으로 바로 넘어감 (?all=1이면 전체 목록 그대로). 없으면 차종 고르기. 건수는 맨 위 빨간 띠와 같은 기준(연식) */
 export function MyCarRecall({ cars, alerts }: { cars: PickerCar[]; alerts: Record<string, CarRecallAlert> }) {
   const [my, setMy] = useState<{ id: string; name: string; n: number } | null | undefined>(undefined)
   const [pick, setPick] = useState(false)
+  const router = useRouter()
   useEffect(() => {
     const m = loadMyCar()
+    // 내 차가 있으면 다른 차 리콜은 볼 일이 적어서 내 차 리콜로 (전체 목록에서 온 경우 ?all=1)
+    if (m && !new URLSearchParams(location.search).has("all")) return router.replace(`/cars/${m.car.id}/recalls`)
     const a = m ? alerts[m.car.id] : undefined
     setMy(m ? { id: m.car.id, name: m.car.name, n: a ? recallsForYear(a, m.year).length : 0 } : null)
-  }, [alerts])
+  }, [alerts, router])
 
   if (my === undefined) return <div className="h-[72px] animate-pulse rounded-2xl bg-muted" />
   if (my && !pick) {

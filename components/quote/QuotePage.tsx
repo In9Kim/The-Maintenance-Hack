@@ -1,18 +1,16 @@
 "use client"
 
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { loadMyCar } from "@/lib/my-car"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
 import { ProductRow } from "@/components/cars/LiveCoupang"
-import { needsSpecCheck, quoteSearchWord } from "@/lib/quote-analyze"
+import { fitsEngine, needsSpecCheck, quoteSearchWord } from "@/lib/quote-analyze"
 import { useAuthToken } from "@/components/my/useAuthToken"
 import { LoginButtons } from "@/components/my/LoginButtons"
 import { MyCarLine } from "@/components/my/MyCarLine"
 import { InfoTip } from "@/components/ui/InfoTip"
-import { addItem, hasItem, loadShopList, saveShopList, type ShopItem } from "@/lib/shop-list"
 
 export interface QuoteCar {
   id: string
@@ -99,7 +97,6 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   const [elapsed, setElapsed] = useState(0)
   const [live, setLive] = useState<Item[]>([]) // 분석 중 받는 대로 보여 줄 항목
   const [open, setOpen] = useState<number[]>([]) // 결과에서 펼친 항목
-  const router = useRouter()
   // 로그인 없이 하루 1번, 로그인하면 하루 3번. undefined = 로그인 확인 중
   const { token, setToken, providers } = useAuthToken()
   const [needLogin, setNeedLogin] = useState(false)
@@ -203,12 +200,6 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
     }
   }
 
-  // 정비소에 보여줄 리스트 (공임나라 가능 항목을 담음)
-  const [list, setList] = useState<ShopItem[]>([])
-  useEffect(() => {
-    if (result && carId) setList(loadShopList(carId))
-  }, [result, carId])
-  const itemOf = (it: Item): ShopItem => (it.ours ? { slug: it.ours.slug, name: it.ours.name, bought: it.ours.shop?.name } : { name: it.name })
 
   // 공임나라 항목마다 쿠팡 상품을 미리 찾아 둔다 (없으면 "사 갈 부품"에서 빼고 나머지로)
   const [prods, setProds] = useState<Record<number, Prod[]>>({})
@@ -228,29 +219,23 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
     for (const [i, qs] of jobs)
       fetch(`/api/coupang-search?${qs}`)
         .then((r) => (r.ok ? r.json() : { items: [] }))
-        .then((j: { items?: Prod[] }) => alive && setProds((p) => ({ ...p, [i]: (j.items ?? []).slice(0, 2) })))
+        .then((j: { items?: Prod[] }) => alive && setProds((p) => ({ ...p, [i]: (j.items ?? []).filter((x) => fitsEngine(x.name, engine || undefined)).slice(0, 2) })))
         .catch(() => alive && setProds((p) => ({ ...p, [i]: [] })))
     return () => {
       alive = false
     }
-  }, [result, carId])
+  }, [result, carId, engine])
 
   const all = (result?.items ?? []).map((it, i) => ({ it, i }))
   const gongim = all.filter((x) => x.it.verdict === "gongim")
   const finding = gongim.some((x) => !prods[x.i])
   // 사 갈 부품: 쿠팡에 이 차에 맞는 상품이 있는 것만
   const buy = gongim.filter((x) => (prods[x.i]?.length ?? 0) > 0)
-  const low = (i: number) => Math.min(...(prods[i] ?? []).map((p) => p.price))
+  const low = (i: number) => prods[i]?.[0]?.price ?? 0
   const partsSum = buy.reduce((s, x) => s + low(x.i), 0)
   // 나머지: 상품 없는 공임나라 항목 → 정비소 문의 → 센터 순
   const order = (it: Item) => (it.verdict === "gongim" ? 0 : it.verdict === "ask" ? 1 : 2)
   const rest = all.filter((x) => x.it.verdict !== "gongim" || (!finding && !prods[x.i]?.length)).sort((a, b) => order(a.it) - order(b.it))
-  const makeList = () => {
-    if (!carId) return
-    const next = buy.reduce((l, x) => (hasItem(l, itemOf(x.it)) ? l : addItem(l, itemOf(x.it))), list)
-    saveShopList(carId, next)
-    router.push(`/shop-card?car=${carId}`)
-  }
   const flip = (i: number) => setOpen((o) => (o.includes(i) ? o.filter((x) => x !== i) : [...o, i]))
 
   /** 사 갈 부품 한 줄: 이름 + 쿠팡 최저가. 누르면 상품 */
@@ -403,13 +388,10 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
                 <Group
                   title="사 갈 부품"
                   count={buy.length}
-                  tip="쿠팡에서 사서 공임나라 같은 일반 정비소에 가져가면 공임만 내고 바꿀 수 있어요. 가격은 쿠팡 최저가예요. 부품을 받아 주는지·공임은 지점마다 달라서 가기 전에 전화로 확인하세요."
+                  tip="쿠팡에서 사서 공임나라 같은 일반 정비소에 가져가면 공임만 내고 바꿀 수 있어요. 가격은 맨 위 상품 기준이에요. 부품을 받아 주는지·공임은 지점마다 달라서 가기 전에 전화로 확인하세요."
                 >
                   {buy.map(({ it, i }) => buyRow(it, i))}
                 </Group>
-                <button onClick={makeList} className="mt-3 flex h-14 w-full items-center justify-center rounded-[12px] bg-primary text-[16px] font-bold text-primary-foreground">
-                  이 {buy.length}개로 정비소 리스트 만들기
-                </button>
               </>
             )
           )}

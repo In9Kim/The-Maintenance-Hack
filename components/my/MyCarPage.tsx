@@ -473,16 +473,15 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
   )
 }
 
-/** 차 카드 바로 아래 도구 4개 (예전엔 맨 아래 목록이라 잘 안 보였음) */
+/** 차 카드 바로 아래 도구 3개 (예전엔 맨 아래 목록이라 잘 안 보였음) */
 const TOOLS = [
   { href: "/quote", label: "견적서 분석", icon: "M7 3h10v18l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5zM10 8h4M10 12h4M10 16h2" },
-  { href: "/shop-card", label: "정비소 리스트", icon: "M9 5h6M9 3h6v4H9zM6 5h-.5A1.5 1.5 0 0 0 4 6.5v13A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 18.5 5H18M8 12l2 2 4-4M8 17h8" },
   { href: "/check", label: "부품 맞나요?", icon: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4M8.5 11l2 2 3.5-3.5" },
   { href: "/recalls", label: "리콜 확인", icon: "M12 3 2 20h20zM12 10v4M12 17h.01" },
 ]
 function Tools() {
   return (
-    <nav aria-label="도구" className="mt-4 grid grid-cols-4 gap-2">
+    <nav aria-label="도구" className="mt-4 grid grid-cols-3 gap-2">
       {TOOLS.map((t) => (
         <Link key={t.href} href={t.href} className="flex min-h-[76px] flex-col items-center justify-center gap-1.5 rounded-[14px] border border-border bg-card px-1 text-center">
           <svg viewBox="0 0 24 24" className="h-6 w-6 text-primary" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden>

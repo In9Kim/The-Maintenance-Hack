@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 // 휴대폰은 위 메뉴를 숨기고 아래 탭(BottomNav)을 쓴다. 부품 호환 확인·계산기는 메뉴에서 빼고 차종·부품 페이지 안에서 연결
 export const NAV = [
   { href: "/cars", label: "차종별 비용", match: (p: string) => p.startsWith("/cars") },
-  { href: "/quote", label: "견적서 분석", match: (p: string) => p === "/quote" || p === "/shop-card" },
+  { href: "/quote", label: "견적서 분석", match: (p: string) => p === "/quote" },
   { href: "/near", label: "근처 정비소", match: (p: string) => p.startsWith("/near") },
   { href: "/my", label: "마이", match: (p: string) => p.startsWith("/my") || p.startsWith("/info") || p.startsWith("/recalls") || p === "/check" },
 ]

@@ -47,13 +47,15 @@ export async function allowSearch(ip: string): Promise<boolean> {
   return true
 }
 
-export async function coupangSearch(keyword: string, limit = 10): Promise<CoupangItem[]> {
+/** gate: 저장된 결과가 없어 쿠팡을 실제로 부를 때만 한 번 묻는다 (false면 "LIMIT" 오류). 저장된 결과는 횟수에 안 셈 */
+export async function coupangSearch(keyword: string, limit = 10, gate?: () => Promise<boolean>): Promise<CoupangItem[]> {
   const q = keyword.replace(/\s+/g, " ").trim().slice(0, 50)
   if (!q) return []
   const cacheKey = `cs:${createHash("sha256").update(`${q}|${limit}`).digest("hex").slice(0, 24)}`
   const store = await kv()
   const hit = await store?.get(cacheKey).catch(() => null)
   if (hit) return JSON.parse(hit) as CoupangItem[]
+  if (gate && !(await gate())) throw new Error("LIMIT")
 
   const ak = process.env.COUPANG_ACCESS_KEY
   const sk = process.env.COUPANG_SECRET_KEY

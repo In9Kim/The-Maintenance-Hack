@@ -88,7 +88,7 @@ export default async function CarRecallsPage({ params }: Props) {
               ? `${dataBasisText()} 데이터에서 ${name}에 해당한다고 확실히 확인된 리콜이 없어요.`
               : "리콜 데이터를 준비하고 있어요."}{" "}
             차명 표기가 애매한 리콜은{" "}
-            <Link href="/recalls" className="font-semibold underline underline-offset-2">
+            <Link href="/recalls?all=1" className="font-semibold underline underline-offset-2">
               전체 리콜 목록
             </Link>
             에만 올려 두었으니 함께 확인해 주세요.
@@ -122,7 +122,7 @@ export default async function CarRecallsPage({ params }: Props) {
       </TrackedLink>
 
       <Link
-        href="/recalls"
+        href="/recalls?all=1"
         className="mt-3 inline-flex min-h-[44px] items-center text-[14px] font-semibold text-muted-foreground hover:text-foreground"
       >
         전체 리콜 목록 보기

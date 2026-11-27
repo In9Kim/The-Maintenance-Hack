@@ -95,11 +95,6 @@ export function PartsBeforeVisit({ kind }: { kind: "gongim" | "bluehands" | "aut
       <p className="text-[15px] font-bold">{gongim ? "가기 전에 사 갈 부품" : "내 차 부품값"}</p>
       <PartRows my={my} items={items} />
       <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>
-      {gongim && (
-        <Link href="/shop-card" className="mt-3 flex h-11 items-center justify-center rounded-[10px] border border-primary/40 bg-card text-[14px] font-semibold text-primary">
-          정비소에 보여줄 부품 리스트 만들기
-        </Link>
-      )}
     </div>
   )
 }
