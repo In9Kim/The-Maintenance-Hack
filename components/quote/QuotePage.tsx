@@ -377,17 +377,19 @@ function PhotoExamples() {
   )
 }
 
-/** 분석 진행 단계 (실제 단계를 받는 게 아니라 경과 시간으로 보여 줌. 보통 40~60초) */
+/** 분석 진행 단계 (실제 단계를 받는 게 아니라 경과 시간으로 보여 줌). Haiku 기준 보통 10초 안팎 (2026-11-27 운영 측정 9.4초) */
 const STEPS = [
   { at: 0, text: "사진 보내는 중" },
-  { at: 6, text: "견적서 글자 읽는 중" },
-  { at: 20, text: "항목을 하나씩 나누는 중" },
-  { at: 35, text: "공임나라로 할 수 있는지 판단하는 중" },
-  { at: 55, text: "거의 다 됐어요" },
+  { at: 2, text: "견적서 글자 읽는 중" },
+  { at: 5, text: "항목을 하나씩 나누는 중" },
+  { at: 8, text: "공임나라로 할 수 있는지 판단하는 중" },
+  { at: 13, text: "거의 다 됐어요" },
 ]
+const EXPECT = 12
 function Progress({ sec }: { sec: number }) {
   const cur = STEPS.filter((s) => sec >= s.at).length - 1
-  const pct = Math.min(95, Math.round((sec / 60) * 100))
+  // 예상 시간까지 빠르게 차고, 넘으면 95%까지 천천히
+  const pct = Math.min(95, sec <= EXPECT ? Math.round((sec / EXPECT) * 85) : 85 + Math.round((sec - EXPECT) / 2))
   return (
     <div className="mt-3 rounded-[12px] bg-muted p-3.5" aria-live="polite">
       <div className="h-1.5 overflow-hidden rounded-full bg-border">
@@ -401,7 +403,7 @@ function Progress({ sec }: { sec: number }) {
           </li>
         ))}
       </ul>
-      <p className="num mt-2 text-[12px] text-muted-foreground">{sec}초 · 보통 1분 안쪽이에요. 화면을 닫지 말아 주세요</p>
+      <p className="num mt-2 text-[12px] text-muted-foreground">{sec}초 · 보통 10초 안팎이에요</p>
     </div>
   )
 }
