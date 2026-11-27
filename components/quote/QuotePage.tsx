@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { loadMyCar } from "@/lib/my-car"
 import { OutboundLink } from "@/components/seo/OutboundLink"
@@ -12,7 +13,7 @@ import { useAuthToken } from "@/components/my/useAuthToken"
 import { LoginButtons } from "@/components/my/LoginButtons"
 import { MyCarLine } from "@/components/my/MyCarLine"
 import { InfoTip } from "@/components/ui/InfoTip"
-import { addItem, hasItem, loadShopList, removeItem, saveShopList, type ShopItem } from "@/lib/shop-list"
+import { addItem, hasItem, loadShopList, saveShopList, type ShopItem } from "@/lib/shop-list"
 
 export interface QuoteCar {
   id: string
@@ -97,6 +98,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   const [elapsed, setElapsed] = useState(0)
   const [live, setLive] = useState<Item[]>([]) // 분석 중 받는 대로 보여 줄 항목
   const [open, setOpen] = useState<number[]>([]) // 결과에서 펼친 항목
+  const router = useRouter()
   // 로그인 없이 하루 1번, 로그인하면 하루 3번. undefined = 로그인 확인 중
   const { token, setToken, providers } = useAuthToken()
   const [needLogin, setNeedLogin] = useState(false)
@@ -206,37 +208,27 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
     if (result && carId) setList(loadShopList(carId))
   }, [result, carId])
   const itemOf = (it: Item): ShopItem => (it.ours ? { slug: it.ours.slug, name: it.ours.name, bought: it.ours.shop?.name } : { name: it.name })
-  const toggleList = (it: Item) => {
-    if (!carId) return
-    const s = itemOf(it)
-    const next = hasItem(list, s) ? removeItem(list, s) : addItem(list, s)
-    setList(next)
-    saveShopList(carId, next)
-  }
 
   // 판정별로 묶기. 공임나라 항목은 아끼는 금액이 큰 순
   const all = (result?.items ?? []).map((it, i) => ({ it, i }))
   const save = (it: Item) => (it.ours ? Math.max(0, it.ours.dealer - it.ours.self) : 0)
   const gongim = all.filter((x) => x.it.verdict === "gongim").sort((a, b) => save(b.it) - save(a.it))
-  const center = all.filter((x) => x.it.verdict === "center")
-  const ask = all.filter((x) => x.it.verdict !== "gongim" && x.it.verdict !== "center")
+  // 나머지: 전화 확인 먼저, 센터 작업은 뒤
+  const rest = all.filter((x) => x.it.verdict !== "gongim").sort((a, b) => Number(a.it.verdict === "center") - Number(b.it.verdict === "center"))
   const saving = gongim.reduce((s, x) => s + save(x.it), 0)
-  const allIn = gongim.length > 0 && gongim.every((x) => hasItem(list, itemOf(x.it)))
-  const addAll = () => {
+  // 공임나라 항목을 한 번에 리스트로 (뺄 건 리스트 화면에서 빼기)
+  const makeList = () => {
     if (!carId) return
-    const next = allIn
-      ? gongim.reduce((l, x) => removeItem(l, itemOf(x.it)), list)
-      : gongim.reduce((l, x) => (hasItem(l, itemOf(x.it)) ? l : addItem(l, itemOf(x.it))), list)
-    setList(next)
+    const next = gongim.reduce((l, x) => (hasItem(l, itemOf(x.it)) ? l : addItem(l, itemOf(x.it))), list)
     saveShopList(carId, next)
+    router.push(`/shop-card?car=${carId}`)
   }
   const flip = (i: number) => setOpen((o) => (o.includes(i) ? o.filter((x) => x !== i) : [...o, i]))
 
-  /** 한 줄: 이름 + (아끼는 돈) + 담기. 누르면 이유·가격·쿠팡이 펼쳐짐 */
+  /** 한 줄: 이름 + (아끼는 돈). 누르면 이유·가격·쿠팡이 펼쳐짐 */
   const row = (it: Item, i: number) => {
     const isG = it.verdict === "gongim"
     const on = open.includes(i)
-    const inList = isG && hasItem(list, itemOf(it))
     const quoted = (it.parts_price ?? 0) + (it.labor_price ?? 0)
     const word = quoteSearchWord(it.name)
     return (
@@ -245,18 +237,9 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
           <button onClick={() => flip(i)} aria-expanded={on} className="flex min-h-[52px] min-w-0 flex-1 items-center gap-2 py-2 text-left">
             <span className="line-clamp-2 min-w-0 flex-1 text-[15px] leading-snug">{it.name.replace(/^#\s*/, "")}</span>
             {isG && save(it) > 0 && <span className="num shrink-0 text-[13px] font-bold text-primary">-{won(save(it))}</span>}
+            {!isG && <span className="shrink-0 text-[12px] text-muted-foreground">{it.verdict === "center" ? "센터" : "전화 확인"}</span>}
             <span aria-hidden className={`shrink-0 text-[16px] text-muted-foreground transition-transform ${on ? "rotate-90" : ""}`}>›</span>
           </button>
-          {isG && (
-            <button
-              onClick={() => toggleList(it)}
-              aria-pressed={inList}
-              aria-label={inList ? `${it.name} 리스트에서 빼기` : `${it.name} 정비소 리스트에 담기`}
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-[16px] font-bold ${inList ? "border-primary bg-primary text-primary-foreground" : "border-primary/40 text-primary"}`}
-            >
-              {inList ? "✓" : "+"}
-            </button>
-          )}
         </div>
         {on && (
           <div className="pb-3 text-[13px] leading-relaxed text-muted-foreground">
@@ -389,39 +372,29 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
                 {gongim.length > 0 ? `공임나라로 돌릴 항목 ${gongim.length}개` : "공임나라로 돌릴 항목은 없어 보여요"}
               </p>
             )}
-            <p className="mt-1 text-[13px] text-white/60">전체 {result.items.length}개 중 {gongim.length}개</p>
+            <p className="mt-1 text-[13px] text-white/60">{result.items.length}개 중 {gongim.length}개는 공임나라로 돌릴 만해요</p>
           </div>
 
           {gongim.length > 0 && (
-            <Group
-              title="공임나라로 돌리기"
-              count={gongim.length}
-              tip={`부품을 사 가서 공임나라에 맡기기 쉬운 항목이에요. 금액은 정비핵 데이터 기준 공식센터 추정가 대비예요. 부품을 받아 주는지·공임은 지점마다 달라서 가기 전에 전화로 확인하세요.`}
-              action={
-                <button onClick={addAll} className="min-h-[36px] rounded-full px-2 text-[13px] font-semibold text-primary">
-                  {allIn ? "✓ 모두 담음" : "모두 담기"}
-                </button>
-              }
-            >
-              {gongim.map(({ it, i }) => row(it, i))}
-            </Group>
+            <>
+              <Group
+                title="공임나라로 돌리기"
+                count={gongim.length}
+                tip="부품을 사 가서 공임나라에 맡기기 쉬운 항목이에요. 금액은 정비핵 데이터 기준 공식센터 추정가 대비예요. 부품을 받아 주는지·공임은 지점마다 달라서 가기 전에 전화로 확인하세요."
+              >
+                {gongim.map(({ it, i }) => row(it, i))}
+              </Group>
+              <button onClick={makeList} className="mt-3 flex h-14 w-full items-center justify-center rounded-[12px] bg-primary text-[16px] font-bold text-primary-foreground">
+                이 {gongim.length}개로 정비소 리스트 만들기
+              </button>
+            </>
           )}
-          {ask.length > 0 && (
-            <Group title="전화로 물어보기" count={ask.length} tip="지점마다 해 주는지, 값이 얼마인지 달라요. 필요한 작업인지도 같이 물어보세요." folded>
-              {ask.map(({ it, i }) => row(it, i))}
-            </Group>
-          )}
-          {center.length > 0 && (
-            <Group title="센터에서 하기" count={center.length} tip="진단·전자제어·판금처럼 공식센터나 전문점이 나은 작업이에요." folded>
-              {center.map(({ it, i }) => row(it, i))}
+          {rest.length > 0 && (
+            <Group title="나머지" count={rest.length} tip="전화 확인: 지점마다 해 주는지·값이 달라요. 센터: 진단·전자제어·판금처럼 공식센터나 전문점이 나은 작업이에요." folded>
+              {rest.map(({ it, i }) => row(it, i))}
             </Group>
           )}
 
-          {list.length > 0 && car && (
-            <Link href={`/shop-card?car=${car.id}`} className="mt-4 flex h-14 items-center justify-center rounded-[12px] bg-primary text-[16px] font-bold text-primary-foreground">
-              정비소에 보여줄 리스트 ({list.length}개)
-            </Link>
-          )}
           <div className="mt-3 grid grid-cols-2 gap-2">
             <button onClick={() => { setResult(null); setOpen([]) }} className="h-12 rounded-[10px] border border-border bg-card text-[14px] font-semibold">
               다른 견적서
