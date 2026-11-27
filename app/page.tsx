@@ -50,7 +50,7 @@ export default function Home() {
       {/* ── 등록 안 한 사람(검색엔진 포함): 예시 차 + 등록 유도 ── */}
       <section className="home-guest mx-auto max-w-xl px-5 pb-6 pt-8 sm:pt-12">
         <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[36px]">정비소 견적, 부품값과 공임으로 나눠 보세요</h1>
-        <p className="mt-2 text-[15px] text-muted-foreground">공식센터 견적에서 공임나라로 돌릴 수 있는 항목을 찾아 드려요</p>
+        <p className="mt-2 text-[15px] text-muted-foreground">공식센터 견적에서 부품을 사 가면 싸지는 항목을 찾아 드려요</p>
         <div className="mt-6"><QuoteEntry /></div>
 
         <p className="mt-10 text-[16px] font-bold">견적서가 없다면, 내 차 정비비부터 보세요</p>

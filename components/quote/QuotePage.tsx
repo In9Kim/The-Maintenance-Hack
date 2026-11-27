@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { loadMyCar } from "@/lib/my-car"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
-import { LiveCoupang, ProductRow } from "@/components/cars/LiveCoupang"
+import { ProductRow } from "@/components/cars/LiveCoupang"
 import { needsSpecCheck, quoteSearchWord } from "@/lib/quote-analyze"
 import { useAuthToken } from "@/components/my/useAuthToken"
 import { LoginButtons } from "@/components/my/LoginButtons"
@@ -47,6 +47,8 @@ const VERDICT = {
   ask: { label: "전화로 확인", cls: "bg-[#FFFAEB] text-[#B54708]" },
 } as const
 const won = (n: number) => `${n.toLocaleString("ko-KR")}원`
+const clean = (name: string) => name.replace(/^#\s*/, "")
+interface Prod { productId: number | string; name: string; price: number; url: string; image?: string }
 
 /** 로그인 안 한 사람의 하루 무료 횟수를 기기별로 세기 위한 무작위 값 (개인정보 아님, 이 브라우저에만) */
 function deviceId(): string {
@@ -208,66 +210,91 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   }, [result, carId])
   const itemOf = (it: Item): ShopItem => (it.ours ? { slug: it.ours.slug, name: it.ours.name, bought: it.ours.shop?.name } : { name: it.name })
 
-  // 판정별로 묶기. 공임나라 항목은 아끼는 금액이 큰 순
+  // 공임나라 항목마다 쿠팡 상품을 미리 찾아 둔다 (없으면 "사 갈 부품"에서 빼고 나머지로)
+  const [prods, setProds] = useState<Record<number, Prod[]>>({})
+  useEffect(() => {
+    if (!result || !carId) return
+    let alive = true
+    const init: Record<number, Prod[]> = {}
+    const jobs: [number, string][] = []
+    result.items.forEach((it, i) => {
+      if (it.verdict !== "gongim") return
+      if (it.ours?.shop) return void (init[i] = [{ productId: it.ours.slug, ...it.ours.shop }])
+      const word = quoteSearchWord(it.name)
+      if (!it.ours && (needsSpecCheck(it.name) || word.length < 2)) return void (init[i] = [])
+      jobs.push([i, new URLSearchParams(it.ours ? { carId, part: it.ours.slug } : { carId, q: word }).toString()])
+    })
+    setProds(init)
+    for (const [i, qs] of jobs)
+      fetch(`/api/coupang-search?${qs}`)
+        .then((r) => (r.ok ? r.json() : { items: [] }))
+        .then((j: { items?: Prod[] }) => alive && setProds((p) => ({ ...p, [i]: (j.items ?? []).slice(0, 2) })))
+        .catch(() => alive && setProds((p) => ({ ...p, [i]: [] })))
+    return () => {
+      alive = false
+    }
+  }, [result, carId])
+
   const all = (result?.items ?? []).map((it, i) => ({ it, i }))
-  const save = (it: Item) => (it.ours ? Math.max(0, it.ours.dealer - it.ours.self) : 0)
-  const gongim = all.filter((x) => x.it.verdict === "gongim").sort((a, b) => save(b.it) - save(a.it))
-  // 나머지: 전화 확인 먼저, 센터 작업은 뒤
-  const rest = all.filter((x) => x.it.verdict !== "gongim").sort((a, b) => Number(a.it.verdict === "center") - Number(b.it.verdict === "center"))
-  const saving = gongim.reduce((s, x) => s + save(x.it), 0)
-  // 공임나라 항목을 한 번에 리스트로 (뺄 건 리스트 화면에서 빼기)
+  const gongim = all.filter((x) => x.it.verdict === "gongim")
+  const finding = gongim.some((x) => !prods[x.i])
+  // 사 갈 부품: 쿠팡에 이 차에 맞는 상품이 있는 것만
+  const buy = gongim.filter((x) => (prods[x.i]?.length ?? 0) > 0)
+  const low = (i: number) => Math.min(...(prods[i] ?? []).map((p) => p.price))
+  const partsSum = buy.reduce((s, x) => s + low(x.i), 0)
+  // 나머지: 상품 없는 공임나라 항목 → 정비소 문의 → 센터 순
+  const order = (it: Item) => (it.verdict === "gongim" ? 0 : it.verdict === "ask" ? 1 : 2)
+  const rest = all.filter((x) => x.it.verdict !== "gongim" || (!finding && !prods[x.i]?.length)).sort((a, b) => order(a.it) - order(b.it))
   const makeList = () => {
     if (!carId) return
-    const next = gongim.reduce((l, x) => (hasItem(l, itemOf(x.it)) ? l : addItem(l, itemOf(x.it))), list)
+    const next = buy.reduce((l, x) => (hasItem(l, itemOf(x.it)) ? l : addItem(l, itemOf(x.it))), list)
     saveShopList(carId, next)
     router.push(`/shop-card?car=${carId}`)
   }
   const flip = (i: number) => setOpen((o) => (o.includes(i) ? o.filter((x) => x !== i) : [...o, i]))
 
-  /** 한 줄: 이름 + (아끼는 돈). 누르면 이유·가격·쿠팡이 펼쳐짐 */
-  const row = (it: Item, i: number) => {
-    const isG = it.verdict === "gongim"
+  /** 사 갈 부품 한 줄: 이름 + 쿠팡 최저가. 누르면 상품 */
+  const buyRow = (it: Item, i: number) => {
     const on = open.includes(i)
-    const quoted = (it.parts_price ?? 0) + (it.labor_price ?? 0)
-    const word = quoteSearchWord(it.name)
+    const ps = prods[i] ?? []
     return (
       <li key={i} className="border-b border-border last:border-0">
-        <div className="flex items-center gap-2">
-          <button onClick={() => flip(i)} aria-expanded={on} className="flex min-h-[52px] min-w-0 flex-1 items-center gap-2 py-2 text-left">
-            <span className="line-clamp-2 min-w-0 flex-1 text-[15px] leading-snug">{it.name.replace(/^#\s*/, "")}</span>
-            {isG && save(it) > 0 && <span className="num shrink-0 text-[13px] font-bold text-primary">-{won(save(it))}</span>}
-            {!isG && <span className="shrink-0 text-[12px] text-muted-foreground">{it.verdict === "center" ? "센터" : "전화 확인"}</span>}
-            <span aria-hidden className={`shrink-0 text-[16px] text-muted-foreground transition-transform ${on ? "rotate-90" : ""}`}>›</span>
-          </button>
-        </div>
+        <button onClick={() => flip(i)} aria-expanded={on} className="flex min-h-[52px] w-full items-center gap-2 py-2 text-left">
+          <span className="line-clamp-2 min-w-0 flex-1 text-[15px] leading-snug">{clean(it.name)}</span>
+          <span className="num shrink-0 text-[14px] font-bold">{won(low(i))}</span>
+          <span aria-hidden className={`shrink-0 text-[16px] text-muted-foreground transition-transform ${on ? "rotate-90" : ""}`}>›</span>
+        </button>
+        {on && car && (
+          <div className="pb-3">
+            <ul className="divide-y divide-border rounded-[10px] border border-border bg-card">
+              {ps.map((p) => (
+                <li key={p.productId}>
+                  <ProductRow href={p.url} carId={car.id} partId={it.ours?.slug ?? `quote-${quoteSearchWord(it.name)}`} name={p.name} price={p.price} image={p.image} />
+                </li>
+              ))}
+            </ul>
+            <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">상품명의 연식이 내 차와 같은지 보세요. {AFFILIATE_TEXT}</p>
+          </div>
+        )}
+      </li>
+    )
+  }
+
+  /** 나머지 한 줄: 이름 + 어디서. 누르면 이유 */
+  const restRow = (it: Item, i: number) => {
+    const on = open.includes(i)
+    const quoted = (it.parts_price ?? 0) + (it.labor_price ?? 0)
+    return (
+      <li key={i} className="border-b border-border last:border-0">
+        <button onClick={() => flip(i)} aria-expanded={on} className="flex min-h-[52px] w-full items-center gap-2 py-2 text-left">
+          <span className="line-clamp-2 min-w-0 flex-1 text-[15px] leading-snug">{clean(it.name)}</span>
+          <span className="shrink-0 text-[12px] text-muted-foreground">{it.verdict === "center" ? "센터" : "정비소 문의"}</span>
+          <span aria-hidden className={`shrink-0 text-[16px] text-muted-foreground transition-transform ${on ? "rotate-90" : ""}`}>›</span>
+        </button>
         {on && (
           <div className="pb-3 text-[13px] leading-relaxed text-muted-foreground">
-            <p>{it.reason}</p>
-            {isG && it.ours ? (
-              <p className="num mt-1">
-                센터 추정 <span className="price-was">{won(it.ours.dealer)}</span> → 공임나라 <b className="text-foreground">{won(it.ours.self)}</b>
-              </p>
-            ) : (
-              quoted > 0 && <p className="num mt-1">견적 {won(quoted)}</p>
-            )}
-            {isG && car && (
-              <div className="mt-2">
-                {it.ours?.shop ? (
-                  <>
-                    <div className="rounded-[10px] border border-border bg-card">
-                      <ProductRow href={it.ours.shop.url} carId={car.id} partId={it.ours.slug} name={it.ours.shop.name} price={it.ours.shop.price} image={it.ours.shop.image} />
-                    </div>
-                    <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">{AFFILIATE_TEXT}</p>
-                  </>
-                ) : it.ours ? (
-                  <LiveCoupang compact carId={car.id} part={it.ours.slug} partId={it.ours.slug} emptyText="쿠팡엔 이 차에 맞는 상품이 없어요. 공임나라에 부품도 구해 달라고 해 보세요." />
-                ) : needsSpecCheck(it.name) ? (
-                  <p className="rounded-[10px] bg-muted px-3 py-2.5 text-foreground">미션 종류마다 오일 규격이 달라요. 오일까지 공임나라에 맡기는 게 안전해요.</p>
-                ) : word.length >= 2 ? (
-                  <LiveCoupang compact carId={car.id} q={word} partId={`quote-${word}`} emptyText="쿠팡엔 이 차에 맞는 상품이 없어요. 공임나라에 부품도 구해 달라고 해 보세요." />
-                ) : null}
-              </div>
-            )}
+            <p>{it.verdict === "gongim" ? "쿠팡에 이 차에 맞는 부품이 없어요. 정비소에 부품까지 맡기세요." : it.reason}</p>
+            {quoted > 0 && <p className="num mt-1">견적 {won(quoted)}</p>}
           </div>
         )}
       </li>
@@ -353,39 +380,42 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
 
       {result && (
         <section aria-live="polite">
-          {/* 맨 위: 아낄 돈 하나만 크게 */}
+          {/* 맨 위: 사 갈 부품 수와 부품값 */}
           <div className="rounded-2xl bg-[#14213D] px-4 py-5 text-white">
             <p className="text-[12px] text-white/55">{[result.shop, car?.name].filter(Boolean).join(" · ")}</p>
-            {saving > 0 ? (
+            {finding ? (
+              <p className="mt-2 text-[20px] font-extrabold leading-snug">쿠팡에서 부품 찾는 중…</p>
+            ) : buy.length > 0 ? (
               <>
-                <p className="mt-2 text-[14px] text-white/80">공임나라로 돌리면</p>
-                <p className="num text-[30px] font-extrabold leading-tight text-[#75E0A7]">약 {won(saving)} 아껴요</p>
+                <p className="mt-2 text-[20px] font-extrabold leading-snug">{buy.length}개는 부품을 사 가면 돼요</p>
+                <p className="num mt-1 text-[15px] text-[#75E0A7]">쿠팡 부품값 약 {won(partsSum)}</p>
               </>
             ) : (
-              <p className="mt-2 text-[20px] font-extrabold leading-snug">
-                {gongim.length > 0 ? `공임나라로 돌릴 항목 ${gongim.length}개` : "공임나라로 돌릴 항목은 없어 보여요"}
-              </p>
+              <p className="mt-2 text-[20px] font-extrabold leading-snug">직접 사 갈 부품은 없어 보여요</p>
             )}
-            <p className="mt-1 text-[13px] text-white/60">{result.items.length}개 중 {gongim.length}개는 공임나라로 돌릴 만해요</p>
           </div>
 
-          {gongim.length > 0 && (
-            <>
-              <Group
-                title="공임나라로 돌리기"
-                count={gongim.length}
-                tip="부품을 사 가서 공임나라에 맡기기 쉬운 항목이에요. 금액은 정비핵 데이터 기준 공식센터 추정가 대비예요. 부품을 받아 주는지·공임은 지점마다 달라서 가기 전에 전화로 확인하세요."
-              >
-                {gongim.map(({ it, i }) => row(it, i))}
-              </Group>
-              <button onClick={makeList} className="mt-3 flex h-14 w-full items-center justify-center rounded-[12px] bg-primary text-[16px] font-bold text-primary-foreground">
-                이 {gongim.length}개로 정비소 리스트 만들기
-              </button>
-            </>
+          {finding ? (
+            <div className="mt-3 h-[180px] animate-pulse rounded-2xl bg-muted" />
+          ) : (
+            buy.length > 0 && (
+              <>
+                <Group
+                  title="사 갈 부품"
+                  count={buy.length}
+                  tip="쿠팡에서 사서 공임나라 같은 일반 정비소에 가져가면 공임만 내고 바꿀 수 있어요. 가격은 쿠팡 최저가예요. 부품을 받아 주는지·공임은 지점마다 달라서 가기 전에 전화로 확인하세요."
+                >
+                  {buy.map(({ it, i }) => buyRow(it, i))}
+                </Group>
+                <button onClick={makeList} className="mt-3 flex h-14 w-full items-center justify-center rounded-[12px] bg-primary text-[16px] font-bold text-primary-foreground">
+                  이 {buy.length}개로 정비소 리스트 만들기
+                </button>
+              </>
+            )
           )}
-          {rest.length > 0 && (
-            <Group title="나머지" count={rest.length} tip="전화 확인: 지점마다 해 주는지·값이 달라요. 센터: 진단·전자제어·판금처럼 공식센터나 전문점이 나은 작업이에요." folded>
-              {rest.map(({ it, i }) => row(it, i))}
+          {!finding && rest.length > 0 && (
+            <Group title="나머지" count={rest.length} tip="정비소 문의: 쿠팡에 맞는 부품이 없거나 지점마다 해 주는지 달라요. 센터: 진단·전자제어·판금처럼 공식센터나 전문점이 나은 작업이에요." folded>
+              {rest.map(({ it, i }) => restRow(it, i))}
             </Group>
           )}
 
