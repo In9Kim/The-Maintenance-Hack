@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HomeMyCar } from "@/components/home/HomeMyCar";
+import { QuoteEntry } from "@/components/home/QuoteEntry";
 import { CarPicker, type PickerCar } from "@/components/home/CarPicker";
 import { carShortName, pageMetadata, partSlug, seoCars } from "@/lib/seo";
 import { coupangPickFor } from "@/lib/coupang-links";
@@ -43,15 +44,19 @@ export default function Home() {
       {/* ── 등록한 사람: 내 차만 ── */}
       <section className="home-mine mx-auto max-w-xl px-5 pb-6 pt-6 sm:pt-10">
         <HomeMyCar />
+        <div className="mt-5"><QuoteEntry compact /></div>
       </section>
 
       {/* ── 등록 안 한 사람(검색엔진 포함): 예시 차 + 등록 유도 ── */}
       <section className="home-guest mx-auto max-w-xl px-5 pb-6 pt-8 sm:pt-12">
         <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[36px]">정비소 견적, 부품값과 공임으로 나눠 보세요</h1>
-        <p className="mt-2 text-[15px] text-muted-foreground">내 차를 등록하면 맞는 부품과 가격, 교체 시기를 보여 드려요</p>
+        <p className="mt-2 text-[15px] text-muted-foreground">공식센터 견적에서 공임나라로 돌릴 수 있는 항목을 찾아 드려요</p>
+        <div className="mt-6"><QuoteEntry /></div>
+
+        <p className="mt-10 text-[16px] font-bold">견적서가 없다면, 내 차 정비비부터 보세요</p>
 
         {ex && (
-          <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
+          <div className="mt-3 overflow-hidden rounded-2xl border border-border bg-card">
             <div className="flex items-center gap-3 bg-[#14213D] p-4 text-white">
               <span className="min-w-0 flex-1">
                 <span className="block text-[12px] text-white/60">예시</span>
@@ -80,7 +85,7 @@ export default function Home() {
 
         <Link
           href="/my"
-          className="mt-4 flex h-12 w-full items-center justify-center rounded-[10px] bg-primary text-[16px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px"
+          className="mt-4 flex h-12 w-full items-center justify-center rounded-[10px] border border-primary bg-card text-[16px] font-bold text-primary transition hover:bg-primary/5 active:translate-y-px"
         >
           내 차 등록하기
         </Link>

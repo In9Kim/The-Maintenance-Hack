@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getSeoCar, partCost, partSlug } from "@/lib/seo"
 import { coupangPickFor } from "@/lib/coupang-links"
 import { analyzeQuoteImage, buildQuotePrompt } from "@/lib/quote-analyze"
-import { takeQuote, refundQuote, QUOTE_PER_USER } from "@/lib/quote-limit"
+import { takeQuote, refundQuote, QUOTE_GUEST, QUOTE_PER_IP, QUOTE_PER_USER, type QuoteCounter } from "@/lib/quote-limit"
 import { userIdFrom } from "@/lib/auth-user"
 
 const TYPES = new Set(["image/jpeg", "image/png", "image/webp"])
@@ -10,7 +10,7 @@ const MAX_B64 = 5_000_000 // 약 3.7MB (화면에서 줄여 보내서 보통 0.5
 
 /** 견적서 사진 분석. 사진은 저장하지 않고 응답이 끝나면 버린다 */
 export async function POST(req: NextRequest) {
-  let body: { carId?: string; year?: number; engine?: string; image?: string; mediaType?: string }
+  let body: { carId?: string; year?: number; engine?: string; image?: string; mediaType?: string; device?: string }
   try {
     body = await req.json()
   } catch {
@@ -22,23 +22,32 @@ export async function POST(req: NextRequest) {
   const mediaType = TYPES.has(body.mediaType ?? "") ? body.mediaType! : "image/jpeg"
   if (!image || image.length > MAX_B64) return NextResponse.json({ error: "사진이 없거나 너무 커요. 다시 찍어 주세요." }, { status: 400 })
 
-  // 로그인한 사람만 (계정마다 하루 1번). 비로그인은 AI를 부르기 전에 막는다
+  // 로그인 안 해도 기기마다 하루 1번 (정비소 앞에서 바로 쓰게). 로그인하면 계정마다 하루 3번
   const uid = await userIdFrom(req)
-  if (!uid) return NextResponse.json({ error: "견적서 분석은 로그인하면 하루 1번 쓸 수 있어요.", login: true }, { status: 401 })
-  const who = `u:${uid}`
-  const take = await takeQuote(who)
+  const device = typeof body.device === "string" && /^[0-9a-f-]{36}$/.test(body.device) ? body.device : ""
+  const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
+  const counters: QuoteCounter[] = uid
+    ? [{ who: `u:${uid}`, limit: QUOTE_PER_USER }]
+    : [
+        { who: `d:${device || ip}`, limit: QUOTE_GUEST },
+        { who: `ip:${ip}`, limit: QUOTE_PER_IP },
+      ]
+  const take = await takeQuote(counters)
   if (take !== "ok") {
-    return NextResponse.json(
-      { error: take === "global" ? "오늘은 분석 요청이 많아 마감됐어요. 내일 다시 이용해 주세요." : `견적서 분석은 하루 ${QUOTE_PER_USER}번까지예요. 내일 다시 이용해 주세요.`, limited: true },
-      { status: 429 },
-    )
+    const error =
+      take === "global"
+        ? "오늘은 분석 요청이 많아 마감됐어요. 내일 다시 이용해 주세요."
+        : uid
+          ? `견적서 분석은 하루 ${QUOTE_PER_USER}번까지예요. 내일 다시 이용해 주세요.`
+          : `오늘 무료 분석 ${QUOTE_GUEST}번을 썼어요. 로그인하면 하루 ${QUOTE_PER_USER}번까지 쓸 수 있어요.`
+    return NextResponse.json({ error, limited: true, login: !uid && take !== "global" }, { status: 429 })
   }
 
   const year = Number.isInteger(body.year) ? body.year : undefined
   const engine = typeof body.engine === "string" ? body.engine : undefined
   try {
     const result = await analyzeQuoteImage(image, mediaType, buildQuotePrompt(car, car.parts, year, engine))
-    if (!result.readable) await refundQuote(who)
+    if (!result.readable) await refundQuote(counters)
     // 정비핵 소모품과 짝지어진 항목: 직접 구매+공임나라 예상, 공식센터 추정, 쿠팡 상품
     const items = result.items.map((it) => {
       const part = it.match_part_id ? car.parts.find((p) => p.id === it.match_part_id) : undefined
@@ -60,7 +69,7 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
     console.error("[quote]", msg.slice(0, 200))
-    await refundQuote(who)
+    await refundQuote(counters)
     if (msg === "NO_KEY") return NextResponse.json({ error: "분석 기능을 준비 중이에요." }, { status: 503 })
     if (/credit|balance|billing/i.test(msg)) return NextResponse.json({ error: "분석 기능이 잠시 멈췄어요. 곧 다시 열게요." }, { status: 503 })
     return NextResponse.json({ error: "사진을 분석하지 못했어요. 글자가 잘 보이게 다시 찍어 주세요." }, { status: 502 })

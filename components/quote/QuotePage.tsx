@@ -47,6 +47,20 @@ const VERDICT = {
 const KIND = { done: "한 작업", recommended: "권고", inspection: "점검" } as const
 const won = (n: number) => `${n.toLocaleString("ko-KR")}원`
 
+/** 로그인 안 한 사람의 하루 무료 횟수를 기기별로 세기 위한 무작위 값 (개인정보 아님, 이 브라우저에만) */
+function deviceId(): string {
+  try {
+    let v = localStorage.getItem("mh_device")
+    if (!v) {
+      v = crypto.randomUUID()
+      localStorage.setItem("mh_device", v)
+    }
+    return v
+  } catch {
+    return ""
+  }
+}
+
 /** 사진을 긴 변 1568px JPEG로 줄인다 (AI가 읽기 좋은 크기, 전송량 감소). 원본은 어디에도 저장하지 않음 */
 async function shrink(file: File): Promise<string> {
   const url = URL.createObjectURL(file)
@@ -81,8 +95,9 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [elapsed, setElapsed] = useState(0)
   const [openShop, setOpenShop] = useState<number[]>([])
-  // 로그인한 사람만 분석 가능 (계정마다 하루 1번). undefined = 확인 중
+  // 로그인 없이 하루 1번, 로그인하면 하루 3번. undefined = 로그인 확인 중
   const { token, setToken, providers } = useAuthToken()
+  const [needLogin, setNeedLogin] = useState(false)
 
   // 분석 중 경과 시간 (진행 단계 표시용)
   useEffect(() => {
@@ -125,14 +140,18 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
       const r = await fetch("/api/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        body: JSON.stringify({ carId: car.id, year: year ? Number(year) : undefined, engine: engine || undefined, image: preview, mediaType: "image/jpeg" }),
+        body: JSON.stringify({ carId: car.id, year: year ? Number(year) : undefined, engine: engine || undefined, image: preview, mediaType: "image/jpeg", device: deviceId() }),
       })
       const j = await r.json()
       if (r.status === 401) setToken(null)
+      setNeedLogin(!!j.login && !token)
       if (!r.ok) setError(j.error ?? "분석하지 못했어요.")
       else if (!j.readable) setError("견적서·점검내역을 읽지 못했어요. 표가 화면에 꽉 차게, 글자가 선명하게 다시 찍어 주세요.")
       else {
-        setResult(j as Result)
+        const res = j as Result
+        setResult(res)
+        // 결과까지 본 사람 수와 아낄 수 있다고 나온 항목 수 (사용성 확인용, 견적 내용은 보내지 않음)
+        track({ type: "report", carId: car.id, meta: { via: "quote_result", items: res.items.length, gongim: res.items.filter((i) => i.verdict === "gongim").length, login: !!token } })
         setPreview(null) // 결과가 나오면 사진은 화면에서도 지움
       }
     } catch {
@@ -202,24 +221,23 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
             <button onClick={() => fileRef.current?.click()} className="mt-3 h-12 w-full rounded-[10px] border border-dashed border-input text-[15px] font-semibold">
               {preview ? "다른 사진 고르기" : "사진 찍기 / 고르기"}
             </button>
-            {token === null ? (
-              <div className="mt-3 rounded-[12px] bg-muted p-3.5">
-                <p className="text-[14px] font-semibold">로그인하면 하루 1번 분석할 수 있어요</p>
-                <div className="mt-2.5"><LoginButtons providers={providers} next="/quote" /></div>
-              </div>
-            ) : (
             <button
               onClick={analyze}
               disabled={!car || !preview || busy || token === undefined}
               className="mt-2 h-12 w-full rounded-[10px] bg-primary text-[16px] font-bold text-primary-foreground disabled:cursor-not-allowed disabled:bg-[#9BB8AD]"
             >
-              {busy ? "분석 중…" : !car ? "차종을 먼저 골라 주세요" : "공임나라로 아낄 수 있는 것 찾기"}
+              {busy ? "분석 중…" : !car ? "차종을 먼저 골라 주세요" : !preview ? "사진을 먼저 올려 주세요" : "공임나라로 아낄 수 있는 것 찾기"}
             </button>
-            )}
             {busy && <Progress sec={elapsed} />}
             {error && <p role="alert" className="mt-3 rounded-[10px] bg-[#FEF3F2] px-3.5 py-2.5 text-[14px] text-[#B42318]">{error}</p>}
+            {needLogin && token === null && (
+              <div className="mt-3 rounded-[12px] bg-muted p-3.5">
+                <p className="text-[14px] font-semibold">로그인하고 이어서 분석하기</p>
+                <div className="mt-2.5"><LoginButtons providers={providers} next="/quote" /></div>
+              </div>
+            )}
             <p className="mt-3 text-[12px] leading-relaxed text-muted-foreground">
-              로그인하면 하루 1번 무료 · 사진은 저장하지 않아요. 이름·전화번호·차량번호는 결과에 남기지 않아요. AI 결과는 참고용이에요.
+              로그인 없이 하루 1번 · 로그인하면 하루 3번 · 사진은 저장하지 않아요. 이름·전화번호·차량번호는 결과에 남기지 않아요. AI 결과는 참고용이에요.
             </p>
           </div>
         </>

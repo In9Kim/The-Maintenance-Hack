@@ -13,7 +13,7 @@ import { SITE_URL } from "@/lib/seo"
 export const metadata: Metadata = {
   title: "정비핵 - 자동차 정비 비용 계산기",
   description:
-    "공임나라 + 쿠팡 조합으로 공식 서비스 센터 대비 최대 60% 절약. 차종별 소모품 규격 자동 조회 및 최저가 부품 링크 제공.",
+    "정비소 견적서 사진으로 공임나라로 돌릴 항목을 찾고, 차종별 소모품 규격과 부품값·공임을 공식센터 가격과 나란히 비교해요.",
   keywords: ["자동차 정비", "공임나라", "쿠팡", "브레이크패드", "엔진오일", "정비 비용"],
   metadataBase: new URL(SITE_URL),
   // 구글 서치콘솔 / 네이버 서치어드바이저 소유 확인 (HTML 태그 방식의 content 값만 환경변수에 넣으면 됨)
