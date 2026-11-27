@@ -1,5 +1,6 @@
 "use client"
 
+import { PartIcon } from "@/components/PartIcon"
 import Link from "next/link"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
@@ -384,6 +385,7 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
                 onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), toggle())}
                 className="flex cursor-pointer items-center gap-3 px-4 py-3"
               >
+                <PartIcon name={d.part.name} size={36} />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[15px] font-semibold">{d.part.name}</span>
                   <span className="num block truncate text-[13px] text-muted-foreground">

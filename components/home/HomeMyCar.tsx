@@ -8,6 +8,7 @@ import { isCustomCar } from "@/lib/car-catalog"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
+import { PartIcon, partLook } from "@/components/PartIcon"
 
 /**
  * 첫 화면 '내 차' (등록한 사람만) = 오늘 할 일 하나.
@@ -113,7 +114,13 @@ function NextCard({ my, skipped, onSave, onSkip }: { my: MyCar; skipped: string[
     return (
       <div className="mt-4 rounded-2xl border border-border bg-card p-4">
         <p className="text-[13px] text-muted-foreground">교체 시기 계산 · {a.left}개 남음</p>
-        <p className="mt-1 text-[18px] font-extrabold leading-snug">{d.part.name}, 마지막으로 언제 갈았어요?</p>
+        <div className="mt-2 flex items-start gap-3">
+          <PartIcon name={d.part.name} size={44} />
+          <div className="min-w-0">
+            <p className="text-[18px] font-extrabold leading-snug">{d.part.name}, 마지막으로 언제 갈았어요?</p>
+            {partLook(d.part.name).desc && <p className="mt-0.5 text-[13px] text-muted-foreground">{partLook(d.part.name).desc}</p>}
+          </div>
+        </div>
         <div className="mt-3 grid grid-cols-2 gap-2">
           {ASK.map((o) => (
             <button
@@ -160,7 +167,13 @@ function BuyCard({ my, due, more, onSave }: { my: MyCar; due: PartDue; more: num
     <div className="mt-4 overflow-hidden rounded-2xl border border-[#FEC84B] bg-card">
       <div className="bg-[#FFFAEB] px-4 py-3">
         <p className="text-[13px] font-semibold text-[#B54708]">{due.state === "over" ? "교체 시기가 지났어요" : "곧 갈 때예요"} · {due.text}</p>
-        <p className="mt-0.5 text-[19px] font-extrabold leading-snug">{p.name}</p>
+        <div className="mt-1.5 flex items-center gap-3">
+          <PartIcon name={p.name} />
+          <div className="min-w-0">
+            <p className="text-[19px] font-extrabold leading-snug">{p.name}</p>
+            {partLook(p.name).desc && <p className="text-[13px] text-muted-foreground">{partLook(p.name).desc}</p>}
+          </div>
+        </div>
       </div>
       <div className="p-4">
         {p.shop ? (
