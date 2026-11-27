@@ -10,6 +10,7 @@ import raw from "@/data/coupang-links.json"
 import searchRaw from "@/data/coupang-search-links.json"
 import picksRaw from "@/data/coupang-picks.json"
 import batteryRaw from "@/data/battery-fitment.json"
+import padRaw from "@/data/brake-pad-fitment.json"
 import type { CarModel, MaintenancePart } from "@/types"
 
 import type { CoupangSpecLink } from "./coupang-check"
@@ -66,7 +67,7 @@ export interface CoupangChoice {
  *  - wiper: 운전석·조수석 길이가 규격과 같은 세트 / cabin·air: 상품명에 이 차종(또는 순정 품번)이 적힌 필터
  */
 export interface CoupangPick {
-  kind: "set" | "oil" | "wiper" | "cabin" | "air" | "battery"
+  kind: "set" | "oil" | "wiper" | "cabin" | "air" | "battery" | "pad"
   productId?: number | string
   name: string
   price: number
@@ -84,7 +85,23 @@ export function coupangPickFor(part: MaintenancePart): CoupangPick | undefined {
     const main = batteryOptionsFor(part)[0]
     return main && main.share >= 0.5 ? main.pick : undefined
   }
+  const pads = padOptionsFor(part)
+  // 패드: 품번이 하나뿐인 차종만 대표 상품 (휠 크기·EPB로 갈리면 화면의 품번 목록에서 고르게)
+  if (pads.length) return pads.length === 1 ? pads[0].pick : undefined
   return PICKS[part.id]
+}
+
+/** 브레이크 패드 상신 품번별 상품 (data/brake-pad-fitment.json: 상신 공용차종표, scripts/pick-coupang-brake.mjs가 품번마다 상품을 고름) */
+export interface PadOption {
+  sp: string
+  /** 그 품번이 맞는 조건 (휠 크기·엔진·EPB). 빈 문자열이면 전 차량 */
+  label: string
+  pick?: CoupangPick
+}
+const PADS = ((padRaw as { parts?: Record<string, { sp: string; label: string }[]> }).parts ?? {})
+
+export function padOptionsFor(part: MaintenancePart): PadOption[] {
+  return (PADS[part.id] ?? []).map((o) => ({ ...o, pick: PICKS[`pad:${o.sp}`] }))
 }
 
 /**
@@ -122,13 +139,15 @@ export function coupangChoicesFor(part: MaintenancePart): CoupangChoice[] {
     out.push({
       url: pick.url,
       kind: "pick",
-      title: pick.kind === "battery" ? "가장 흔한 규격 배터리 (쿠팡)" : pick.kind === "set" ? "이 세트 사면 돼요 (쿠팡)" : pick.kind === "oil" ? "이 오일 사면 돼요 (쿠팡)" : pick.kind === "wiper" ? "이 와이퍼 사면 돼요 (쿠팡)" : "이 필터 사면 돼요 (쿠팡)",
+      title: pick.kind === "pad" ? "이 패드 사면 돼요 (쿠팡)" : pick.kind === "battery" ? "가장 흔한 규격 배터리 (쿠팡)" : pick.kind === "set" ? "이 세트 사면 돼요 (쿠팡)" : pick.kind === "oil" ? "이 오일 사면 돼요 (쿠팡)" : pick.kind === "wiper" ? "이 와이퍼 사면 돼요 (쿠팡)" : "이 필터 사면 돼요 (쿠팡)",
       sub: pick.name,
       price: pick.price,
       priceDate: pick.checkedAt,
       image: pick.image,
       note:
-        pick.kind === "battery"
+        pick.kind === "pad"
+          ? `상신브레이크 공용차종표에서 이 차에 맞는 품번(${padOptionsFor(part)[0]?.sp})이 상품명에 있는 상신 정품이에요. 같은 품번을 여러 차가 같이 써서 상품명에 다른 차 이름이 있을 수 있어요.`
+          : pick.kind === "battery"
           ? `이 차종 적합표에서 가장 많은 ${batteryOptionsFor(part)[0]?.name} 규격이에요. 트림마다 규격이 달라서 지금 달린 배터리 라벨과 같은지 꼭 보세요. 폐배터리 반납 조건이 붙은 상품이 많아요.`
           : pick.kind === "set"
           ? "엔진오일 + 오일필터가 함께 든 차종 전용 세트예요. 상품명의 연식·엔진이 내 차와 같은지 한 번 더 보세요."

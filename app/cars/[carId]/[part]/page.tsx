@@ -18,8 +18,9 @@ import {
 } from "@/lib/seo"
 import { formatPrice } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
-import { batteryOptionsFor, coupangChoicesFor, naverShoppingFor, oilTiersFor } from "@/lib/coupang-links"
+import { batteryOptionsFor, padOptionsFor, coupangChoicesFor, naverShoppingFor, oilTiersFor } from "@/lib/coupang-links"
 import { BatteryOptions } from "@/components/cars/BatteryOptions"
+import { PadOptions } from "@/components/cars/PadOptions"
 import { OilTiers } from "@/components/cars/OilTiers"
 import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
 import { carPhoto } from "@/lib/car-photos"
@@ -147,6 +148,11 @@ export default async function PartPage({ params }: Props) {
           <p className="mt-3 text-[13px] font-semibold text-primary">① 이 규격으로 부품 사기</p>
           <p className="mt-1 text-[16px] font-semibold leading-relaxed">{part.spec}</p>
           {part.partNumber && <p className="mt-1 text-[14px] text-muted-foreground">참고 품번 {part.partNumber}</p>}
+          {padOptionsFor(part).length === 1 && (
+            <p className="mt-1 text-[14px] text-muted-foreground">
+              상신 패드 품번 <b className="num text-foreground">{padOptionsFor(part)[0].sp}</b>{padOptionsFor(part)[0].sp.startsWith("SP") && ` (같은 번호의 하드론은 HP${padOptionsFor(part)[0].sp.slice(2)})`}
+            </p>
+          )}
 
           {specLinks.length > 0 ? (
             <div className="mt-4 space-y-2">
@@ -172,9 +178,12 @@ export default async function PartPage({ params }: Props) {
               {naverShoppingFor(part) && <NaverCompareLink url={naverShoppingFor(part)!.url} carId={car.id} partId={part.id} />}
               <OilTiers rows={oilTiersFor(part)} carId={car.id} partId={part.id} />
               <BatteryOptions rows={batteryOptionsFor(part)} carId={car.id} partId={part.id} />
+              <PadOptions rows={padOptionsFor(part)} carId={car.id} partId={part.id} />
             </div>
           ) : batteryOptionsFor(part).length ? (
             <BatteryOptions rows={batteryOptionsFor(part)} carId={car.id} partId={part.id} />
+          ) : padOptionsFor(part).length > 1 ? (
+            <PadOptions rows={padOptionsFor(part)} carId={car.id} partId={part.id} />
           ) : (
             <>
               <p className="mt-4 rounded-[10px] bg-muted px-3 py-2.5 text-[14px] text-muted-foreground">
