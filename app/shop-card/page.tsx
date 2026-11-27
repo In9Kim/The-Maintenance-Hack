@@ -32,7 +32,6 @@ export default function Page() {
     <div className="mx-auto max-w-2xl px-5 pb-6 pt-6 sm:pt-10">
       <Breadcrumbs items={[{ href: "/", label: "정비핵" }, { href: "/my", label: "마이" }, { label: "정비소에 보여주기" }]} />
       <h1 className="text-[26px] font-extrabold leading-[1.3] sm:text-[34px]">정비소에 보여줄 부품 리스트</h1>
-      <p className="mt-2 text-[15px] text-muted-foreground">공임나라에 부품을 가져갈 때 이 화면을 보여 주세요</p>
       <div className="mt-6">
         <ShopCardPage cars={cars} />
       </div>

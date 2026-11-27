@@ -21,6 +21,7 @@ import { GONGIM_RESERVATION_URL } from "@/lib/config"
 import { batteryOptionsFor, padOptionsFor, coupangChoicesFor, naverShoppingFor, oilTiersFor } from "@/lib/coupang-links"
 import { BatteryOptions } from "@/components/cars/BatteryOptions"
 import { PadOptions } from "@/components/cars/PadOptions"
+import { InfoTip } from "@/components/ui/InfoTip"
 import { OilTiers } from "@/components/cars/OilTiers"
 import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
 import { carPhoto } from "@/lib/car-photos"
@@ -234,11 +235,16 @@ export default async function PartPage({ params }: Props) {
             </div>
           ))}
         </dl>
-        {part.source && <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">출처: {part.source}</p>}
+        {part.source && (
+          <p className="mt-2 flex items-center gap-1 text-[13px] text-muted-foreground">
+            출처 <InfoTip label="출처 보기" align="left">{part.source}</InfoTip>
+          </p>
+        )}
         {part.fitted && part.fitted.length > 0 && (
           <div className="mt-3 rounded-[12px] border border-border bg-card px-4 py-3 text-[14px] leading-relaxed">
-            <p className="font-semibold">실제로 달아 본 상품</p>
-            <p className="mt-0.5 text-[13px] text-muted-foreground">운영자 차에 실제로 단 상품 (주문 내역 기준)</p>
+            <p className="flex items-center gap-1.5 font-semibold">
+              실제로 달아 본 상품 <InfoTip label="설명" align="left">운영자 차에 실제로 단 상품이에요 (주문 내역 기준).</InfoTip>
+            </p>
             <ul className="mt-2 space-y-2">
               {part.fitted.map((f) => (
                 <li key={f.item + f.date} className="border-t border-border pt-2 first:border-t-0 first:pt-0">

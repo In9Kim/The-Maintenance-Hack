@@ -1,3 +1,4 @@
+import { InfoTip } from "@/components/ui/InfoTip"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/seo/Shared"
 import { NearMap } from "@/components/near/NearMap"
@@ -10,8 +11,10 @@ export function NearPage({ kind }: { kind: NearKind }) {
   return (
     <div className="mx-auto max-w-5xl px-5 pb-6 pt-6 sm:pt-10">
       <Breadcrumbs items={[{ href: "/", label: "정비핵" }, { label: "근처 정비소·세차장" }]} />
-      <h1 className="text-[26px] font-extrabold leading-[1.3] sm:text-[34px]">근처 {kind.label} 찾기</h1>
-      <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">{kind.intro}</p>
+      <h1 className="flex items-center gap-2 text-[26px] font-extrabold leading-[1.3] sm:text-[34px]">
+        근처 {kind.label} 찾기
+        <InfoTip label={`${kind.label} 안내`} align="left">{kind.intro}</InfoTip>
+      </h1>
 
       <nav aria-label="찾을 곳" className="-mx-5 mt-5 overflow-x-auto px-5">
         <ul className="flex gap-2">

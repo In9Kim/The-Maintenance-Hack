@@ -10,6 +10,8 @@ import { LiveCoupang } from "@/components/cars/LiveCoupang"
 import { quoteSearchWord } from "@/lib/quote-analyze"
 import { useAuthToken } from "@/components/my/useAuthToken"
 import { LoginButtons } from "@/components/my/LoginButtons"
+import { MyCarLine } from "@/components/my/MyCarLine"
+import { InfoTip } from "@/components/ui/InfoTip"
 import { addItem, hasItem, loadShopList, removeItem, saveShopList, type ShopItem } from "@/lib/shop-list"
 
 export interface QuoteCar {
@@ -186,16 +188,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
       {!result && (
         <>
           {fromMy && car ? (
-          <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3">
-            <span className="min-w-0 flex-1">
-              <span className="block text-[12px] text-muted-foreground">내 차</span>
-              <span className="block truncate text-[16px] font-bold">{car.name}</span>
-              <span className="block text-[13px] text-muted-foreground">{[year && `${year}년형`, engine || car.engines[0]].filter(Boolean).join(" · ")}</span>
-            </span>
-            <button onClick={() => setFromMy(false)} className="min-h-[40px] shrink-0 rounded-lg border border-border px-3 text-[13px] font-semibold">
-              다른 차
-            </button>
-          </div>
+          <MyCarLine name={car.name} detail={[year && `${year}년형`, engine || car.engines[0]].filter(Boolean).join(" · ")} onChange={() => setFromMy(false)} />
           ) : (
           <div className="rounded-2xl border border-border bg-card p-4">
             <p className="text-[15px] font-bold">내 차</p>
@@ -227,8 +220,12 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
           )}
 
           <div className="mt-4 rounded-2xl border border-border bg-card p-4">
-            <p className="text-[15px] font-bold">견적서·점검내역 사진</p>
-            <p className="mt-0.5 text-[13px] text-muted-foreground">표 전체가 나오게, 글자가 선명하게 찍어 주세요</p>
+            <p className="flex items-center gap-1.5 text-[15px] font-bold">
+              견적서 사진
+              <InfoTip label="찍는 방법과 이용 안내" align="left">
+                표 전체가 나오게, 글자가 선명하게 찍어 주세요. 로그인 없이 하루 1번, 로그인하면 하루 3번 쓸 수 있어요. 사진은 저장하지 않고, 이름·전화번호·차량번호는 결과에 남기지 않아요. AI 결과는 참고용이에요.
+              </InfoTip>
+            </p>
             <input ref={fileRef} type="file" accept="image/*" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} />
             {preview ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -252,9 +249,6 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
                 <div className="mt-2.5"><LoginButtons providers={providers} next="/quote" /></div>
               </div>
             )}
-            <p className="mt-3 text-[12px] leading-relaxed text-muted-foreground">
-              로그인 없이 하루 1번 · 로그인하면 하루 3번 · 사진은 저장하지 않아요. 이름·전화번호·차량번호는 결과에 남기지 않아요. AI 결과는 참고용이에요.
-            </p>
           </div>
         </>
       )}

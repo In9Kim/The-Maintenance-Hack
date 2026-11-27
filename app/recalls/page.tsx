@@ -3,7 +3,8 @@ import Link from "next/link"
 import { pageMetadata, seoCars, carShortName } from "@/lib/seo"
 import { splitCritical, MAJOR_MAKERS } from "@/lib/recalls/highlight"
 import { Breadcrumbs, JsonLd } from "@/components/seo/Shared"
-import { CarPicker } from "@/components/home/CarPicker"
+import { MyCarRecall } from "@/components/recalls/MyCarRecall"
+import { carRecallAlerts } from "@/lib/recalls/car-alert"
 import {
   MajorRecallList,
   RecallEmpty,
@@ -74,24 +75,19 @@ export default function RecallsPage() {
       <Breadcrumbs items={[{ href: "/", label: "정비핵" }, { label: "자동차 리콜 정보" }]} />
 
       <h1 className="text-[26px] font-extrabold leading-[1.3] sm:text-[34px]">자동차 리콜 정보</h1>
-      <p className="mt-2 text-[15px] text-muted-foreground">내 차를 등록하면 해당 리콜이 화면 맨 위에 빨간 띠로 떠요.</p>
 
       {carLinks.length > 0 && (
-        <section className="mt-8 max-w-xl" aria-label="내 차 리콜 보기">
-          <CarPicker
+        <section className="mt-6 max-w-xl" aria-label="내 차 리콜">
+          <MyCarRecall
             cars={carLinks.map(({ car, count }) => ({ id: car.id, brand: car.brand, label: `${carShortName(car)} · 리콜 ${count}건` }))}
-            path="/recalls"
-            via="recalls_picker"
-            cta="리콜 목록 보기"
-            hint="차종을 고르면 리콜을 보여드려요"
-            label="내 차 리콜 보기"
+            alerts={carRecallAlerts()}
           />
         </section>
       )}
 
       <section className="mt-10" aria-labelledby="major">
         <h2 id="major" className={H2}>꼭 확인할 리콜</h2>
-        <p className="mt-1 text-[14px] text-muted-foreground">최근 90일, 주요 브랜드의 화재·제동·조향·에어백 결함만</p>
+        <p className="mt-1 text-[13px] text-muted-foreground">최근 90일 · 화재·제동·조향·에어백</p>
         <div className="mt-4">
           {critical.length ? <MajorRecallList groups={critical} /> : <RecallEmpty>최근 90일 동안 안전 직결 리콜이 없어요.</RecallEmpty>}
         </div>

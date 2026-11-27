@@ -114,7 +114,6 @@ function NextCard({ my, skipped, onSave, onSkip }: { my: MyCar; skipped: string[
       <div className="mt-4 rounded-2xl border border-border bg-card p-4">
         <p className="text-[13px] text-muted-foreground">교체 시기 계산 · {a.left}개 남음</p>
         <p className="mt-1 text-[18px] font-extrabold leading-snug">{d.part.name}, 마지막으로 언제 갈았어요?</p>
-        <p className="mt-1 text-[13px] text-muted-foreground">대충 골라도 돼요. 다음 교체 때를 알려 드릴게요</p>
         <div className="mt-3 grid grid-cols-2 gap-2">
           {ASK.map((o) => (
             <button
@@ -132,7 +131,6 @@ function NextCard({ my, skipped, onSave, onSkip }: { my: MyCar; skipped: string[
         <button onClick={() => onSkip(d.part.slug)} className="mt-2 min-h-[44px] w-full text-[14px] font-semibold text-muted-foreground">
           모르겠어요 · 다음 부품
         </button>
-        {my.km <= 0 && <p className="mt-1 text-[12px] text-muted-foreground">마이에서 지금 주행거리를 넣으면 더 정확해져요</p>}
       </div>
     )
   }

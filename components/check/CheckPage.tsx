@@ -9,6 +9,8 @@ import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
 import { useAuthToken } from "@/components/my/useAuthToken"
 import { LoginButtons } from "@/components/my/LoginButtons"
+import { MyCarLine } from "@/components/my/MyCarLine"
+import { InfoTip } from "@/components/ui/InfoTip"
 
 export interface CheckCar {
   id: string
@@ -142,12 +144,12 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
 
   return (
     <div>
-      {/* ① 내 차 */}
+      {/* ① 내 차: 등록한 차면 한 줄 */}
+      {fromMy && car ? (
+        <MyCarLine name={car.name} detail={[year && `${year}년형`, engine || car.engines[0]].filter(Boolean).join(" · ")} onChange={() => setFromMy(false)} />
+      ) : (
       <div className="rounded-2xl border border-border bg-card p-4">
-        <div className="flex items-baseline justify-between">
-          <p className="text-[15px] font-bold">내 차</p>
-          {fromMy && <span className="text-[12px] text-muted-foreground">등록한 차로 골라 뒀어요</span>}
-        </div>
+        <p className="text-[15px] font-bold">내 차</p>
         <div className="mt-2 grid grid-cols-[0.8fr_1.2fr] gap-2">
           <label className="sr-only" htmlFor="ck-brand">브랜드</label>
           <select id="ck-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setYear(""); setEngine(""); setResult(null); setSearch(null); setPartSel("") }}>
@@ -175,12 +177,15 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
           </div>
         )}
       </div>
+      )}
 
       {/* ② 이 차에 맞게 골라 둔 상품 (붙여 넣기 전에 먼저) */}
       {car && picks.length > 0 && !result && (
         <div className="mt-4 rounded-2xl border border-primary/30 bg-[#F6FEF9] p-4">
-          <p className="text-[15px] font-bold">{car.name}에 맞게 골라 둔 상품</p>
-          <p className="mt-0.5 text-[13px] text-muted-foreground">상품명의 규격·차종이 이 차와 맞는 것만 골랐어요</p>
+          <p className="flex items-center gap-1.5 text-[15px] font-bold">
+            내 차에 맞는 상품
+            <InfoTip label="고른 기준" align="left">상품명의 규격·차종이 이 차와 맞는 것만 골랐어요. 가격은 표시한 날 쿠팡 기준이라 바뀔 수 있어요.</InfoTip>
+          </p>
           <ul className="mt-3 divide-y divide-border rounded-[12px] border border-border bg-card">
             {picks.map((p) => (
               <li key={p.url}>
@@ -204,8 +209,10 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
       {/* ③ 화면 안에서 쿠팡 검색 → 고른 상품이 맞는지 바로 확인 (앱 이동 없음) */}
       {car && (
         <div className="mt-4 rounded-2xl border border-border bg-card p-4">
-          <p className="text-[15px] font-bold">다른 상품 찾아서 확인하기</p>
-          <p className="mt-0.5 text-[13px] text-muted-foreground">부품을 누르면 쿠팡 상품이 나와요. [내 차에 맞나?]를 누르면 바로 확인해요</p>
+          <p className="flex items-center gap-1.5 text-[15px] font-bold">
+            다른 상품 확인하기
+            <InfoTip label="사용 방법" align="left">부품을 누르면 쿠팡 상품이 나와요. [내 차에 맞나?]를 누르면 AI가 확인해요 (로그인하면 하루 3번).</InfoTip>
+          </p>
           <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
             {car.parts
               .filter((p) => !p.engine || !engine || p.engine === engine)
@@ -284,7 +291,7 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
             </ul>
           )}
           {search && search.items.length > 0 && (
-            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">가격은 지금 쿠팡 검색 기준이에요. AI 판정은 로그인하면 하루 3번, 참고용이에요. {AFFILIATE_TEXT}</p>
+            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>
           )}
         </div>
       )}

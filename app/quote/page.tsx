@@ -23,7 +23,6 @@ export default function Page() {
     <div className="mx-auto max-w-2xl px-5 pb-6 pt-6 sm:pt-10">
       <Breadcrumbs items={[{ href: "/", label: "정비핵" }, { label: "견적서 분석" }]} />
       <h1 className="text-[26px] font-extrabold leading-[1.3] sm:text-[34px]">견적서, 공임나라로 돌릴 수 있을까?</h1>
-      <p className="mt-2 text-[15px] text-muted-foreground">정비소 견적서·점검내역 사진 한 장이면 돼요</p>
       <div className="mt-6">
         <QuotePage cars={cars} />
       </div>

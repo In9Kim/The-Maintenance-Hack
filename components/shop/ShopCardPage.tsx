@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 import { loadMyCar, type MyCar } from "@/lib/my-car"
-import { MOBIS_SEARCH_URL } from "@/lib/mobis-search"
+import { MyCarLine } from "@/components/my/MyCarLine"
+import { InfoTip } from "@/components/ui/InfoTip"
 import { addItem, hasItem, loadShopList, phoneScript, removeItem, saveShopList, type ShopItem } from "@/lib/shop-list"
 
 export interface ShopCardPart {
@@ -69,7 +70,7 @@ export function ShopCardPage({ cars }: { cars: ShopCardCar[] }) {
     if (car) saveShopList(car.id, next)
   }
   const toggle = (p: ShopCardPart) => {
-    const it: ShopItem = { slug: p.slug, name: p.name, bought: p.pick }
+    const it: ShopItem = { slug: p.slug, name: p.name }
     update(hasItem(items, it) ? removeItem(items, it) : addItem(items, it))
   }
   const addFree = () => {
@@ -78,7 +79,6 @@ export function ShopCardPage({ cars }: { cars: ShopCardCar[] }) {
     update(addItem(items, { name: n }))
     setFree("")
   }
-  const setBought = (it: ShopItem, bought: string) => update(items.map((x) => (x === it ? { ...x, bought } : x)))
 
   const copy = async () => {
     try {
@@ -103,15 +103,11 @@ export function ShopCardPage({ cars }: { cars: ShopCardCar[] }) {
     <div>
       {/* 1. 차 */}
       {mine && car ? (
-        <div className="flex items-center justify-between gap-3 rounded-2xl bg-[#14213D] px-4 py-3.5 text-white">
-          <span className="min-w-0">
-            <span className="block truncate text-[18px] font-extrabold">{car.name}</span>
-            <span className="num block text-[13px] text-white/70">{[mine.year ? `${mine.year}년형` : "", engine, mine.km ? `${mine.km.toLocaleString("ko-KR")}km` : ""].filter(Boolean).join(" · ")}</span>
-          </span>
-          <button onClick={() => { setMy(null); setCarId(""); setBrand("") }} className="shrink-0 text-[13px] text-white/70 underline underline-offset-2">
-            다른 차
-          </button>
-        </div>
+        <MyCarLine
+          name={car.name}
+          detail={[mine.year ? `${mine.year}년형` : "", engine].filter(Boolean).join(" · ")}
+          onChange={() => { setMy(null); setCarId(""); setBrand("") }}
+        />
       ) : (
         <div className="rounded-2xl border border-border bg-card p-4">
           <p className="text-[15px] font-bold">차종</p>
@@ -137,7 +133,10 @@ export function ShopCardPage({ cars }: { cars: ShopCardCar[] }) {
       {car && (
         <>
           {/* 2. 담을 부품 */}
-          <p className="mt-5 text-[15px] font-semibold">가져갈 부품을 골라 주세요</p>
+          <p className="mt-5 flex items-center gap-1.5 text-[15px] font-semibold">
+            가져갈 부품
+            <InfoTip label="정비소 리스트 안내" align="left">부품을 가져가면 받아 주는지, 공임이 얼마인지는 지점마다 달라요. 가기 전에 전화로 물어보세요. 견적서 분석 결과에서도 담을 수 있고, 이 목록은 이 폰에만 저장돼요.</InfoTip>
+          </p>
           <div className="mt-2 flex flex-wrap gap-2">
             {parts.map((p) => {
               const on = hasItem(items, { slug: p.slug, name: p.name })
@@ -176,31 +175,12 @@ export function ShopCardPage({ cars }: { cars: ShopCardCar[] }) {
               <p className="mt-5 text-[15px] font-semibold">담은 부품 {items.length}개</p>
               <ul className="mt-2 divide-y divide-border rounded-[14px] border border-border bg-card">
                 {items.map((it) => {
-                  const p = partOf(it)
                   return (
-                    <li key={it.slug ?? it.name} className="px-4 py-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <span className="min-w-0">
-                          <span className="block text-[15px] font-semibold">{it.name}</span>
-                          {p && <span className="block text-[12px] text-muted-foreground">{p.spec}{p.partNumber ? ` · 순정 품번 ${p.partNumber}` : ""}</span>}
-                          {p && !p.partNumber && p.mobis && (
-                            <a href={MOBIS_SEARCH_URL} target="_blank" rel="noopener noreferrer" className="mt-0.5 block text-[12px] font-semibold text-primary underline underline-offset-2">
-                              순정 품번: 현대모비스에서 &lsquo;{p.mobis}&rsquo; 검색 ›
-                            </a>
-                          )}
-                        </span>
-                        <button onClick={() => update(removeItem(items, it))} className="shrink-0 text-[13px] text-muted-foreground" aria-label={`${it.name} 빼기`}>
-                          빼기
-                        </button>
-                      </div>
-                      <input
-                        aria-label={`${it.name} 산 상품 이름`}
-                        className="mt-2 h-10 w-full rounded-[8px] border border-input bg-background px-3 text-[14px] outline-none focus:border-primary"
-                        value={it.bought ?? ""}
-                        maxLength={80}
-                        placeholder="산 상품 이름 (선택)"
-                        onChange={(e) => setBought(it, e.target.value)}
-                      />
+                    <li key={it.slug ?? it.name} className="flex items-center justify-between gap-3 px-4 py-3">
+                      <span className="min-w-0 truncate text-[15px] font-semibold">{it.name}</span>
+                      <button onClick={() => update(removeItem(items, it))} className="min-h-[36px] shrink-0 px-1 text-[13px] text-muted-foreground" aria-label={`${it.name} 빼기`}>
+                        빼기
+                      </button>
                     </li>
                   )
                 })}
@@ -212,7 +192,7 @@ export function ShopCardPage({ cars }: { cars: ShopCardCar[] }) {
 
               {/* 4. 전화로 먼저 */}
               <div className="mt-4 rounded-2xl bg-muted p-4">
-                <p className="text-[14px] font-bold">가기 전에 전화로 이렇게 물어보세요</p>
+                <p className="text-[14px] font-bold">전화로 먼저 물어보기</p>
                 <p className="mt-1.5 text-[14px] leading-relaxed">{phoneScript(carLine, items)}</p>
                 <div className="mt-3 grid grid-cols-2 gap-2">
                   <button onClick={copy} className="h-11 rounded-[10px] border border-border bg-card text-[14px] font-semibold">
@@ -224,15 +204,7 @@ export function ShopCardPage({ cars }: { cars: ShopCardCar[] }) {
                 </div>
               </div>
             </>
-          ) : (
-            <p className="mt-5 rounded-[12px] bg-muted px-4 py-3 text-[14px] text-muted-foreground">
-              위에서 부품을 누르면 여기에 담겨요. 견적서 분석 결과에서도 담을 수 있어요.
-            </p>
-          )}
-
-          <p className="mt-4 text-[12px] leading-relaxed text-muted-foreground">
-            부품을 가져가면 받아 주는지·공임은 지점마다 달라요. 이 목록은 이 폰에만 저장돼요.
-          </p>
+          ) : null}
         </>
       )}
 

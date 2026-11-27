@@ -84,7 +84,7 @@ export function PartsBeforeVisit({ kind }: { kind: "gongim" | "bluehands" | "aut
       <Link href="/" className="flex items-center gap-3 rounded-[14px] border border-primary/30 bg-[#F6FEF9] p-4">
         <span className="min-w-0 flex-1">
           <span className="block text-[15px] font-bold">가기 전에 챙길 부품, 알려 드릴까요?</span>
-          <span className="block text-[13px] text-muted-foreground">{my.car.name} 부품을 언제 갈았는지 몇 개만 골라 주세요 (버튼만 누르면 돼요)</span>
+          <span className="block text-[13px] text-muted-foreground">언제 갈았는지 버튼으로 골라 주세요</span>
         </span>
         <span aria-hidden className="text-primary">›</span>
       </Link>
@@ -92,8 +92,7 @@ export function PartsBeforeVisit({ kind }: { kind: "gongim" | "bluehands" | "aut
   }
   return (
     <div className="rounded-[14px] border border-primary/30 bg-[#F6FEF9] p-4">
-      <p className="text-[15px] font-bold">{gongim ? `${my.car.name}, 가기 전에 부품 먼저 사 두세요` : `${my.car.name} 부품값, 견적과 비교해 보세요`}</p>
-      <p className="mt-0.5 text-[13px] text-muted-foreground">{gongim ? "공임나라는 부품을 가져가면 공임만 받아요" : "공식센터 견적의 부품값이 적당한지 확인할 수 있어요"}</p>
+      <p className="text-[15px] font-bold">{gongim ? "가기 전에 사 갈 부품" : "내 차 부품값"}</p>
       <PartRows my={my} items={items} />
       <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>
       {gongim && (

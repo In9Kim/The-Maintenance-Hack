@@ -51,7 +51,6 @@ export default function Page() {
     <div className="mx-auto max-w-2xl px-5 pb-6 pt-6 sm:pt-10">
       <Breadcrumbs items={[{ href: "/", label: "정비핵" }, { label: "부품 호환 확인" }]} />
       <h1 className="text-[26px] font-extrabold leading-[1.3] sm:text-[34px]">이 부품, 내 차에 맞을까?</h1>
-      <p className="mt-2 text-[15px] text-muted-foreground">차종·연식만 고르면 돼요. 차대번호는 필요 없어요</p>
 
       <div className="mt-6">
         <CheckPage cars={cars} />

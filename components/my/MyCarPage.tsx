@@ -14,6 +14,7 @@ import {
   type MyCar,
 } from "@/lib/my-car"
 import { isCustomCar } from "@/lib/car-catalog"
+import { InfoTip } from "@/components/ui/InfoTip"
 import { RegisterCar, FIELD, num, snapshot, customSnapshot, type MyCarOption } from "@/components/my/RegisterCar"
 import { authEnabled, enabledProviders, supabase, type Provider } from "@/lib/supabase"
 import { deleteCloudCar, fetchCars, fromRow, mergeGarage, pushCars } from "@/lib/cloud-garage"
@@ -346,7 +347,11 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
           )}
         </div>
       </section>
-      {my.car.credit && <p className="mt-1.5 text-right text-[11px] text-muted-foreground">{my.car.credit}</p>}
+      {my.car.credit && (
+        <p className="mt-1 flex justify-end">
+          <InfoTip label="사진 출처">{my.car.credit}</InfoTip>
+        </p>
+      )}
 
       <Tools />
 
@@ -360,7 +365,6 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
       <p className="mt-5 text-[15px] font-semibold">
         {urgent > 0 ? `지금 챙길 소모품이 ${urgent}개 있어요` : unknown === list.length ? "마지막으로 교체한 날짜를 넣어 주세요" : unknown > 0 ? "기록한 소모품 중엔 당장 교체할 게 없어요" : "당장 교체할 소모품은 없어요"}
       </p>
-      {unknown > 0 && <p className="mt-1 text-[13px] text-muted-foreground">부품을 누르면 교체 날짜를 넣을 수 있어요</p>}
 
       <ul className="mt-3 divide-y divide-border rounded-[14px] border border-border bg-card">
         {list.filter((d) => showUnknown || d.state !== "unknown" || unknown === list.length).slice(0, showUnknown ? undefined : unknown === list.length ? 3 : undefined).map((d) => {
@@ -445,7 +449,7 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
         </button>
       )}
 
-      {list.some((d) => d.part.shop) && <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">쿠팡 가격은 표시한 날 기준이라 바뀔 수 있어요. {AFFILIATE_TEXT}</p>}
+      {list.some((d) => d.part.shop) && <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>}
 
       </>
       )}
