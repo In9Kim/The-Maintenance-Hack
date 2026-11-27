@@ -4,6 +4,7 @@ import { coupangPickFor } from "@/lib/coupang-links"
 import { analyzeQuoteImage, buildQuotePrompt, streamQuoteImage, type QuoteItem } from "@/lib/quote-analyze"
 import { takeQuote, refundQuote, QUOTE_GUEST, QUOTE_PER_IP, QUOTE_PER_USER, type QuoteCounter } from "@/lib/quote-limit"
 import { userIdFrom } from "@/lib/auth-user"
+import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-auth"
 
 const TYPES = new Set(["image/jpeg", "image/png", "image/webp"])
 const MAX_B64 = 5_000_000 // 약 3.7MB (화면에서 줄여 보내서 보통 0.5MB 안쪽)
@@ -26,7 +27,11 @@ export async function POST(req: NextRequest) {
   const uid = await userIdFrom(req)
   const device = typeof body.device === "string" && /^[0-9a-f-]{36}$/.test(body.device) ? body.device : ""
   const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
-  const counters: QuoteCounter[] = uid
+  // 관리자(/admin/login으로 로그인한 운영자)는 개인 한도 없이 테스트. 사이트 전체 한도는 그대로 센다
+  const admin = await verifyAdminToken(req.cookies.get(ADMIN_COOKIE)?.value ?? "")
+  const counters: QuoteCounter[] = admin
+    ? []
+    : uid
     ? [{ who: `u:${uid}`, limit: QUOTE_PER_USER }]
     : [
         { who: `d:${device || ip}`, limit: QUOTE_GUEST },
