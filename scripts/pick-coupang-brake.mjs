@@ -45,6 +45,7 @@ async function main() {
   const today = new Date(Date.now() + 9 * 3600_000).toISOString().slice(0, 10)
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
   let ok = 0
+  const pool = new Map() // 품번 → 이번에 찾은 맞는 상품들 (차종별로 다시 고를 때 씀)
   for (const code of codes) {
     const q = `상신 브레이크패드 ${code}`
     let items = []
@@ -66,6 +67,7 @@ async function main() {
       await sleep(2500)
     }
     const cands = items.filter((x) => padMatches(x.productName, code))
+    pool.set(code, cands)
     // 하이큐(SP)가 일반 교체용이라 먼저, 그다음 로켓배송 → 검색 순위
     const isQ = (x) => new RegExp(`SP[ -]?${code.slice(2)}`).test(x.productName.toUpperCase())
     cands.sort((a, b) => (isQ(b) ? 1 : 0) - (isQ(a) ? 1 : 0) || (b.isRocket ? 1 : 0) - (a.isRocket ? 1 : 0) || a.rank - b.rank)
@@ -85,7 +87,46 @@ async function main() {
     writeFileSync(OUT, JSON.stringify(out, null, 2) + "\n")
   }
   console.log(`골라짐 ${ok} / ${codes.length}`)
+
+  // 차종별: 품번 대표 상품에 다른 차 이름만 있으면, 내 차 이름이 적힌 같은 품번 상품을 찾아 "pad:부품id:품번"으로 따로 저장
+  const cars = JSON.parse(readFileSync("data/vehicles.json", "utf8")).cars
+  const norm = (x) => String(x).toUpperCase().replace(/[\s\-_/()[\]]/g, "")
+  let own = 0
+  for (const [partId, list] of Object.entries(fit)) {
+    const car = cars.find((c) => partId.startsWith(c.id + "-"))
+    if (!car) continue
+    const names = [car.model, ...(MODEL_ALIAS[car.model] ?? [])].map(norm)
+    const mine = (x) => names.some((n) => norm(x).includes(n))
+    for (const o of list) {
+      const key = `pad:${partId}:${o.sp}`
+      const base = out.picks[`pad:${o.sp}`]
+      if (!base || mine(base.name)) {
+        delete out.picks[key]
+        continue
+      }
+      let cand = (pool.get(o.sp) ?? []).find((x) => mine(x.productName))
+      if (!cand) {
+        const q = `${car.model} 상신 브레이크패드 ${o.sp}`
+        try {
+          cand = (await search(q, ak, sk)).map((x) => ({ ...x, _q: q })).find((x) => padMatches(x.productName, o.sp) && mine(x.productName))
+        } catch {}
+        await sleep(2500)
+      }
+      if (cand) {
+        out.picks[key] = { kind: "pad", name: cand.productName, price: cand.productPrice, url: cand.productUrl, image: cand.productImage, rocket: !!cand.isRocket, productId: cand.productId, query: cand._q, checkedAt: today }
+        own++
+        console.log(`  ✔ ${partId} ${o.sp} → ${cand.productName.slice(0, 60)}`)
+      } else if (!(out.picks[key] && padMatches(out.picks[key].name, o.sp) && mine(out.picks[key].name))) {
+        delete out.picks[key]
+      }
+      writeFileSync(OUT, JSON.stringify(out, null, 2) + "\n")
+    }
+  }
+  console.log(`내 차 이름이 적힌 상품으로 바꿈 ${own}`)
 }
+
+/** 쇼핑몰·상신 표에서 쓰는 다른 차 이름 표기 */
+const MODEL_ALIAS = { 쏘나타: ["소나타"], 그랜저: ["그랜져"], 싼타페: ["산타페"], 팰리세이드: ["펠리세이드", "펠리세이트"], 쏘렌토: ["소렌토"], 아반떼: ["아반테"], 아이오닉5: ["아이오닉 5"], 봉고3: ["봉고"], 카니발: [], 스타리아: [] }
 
 if (process.argv[1]?.replace(/\\/g, "/").endsWith("pick-coupang-brake.mjs")) {
   main().catch((e) => {

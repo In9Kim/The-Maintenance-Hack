@@ -91,7 +91,8 @@ export function coupangPickFor(part: MaintenancePart): CoupangPick | undefined {
   return PICKS[part.id]
 }
 
-/** 브레이크 패드 상신 품번별 상품 (data/brake-pad-fitment.json: 상신 공용차종표, scripts/pick-coupang-brake.mjs가 품번마다 상품을 고름) */
+/** 브레이크 패드 상신 품번별 상품 (data/brake-pad-fitment.json: 상신 공용차종표, scripts/pick-coupang-brake.mjs가 품번마다 상품을 고름).
+ *  내 차 이름이 적힌 같은 품번 상품이 있으면 그걸(pad:부품id:품번), 없으면 품번 대표 상품(pad:품번) */
 export interface PadOption {
   sp: string
   /** 그 품번이 맞는 조건 (휠 크기·엔진·EPB). 빈 문자열이면 전 차량 */
@@ -101,7 +102,7 @@ export interface PadOption {
 const PADS = ((padRaw as { parts?: Record<string, { sp: string; label: string }[]> }).parts ?? {})
 
 export function padOptionsFor(part: MaintenancePart): PadOption[] {
-  return (PADS[part.id] ?? []).map((o) => ({ ...o, pick: PICKS[`pad:${o.sp}`] }))
+  return (PADS[part.id] ?? []).map((o) => ({ ...o, pick: PICKS[`pad:${part.id}:${o.sp}`] ?? PICKS[`pad:${o.sp}`] }))
 }
 
 /**
