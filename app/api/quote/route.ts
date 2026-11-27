@@ -68,6 +68,8 @@ export async function POST(req: NextRequest) {
       },
     }
   }
+  // 부품이 없는 항목(점검·클리닝·탈부착만)은 결과에서 뺀다
+  const isPart = (it: QuoteItem) => it.has_part !== false
   const failMsg = (msg: string): [string, number] =>
     msg === "NO_KEY"
       ? ["분석 기능을 준비 중이에요.", 503]
@@ -83,9 +85,9 @@ export async function POST(req: NextRequest) {
       async start(ctl) {
         const send = (o: unknown) => ctl.enqueue(enc.encode(JSON.stringify(o) + "\n"))
         try {
-          const result = await streamQuoteImage(image, mediaType, prompt, (it) => send({ t: "item", item: enrich(it) }))
+          const result = await streamQuoteImage(image, mediaType, prompt, (it) => it.has_part !== false && send({ t: "item", item: enrich(it) }))
           if (!result.readable) await refundQuote(counters)
-          send({ t: "done", result: { ...result, items: result.items.map(enrich) } })
+          send({ t: "done", result: { ...result, items: result.items.filter(isPart).map(enrich) } })
         } catch (e) {
           const msg = e instanceof Error ? e.message : String(e)
           console.error("[quote:stream]", msg.slice(0, 200))
@@ -102,7 +104,7 @@ export async function POST(req: NextRequest) {
   try {
     const result = await analyzeQuoteImage(image, mediaType, prompt)
     if (!result.readable) await refundQuote(counters)
-    return NextResponse.json({ ...result, items: result.items.map(enrich) })
+    return NextResponse.json({ ...result, items: result.items.filter(isPart).map(enrich) })
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
     console.error("[quote]", msg.slice(0, 200))

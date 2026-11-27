@@ -14,6 +14,8 @@ export type QuoteVerdict = "gongim" | "center" | "ask"
 export interface QuoteItem {
   name: string
   kind: "done" | "recommended" | "inspection"
+  /** 사거나 바꾸는 부품(오일·액 포함)이 있는 항목인가. false(점검·클리닝·탈부착만)면 화면에서 뺀다 */
+  has_part: boolean
   parts_price: number | null
   labor_price: number | null
   verdict: QuoteVerdict
@@ -44,13 +46,14 @@ const ITEM_SCHEMA = {
   properties: {
     name: { type: "string" },
     kind: { type: "string", enum: ["done", "recommended", "inspection"] },
+    has_part: { type: "boolean" },
     parts_price: { type: ["integer", "null"] },
     labor_price: { type: ["integer", "null"] },
     verdict: { type: "string", enum: ["gongim", "center", "ask"] },
     reason: { type: "string" },
     match_part_id: { type: ["string", "null"] },
   },
-  required: ["name", "kind", "parts_price", "labor_price", "verdict", "reason", "match_part_id"],
+  required: ["name", "kind", "has_part", "parts_price", "labor_price", "verdict", "reason", "match_part_id"],
   additionalProperties: false,
 }
 
@@ -108,6 +111,7 @@ export function buildQuotePrompt(car: CompatCar, parts: QuoteCarPart[], year?: n
 1. 사진의 정비 항목을 빠짐없이 읽는다. 표의 작업 내용뿐 아니라 '기술자 소견'·'권고'처럼 다음에 하라고 적힌 항목도 각각 하나의 항목으로 나눈다.
    점검 결과 줄(예: '배터리 점검 — 불량')과 권고·견적 줄(예: '배터리 교체 — 부품 165,000원')은 같은 부품이라도 합치지 말고 따로 쓴다. 이름은 사진에 적힌 대로(교체·교환 같은 말 포함).
 2. kind: 이미 한 작업은 done, 앞으로 하라고 권한 항목은 recommended, 점검만 한 항목은 inspection.
+   has_part: 사거나 바꾸는 부품(오일·액·필터 포함)이 있는 항목이면 true. 점검·안심점검·진단·클리닝·세척·탈부착·정조립·조정·공임만 있는 항목은 false (예: '7년차 안심점검' false, '연료펌프어셈블리 및 세척' true).
 3. parts_price·labor_price: 그 항목 줄에 적힌 금액만 정수로. 적혀 있지 않거나 0이면 null. 금액을 지어내지 않는다.
 4. verdict
    - gongim: 부품을 직접 사서 공임나라 같은 일반 정비소에 교체만 맡기기 쉬운 소모품·정비 (엔진오일·필터·와이퍼·배터리·브레이크 패드/디스크/액·점화플러그·냉각수·미션오일·벨트·쇼크업소버·하부 암 같은 볼트 체결 부품 등)

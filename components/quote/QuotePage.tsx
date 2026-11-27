@@ -383,14 +383,15 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
         <section aria-live="polite">
           {/* 맨 위: 사 갈 부품 수와 부품값 */}
           <div className="rounded-2xl bg-[#14213D] px-4 py-5 text-white">
-            <p className="text-[12px] text-white/55">{[result.shop, car?.name].filter(Boolean).join(" · ")}</p>
+            <p className="text-[12px] text-white/55">{[result.shop !== "알 수 없음" && result.shop, car?.name].filter(Boolean).join(" · ")}</p>
             {finding ? (
               <p className="mt-2 text-[20px] font-extrabold leading-snug">쿠팡에서 부품 찾는 중…</p>
             ) : calc.length > 0 && saved > 0 ? (
               <>
                 <p className="num mt-2 text-[24px] font-extrabold leading-snug">약 {won(saved)} 아낄 수 있어요</p>
-                <p className="num mt-1 text-[14px] text-white/75">
-                  {calc.length}개 항목 {byCenter ? "센터(추정)" : "견적"} {won(quotedSum)} → 부품 사 가면 약 {won(mineSum)}
+                <p className="num mt-1 text-[14px] leading-relaxed text-white/75">
+                  {calc.length}개 항목 {byCenter ? "센터(추정)" : "견적"} <span className="whitespace-nowrap">{won(quotedSum)}</span>
+                  <br />→ 부품 사 가면 약 <span className="whitespace-nowrap">{won(mineSum)}</span>
                 </p>
               </>
             ) : calc.length > 0 ? (
