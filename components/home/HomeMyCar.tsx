@@ -142,19 +142,8 @@ function NextCard({ my, skipped, onSave, onSkip }: { my: MyCar; skipped: string[
     )
   }
 
-  if (a.type === "ok") {
-    return (
-      <div className="mt-4 rounded-2xl border border-border bg-card p-4">
-        <p className="text-[16px] font-bold">지금 갈아야 할 부품은 없어요</p>
-        {a.due && (
-          <p className="mt-1 text-[14px] text-muted-foreground">
-            다음은 <b className="text-foreground">{a.due.part.name}</b> · {a.due.text}
-          </p>
-        )}
-        <Link href="/my" className="mt-3 inline-flex min-h-[40px] items-center text-[13px] font-semibold text-primary">교체 기록 전체 보기 ›</Link>
-      </div>
-    )
-  }
+  // 지금 갈 부품이 없으면 카드를 안 보여 줌 (다음 교체 일정은 마이에서)
+  if (a.type === "ok") return null
 
   // buy: 가장 급한 부품을 바로 살 수 있게
   return <BuyCard my={my} due={a.due} more={a.urgent.length - 1} onSave={onSave} />
