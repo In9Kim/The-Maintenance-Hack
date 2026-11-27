@@ -62,6 +62,7 @@ export async function POST(req: NextRequest) {
         slug: partSlug(car, part),
         name: part.name,
         self: c.self,
+        labor: part.laborCost,
         dealer: c.dealer,
         shop: pick ? { name: pick.name, price: pick.price, url: pick.url, image: pick.image, date: pick.checkedAt } : null,
       },

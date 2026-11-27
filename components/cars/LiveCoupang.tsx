@@ -35,7 +35,7 @@ export function LiveCoupang({ carId, part, q, partId, emptyText, compact = false
     setFailed(false)
     fetch(`/api/coupang-search?${new URLSearchParams(part ? { carId, part } : { carId, q: q ?? "" })}`)
       .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((j: { items?: Item[] }) => alive && setItems((j.items ?? []).slice(0, 3)))
+      .then((j: { items?: Item[] }) => alive && setItems((j.items ?? []).slice(0, 3).sort((a, b) => a.price - b.price)))
       .catch(() => alive && setFailed(true))
     return () => {
       alive = false

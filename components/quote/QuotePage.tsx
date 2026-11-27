@@ -28,7 +28,7 @@ interface Item {
   labor_price: number | null
   verdict: "gongim" | "center" | "ask"
   reason: string
-  ours?: { slug: string; name: string; self: number; dealer: number; shop: { name: string; price: number; url: string; image?: string; date: string } | null }
+  ours?: { slug: string; name: string; self: number; labor?: number; dealer: number; shop: { name: string; price: number; url: string; image?: string; date: string } | null }
 }
 interface Result {
   readable: boolean
@@ -219,7 +219,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
     for (const [i, qs] of jobs)
       fetch(`/api/coupang-search?${qs}`)
         .then((r) => (r.ok ? r.json() : { items: [] }))
-        .then((j: { items?: Prod[] }) => alive && setProds((p) => ({ ...p, [i]: (j.items ?? []).filter((x) => fitsEngine(x.name, engine || undefined)).slice(0, 2) })))
+        .then((j: { items?: Prod[] }) => alive && setProds((p) => ({ ...p, [i]: (j.items ?? []).filter((x) => fitsEngine(x.name, engine || undefined)).slice(0, 2).sort((a, b) => a.price - b.price) })))
         .catch(() => alive && setProds((p) => ({ ...p, [i]: [] })))
     return () => {
       alive = false
@@ -233,6 +233,15 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   const buy = gongim.filter((x) => (prods[x.i]?.length ?? 0) > 0)
   const low = (i: number) => prods[i]?.[0]?.price ?? 0
   const partsSum = buy.reduce((s, x) => s + low(x.i), 0)
+  // 아낄 돈: 견적서 금액과 공임나라 공임을 알 수 있는 항목만 (견적 − 쿠팡 부품값 − 공임나라 공임)
+  const quoted = (it: Item) => (it.parts_price ?? 0) + (it.labor_price ?? 0)
+  // 견적서에 금액이 없으면 공식센터 추정가로
+  const base = (it: Item) => quoted(it) || it.ours?.dealer || 0
+  const calc = buy.filter((x) => base(x.it) > 0 && (x.it.ours?.labor ?? 0) > 0)
+  const byCenter = calc.some((x) => !quoted(x.it))
+  const quotedSum = calc.reduce((s, x) => s + base(x.it), 0)
+  const mineSum = calc.reduce((s, x) => s + low(x.i) + (x.it.ours?.labor ?? 0), 0)
+  const saved = quotedSum - mineSum
   // 나머지: 상품 없는 공임나라 항목 → 정비소 문의 → 센터 순
   const order = (it: Item) => (it.verdict === "gongim" ? 0 : it.verdict === "ask" ? 1 : 2)
   const rest = all.filter((x) => x.it.verdict !== "gongim" || (!finding && !prods[x.i]?.length)).sort((a, b) => order(a.it) - order(b.it))
@@ -251,6 +260,13 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
         </button>
         {on && car && (
           <div className="pb-3">
+            {base(it) > 0 && (it.ours?.labor ?? 0) > 0 ? (
+              <p className="num mb-2 text-[13px] text-muted-foreground">
+                {quoted(it) ? "견적" : "센터(추정)"} {won(base(it))} → 부품 {won(low(i))} + 공임나라 공임 약 {won(it.ours!.labor!)}
+              </p>
+            ) : (
+              <p className="mb-2 text-[13px] text-muted-foreground">공임은 정비소에 물어보세요.</p>
+            )}
             <ul className="divide-y divide-border rounded-[10px] border border-border bg-card">
               {ps.map((p) => (
                 <li key={p.productId}>
@@ -370,6 +386,18 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
             <p className="text-[12px] text-white/55">{[result.shop, car?.name].filter(Boolean).join(" · ")}</p>
             {finding ? (
               <p className="mt-2 text-[20px] font-extrabold leading-snug">쿠팡에서 부품 찾는 중…</p>
+            ) : calc.length > 0 && saved > 0 ? (
+              <>
+                <p className="num mt-2 text-[24px] font-extrabold leading-snug">약 {won(saved)} 아낄 수 있어요</p>
+                <p className="num mt-1 text-[14px] text-white/75">
+                  {calc.length}개 항목 {byCenter ? "센터(추정)" : "견적"} {won(quotedSum)} → 부품 사 가면 약 {won(mineSum)}
+                </p>
+              </>
+            ) : calc.length > 0 ? (
+              <>
+                <p className="mt-2 text-[20px] font-extrabold leading-snug">이 견적서는 이미 싼 편이에요</p>
+                <p className="num mt-1 text-[14px] text-white/75">부품을 사 가도 약 {won(mineSum)}이라 차이가 거의 없어요</p>
+              </>
             ) : buy.length > 0 ? (
               <>
                 <p className="mt-2 text-[20px] font-extrabold leading-snug">{buy.length}개는 부품을 사 가면 돼요</p>
@@ -388,7 +416,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
                 <Group
                   title="사 갈 부품"
                   count={buy.length}
-                  tip="쿠팡에서 사서 공임나라 같은 일반 정비소에 가져가면 공임만 내고 바꿀 수 있어요. 가격은 맨 위 상품 기준이에요. 부품을 받아 주는지·공임은 지점마다 달라서 가기 전에 전화로 확인하세요."
+                  tip="쿠팡에서 사서 공임나라 같은 일반 정비소에 가져가면 공임만 내고 바꿀 수 있어요. 가격은 맨 위 상품 기준이에요. 아낄 돈은 견적 금액(적혀 있지 않으면 공식센터 추정가)에서 쿠팡 부품값과 공임나라 공임(추정)을 뺀 값이에요. 부품을 받아 주는지·공임은 지점마다 달라서 가기 전에 전화로 확인하세요."
                 >
                   {buy.map(({ it, i }) => buyRow(it, i))}
                 </Group>

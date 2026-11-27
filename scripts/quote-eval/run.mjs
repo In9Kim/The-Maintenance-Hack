@@ -84,7 +84,10 @@ function grade(c, r, raw) {
   const used = new Set()
   for (const t of c.items) {
     const re = new RegExp(t.kw)
-    const i = r.items.findIndex((x, k) => !used.has(k) && re.test(x.name))
+    // 같은 낱말이 점검 줄과 권고 줄에 다 있으면 정답 종류(kind)와 같은 줄을 먼저
+    const free = (x, k) => !used.has(k) && re.test(x.name)
+    let i = r.items.findIndex((x, k) => free(x, k) && t.kind.includes(x.kind))
+    if (i < 0) i = r.items.findIndex(free)
     if (i < 0) {
       s.miss.push(t.kw)
       continue

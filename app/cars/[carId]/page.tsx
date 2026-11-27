@@ -21,9 +21,7 @@ import { GuideLinks } from "@/components/cars/GuideLinks"
 import { EngineTabs } from "@/components/cars/EngineTabs"
 import { recallsForCar } from "@/lib/recalls/data"
 import { engineGroups } from "@/lib/engines"
-import { coupangChoicesFor, naverShoppingFor } from "@/lib/coupang-links"
-import { NaverCompareLink } from "@/components/cars/NaverCompareLink"
-import { CoupangPickCard } from "@/components/cars/CoupangPickCard"
+import { coupangChoicesFor } from "@/lib/coupang-links"
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { CarDiagram } from "@/components/cars/CarDiagram"
 import { diagramFor } from "@/lib/diagram-data"
@@ -42,31 +40,21 @@ function totalsOf(parts: MaintenancePart[]) {
   )
 }
 
-/** 규격 아래 쿠팡 링크 — 규격 확인 상품(있으면) → 규격·차종 검색 (lib/coupang-links.ts) */
+/** 펼친 안쪽의 쿠팡 버튼 하나 — 골라 둔 상품이 있으면 그 상품, 없으면 규격·차종 검색 (lib/coupang-links.ts) */
 function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
-  const links = coupangChoicesFor(part)
-  if (!links.length) return null
+  const link = coupangChoicesFor(part)[0]
+  if (!link) return null
   return (
-    <div className="mt-1.5 space-y-1">
-      {links.map((l) =>
-        l.kind === "pick" ? (
-          <CoupangPickCard key={l.url} pick={l} carId={car.id} partId={part.id} compact />
-        ) : (
-        <OutboundLink
-          key={l.url}
-          href={l.url}
-          target="coupang"
-          carId={car.id}
-          partId={part.id}
-          sponsored
-          className="mr-2 mt-1 inline-flex h-9 items-center rounded-[8px] bg-primary px-3.5 text-[13px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px"
-        >
-          {l.title.startsWith("다른") ? "다른 상품 보기" : "쿠팡 가격 보기"}
-        </OutboundLink>
-        )
-      )}
-      {naverShoppingFor(part) && <NaverCompareLink url={naverShoppingFor(part)!.url} carId={car.id} partId={part.id} />}
-    </div>
+    <OutboundLink
+      href={link.url}
+      target="coupang"
+      carId={car.id}
+      partId={part.id}
+      sponsored
+      className="mt-2 flex h-11 items-center justify-center rounded-[10px] bg-primary text-[14px] font-bold text-primary-foreground"
+    >
+      쿠팡에서 보기
+    </OutboundLink>
   )
 }
 
@@ -100,8 +88,7 @@ function PartsList({ car, parts }: { car: CarModel; parts: MaintenancePart[] }) 
                   <span aria-hidden className="shrink-0 text-[16px] text-muted-foreground transition-transform group-open:rotate-90">›</span>
                 </summary>
                 <div className="px-4 pb-4 text-[13px] leading-relaxed text-muted-foreground">
-                  <p>{part.spec}</p>
-                  {part.partNumber && <p>순정 품번 {part.partNumber}</p>}
+                  <p>규격 {part.spec}{part.partNumber ? ` · 순정 품번 ${part.partNumber}` : ""}</p>
                   <SpecLinks car={car} part={part} />
                   <Link href={`/cars/${car.id}/${partSlug(car, part)}`} className="mt-1 inline-flex min-h-[40px] items-center font-semibold text-foreground">
                     규격·교체 방법 자세히 ›

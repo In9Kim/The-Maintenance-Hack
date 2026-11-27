@@ -96,7 +96,7 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
         .then((j: { items?: Item[] }) => {
           const got = (j.items ?? []).filter((x) => (!pick || x.url !== pick.url) && fitsEngine(x.name, engine || (car.engines.length === 1 ? car.engines[0] : undefined)))
           const list = pick ? [{ productId: -1, name: pick.name, price: pick.price, url: pick.url, image: pick.image, rocket: false }, ...got] : got
-          if (alive) setFound((f) => ({ ...f, [p.slug]: list.slice(0, 3) }))
+          if (alive) setFound((f) => ({ ...f, [p.slug]: list.slice(0, 3).sort((a, b) => a.price - b.price) }))
         })
     }
     return () => {
