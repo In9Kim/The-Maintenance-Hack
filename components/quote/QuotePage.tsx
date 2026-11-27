@@ -4,10 +4,9 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { loadMyCar } from "@/lib/my-car"
-import { OutboundLink } from "@/components/seo/OutboundLink"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
-import { LiveCoupang } from "@/components/cars/LiveCoupang"
+import { LiveCoupang, ProductRow } from "@/components/cars/LiveCoupang"
 import { needsSpecCheck, quoteSearchWord } from "@/lib/quote-analyze"
 import { useAuthToken } from "@/components/my/useAuthToken"
 import { LoginButtons } from "@/components/my/LoginButtons"
@@ -244,37 +243,29 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
         {on && (
           <div className="pb-3 text-[13px] leading-relaxed text-muted-foreground">
             <p>{it.reason}</p>
-            {quoted > 0 && <p className="num mt-1">견적 금액 {won(quoted)}</p>}
-            {isG && it.ours && car && (
-              <div className="mt-2 rounded-[10px] bg-muted px-3 py-2.5 text-foreground">
-                <p className="num">
-                  공식센터(추정) <span className="price-was">{won(it.ours.dealer)}</span> → 직접 구매+공임나라 <b className="text-primary">{won(it.ours.self)}</b>
-                </p>
-                {it.ours.shop ? (
-                  <>
-                    <OutboundLink href={it.ours.shop.url} target="coupang" carId={car.id} partId={it.ours.slug} sponsored className="mt-2 flex items-center gap-3 rounded-[8px] bg-card p-2">
-                      {it.ours.shop.image && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={it.ours.shop.image} alt="" width={44} height={44} loading="lazy" className="h-11 w-11 shrink-0 rounded-md bg-white object-contain ring-1 ring-border" />
-                      )}
-                      <span className="line-clamp-2 min-w-0 flex-1 text-[12px] leading-snug">{it.ours.shop.name}</span>
-                      <span className="num shrink-0 text-[14px] font-bold text-primary">{won(it.ours.shop.price)}</span>
-                    </OutboundLink>
-                    <p className="mt-1.5 text-[11px] text-muted-foreground">{AFFILIATE_TEXT}</p>
-                  </>
-                ) : (
-                  <Link href={`/cars/${car.id}/${it.ours.slug}`} className="mt-1 inline-flex min-h-[36px] items-center font-semibold text-primary">
-                    맞는 부품·가격 보기 ›
-                  </Link>
-                )}
-              </div>
+            {isG && it.ours ? (
+              <p className="num mt-1">
+                센터 추정 <span className="price-was">{won(it.ours.dealer)}</span> → 공임나라 <b className="text-foreground">{won(it.ours.self)}</b>
+              </p>
+            ) : (
+              quoted > 0 && <p className="num mt-1">견적 {won(quoted)}</p>
             )}
-            {isG && !it.ours && needsSpecCheck(it.name) && (
-              <p className="mt-2 rounded-[10px] bg-muted px-3 py-2.5 text-foreground">미션 종류마다 오일 규격이 달라요. 오일까지 공임나라에 맡기는 게 안전해요.</p>
-            )}
-            {isG && !it.ours && !needsSpecCheck(it.name) && car && word.length >= 2 && (
+            {isG && car && (
               <div className="mt-2">
-                <LiveCoupang carId={car.id} q={word} partId={`quote-${word}`} emptyText="쿠팡엔 이 차에 맞는 상품이 없어요. 공임나라에 부품도 구해 달라고 해 보세요." />
+                {it.ours?.shop ? (
+                  <>
+                    <div className="rounded-[10px] border border-border bg-card">
+                      <ProductRow href={it.ours.shop.url} carId={car.id} partId={it.ours.slug} name={it.ours.shop.name} price={it.ours.shop.price} image={it.ours.shop.image} />
+                    </div>
+                    <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">{AFFILIATE_TEXT}</p>
+                  </>
+                ) : it.ours ? (
+                  <LiveCoupang compact carId={car.id} part={it.ours.slug} partId={it.ours.slug} emptyText="쿠팡엔 이 차에 맞는 상품이 없어요. 공임나라에 부품도 구해 달라고 해 보세요." />
+                ) : needsSpecCheck(it.name) ? (
+                  <p className="rounded-[10px] bg-muted px-3 py-2.5 text-foreground">미션 종류마다 오일 규격이 달라요. 오일까지 공임나라에 맡기는 게 안전해요.</p>
+                ) : word.length >= 2 ? (
+                  <LiveCoupang compact carId={car.id} q={word} partId={`quote-${word}`} emptyText="쿠팡엔 이 차에 맞는 상품이 없어요. 공임나라에 부품도 구해 달라고 해 보세요." />
+                ) : null}
               </div>
             )}
           </div>
