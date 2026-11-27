@@ -101,3 +101,18 @@ html[data-car] .home-guest {
 html:not([data-car]) .home-mine {
   display: none;
 }
+
+/* 견적서 분석 중: 사진 위를 위아래로 훑는 빛 + 찾은 항목이 살짝 떠오름 (components/quote/QuotePage.tsx) */
+@keyframes mh-scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(260px); }
+}
+.mh-scan { animation: mh-scan 1.6s ease-in-out infinite alternate; }
+@keyframes mh-pop {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.mh-pop { animation: mh-pop 0.25s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .mh-scan, .mh-pop { animation: none; }
+}

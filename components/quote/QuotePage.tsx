@@ -96,6 +96,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   const [result, setResult] = useState<Result | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const [elapsed, setElapsed] = useState(0)
+  const [live, setLive] = useState<Item[]>([]) // 분석 중 받는 대로 보여 줄 항목
   const [openShop, setOpenShop] = useState<number[]>([])
   // 로그인 없이 하루 1번, 로그인하면 하루 3번. undefined = 로그인 확인 중
   const { token, setToken, providers } = useAuthToken()
@@ -136,33 +137,67 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
     }
   }
 
+  const finish = (res: Result) => {
+    if (!res.readable) {
+      setError("견적서·점검내역을 읽지 못했어요. 표가 화면에 꽉 차게, 글자가 선명하게 다시 찍어 주세요.")
+      return
+    }
+    setResult(res)
+    // 결과까지 본 사람 수와 아낄 수 있다고 나온 항목 수 (사용성 확인용, 견적 내용은 보내지 않음)
+    track({ type: "report", carId: car!.id, meta: { via: "quote_result", items: res.items.length, gongim: res.items.filter((i) => i.verdict === "gongim").length, login: !!token } })
+    setPreview(null) // 결과가 나오면 사진은 화면에서도 지움
+  }
+
   const analyze = async () => {
     if (!car || !preview) return
     setBusy(true)
     setError("")
+    setLive([])
     track({ type: "report", carId: car.id, meta: { via: "quote_submit" } })
     try {
       const r = await fetch("/api/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        body: JSON.stringify({ carId: car.id, year: year ? Number(year) : undefined, engine: engine || undefined, image: preview, mediaType: "image/jpeg", device: deviceId() }),
+        body: JSON.stringify({ carId: car.id, year: year ? Number(year) : undefined, engine: engine || undefined, image: preview, mediaType: "image/jpeg", device: deviceId(), stream: true }),
       })
+      // 받는 대로(한 줄에 하나): 항목이 완성될 때마다 화면에 추가
+      if (r.ok && r.body && (r.headers.get("content-type") ?? "").includes("ndjson")) {
+        const reader = r.body.getReader()
+        const dec = new TextDecoder()
+        let buf = ""
+        let ended = false
+        for (;;) {
+          const { done, value } = await reader.read()
+          if (done) break
+          buf += dec.decode(value, { stream: true })
+          const lines = buf.split("\n")
+          buf = lines.pop() ?? ""
+          for (const line of lines) {
+            if (!line.trim()) continue
+            const ev = JSON.parse(line) as { t: "item"; item: Item } | { t: "done"; result: Result } | { t: "error"; error: string }
+            if (ev.t === "item") setLive((l) => [...l, ev.item])
+            else if (ev.t === "done") {
+              ended = true
+              finish(ev.result)
+            } else {
+              ended = true
+              setError(ev.error)
+            }
+          }
+        }
+        if (!ended) setError("분석이 중간에 끊겼어요. 다시 시도해 주세요.")
+        return
+      }
       const j = await r.json()
       if (r.status === 401) setToken(null)
       setNeedLogin(!!j.login && !token)
       if (!r.ok) setError(j.error ?? "분석하지 못했어요.")
-      else if (!j.readable) setError("견적서·점검내역을 읽지 못했어요. 표가 화면에 꽉 차게, 글자가 선명하게 다시 찍어 주세요.")
-      else {
-        const res = j as Result
-        setResult(res)
-        // 결과까지 본 사람 수와 아낄 수 있다고 나온 항목 수 (사용성 확인용, 견적 내용은 보내지 않음)
-        track({ type: "report", carId: car.id, meta: { via: "quote_result", items: res.items.length, gongim: res.items.filter((i) => i.verdict === "gongim").length, login: !!token } })
-        setPreview(null) // 결과가 나오면 사진은 화면에서도 지움
-      }
+      else finish(j as Result)
     } catch {
       setError("인터넷 연결을 확인하고 다시 시도해 주세요.")
     } finally {
       setBusy(false)
+      setLive([])
     }
   }
 
@@ -227,6 +262,10 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
               </InfoTip>
             </p>
             <input ref={fileRef} type="file" accept="image/*" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} />
+            {busy && preview ? (
+              <Analyzing preview={preview} sec={elapsed} items={live} />
+            ) : (
+            <>
             {preview ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={preview} alt="올린 견적서" className="mt-3 max-h-[320px] w-full rounded-[10px] bg-muted object-contain" />
@@ -243,7 +282,8 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
             >
               {busy ? "분석 중…" : !car ? "차종을 먼저 골라 주세요" : !preview ? "사진을 먼저 올려 주세요" : "공임나라로 아낄 수 있는 것 찾기"}
             </button>
-            {busy && <Progress sec={elapsed} />}
+            </>
+            )}
             {error && <p role="alert" className="mt-3 rounded-[10px] bg-[#FEF3F2] px-3.5 py-2.5 text-[14px] text-[#B42318]">{error}</p>}
             {needLogin && token === null && (
               <div className="mt-3 rounded-[12px] bg-muted p-3.5">
@@ -377,33 +417,45 @@ function PhotoExamples() {
   )
 }
 
-/** 분석 진행 단계 (실제 단계를 받는 게 아니라 경과 시간으로 보여 줌). Haiku 기준 보통 10초 안팎 (2026-11-27 운영 측정 9.4초) */
-const STEPS = [
-  { at: 0, text: "사진 보내는 중" },
-  { at: 2, text: "견적서 글자 읽는 중" },
-  { at: 5, text: "항목을 하나씩 나누는 중" },
-  { at: 8, text: "공임나라로 할 수 있는지 판단하는 중" },
-  { at: 13, text: "거의 다 됐어요" },
-]
+/** 분석 중 화면: 올린 사진 위에 스캔 효과 + 큰 게이지 + 찾은 항목이 하나씩 나타남.
+ *  게이지는 경과 시간(Haiku 보통 10초 안팎, 2026-11-27 운영 측정 9.4초)과 실제로 받은 항목 수 중 큰 쪽 */
 const EXPECT = 12
-function Progress({ sec }: { sec: number }) {
-  const cur = STEPS.filter((s) => sec >= s.at).length - 1
-  // 예상 시간까지 빠르게 차고, 넘으면 95%까지 천천히
-  const pct = Math.min(95, sec <= EXPECT ? Math.round((sec / EXPECT) * 85) : 85 + Math.round((sec - EXPECT) / 2))
+function stepText(sec: number, found: number) {
+  if (found > 0) return `항목 ${found}개 찾았어요 · 계속 읽는 중`
+  if (sec < 2) return "사진 보내는 중"
+  if (sec < 5) return "견적서 글자 읽는 중"
+  return "항목을 하나씩 나누는 중"
+}
+function Analyzing({ preview, sec, items }: { preview: string; sec: number; items: Item[] }) {
+  const timePct = sec <= EXPECT ? (sec / EXPECT) * 80 : 80 + (sec - EXPECT) / 2
+  const pct = Math.round(Math.min(95, Math.max(timePct, items.length ? 35 + items.length * 9 : 0)))
   return (
-    <div className="mt-3 rounded-[12px] bg-muted p-3.5" aria-live="polite">
-      <div className="h-1.5 overflow-hidden rounded-full bg-border">
-        <div className="h-full rounded-full bg-primary transition-[width] duration-1000" style={{ width: `${pct}%` }} />
+    <div className="mt-3" aria-live="polite" aria-busy="true">
+      <div className="relative overflow-hidden rounded-[12px] bg-[#14213D]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={preview} alt="" className="max-h-[220px] w-full object-contain opacity-45" />
+        <div aria-hidden className="mh-scan absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-transparent via-[#75E0A7]/35 to-transparent motion-reduce:hidden" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+          <span className="num text-[44px] font-extrabold leading-none">{pct}%</span>
+          <span className="mt-2 text-[14px] font-semibold">{stepText(sec, items.length)}</span>
+        </div>
       </div>
-      <ul className="mt-3 space-y-1">
-        {STEPS.map((s, i) => (
-          <li key={s.text} className={`text-[13px] ${i < cur ? "text-muted-foreground line-through" : i === cur ? "font-bold" : "text-muted-foreground/60"}`}>
-            {i < cur ? "✓ " : i === cur ? "• " : "  "}
-            {s.text}
-          </li>
-        ))}
-      </ul>
-      <p className="num mt-2 text-[12px] text-muted-foreground">{sec}초 · 보통 10초 안팎이에요</p>
+      <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
+        <div className="h-full rounded-full bg-primary transition-[width] duration-700 ease-out" style={{ width: `${pct}%` }} />
+      </div>
+      {items.length > 0 && (
+        <ul className="mt-3 space-y-1.5">
+          {items.map((it, i) => {
+            const v = VERDICT[it.verdict] ?? VERDICT.ask
+            return (
+              <li key={i} className="mh-pop flex items-center justify-between gap-2 rounded-[10px] border border-border bg-background px-3 py-2">
+                <span className="min-w-0 truncate text-[14px] font-semibold">{it.name}</span>
+                <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${v.cls}`}>{v.label}</span>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </div>
   )
 }

@@ -154,3 +154,66 @@ export async function analyzeQuoteImage(base64: string, mediaType: string, promp
   const text = (data.content ?? []).filter((c) => c.type === "text").map((c) => c.text ?? "").join("")
   return JSON.parse(text) as QuoteResult
 }
+
+/**
+ * analyzeQuoteImage와 같지만 받는 대로(스트리밍): 항목이 하나 완성될 때마다 onItem, 끝나면 전체 결과.
+ * 화면이 10초 동안 멈춰 있지 않고 첫 항목이 몇 초 만에 보이게 하려고 (lib/quote-stream.ts).
+ */
+export async function streamQuoteImage(
+  base64: string,
+  mediaType: string,
+  prompt: string,
+  onItem: (item: QuoteItem) => void,
+  lean = false,
+): Promise<QuoteResult> {
+  const { ItemExtractor, parseSse } = await import("@/lib/quote-stream")
+  const key = process.env.ANTHROPIC_API_KEY
+  if (!key) throw new Error("NO_KEY")
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": key,
+      "anthropic-version": "2023-06-01",
+      ...(lean ? {} : { "anthropic-beta": "server-side-fallback-2026-07-01" }),
+    },
+    signal: AbortSignal.timeout(90_000),
+    body: JSON.stringify({
+      model: QUOTE_MODEL,
+      max_tokens: 16000,
+      stream: true,
+      ...(lean ? {} : { fallbacks: "default" }),
+      output_config: { ...(lean ? {} : { effort: "medium" }), format: { type: "json_schema", schema: QUOTE_SCHEMA } },
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "image", source: { type: "base64", media_type: mediaType, data: base64 } },
+            { type: "text", text: prompt },
+          ],
+        },
+      ],
+    }),
+  })
+  if (!res.ok || !res.body) {
+    const body = await res.text().catch(() => "")
+    if (!lean && res.status === 400 && /effort|fallback|beta/i.test(body)) return streamQuoteImage(base64, mediaType, prompt, onItem, true)
+    throw new Error(`HTTP ${res.status} ${body.slice(0, 300)}`)
+  }
+  const ex = new ItemExtractor<QuoteItem>()
+  const reader = res.body.getReader()
+  const dec = new TextDecoder()
+  let buf = ""
+  let stop: string | undefined
+  for (;;) {
+    const { done, value } = await reader.read()
+    if (done) break
+    const r = parseSse(buf + dec.decode(value, { stream: true }))
+    buf = r.rest
+    if (r.stop) stop = r.stop
+    for (const t of r.texts) for (const it of ex.push(t)) onItem(it)
+  }
+  if (stop === "refusal") throw new Error("REFUSAL")
+  if (stop === "error") throw new Error("STREAM_ERROR")
+  return JSON.parse(ex.full) as QuoteResult
+}
