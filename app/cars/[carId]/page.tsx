@@ -78,7 +78,7 @@ function PartsList({ car, parts }: { car: CarModel; parts: MaintenancePart[] }) 
   return (
     <div className="overflow-hidden rounded-[14px] border border-border bg-card">
       <p className="border-b border-border bg-muted px-4 py-2 text-[12px] text-muted-foreground">
-        <b className="text-primary">초록</b> 부품 사서 공임나라 · <span className="line-through">회색</span> 공식센터(추정)
+        <b className="text-primary">초록 가격</b>은 부품 사서 공임나라에 맡길 때, <b>센터</b>는 공식센터 가격이에요 (둘 다 추정)
       </p>
       <ul className="divide-y divide-border">
         {parts.map((part) => {
@@ -95,7 +95,7 @@ function PartsList({ car, parts }: { car: CarModel; parts: MaintenancePart[] }) 
                   </span>
                   <span className="num shrink-0 text-right">
                     <span className="block text-[15px] font-bold text-primary">{formatPrice(c.self)}</span>
-                    <span className="price-was block text-[12px] text-muted-foreground">{formatPrice(c.dealer)}</span>
+                    <span className="block text-[12px] text-muted-foreground">센터 {formatPrice(c.dealer)}</span>
                   </span>
                   <span aria-hidden className="shrink-0 text-[16px] text-muted-foreground transition-transform group-open:rotate-90">›</span>
                 </summary>

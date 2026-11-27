@@ -21,8 +21,7 @@ import { authEnabled, enabledProviders, supabase, type Provider } from "@/lib/su
 import { deleteCloudCar, fetchCars, fromRow, mergeGarage, pushCars } from "@/lib/cloud-garage"
 import { track } from "@/lib/track"
 import { LoginButtons, takeAfterLogin } from "@/components/my/LoginButtons"
-import { OutboundLink } from "@/components/seo/OutboundLink"
-import { AFFILIATE_TEXT } from "@/lib/affiliate"
+import { LiveCoupang } from "@/components/cars/LiveCoupang"
 
 export type { MyCarOption }
 
@@ -388,31 +387,18 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
                 <PartIcon name={d.part.name} size={36} />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[15px] font-semibold">{d.part.name}</span>
-                  <span className="num block truncate text-[13px] text-muted-foreground">
-                    {d.part.shop ? (
-                      <span onClick={(e) => e.stopPropagation()}>
-                      <OutboundLink
-                        href={d.part.shop.url}
-                        target="coupang"
-                        carId={my.car.id}
-                        partId={d.part.slug}
-                        sponsored
-                        className="font-bold text-primary"
-                      >
-                        쿠팡 {d.part.shop.price.toLocaleString("ko-KR")}원 ›
-                      </OutboundLink>
-                      </span>
-                    ) : d.part.price ? (
-                      <>예상 {d.part.price.toLocaleString("ko-KR")}원</>
-                    ) : null}
-                    {d.record && <> · {d.record.date.slice(2).replace(/-/g, ".")} 교체</>}
-                  </span>
+                  {d.record && <span className="num block truncate text-[13px] text-muted-foreground">{d.record.date.slice(2).replace(/-/g, ".")} 교체</span>}
                 </span>
                 {d.record && <span className={`shrink-0 rounded-full px-2.5 py-1 text-[12px] font-semibold ${st.cls}`}>{d.text}</span>}
                 <span aria-hidden className={`shrink-0 text-[14px] text-muted-foreground transition ${isOpen ? "rotate-180" : ""}`}>⌄</span>
               </div>
               {isOpen && (
                 <div className="px-4 pb-3">
+                  {!custom && (
+                    <div className="mb-3">
+                      <LiveCoupang carId={my.car.id} part={d.part.slug} partId={d.part.slug} compact emptyText="쿠팡에서 이 차에 맞는 상품을 찾지 못했어요." />
+                    </div>
+                  )}
                   {editing === d.part.slug ? (
                     <RecordForm
                       initial={d.record ?? { date: today(), km: my.km }}
@@ -451,7 +437,6 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
         </button>
       )}
 
-      {list.some((d) => d.part.shop) && <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">{AFFILIATE_TEXT}</p>}
 
       </>
       )}
