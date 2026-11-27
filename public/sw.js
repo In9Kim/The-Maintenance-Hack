@@ -1,7 +1,7 @@
 // 정비핵 서비스 워커: 캐시는 하지 않고, 인터넷이 끊겼을 때 화면 이동만 안내 페이지로 대신한다.
 // (페이지·가격은 항상 새로 받아야 해서 일부러 저장하지 않음)
-const OFFLINE = "/offline.html"
-const CACHE = "mh-offline-v1"
+const OFFLINE = "/offline" // Cloudflare가 /offline.html을 /offline으로 넘겨서 (넘겨진 응답은 화면 이동에 못 씀)
+const CACHE = "mh-offline-v2"
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.add(new Request(OFFLINE, { cache: "reload" }))))
