@@ -1,12 +1,9 @@
 import Link from "next/link";
 import { HomeMyCar } from "@/components/home/HomeMyCar";
 import { QuoteEntry } from "@/components/home/QuoteEntry";
-import { CarPicker, type PickerCar } from "@/components/home/CarPicker";
 import { carShortName, pageMetadata, partSlug, seoCars } from "@/lib/seo";
 import { coupangPickFor } from "@/lib/coupang-links";
 import { carPhoto } from "@/lib/car-photos";
-import { majorRecalls, fmtDate } from "@/lib/recalls/data";
-import { recallCars, splitCritical } from "@/lib/recalls/highlight";
 
 export const metadata = pageMetadata({
   title: "엔진오일 교환비용·공임나라 공임비 계산, 차종별 소모품 가격 | 정비핵",
@@ -20,11 +17,6 @@ const EXAMPLE_CAR = "kia-sorento-mq4";
 
 export default function Home() {
   const cars = seoCars();
-  const pickerCars: PickerCar[] = cars.map((c) => ({
-    id: c.id,
-    brand: c.brand,
-    label: `${c.model} ${c.generation.replace(/\s*\(.*?\)\s*/g, "")} · ${c.yearRange}`,
-  }));
 
   const ex = cars.find((c) => c.id === EXAMPLE_CAR);
   const exEngine = ex?.engineTypes[0];
@@ -35,9 +27,6 @@ export default function Home() {
     .slice(0, 4);
   const exPhoto = ex ? carPhoto(ex.id) : undefined;
 
-  const criticalGroups = splitCritical(majorRecalls(30).groups).critical;
-  const top = criticalGroups[0];
-  const critical = Math.min(criticalGroups.length, 5);
 
   return (
     <div>
@@ -89,28 +78,8 @@ export default function Home() {
         >
           내 차 등록하기
         </Link>
-
-        <div className="mt-10">
-          <CarPicker cars={pickerCars} label="등록 없이 차종만 둘러보기" />
-        </div>
       </section>
 
-      {/* ── 꼭 확인할 리콜: 한 줄 (등록한 사람은 위 빨간 띠로 내 차 리콜만) ── */}
-      {top && (
-        <section className="home-guest mx-auto max-w-xl px-5 pb-8 pt-4">
-          <Link
-            href="/recalls"
-            className="flex items-center gap-3 rounded-[14px] border border-[#FEDF89] bg-[#FFFAEB] px-4 py-3 transition hover:border-[#F79009]"
-          >
-            <span aria-hidden className="shrink-0 rounded-full bg-[#B54708] px-2 py-0.5 text-[12px] font-bold text-white">리콜</span>
-            <span className="min-w-0 flex-1 truncate text-[14px]">
-              <b>{top.makerName} {recallCars(top.recalls[0])}</b>
-              <span className="text-muted-foreground"> · {fmtDate(top.startDate).slice(5)} 시작</span>
-            </span>
-            <span className="shrink-0 text-[13px] font-semibold text-[#B54708]">꼭 확인할 리콜 {critical}건</span>
-          </Link>
-        </section>
-      )}
     </div>
   );
 }
