@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { PartIcon } from "@/components/PartIcon"
 import { loadMyCar } from "@/lib/my-car"
 import { parseProductInput } from "@/lib/compat-request"
 import { track } from "@/lib/track"
@@ -55,6 +56,7 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
   // AI 확인은 로그인한 사람만 (검색·쿠팡 보기는 로그인 없이)
   const { token, setToken, providers } = useAuthToken()
   const [needLogin, setNeedLogin] = useState(false)
+  const boxRef = useRef<HTMLTextAreaElement>(null)
 
   // 등록한 내 차가 있으면 미리 골라 둔다
   useEffect(() => {
@@ -148,16 +150,19 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
       <div className="mt-4 rounded-2xl border border-border bg-card p-4">
       <form onSubmit={submit}>
         <p className="text-[15px] font-bold">사려는 상품을 붙여넣어 주세요</p>
-        <p className="mt-1 text-[13px] text-muted-foreground">쿠팡 앱 상품 화면 → 공유 → 복사 후 눌러 주세요</p>
+        {!product && !result && <HowTo />}
         <button
           type="button"
           onClick={async () => {
+            setError("")
             try {
               const t = (await navigator.clipboard.readText()).trim()
               if (t) setProduct(t)
               else setError("복사한 내용이 없어요. 쿠팡에서 공유 → 복사를 먼저 해 주세요.")
             } catch {
-              setError("붙여넣기를 못 했어요. 아래 칸을 길게 눌러 붙여넣어 주세요.")
+              // 아이폰은 '붙여넣기' 말풍선을 안 누르면 여기로 온다 → 칸에 커서를 두고 길게 눌러 붙여넣게
+              boxRef.current?.focus()
+              setError("아래 칸을 길게 눌러 '붙여넣기'를 눌러 주세요.")
             }
           }}
           className="mt-3 h-12 w-full rounded-[10px] border border-primary text-[15px] font-bold text-primary active:bg-primary/5"
@@ -167,11 +172,15 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
         <label className="sr-only" htmlFor="ck-product">상품</label>
         <textarea
           id="ck-product"
+          ref={boxRef}
           rows={3}
           className="mt-3 w-full rounded-[10px] border border-input bg-card px-3.5 py-3 text-[16px] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           placeholder="예: [쿠팡] 불스원 와이퍼 650mm+400mm 세트 https://link.coupang.com/a/…"
           value={product}
-          onChange={(e) => setProduct(e.target.value)}
+          onChange={(e) => {
+            setProduct(e.target.value)
+            if (e.target.value) setError("")
+          }}
         />
         {(parsed.name || parsed.url) && (
           <p className="mt-1.5 text-[12px] text-muted-foreground">
@@ -203,6 +212,60 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
 
       {result && <ResultView r={result} carId={car?.id} onReset={() => setResult(null)} />}
     </div>
+  )
+}
+
+/** 쓰는 법 그림 3칸: 쿠팡에서 공유→복사 · 여기서 붙여넣기 · AI 판정 결과 (그림은 예시) */
+function HowTo() {
+  const tile = "relative flex aspect-[3/4] flex-col overflow-hidden rounded-[10px] bg-muted p-1.5"
+  const bar = "block h-1.5 rounded-full bg-[#D0D5DD]"
+  const ring = "ring-2 ring-[#12B76A] ring-offset-1"
+  return (
+    <ol className="mt-3 grid grid-cols-3 gap-2" aria-label="쓰는 법: 쿠팡에서 공유 후 복사, 여기서 붙여넣기, 내 차에 맞는지 결과">
+      <li className="text-center">
+        <span aria-hidden className={tile}>
+          <span className="flex flex-1 flex-col rounded-md bg-white p-1.5">
+            <span className="flex justify-end">
+              <span className={`flex h-5 w-5 items-center justify-center rounded-full ${ring}`}>
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#344054" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 12v7h14v-7" />
+                </svg>
+              </span>
+            </span>
+            <span className="mt-1 flex justify-center"><PartIcon name="와이퍼" size={34} /></span>
+            <span className={`${bar} mt-1.5 w-full`} />
+            <span className={`${bar} mt-1 w-2/3`} />
+          </span>
+          <span className="mt-1 flex items-center justify-center gap-1 rounded-md bg-white py-1">
+            <span className={`rounded px-1.5 text-[10px] font-bold text-foreground ${ring}`}>복사</span>
+          </span>
+        </span>
+        <span className="mt-1 block text-[12px] font-semibold">쿠팡: 공유 → 복사</span>
+      </li>
+      <li className="text-center">
+        <span aria-hidden className={tile}>
+          <span className="flex-1 rounded-md border border-[#D0D5DD] bg-white p-1.5 text-left text-[9px] leading-snug text-muted-foreground">
+            [쿠팡] 와이퍼 650mm+400mm 세트 link.coupang.com/…
+          </span>
+          <span className={`mt-1.5 rounded-md border border-primary bg-white py-1 text-[9px] font-bold text-primary ${ring}`}>붙여넣기</span>
+        </span>
+        <span className="mt-1 block text-[12px] font-semibold">여기서 붙여넣기</span>
+      </li>
+      <li className="text-center">
+        <span aria-hidden className={tile}>
+          <span className="flex flex-1 flex-col rounded-md border border-[#ABEFC6] bg-[#ECFDF3] p-1.5 text-left">
+            <span className="flex items-center gap-1 text-[10px] font-extrabold text-[#067647]">
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#12B76A] text-[9px] text-white">✓</span>
+              맞아요
+            </span>
+            <span className="num mt-1.5 rounded bg-white/80 px-1 py-0.5 text-[9px] text-foreground">운전석 650mm ✓</span>
+            <span className="num mt-1 rounded bg-white/80 px-1 py-0.5 text-[9px] text-foreground">조수석 400mm ✓</span>
+            <span className={`${bar} mt-1.5 w-full`} />
+          </span>
+        </span>
+        <span className="mt-1 block text-[12px] font-semibold">맞는지 바로 판정</span>
+      </li>
+    </ol>
   )
 }
 
