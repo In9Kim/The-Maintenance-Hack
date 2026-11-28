@@ -4,7 +4,7 @@ import { lookupCache, writeCache, makeVinPrefix, logEvent, sheetsEnabled, lookup
 import { getFixedVehicleSpec } from "@/lib/vehicle-spec"
 import { softenResult } from "@/lib/compat-wording"
 import { createHash } from "crypto"
-import { checkLimit, countUse, PER_USER } from "@/lib/verify-limit"
+import { checkLimit, countUse, GUEST, PER_IP, PER_USER } from "@/lib/verify-limit"
 import { getSeoCar } from "@/lib/seo"
 import { buildCompatRequest, parseProductInput } from "@/lib/compat-request"
 import { userIdFrom } from "@/lib/auth-user"
@@ -76,9 +76,9 @@ async function extractProductInfoFromUrl(url: string): Promise<string | null> {
 }
 
 export async function POST(req: NextRequest) {
-  // AI 부품 확인은 로그인한 사람만 (계정마다 하루 PER_USER번)
+  // 로그인 안 해도 기기마다 하루 GUEST번 (견적서 분석과 같은 기준). 로그인하면 계정마다 하루 PER_USER번
   const uid = await userIdFrom(req)
-  if (!uid) return NextResponse.json({ error: "부품 확인은 로그인하면 쓸 수 있어요.", login: true }, { status: 401 })
+  const ipAddr = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
   try {
     const body = await req.json()
     const { vin, carId, year, engine, product } = body as {
@@ -180,21 +180,31 @@ export async function POST(req: NextRequest) {
       if (saved) result = { ...result, vehicle_spec: saved }
     } else {
       // 캐시 미스 = AI를 실제로 부름 → 하루 조회 제한 확인 (캐시 결과는 세지 않음)
-      const ip = `u:${uid}`
-      const limit = await checkLimit(ip)
+      const device = typeof body.device === "string" && /^[0-9a-f-]{36}$/.test(body.device) ? body.device : ""
+      const keys = uid
+        ? [{ who: `u:${uid}`, limit: PER_USER }]
+        : [
+            { who: `d:${device || ipAddr}`, limit: GUEST },
+            { who: `ip:${ipAddr}`, limit: PER_IP },
+          ]
+      const states = await Promise.all(keys.map((k) => checkLimit(k.who, k.limit)))
+      const limit = states.find((s) => s.reason === "global") ?? states.find((s) => !s.ok) ?? states[0]
       if (!limit.ok) {
         return NextResponse.json(
           {
             error:
               limit.reason === "global"
                 ? "오늘은 확인 요청이 많아 AI 판정을 잠시 멈췄어요. 내일 다시 이용해 주세요. 그동안은 차종 페이지의 규격·순정 품번으로 직접 대조할 수 있어요."
-                : `AI 판정은 계정마다 하루 ${PER_USER}번까지예요. 내일 다시 이용해 주세요. 이미 누가 확인한 같은 차·같은 상품은 횟수와 상관없이 바로 보여 드려요.`,
+                : uid
+                  ? `AI 판정은 계정마다 하루 ${PER_USER}번까지예요. 내일 다시 이용해 주세요. 이미 누가 확인한 같은 차·같은 상품은 횟수와 상관없이 바로 보여 드려요.`
+                  : `오늘 무료 확인 ${GUEST}번을 썼어요. 로그인하면 하루 ${PER_USER}번까지 쓸 수 있어요.`,
             limited: true,
+            login: !uid && limit.reason !== "global",
           },
           { status: 429 }
         )
       }
-      after(() => countUse(ip))
+      after(() => Promise.all(keys.map((k, i) => countUse(k.who, i === 0))))
       // 차량 정보 확정(저장본 또는 새로 해석) → 그 정보로 부품만 판정
       if (req2) {
         result = await verifyCompatibility(null, productInfo, safeCategory, req2.vehicle, req2.reference)

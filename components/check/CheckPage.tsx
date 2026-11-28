@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { PartIcon } from "@/components/PartIcon"
+import { deviceId } from "@/lib/device-id"
 import { loadMyCar } from "@/lib/my-car"
 import { parseProductInput } from "@/lib/compat-request"
 import { track } from "@/lib/track"
@@ -53,7 +54,7 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
   const [result, setResult] = useState<Result | null>(null)
-  // AI 확인은 로그인한 사람만 (검색·쿠팡 보기는 로그인 없이)
+  // 로그인 안 해도 하루 1번, 로그인하면 하루 3번 (횟수를 넘으면 로그인 안내)
   const { token, setToken, providers } = useAuthToken()
   const [needLogin, setNeedLogin] = useState(false)
   const boxRef = useRef<HTMLTextAreaElement>(null)
@@ -77,19 +78,18 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
 
   const verify = async (text: string): Promise<{ result?: Result; error?: string; login?: boolean }> => {
     if (!car) return { error: "차종을 먼저 골라 주세요." }
-    if (!token) return { login: true }
     try {
       const r = await fetch("/api/verify", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ carId: car.id, year: year ? Number(year) : undefined, engine: engine || undefined, product: text }),
+        headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify({ carId: car.id, year: year ? Number(year) : undefined, engine: engine || undefined, product: text, device: deviceId() }),
       })
       const j = await r.json()
       if (r.status === 401) {
         setToken(null)
         return { login: true }
       }
-      return r.ok ? { result: j as Result } : { error: j.error ?? "확인하지 못했어요. 잠시 뒤 다시 시도해 주세요." }
+      return r.ok ? { result: j as Result } : { error: j.error ?? "확인하지 못했어요. 잠시 뒤 다시 시도해 주세요.", login: !!j.login }
     } catch {
       return { error: "인터넷 연결을 확인하고 다시 시도해 주세요." }
     }
@@ -304,7 +304,7 @@ function ResultView({ r, carId, onReset }: { r: Result; carId?: string; onReset:
 function LoginBox({ providers }: { providers: Parameters<typeof LoginButtons>[0]["providers"] }) {
   return (
     <div className="mt-2 rounded-[12px] bg-muted p-3.5">
-      <p className="text-[14px] font-semibold">로그인하면 내 차에 맞는지 AI로 확인할 수 있어요 (하루 3번)</p>
+      <p className="text-[14px] font-semibold">로그인하면 하루 3번까지 확인할 수 있어요</p>
       <div className="mt-2.5"><LoginButtons providers={providers} next="/check" /></div>
     </div>
   )

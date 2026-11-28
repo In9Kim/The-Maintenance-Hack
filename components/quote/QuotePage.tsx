@@ -1,5 +1,6 @@
 "use client"
 
+import { deviceId } from "@/lib/device-id"
 import Link from "next/link"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { loadMyCar } from "@/lib/my-car"
@@ -47,20 +48,6 @@ const VERDICT = {
 const won = (n: number) => `${n.toLocaleString("ko-KR")}원`
 const clean = (name: string) => name.replace(/^#\s*/, "")
 interface Prod { productId: number | string; name: string; price: number; url: string; image?: string }
-
-/** 로그인 안 한 사람의 하루 무료 횟수를 기기별로 세기 위한 무작위 값 (개인정보 아님, 이 브라우저에만) */
-function deviceId(): string {
-  try {
-    let v = localStorage.getItem("mh_device")
-    if (!v) {
-      v = crypto.randomUUID()
-      localStorage.setItem("mh_device", v)
-    }
-    return v
-  } catch {
-    return ""
-  }
-}
 
 /** 사진을 긴 변 1568px JPEG로 줄인다 (AI가 읽기 좋은 크기, 전송량 감소). 원본은 어디에도 저장하지 않음 */
 async function shrink(file: File): Promise<string> {
