@@ -28,7 +28,7 @@ import { OutboundLink } from "@/components/seo/OutboundLink"
 import { CarDiagram } from "@/components/cars/CarDiagram"
 import { diagramFor } from "@/lib/diagram-data"
 import { CarPhoto } from "@/components/cars/CarPhoto"
-import { PartIcon } from "@/components/PartIcon"
+import { PartIcon, PartName } from "@/components/PartIcon"
 import { carPhoto } from "@/lib/car-photos"
 import type { CarModel, MaintenancePart } from "@/types"
 
@@ -84,7 +84,7 @@ function PartsList({ car, parts }: { car: CarModel; parts: MaintenancePart[] }) 
                 <summary className="flex min-h-[64px] cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
                   <PartIcon name={part.name} size={36} />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[15px] font-semibold leading-snug">{part.name}</span>
+                    <span className="block break-keep text-[15px] font-semibold leading-snug"><PartName name={part.name} /></span>
                     {interval && <span className="block text-[12px] text-muted-foreground">{interval}</span>}
                   </span>
                   <span className="num shrink-0 text-right">

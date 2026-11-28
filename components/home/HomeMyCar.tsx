@@ -252,8 +252,8 @@ function Todo({ my, skipped, onSave, onSkip }: { my: MyCar; skipped: string[]; o
           const chip = CHIP[d.state] ?? CHIP.unknown
           return (
             <li key={d.part.slug} className="border-b border-border last:border-0">
-              <button onClick={() => setOpen(on ? null : d.part.slug)} aria-expanded={on} className="flex min-h-[60px] w-full items-center gap-3 py-2 text-left">
-                <PartIcon name={d.part.name} size={36} />
+              <button onClick={() => setOpen(on ? null : d.part.slug)} aria-expanded={on} className="flex min-h-[64px] w-full items-center gap-3 py-2 text-left">
+                <PartIcon name={d.part.name} size={48} />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[15px] font-semibold">{d.part.name}</span>
                   <span className="num block truncate text-[12px] text-muted-foreground">{d.record ? d.text : "마지막으로 언제 갈았나요?"}</span>

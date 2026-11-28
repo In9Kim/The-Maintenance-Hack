@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { pageMetadata } from "@/lib/seo"
 import { AFFILIATE_TEXT } from "@/components/seo/Shared"
+import { allPartPhotos } from "@/lib/part-photos"
 
 export const metadata = pageMetadata({
   title: "데이터 출처·이용 안내 | 정비핵",
@@ -23,6 +24,7 @@ const TOOLS = [
 ]
 
 export default function InfoPage() {
+  const photos = allPartPhotos()
   return (
     <div className="mx-auto max-w-2xl px-5 pb-12 pt-6 sm:pt-10">
       <h1 className="text-[24px] font-extrabold">데이터 출처·이용 안내</h1>
@@ -43,6 +45,34 @@ export default function InfoPage() {
         </p>
         <p className="mt-2 rounded-[10px] bg-muted px-4 py-3 text-[13px] text-muted-foreground">{AFFILIATE_TEXT}</p>
       </section>
+
+      {photos.length > 0 && (
+        <section id="part-photos" className="mt-8 scroll-mt-20">
+          <h2 className="text-[17px] font-bold">부품 사진 출처</h2>
+          <ul className="mt-2 divide-y divide-border rounded-[14px] border border-border bg-card">
+            {photos.map((p) => (
+              <li key={p.kind} className="grid gap-1 px-4 py-3 sm:grid-cols-[10rem_1fr]">
+                <span className="break-keep text-[14px] font-semibold">{p.label}</span>
+                <span className="break-keep text-[13px] leading-relaxed text-muted-foreground">
+                  <a href={p.page} target="_blank" rel="noopener nofollow" className="underline underline-offset-2 hover:text-foreground">
+                    {p.author}
+                  </a>
+                  {" · "}
+                  {p.licenseUrl ? (
+                    <a href={p.licenseUrl} target="_blank" rel="noopener nofollow license" className="underline underline-offset-2 hover:text-foreground">
+                      {p.license}
+                    </a>
+                  ) : (
+                    p.license
+                  )}
+                  {" · Wikimedia Commons"}
+                  {p.edited ? ` (정비핵이 ${p.edited})` : ""}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="mt-8">
         <h2 className="text-[17px] font-bold">다른 도구</h2>

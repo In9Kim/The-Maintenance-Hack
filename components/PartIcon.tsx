@@ -1,7 +1,12 @@
 /**
  * 부품 이름 앞의 작은 그림 + 한 줄 설명 (부품 이름만 봐서는 뭔지 모르는 사람을 위해).
  * 이름의 낱말로 종류를 고른다. 모르는 이름은 렌치 그림, 설명 없음.
+ * 종류 대표 사진(lib/part-photos)이 있으면 그림 대신 사진.
  */
+import { partPhoto } from "@/lib/part-photos"
+import { InfoTip } from "@/components/ui/InfoTip"
+import { PartPhotoImg } from "@/components/PartPhotoImg"
+
 type Kind = "oil" | "air" | "cabin" | "fuel" | "pad" | "disc" | "lining" | "spark" | "wiper" | "battery" | "fluid" | "other"
 
 const LOOK: { kind: Kind; re: RegExp; desc: string }[] = [
@@ -109,14 +114,82 @@ function Glyph({ kind }: { kind: Kind }) {
   }
 }
 
-/** 부품 그림 타일 (기본 40px) */
-export function PartIcon({ name, size = 40 }: { name: string; size?: number }) {
-  const { kind } = partLook(name)
+/**
+ * 부품 이름. 끝의 괄호 '(1.6 가솔린)'은 한 덩어리(inline-block)로 묶어 괄호 안에서 꺾이지 않게.
+ * 칸보다 길면 inline-block 안에서 줄이 바뀌므로 넘치지는 않는다.
+ */
+export function PartName({ name }: { name: string }) {
+  const m = name.match(/^(.*\S)\s+(\([^()]*\))$/)
+  if (!m) return <>{name}</>
+  return (
+    <>
+      {m[1]} <span className="inline-block">{m[2]}</span>
+    </>
+  )
+}
+
+function GlyphTile({ kind, size }: { kind: Kind; size: number }) {
   return (
     <span aria-hidden className="flex shrink-0 items-center justify-center rounded-[10px] bg-[#ECFDF3] text-[#067647]" style={{ width: size, height: size }}>
       <svg viewBox="0 0 24 24" width={size * 0.66} height={size * 0.66}>
         <Glyph kind={kind} />
       </svg>
     </span>
+  )
+}
+
+/**
+ * 부품 그림 타일 (기본 40px). 종류 대표 사진이 있으면 사진, 없거나 못 불러오면 그림.
+ * photo={false}면 늘 그림 (안내 그림 안처럼 사진이 어울리지 않는 곳)
+ */
+export function PartIcon({ name, size = 40, photo: usePhoto = true }: { name: string; size?: number; photo?: boolean }) {
+  const { kind } = partLook(name)
+  const photo = usePhoto ? partPhoto(kind) : undefined
+  const glyph = <GlyphTile kind={kind} size={size} />
+  if (!photo) return glyph
+  return (
+    <span aria-hidden className="flex shrink-0">
+      <PartPhotoImg src={photo.localSmall} size={size} fallback={glyph} className="flex shrink-0 overflow-hidden rounded-[10px] border border-border bg-white" />
+    </span>
+  )
+}
+
+/**
+ * 부품을 펼쳤을 때 위쪽 큰 사진 (160px). 사진이 없는 종류나 못 불러오면 아무것도 안 그림.
+ * (i)는 사진 오른쪽 위에 겹쳐 두고, 아래 줄은 저작자 표시가 필요한 사진만 (사진: 저작자, 라이선스).
+ * 고친 내용(정사각형으로 맞춤 등)은 데이터 출처 페이지(/info)의 '부품 사진 출처'에 적는다.
+ */
+export function PartPhotoLarge({ name }: { name: string }) {
+  const photo = partPhoto(partLook(name).kind)
+  if (!photo) return null
+  return (
+    <PartPhotoImg
+      src={photo.local}
+      size={160}
+      alt={photo.label}
+      wrap="relative mb-3"
+      className="block overflow-hidden rounded-[14px] border border-border bg-white"
+    >
+      {/* 사진(160px) 오른쪽 위 모서리: 160 - 28 - 6 */}
+      <span className="absolute left-[126px] top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-sm">
+        <InfoTip label="예시 사진 안내">종류 예시 사진이에요. 내 차 부품과 모양이 다를 수 있어요.</InfoTip>
+      </span>
+      {photo.credit && (
+        <p className="mt-1.5 break-keep text-[11px] leading-snug text-muted-foreground">
+          사진:{" "}
+          <a href={photo.page} target="_blank" rel="noopener nofollow" className="underline underline-offset-2 hover:text-foreground">
+            {photo.author}
+          </a>
+          ,{" "}
+          {photo.licenseUrl ? (
+            <a href={photo.licenseUrl} target="_blank" rel="noopener nofollow license" className="underline underline-offset-2 hover:text-foreground">
+              {photo.license}
+            </a>
+          ) : (
+            photo.license
+          )}
+        </p>
+      )}
+    </PartPhotoImg>
   )
 }

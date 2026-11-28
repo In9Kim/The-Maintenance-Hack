@@ -1,6 +1,6 @@
 "use client"
 
-import { PartIcon } from "@/components/PartIcon"
+import { PartIcon, PartName, PartPhotoLarge } from "@/components/PartIcon"
 import Link from "next/link"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
@@ -314,10 +314,10 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
                 className="cursor-pointer px-4 py-3"
               >
                 <span className="flex items-center gap-3">
-                  <PartIcon name={d.part.name} size={36} />
+                  <PartIcon name={d.part.name} size={48} />
                   <span className="min-w-0 flex-1">
                     {/* 긴 이름은 2줄까지 (오른쪽 칩 때문에 '(1.6 가솔린)'이 잘리지 않게) */}
-                    <span className="line-clamp-2 break-keep text-[15px] font-semibold">{d.part.name}</span>
+                    <span className="line-clamp-2 break-keep text-[15px] font-semibold"><PartName name={d.part.name} /></span>
                     {d.record && <span className="num block truncate text-[13px] text-muted-foreground">{d.record.date.slice(2).replace(/-/g, ".")} 교체</span>}
                   </span>
                   {d.record && <span className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-[12px] font-semibold ${st.cls}`}>{d.text}</span>}
@@ -325,13 +325,14 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
                 </span>
                 {/* 막대는 칩 아래 줄에 같은 너비로 (줄마다 끝나는 위치가 같아야 길이로 비교됨) */}
                 {d.record && d.ratio >= 0 && d.state !== "unknown" && (
-                  <span aria-hidden className="ml-12 mt-2 block h-1.5 overflow-hidden rounded-full bg-muted">
+                  <span aria-hidden className="ml-[60px] mt-2 block h-1.5 overflow-hidden rounded-full bg-muted">
                     <span className={`block h-full rounded-full ${BAR[d.state]}`} style={{ width: `${Math.min(1, d.ratio) * 100}%` }} />
                   </span>
                 )}
               </div>
               {isOpen && (
                 <div className="px-4 pb-3">
+                  <PartPhotoLarge name={d.part.name} />
                   {!custom && d.state === "ok" ? (
                     <p className="mb-3 text-[14px] text-muted-foreground break-keep">
                       {/ 남음$/.test(d.text) ? `${d.text.replace(/ 남음$/, " 남았어요")}.` : "아직 여유 있어요."} {loggedIn ? "때가 되면 알려 드릴게요." : "때가 되면 여기 표시돼요."}

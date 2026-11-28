@@ -270,7 +270,7 @@ function HowTo() {
                 </svg>
               </span>
             </span>
-            <span className="mt-1 flex justify-center"><PartIcon name="와이퍼" size={34} /></span>
+            <span className="mt-1 flex justify-center"><PartIcon name="와이퍼" size={34} photo={false} /></span>
             <span className={`${bar} mt-1.5 w-full`} />
             <span className={`${bar} mt-1 w-2/3`} />
           </span>

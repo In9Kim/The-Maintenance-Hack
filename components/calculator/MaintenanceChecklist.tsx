@@ -1,12 +1,14 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { Fragment, useMemo, useState } from "react"
+import Link from "next/link"
 import { Checkbox } from "@/components/ui/checkbox"
 import { cn, formatPrice } from "@/lib/utils"
 import { CATEGORY_LABELS, type MaintenancePart, type PartCategory } from "@/types"
 import { intervalText } from "@/lib/seo"
 import { cardIntervalText, splitChecklistParts } from "@/lib/checklist-order"
 import type { CarModel } from "@/types"
+import { PartIcon, PartName } from "@/components/PartIcon"
 
 
 interface MaintenanceChecklistProps {
@@ -128,19 +130,38 @@ function PartCard({ part, isChecked, onToggle, dueText }: PartCardProps) {
       <div className="flex items-start">
         <label className="flex min-w-0 flex-1 cursor-pointer items-start gap-3 py-3.5 pl-4 pr-1">
           <Checkbox checked={isChecked} onCheckedChange={onToggle} aria-label={part.name} className="mt-0.5 h-5 w-5" />
-          <span className="min-w-0 flex-1">
-            <span className="flex items-start justify-between gap-3">
-              <span className="break-keep font-semibold">{part.name}</span>
-              <span className="num shrink-0 text-right">
-                <span className="block font-bold text-primary">{formatPrice(self)}</span>
-                <span className="price-was block whitespace-nowrap text-[12px]">센터 추정 {formatPrice(dealer)}</span>
+          <PartIcon name={part.name} size={40} />
+          {/* 왼쪽: 이름 + 주기 / 오른쪽: 가격. 가격 칸은 가장 긴 덩어리 너비만(w-min) 써서 '센터 추정'과 금액을 두 줄로 → 이름 칸을 넓게 */}
+          <span className="flex min-w-0 flex-1 items-start justify-between gap-3">
+            <span className="min-w-0">
+              <span className="block break-keep font-semibold">
+                <PartName name={part.name} />
+              </span>
+              {dueText ? (
+                <span className="mt-0.5 block whitespace-nowrap text-[13px] font-semibold text-[#B54708]">{dueText}</span>
+              ) : (
+                interval && (
+                  <span className="mt-0.5 block text-[13px] text-muted-foreground">
+                    {/* '15,000km·12개월마다'는 칸이 좁으면 '·' 뒤에서만 줄바꿈 */}
+                    {interval.split("·").map((t, i, all) => (
+                      <Fragment key={i}>
+                        {i > 0 && <wbr />}
+                        <span className="whitespace-nowrap">
+                          {t}
+                          {i < all.length - 1 && "·"}
+                        </span>
+                      </Fragment>
+                    ))}
+                  </span>
+                )
+              )}
+            </span>
+            <span className="num w-min shrink-0 text-right">
+              <span className="block whitespace-nowrap font-bold text-primary">{formatPrice(self)}</span>
+              <span className="price-was block text-[12px] leading-snug">
+                <span className="whitespace-nowrap">센터 추정</span> <span className="whitespace-nowrap">{formatPrice(dealer)}</span>
               </span>
             </span>
-            {dueText ? (
-              <span className="mt-0.5 block whitespace-nowrap text-[13px] font-semibold text-[#B54708]">{dueText}</span>
-            ) : (
-              interval && <span className="mt-0.5 block whitespace-nowrap text-[13px] text-muted-foreground">{interval}</span>
-            )}
           </span>
         </label>
         {spec && (
@@ -159,7 +180,7 @@ function PartCard({ part, isChecked, onToggle, dueText }: PartCardProps) {
           </button>
         )}
       </div>
-      {spec && specOpen && <p className="-mt-1 pb-3 pl-12 pr-4 text-[13px] leading-relaxed text-muted-foreground">{spec}</p>}
+      {spec && specOpen && <p className="-mt-1 pb-3 pl-[100px] pr-4 text-[13px] leading-relaxed text-muted-foreground">{spec}</p>}
     </div>
   )
 }
