@@ -13,7 +13,7 @@ import { PartIcon, partLook } from "@/components/PartIcon"
 /**
  * 첫 화면 '내 차' (등록한 사람만) = 한눈에 보는 칸 4개 + 할 일 목록.
  * 할 일: 교체 시기가 된 부품(누르면 바로 사기) → 기록 없는 부품(누르면 "언제 갈았어요?" 버튼).
- * 차 관리(전체 목록·주행거리·기록)는 마이에서. 등록 여부는 layout의 작은 스크립트가 <html data-car>로 먼저 표시한다.
+ * 차 관리(전체 목록·주행거리·기록)는 정비 탭에서. 등록 여부는 layout의 작은 스크립트가 <html data-car>로 먼저 표시한다.
  */
 export function HomeMyCar() {
   const [g, setG] = useState<Garage | null>(null)
@@ -68,7 +68,7 @@ export function HomeMyCar() {
         </div>
       )}
 
-      {/* 차 이름은 한 줄로만 (큰 카드는 마이에서) */}
+      {/* 차 이름은 한 줄로만 (큰 카드는 정비 탭에서) */}
       <Link href="/my" className="flex items-center gap-3">
         {my.car.photo && (
           // eslint-disable-next-line @next/next/no-img-element
@@ -210,11 +210,11 @@ function Todo({ my, skipped, onSave, onSkip }: { my: MyCar; skipped: string[]; o
   const [open, setOpen] = useState<string | null>(null)
   const list = dueList(my)
   if (!list.length) {
-    // 목록에 있는 차인데 부품이 비어 있으면 예전에 저장한 값 → 마이를 열면 최신 부품 정보로 갈아 끼움
+    // 목록에 있는 차인데 부품이 비어 있으면 예전에 저장한 값 → 정비 탭을 열면 최신 부품 정보로 갈아 끼움
     if (!isCustomCar(my.car.id))
       return (
         <Link href="/my" className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4">
-          <span className="text-[15px] font-bold">마이에서 부품 정보 불러오기</span>
+          <span className="text-[15px] font-bold">정비 탭에서 부품 정보 불러오기</span>
           <span aria-hidden className="text-muted-foreground">›</span>
         </Link>
       )

@@ -7,7 +7,7 @@ export const metadata = pageMetadata({
   path: "/privacy",
 })
 
-/** 개인정보 보호책임자 연락처 (공개용 이메일). 비어 있으면 '마이 > 회원 탈퇴' 안내만 */
+/** 개인정보 보호책임자 연락처 (공개용 이메일). 비어 있으면 '더보기 > 회원 탈퇴' 안내만 */
 const CONTACT = "wwe9459@naver.com"
 
 const ROWS = [
@@ -21,6 +21,7 @@ const ROWS = [
   { k: "위치 정보", v: "정비소 찾기에서 '내 위치'를 누른 경우에만 휴대폰 위치(좌표)를, 동네 이름으로 찾으면 적은 이름을 카카오 지도 검색으로 보내요. 정비핵 서버로는 보내지 않아요. 다음에 바로 보이도록 마지막 위치(대략 좌표·동네 이름)는 이 폰에만 저장해요" },
   { k: "하루 이용 횟수", v: "견적서 분석·부품 확인 횟수를 계정, 또는 로그인 안 했으면 이 브라우저의 무작위 값과 IP 주소를 알아볼 수 없게 바꿔서 세고 이틀 안에 지워요" },
   { k: "교체 시기 알림", v: "알림을 켠 경우에만: 이 휴대폰의 알림 주소와 알릴 부품 이름·차 이름·날짜를 저장해요. 알림을 끄거나 로그아웃하면 이 휴대폰의 알림 정보를, 탈퇴하면 이 계정의 알림 정보를 모두 지우고, 안 쓰면 1년 뒤 저절로 지워요. 알림은 휴대폰 회사의 알림 서버(구글·애플 등)를 거쳐 가요" },
+  { k: "알림함", v: "받은 교체 시기 알림의 제목·내용·여는 주소·받은 시각을 이 폰에만 최근 50개까지 저장해요(90일 지나면 지움). 서버로 보내지 않아요" },
   { k: "보관 기간", v: "계정·차·교체 기록은 회원 탈퇴 때 바로 삭제. 이용 통계는 개인을 알아볼 수 없는 기록이라 서비스 개선에 쓰는 동안 보관해요" },
   { k: "맡기는 곳", v: "Supabase Inc. (계정·차 정보 저장, 서버 위치: 서울), Cloudflare Inc. (사이트 운영, 이용 횟수·알림 정보 저장), Anthropic PBC (견적서·부품 확인·규격 만들기 AI), Google LLC (위 AI의 대체 Gemini, 이용 통계·차종 규격 저장 Google 스프레드시트), Kakao Corp. (카카오 로그인, 지도·정비소 검색)" },
   { k: "제3자 제공", v: "하지 않아요" },
@@ -44,7 +45,7 @@ export default function PrivacyPage() {
       <section className="mt-8 space-y-2 text-[14px] leading-relaxed text-muted-foreground">
         <h2 className="text-[17px] font-bold text-foreground">탈퇴와 삭제</h2>
         <p>
-          <Link href="/my" className="font-semibold text-foreground underline underline-offset-2">마이</Link>
+          <Link href="/more" className="font-semibold text-foreground underline underline-offset-2">더보기</Link>
           {" > 회원 탈퇴"}를 누르면 계정과 저장한 차·교체 기록이 바로 지워져요. 로그인 없이 쓴 정보는 브라우저 데이터를 지우면 사라져요.
         </p>
         <p>카카오·구글 쪽 연결 해제는 각 서비스의 계정 설정에서 할 수 있어요.</p>

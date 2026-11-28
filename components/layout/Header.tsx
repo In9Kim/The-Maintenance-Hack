@@ -2,13 +2,17 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { InboxBell } from "@/components/layout/InboxBell"
+// 탭 판정은 아래 탭(BottomNav)과 같은 것을 쓴다 (두 벌로 만들지 않기)
+import { matchHome, matchCare, matchQuote, matchNear, matchMore } from "@/lib/nav-match"
 
-// 휴대폰은 위 메뉴를 숨기고 아래 탭(BottomNav)을 쓴다. 부품 호환 확인·계산기는 메뉴에서 빼고 차종·부품 페이지 안에서 연결
+// 휴대폰은 위 메뉴를 숨기고 아래 탭(BottomNav)을 쓴다. 순서는 아래 탭과 같게 (홈·정비·견적서·정비소·더보기)
 export const NAV = [
-  { href: "/cars", label: "차종별 비용", match: (p: string) => p.startsWith("/cars") },
-  { href: "/quote", label: "견적서 분석", match: (p: string) => p === "/quote" },
-  { href: "/near", label: "근처 정비소", match: (p: string) => p.startsWith("/near") },
-  { href: "/my", label: "마이", match: (p: string) => p.startsWith("/my") || p.startsWith("/info") || p.startsWith("/recalls") || p === "/check" },
+  { href: "/cars", label: "차종별 비용", match: (p: string) => matchHome(p) && p !== "/" && p !== "/inbox" },
+  { href: "/my", label: "내 차 정비", match: matchCare },
+  { href: "/quote", label: "견적서 분석", match: matchQuote },
+  { href: "/near", label: "근처 정비소", match: matchNear },
+  { href: "/more", label: "더보기", match: matchMore },
 ]
 
 /** 로고: 영수증 한 장 (견적서를 다시 쓴다는 뜻) */
@@ -33,6 +37,8 @@ export function Header() {
           <LogoMark />
           <span className="text-[17px] font-extrabold tracking-tight">정비핵</span>
         </Link>
+        {/* 메뉴와 종을 한 묶음으로: 종이 없는 화면에도 같은 너비 빈칸을 둬서 메뉴 위치가 화면마다 움직이지 않게 */}
+        <div className="flex items-center gap-1">
         <nav aria-label="주 메뉴" className="hidden items-center gap-0.5 whitespace-nowrap text-[15px] md:flex">
           {NAV.map((item) => {
             const active = item.match(pathname)
@@ -50,6 +56,8 @@ export function Header() {
             )
           })}
         </nav>
+        {pathname === "/" ? <InboxBell /> : <span aria-hidden className="hidden h-11 w-11 shrink-0 md:block" />}
+        </div>
       </div>
     </header>
   )

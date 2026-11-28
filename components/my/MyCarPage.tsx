@@ -24,8 +24,6 @@ import { deleteCloudCar, fetchCars, fromRow, mergeGarage, pushCars } from "@/lib
 import { track } from "@/lib/track"
 import { takeAfterLogin } from "@/components/my/LoginButtons"
 import { LoginPanel } from "@/components/my/LoginPanel"
-import { PushToggle } from "@/components/my/PushToggle"
-import { disableAllPush, disablePush } from "@/lib/push-client"
 import { LiveCoupang } from "@/components/cars/LiveCoupang"
 
 export type { MyCarOption }
@@ -35,6 +33,13 @@ const STATE_STYLE: Record<DueState, { label: string; cls: string }> = {
   soon: { label: "곧 교체", cls: "bg-[#FFF6ED] text-[#B54708]" },
   ok: { label: "여유 있음", cls: "bg-[#ECFDF3] text-[#067647]" },
   unknown: { label: "기록 필요", cls: "bg-muted text-muted-foreground" },
+}
+
+/** 부품 진행 막대 색 (지난 교체부터 얼마나 썼는지) */
+const BAR: Record<Exclude<DueState, "unknown">, string> = {
+  ok: "bg-[#12B76A]",
+  soon: "bg-[#F79009]",
+  over: "bg-[#F04438]",
 }
 
 interface Account {
@@ -218,93 +223,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
       )}
 
       {cloudError && <p role="alert" className="mt-4 rounded-[10px] bg-[#FEF3F2] px-4 py-3 text-[14px] text-[#B42318]">{cloudError}</p>}
-
-      <nav aria-label="안내" className="mt-10">
-        <p className="px-1 text-[13px] font-semibold text-muted-foreground">안내</p>
-        <div className="mt-2 divide-y divide-border rounded-[14px] border border-border bg-card">
-          {[
-            { href: "/info", label: "데이터 출처·이용 안내" },
-            { href: "/privacy", label: "개인정보 처리방침" },
-            { href: "mailto:wwe9459@naver.com?subject=%EC%A0%95%EB%B9%84%ED%95%B5%20%EB%AC%B8%EC%9D%98", label: "문의하기 · 내 차 정보 요청" },
-          ].map((m) => (
-            <Link key={m.href} href={m.href} className="flex min-h-[52px] items-center justify-between px-4 text-[15px]">
-              {m.label}
-              <span aria-hidden className="text-muted-foreground">›</span>
-            </Link>
-          ))}
-        </div>
-      </nav>
-
-      {authEnabled() && !loginFirst && !(guest && !account && garage.cars.length === 0) && (
-        <AccountBox
-          providers={providers}
-          account={account}
-          onSignedOut={() => {
-            accountRef.current = null
-            setAccount(null)
-            apply({ cars: [], active: "" }) // 계정의 차는 이 폰에서 지움 (다시 로그인하면 돌아옴)
-          }}
-        />
-      )}
     </div>
-  )
-}
-
-
-function AccountBox({ providers, account, onSignedOut }: { providers: Provider[]; account: Account | null; onSignedOut: () => void }) {
-  const [busy, setBusy] = useState(false)
-
-  const signOut = async () => {
-    // 로그아웃하면 이 폰의 차 목록을 비우므로, 그 전에 계정에 한 번 더 올려 둔다 (저장 실패했던 수정이 사라지지 않게)
-    setBusy(true)
-    const cars = loadGarage().cars
-    const saved = cars.length ? await pushCars(cars).then(() => true, () => false) : true
-    setBusy(false)
-    if (!saved && !confirm("계정에 저장 못 한 기록이 있어요. 로그아웃하면 이 폰에서 사라져요. 그래도 할까요?")) return
-    await disablePush().catch(() => {}) // 로그아웃한 폰에는 알림을 보내지 않음
-    const sb = await supabase()
-    await sb.auth.signOut()
-    onSignedOut()
-  }
-
-  const withdraw = async () => {
-    if (!confirm("탈퇴하면 계정에 저장한 차와 교체 기록이 모두 지워지고 되돌릴 수 없어요. 탈퇴할까요?")) return
-    setBusy(true)
-    await disableAllPush().catch(() => {}) // 이 계정으로 알림을 켠 다른 폰까지 모두 지움
-    const sb = await supabase()
-    const { error } = await sb.rpc("delete_my_account")
-    if (error) {
-      setBusy(false)
-      alert("탈퇴 처리에 실패했어요. 잠시 뒤 다시 시도해 주세요.")
-      return
-    }
-    await sb.auth.signOut({ scope: "local" })
-    onSignedOut()
-    setBusy(false)
-    alert("탈퇴했어요. 그동안 이용해 주셔서 고맙습니다.")
-  }
-
-  if (account) {
-    return (
-      <section className="mt-10 rounded-[14px] border border-border bg-card p-4">
-        <p className="text-[15px] font-semibold">
-          {account.name}
-          <span className="ml-1.5 text-[13px] font-normal text-muted-foreground">{account.provider === "kakao" ? "카카오" : account.provider === "google" ? "구글" : ""} 로그인 중</span>
-        </p>
-        <p className="mt-0.5 text-[13px] text-muted-foreground">차 목록과 교체 기록이 계정에 저장돼요</p>
-        <PushToggle />
-        <div className="mt-3 flex gap-4 text-[13px]">
-          <button onClick={signOut} disabled={busy} className="min-h-[40px] font-semibold underline underline-offset-4">로그아웃</button>
-          <button onClick={withdraw} disabled={busy} className="min-h-[40px] text-muted-foreground underline underline-offset-4">회원 탈퇴</button>
-        </div>
-      </section>
-    )
-  }
-
-  if (!providers.length) return null
-
-  return (
-    <LoginPanel providers={providers} className="mt-10" />
   )
 }
 
@@ -365,8 +284,6 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
         </p>
       )}
 
-      <Tools />
-
       {custom ? (
         <p className="mt-6 rounded-[14px] border border-border bg-card px-4 py-3.5 text-[14px] leading-relaxed text-muted-foreground">
           이 차는 아직 부품 규격·가격 정보가 없어요. 등록이 많은 차부터 채우고 있어요. 근처 공임나라 찾기는 그대로 쓸 수 있어요.
@@ -394,15 +311,24 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
                 aria-expanded={isOpen}
                 onClick={toggle}
                 onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), toggle())}
-                className="flex cursor-pointer items-center gap-3 px-4 py-3"
+                className="cursor-pointer px-4 py-3"
               >
-                <PartIcon name={d.part.name} size={36} />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[15px] font-semibold">{d.part.name}</span>
-                  {d.record && <span className="num block truncate text-[13px] text-muted-foreground">{d.record.date.slice(2).replace(/-/g, ".")} 교체</span>}
+                <span className="flex items-center gap-3">
+                  <PartIcon name={d.part.name} size={36} />
+                  <span className="min-w-0 flex-1">
+                    {/* 긴 이름은 2줄까지 (오른쪽 칩 때문에 '(1.6 가솔린)'이 잘리지 않게) */}
+                    <span className="line-clamp-2 break-keep text-[15px] font-semibold">{d.part.name}</span>
+                    {d.record && <span className="num block truncate text-[13px] text-muted-foreground">{d.record.date.slice(2).replace(/-/g, ".")} 교체</span>}
+                  </span>
+                  {d.record && <span className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-[12px] font-semibold ${st.cls}`}>{d.text}</span>}
+                  <span aria-hidden className={`shrink-0 text-[14px] text-muted-foreground transition ${isOpen ? "rotate-180" : ""}`}>⌄</span>
                 </span>
-                {d.record && <span className={`shrink-0 rounded-full px-2.5 py-1 text-[12px] font-semibold ${st.cls}`}>{d.text}</span>}
-                <span aria-hidden className={`shrink-0 text-[14px] text-muted-foreground transition ${isOpen ? "rotate-180" : ""}`}>⌄</span>
+                {/* 막대는 칩 아래 줄에 같은 너비로 (줄마다 끝나는 위치가 같아야 길이로 비교됨) */}
+                {d.record && d.ratio >= 0 && d.state !== "unknown" && (
+                  <span aria-hidden className="ml-12 mt-2 block h-1.5 overflow-hidden rounded-full bg-muted">
+                    <span className={`block h-full rounded-full ${BAR[d.state]}`} style={{ width: `${Math.min(1, d.ratio) * 100}%` }} />
+                  </span>
+                )}
               </div>
               {isOpen && (
                 <div className="px-4 pb-3">
@@ -479,27 +405,6 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
         </button>
       </p>
     </>
-  )
-}
-
-/** 차 카드 바로 아래 도구 3개 (예전엔 맨 아래 목록이라 잘 안 보였음) */
-const TOOLS = [
-  { href: "/quote", label: "견적서 분석", icon: "M7 3h10v18l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5zM10 8h4M10 12h4M10 16h2" },
-  { href: "/check", label: "부품 맞나요?", icon: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4M8.5 11l2 2 3.5-3.5" },
-  { href: "/recalls", label: "리콜 확인", icon: "M12 3 2 20h20zM12 10v4M12 17h.01" },
-]
-function Tools() {
-  return (
-    <nav aria-label="도구" className="mt-4 grid grid-cols-3 gap-2">
-      {TOOLS.map((t) => (
-        <Link key={t.href} href={t.href} className="flex min-h-[76px] flex-col items-center justify-center gap-1.5 rounded-[14px] border border-border bg-card px-1 text-center">
-          <svg viewBox="0 0 24 24" className="h-6 w-6 text-primary" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d={t.icon} />
-          </svg>
-          <span className="text-[12px] font-semibold leading-tight">{t.label}</span>
-        </Link>
-      ))}
-    </nav>
   )
 }
 

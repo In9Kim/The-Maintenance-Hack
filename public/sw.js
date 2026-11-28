@@ -19,23 +19,86 @@ self.addEventListener("fetch", (e) => {
   e.respondWith(fetch(e.request).catch(() => caches.match(OFFLINE)))
 })
 
-// 교체 시기 알림 (서버가 매일 아침 보냄). 누르면 마이 화면으로
+// 교체 시기 알림 (서버가 매일 아침 보냄). 누르면 정비 화면으로
 self.addEventListener("push", (e) => {
   let d = {}
   try {
     d = e.data ? e.data.json() : {}
   } catch {}
+  const title = d.title || "정비핵"
+  const body = d.body || ""
+  const url = sameOrigin(d.url)
   e.waitUntil(
-    self.registration.showNotification(d.title || "정비핵", {
-      body: d.body || "",
-      icon: "/icon-192.png",
-      // 안드로이드 상태줄 작은 아이콘: 흰색·투명 배경이어야 함 (컬러 아이콘은 흰 사각형으로 보임)
-      badge: "/badge-96.png",
-      tag: "mh-due",
-      data: { url: sameOrigin(d.url) },
-    }),
+    Promise.all([
+      self.registration.showNotification(title, {
+        body,
+        icon: "/icon-192.png",
+        // 안드로이드 상태줄 작은 아이콘: 흰색·투명 배경이어야 함 (컬러 아이콘은 흰 사각형으로 보임)
+        badge: "/badge-96.png",
+        tag: "mh-due",
+        data: { url },
+      }),
+      // 알림을 지워도 알림함(/inbox)에서 다시 볼 수 있게 이 폰에 저장. 실패해도 알림 표시는 그대로
+      saveInbox({ title, body, url, at: Date.now() })
+        .then(() => self.clients.matchAll({ type: "window", includeUncontrolled: true }))
+        .then((list) => list.forEach((c) => c.postMessage({ type: "mh-inbox" })))
+        .catch(() => {}),
+    ]),
   )
 })
+
+// 알림함 보관: 최근 50개, 90일. lib/inbox-core.ts 의 INBOX_MAX·INBOX_DAYS 와 같이 바꿀 것 (sw.js는 TS를 못 불러옴)
+const INBOX_MAX = 50
+const INBOX_DAYS = 90
+
+/** 알림함 저장 (제목·내용·주소·받은 시각만). 넣은 뒤 같은 트랜잭션에서 오래된 것 정리 */
+function saveInbox(item) {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open("mh-inbox", 1)
+    req.onupgradeneeded = () => {
+      const s = req.result.createObjectStore("items", { keyPath: "id", autoIncrement: true })
+      s.createIndex("at", "at")
+    }
+    req.onerror = () => reject(req.error)
+    req.onblocked = () => reject(new Error("blocked"))
+    req.onsuccess = () => {
+      const db = req.result
+      const tx = db.transaction("items", "readwrite")
+      const store = tx.objectStore("items")
+      tx.oncomplete = () => {
+        db.close()
+        resolve()
+      }
+      tx.onerror = tx.onabort = () => {
+        db.close()
+        reject(tx.error)
+      }
+      store.add(item)
+      // 90일 지난 것 지움
+      const min = item.at - INBOX_DAYS * 24 * 60 * 60 * 1000
+      store.index("at").openCursor(IDBKeyRange.upperBound(min, true)).onsuccess = (ev) => {
+        const cur = ev.target.result
+        if (cur) {
+          cur.delete()
+          cur.continue()
+          return
+        }
+        // 그래도 50개가 넘으면 오래된 것부터 지움
+        store.count().onsuccess = (c) => {
+          let extra = c.target.result - INBOX_MAX
+          if (extra <= 0) return
+          store.index("at").openCursor().onsuccess = (ev2) => {
+            const cur2 = ev2.target.result
+            if (!cur2 || extra <= 0) return
+            cur2.delete()
+            extra--
+            cur2.continue()
+          }
+        }
+      }
+    }
+  })
+}
 
 /** 알림이 여는 주소는 이 사이트 안만 (없거나 다른 사이트면 마이 화면) */
 function sameOrigin(u) {
