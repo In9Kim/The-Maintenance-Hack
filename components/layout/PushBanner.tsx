@@ -10,8 +10,8 @@ import { track } from "@/lib/track"
 const DISMISS_KEY = "mh_push_dismissed"
 
 /**
- * 화면 맨 위(리콜 띠 아래) 한 줄: 교체 시기 알림 켜기.
- * 차를 등록하고 로그인한 사람에게만, 아직 안 켰을 때만. ×로 닫으면 다시 안 보임 (마이 > 계정에서 켜고 끌 수 있음)
+ * 홈 맨 위 한 줄: 교체 시기 알림 켜기 (리콜 띠가 있으면 그 대신 안 보임, RecallBanner가 그림).
+ * 차를 등록하고 로그인한 사람에게만, 아직 안 켰을 때만. ×로 닫으면 다시 안 보임 (더보기 > 계정에서 켜고 끌 수 있음)
  */
 export function PushBanner() {
   const pathname = usePathname()

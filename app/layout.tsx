@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next"
 import { Header } from "@/components/layout/Header"
 import { BottomNav } from "@/components/layout/BottomNav"
 import { RecallBanner } from "@/components/layout/RecallBanner"
-import { PushBanner } from "@/components/layout/PushBanner"
 import { carRecallAlerts } from "@/lib/recalls/car-alert"
 import { TrackFrom } from "@/components/seo/TrackFrom"
 import { WebAnalytics } from "@/components/seo/WebAnalytics"
@@ -58,7 +57,6 @@ export default function RootLayout({
           본문 바로가기
         </a>
         <RecallBanner alerts={carRecallAlerts()} />
-        <PushBanner />
         <Header />
         <TrackFrom />
         <WebAnalytics />

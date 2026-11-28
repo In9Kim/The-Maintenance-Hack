@@ -5,10 +5,14 @@ import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { loadMyCar } from "@/lib/my-car"
 import { recallsForYear, type CarRecallAlert } from "@/lib/recalls/year"
+import { PushBanner } from "@/components/layout/PushBanner"
 
 const DISMISS_KEY = "mh_recall_dismissed"
 
-/** 등록한 내 차(연식 기준)에 리콜이 있으면 화면 맨 위 빨간 띠. 닫으면 새 리콜이 나올 때까지 숨김 */
+/**
+ * 맨 위 띠는 홈에서만, 한 번에 하나만 (띠 두 줄이 쌓여 화면을 덮지 않게).
+ * 등록한 내 차(연식 기준)에 리콜이 있으면 빨간 리콜 띠, 없거나 닫았으면 알림 켜기 띠(PushBanner). 리콜 띠는 닫으면 새 리콜이 나올 때까지 숨김
+ */
 export function RecallBanner({ alerts }: { alerts: Record<string, CarRecallAlert> }) {
   const pathname = usePathname()
   const [state, setState] = useState<{ carId: string; name: string; count: number; latestId: string } | null>(null)
@@ -29,7 +33,8 @@ export function RecallBanner({ alerts }: { alerts: Record<string, CarRecallAlert
     return () => window.removeEventListener("mh-my-car", read)
   }, [alerts])
 
-  if (!state || pathname.startsWith("/admin") || pathname === `/cars/${state.carId}/recalls`) return null
+  if (pathname !== "/") return null
+  if (!state) return <PushBanner />
 
   const close = () => {
     try {
