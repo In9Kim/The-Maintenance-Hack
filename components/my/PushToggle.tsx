@@ -42,7 +42,7 @@ export function PushToggle() {
         <span className="min-w-0">
           <span className="block text-[15px] font-bold">교체 시기 알림</span>
           <span className="block text-[13px] text-muted-foreground">
-            {st === "on" ? "켜져 있어요 · 갈 때가 되면 아침 9시에 알려 드려요" : "갈 때가 되면 아침 9시에 한 번 알려 드려요"}
+            {st === "on" ? "켜짐 · 갈 때가 되면 아침 9시에" : "갈 때가 되면 아침 9시에 알려요"}
           </span>
         </span>
         {st === "on" ? (
