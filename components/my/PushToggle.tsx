@@ -22,8 +22,10 @@ export function PushToggle() {
       setSt(r)
       track({ type: "nav", meta: { via: "push_on", result: r } })
       if (r === "off") setErr("알림을 켜지 못했어요. 잠시 뒤 다시 눌러 주세요.")
-    } catch {
-      setErr("알림을 켜지 못했어요. 잠시 뒤 다시 눌러 주세요.")
+    } catch (e) {
+      const m = (e as Error)?.message || "알림을 켜지 못했어요"
+      setErr(m)
+      track({ type: "nav", meta: { via: "push_fail", reason: m.slice(0, 80) } })
     }
     setBusy(false)
   }

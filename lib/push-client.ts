@@ -38,13 +38,20 @@ const key = () => {
 
 async function send(sub: PushSubscription, g: Garage, hello = false): Promise<boolean> {
   const token = await accessToken()
-  if (!token) return false
+  if (!token) {
+    if (hello) throw new Error("로그인이 풀려 있어요. 이 화면에서 다시 로그인해 주세요.")
+    return false
+  }
   const r = await fetch("/api/push", {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
     body: JSON.stringify({ subscription: sub.toJSON(), items: pushSchedule(g, today()), hello }),
   })
-  return r.ok
+  if (!hello) return r.ok
+  if (!r.ok) throw new Error(`알림 저장에 실패했어요 (서버 ${r.status})`)
+  const j = (await r.json().catch(() => ({}))) as { hello?: number | null; stored?: boolean }
+  if (j.hello != null && (j.hello < 200 || j.hello >= 300)) throw new Error(`저장은 됐는데 확인 알림을 못 보냈어요 (알림 서버 ${j.hello})`)
+  return true
 }
 
 /** 알림 켜기 (버튼을 눌렀을 때만 권한을 묻는다) */
@@ -53,9 +60,14 @@ export async function enablePush(): Promise<PushState> {
   if (st === "ios-install" || st === "unsupported" || st === "denied") return st
   const perm = await Notification.requestPermission()
   if (perm !== "granted") return perm === "denied" ? "denied" : "off"
-  const reg = (await navigator.serviceWorker.getRegistration()) ?? (await navigator.serviceWorker.register("/sw.js"))
-  await navigator.serviceWorker.ready
-  const sub = (await reg.pushManager.getSubscription()) ?? (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key() }))
+  let sub: PushSubscription
+  try {
+    const reg = (await navigator.serviceWorker.getRegistration()) ?? (await navigator.serviceWorker.register("/sw.js"))
+    await navigator.serviceWorker.ready
+    sub = (await reg.pushManager.getSubscription()) ?? (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key() }))
+  } catch (e) {
+    throw new Error(`이 폰에 알림을 등록하지 못했어요 (${(e as Error)?.name ?? "오류"})`)
+  }
   return (await send(sub, loadGarage(), true)) ? "on" : "off"
 }
 
