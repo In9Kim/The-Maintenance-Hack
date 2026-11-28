@@ -48,9 +48,13 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
   const [cloudError, setCloudError] = useState("")
   const accountRef = useRef<Account | null>(null)
   const [providers, setProviders] = useState<Provider[]>([])
+  const [provReady, setProvReady] = useState(false) // 로그인 수단을 받기 전엔 등록 양식이 먼저 번쩍 뜨지 않게
   const [guest, setGuest] = useState(false) // '로그인 없이 이 폰에만' 을 고름
   useEffect(() => {
-    if (authEnabled()) enabledProviders().then(setProviders)
+    if (!authEnabled()) return setProvReady(true)
+    enabledProviders()
+      .then(setProviders)
+      .finally(() => setProvReady(true))
   }, [])
 
   const rebuild = useCallback(
@@ -139,7 +143,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
     if (accountRef.current) cloud(deleteCloudCar(id))
   }
 
-  if (!ready) return <div className="mx-auto max-w-2xl px-5 py-10"><div className="h-64 animate-pulse rounded-2xl bg-muted" /></div>
+  if (!ready || !provReady) return <div className="mx-auto max-w-2xl px-5 py-10"><div className="h-64 animate-pulse rounded-2xl bg-muted" /></div>
 
   const active = garage.cars.find((c) => c.id === garage.active)
   const showRegister = adding !== null || !active
