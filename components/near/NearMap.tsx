@@ -20,6 +20,8 @@ declare global {
 
 const SEOUL_CITY_HALL = { lat: 37.5665, lng: 126.978 }
 const RADIUS = 20000
+/** 목록은 가까운 곳부터 이만큼씩 보여 준다 (지도 핀은 전부) */
+const PAGE = 5
 
 type Status = "idle" | "locating" | "searching" | "done" | "error"
 interface Place extends KakaoPlace {
@@ -110,6 +112,7 @@ export function NearMap({ slug }: { slug: string }) {
   const [error, setError] = useState("")
   const [notice, setNotice] = useState("")
   const [places, setPlaces] = useState<Place[]>([])
+  const [shown, setShown] = useState(PAGE)
   const [active, setActive] = useState<string | null>(null)
   const [area, setArea] = useState("")
   const [center, setCenter] = useState<{ lat: number; lng: number; label: string } | null>(null)
@@ -129,7 +132,11 @@ export function NearMap({ slug }: { slug: string }) {
         el.innerHTML = pinHtml(i + 1, kind.color, p.id === activeId)
         el.addEventListener("click", () => {
           setActive(p.id)
-          document.getElementById(`place-${p.id}`)?.scrollIntoView({ block: "nearest", behavior: "smooth" })
+          // 아직 목록에 안 펼친 곳이면 그 곳까지 펼친 뒤 스크롤
+          setShown((s) => Math.max(s, Math.ceil((i + 1) / PAGE) * PAGE))
+          window.setTimeout(() => {
+            document.getElementById(`place-${p.id}`)?.scrollIntoView({ block: "nearest", behavior: "smooth" })
+          }, 50)
         })
         const o = new kakao.maps.CustomOverlay({
           position: new kakao.maps.LatLng(Number(p.y), Number(p.x)),
@@ -187,6 +194,7 @@ export function NearMap({ slug }: { slug: string }) {
           .slice(0, 30)
 
         setPlaces(list)
+        setShown(PAGE)
         setActive(null)
         drawPins(list, null)
 
@@ -390,10 +398,10 @@ export function NearMap({ slug }: { slug: string }) {
         </div>
 
         <div className="min-w-0">
-          {status === "done" && (
-            <p className="mb-2 text-[14px] text-muted-foreground">
-              {center?.label} 기준 20km 안 <b className="text-foreground">{places.length}곳</b>
-              {places.length > 0 && ", 가까운 순"}
+          {status === "done" && places.length > 0 && (
+            <p className="mb-2 break-keep text-[14px] text-muted-foreground">
+              {center && center.label !== "내 위치" ? `${center.label} 근처` : "가까운"} {kind.label}{" "}
+              <b className="text-foreground">{places.length}곳</b>
             </p>
           )}
           {status === "done" && places.length === 0 && (
@@ -403,8 +411,8 @@ export function NearMap({ slug }: { slug: string }) {
             </div>
           )}
           <ol ref={listRef} className="max-h-none space-y-2 lg:max-h-[570px] lg:overflow-y-auto lg:pr-1">
-            {places.map((p, i) => (
-              <li key={p.id} id={`place-${p.id}`}>
+            {places.slice(0, shown).map((p, i) => (
+              <li key={p.id} id={`place-${p.id}`} className="scroll-mt-20 scroll-mb-[calc(72px+env(safe-area-inset-bottom))] lg:scroll-mb-2">
                 <div
                   className={`rounded-[14px] border bg-card p-3.5 transition ${
                     active === p.id ? "border-foreground shadow-[0_0_0_1px_hsl(var(--foreground))]" : "border-border"
@@ -460,6 +468,15 @@ export function NearMap({ slug }: { slug: string }) {
               </li>
             ))}
           </ol>
+          {shown < places.length && (
+            <button
+              type="button"
+              onClick={() => setShown((s) => s + PAGE)}
+              className="mt-2 flex min-h-[48px] w-full items-center justify-center rounded-[12px] border border-dashed border-border text-[14px] font-semibold text-muted-foreground hover:border-primary/50 hover:text-foreground"
+            >
+              {`더 보기 (${Math.min(PAGE, places.length - shown)}곳)`}
+            </button>
+          )}
         </div>
       </div>
       <p className="mt-3 text-[12px] text-muted-foreground">위치 정보: 카카오 로컬. 지점 정보가 바뀌었을 수 있으니 방문 전 전화로 확인하세요. 위치는 저장하지 않습니다.</p>

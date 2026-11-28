@@ -18,6 +18,7 @@ import {
 import { dataBasisText, fmtDate, recallData, recallsForCar, shortReason } from "@/lib/recalls/data"
 import { carRecallAlerts } from "@/lib/recalls/car-alert"
 import { MyYearRecalls } from "@/components/cars/MyYearRecalls"
+import { InfoTip } from "@/components/ui/InfoTip"
 
 export const dynamicParams = false
 
@@ -76,7 +77,10 @@ export default async function CarRecallsPage({ params }: Props) {
 
       <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[36px]">{name} 리콜 정보</h1>
       <p className="mt-2 text-[15px] text-muted-foreground">
-        {car.generation} · {car.yearRange} 생산 차량 리콜 <b className="num text-foreground">{recalls.length}건</b>
+        {car.generation} · {car.yearRange} 생산 차량{" "}
+        <span className="whitespace-nowrap">
+          리콜 <b className="num text-foreground">{recalls.length}건</b>
+        </span>
       </p>
 
       {/* 등록한 내 차 연식에 해당할 수 있는 건수 (맨 위 리콜 띠와 같은 기준) */}
@@ -84,7 +88,7 @@ export default async function CarRecallsPage({ params }: Props) {
 
       <RecallNotice carId={car.id} />
 
-      <section className="mt-10" aria-label={`${name} 리콜 목록`}>
+      <section className="mt-6" aria-label={`${name} 리콜 목록`}>
         {recalls.length ? (
           <RecallList recalls={recalls} />
         ) : (
@@ -99,9 +103,12 @@ export default async function CarRecallsPage({ params }: Props) {
             에만 올려 두었으니 함께 확인해 주세요.
           </RecallEmpty>
         )}
-        <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
-          차명의 세대 표기와 생산기간이 이 차종과 확실히 일치하는 리콜만 모았어요. 하이브리드 등 같은 세대의 다른
-          파워트레인 리콜도 포함돼요.
+        <p className="mt-3 flex items-center gap-1 break-keep text-[13px] text-muted-foreground">
+          이 차종에 확실히 맞는 리콜만 모았어요
+          <InfoTip label="모은 기준 보기">
+            차명의 세대 표기와 생산기간이 이 차종과 확실히 일치하는 리콜만 모았어요. 하이브리드 등 같은 세대의 다른
+            파워트레인 리콜도 포함돼요.
+          </InfoTip>
         </p>
       </section>
 
@@ -110,27 +117,32 @@ export default async function CarRecallsPage({ params }: Props) {
         href={`/cars/${car.id}`}
         carId={car.id}
         label="recall_to_cost"
-        className="mt-10 flex items-center justify-between gap-4 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-input sm:p-5"
+        className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-input sm:p-5"
       >
         <span className="min-w-0">
-          <span className="block text-[16px] font-bold">{name} 소모품 교체 비용 보기</span>
-          <span className="mt-1 block text-[14px] leading-relaxed text-muted-foreground">
-            리콜 수리 받으러 가는 김에 엔진오일·필터도 함께 점검해 보세요
+          <span className="block truncate whitespace-nowrap text-[16px] font-bold">
+            <span className="sr-only">{name} </span>소모품 교체 비용
+          </span>
+          <span className="mt-0.5 block truncate whitespace-nowrap text-[13px] text-muted-foreground">
+            리콜 가는 김에 함께 점검
           </span>
         </span>
-        {savings > 0 && (
-          <span className="num shrink-0 text-right">
-            <span className="block text-[12px] text-muted-foreground">아끼는 돈</span>
-            <span className="text-[18px] font-extrabold text-primary">{formatPrice(savings)}</span>
-          </span>
-        )}
+        <span className="flex shrink-0 items-center gap-2">
+          {savings > 0 && (
+            <span className="num text-right">
+              <span className="block whitespace-nowrap text-[12px] text-muted-foreground">직접 사면 아껴요</span>
+              <span className="whitespace-nowrap text-[18px] font-extrabold text-primary">{formatPrice(savings)}</span>
+            </span>
+          )}
+          <span aria-hidden className="text-[20px] leading-none text-muted-foreground">›</span>
+        </span>
       </TrackedLink>
 
       <Link
         href="/recalls?all=1"
         className="mt-3 inline-flex min-h-[44px] items-center text-[14px] font-semibold text-muted-foreground hover:text-foreground"
       >
-        전체 리콜 목록 보기
+        전체 리콜 목록 보기 <span aria-hidden className="ml-1">›</span>
       </Link>
 
       <RecallFaq items={faq} />

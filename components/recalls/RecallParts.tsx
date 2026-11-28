@@ -15,7 +15,6 @@ import type { RecallNewsItem } from "@/lib/recalls/types"
 import { recallBlogPost } from "@/lib/recalls/blog"
 import { partLabel, recallCars, type RecallGroup } from "@/lib/recalls/highlight"
 
-const H2 = "text-[20px] font-bold sm:text-[24px]"
 const SUMMARY = "flex min-h-[44px] cursor-pointer list-none items-center gap-1 text-[14px] font-semibold text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden"
 
 /** 모든 리콜 페이지 상단: 차대번호 조회 안내 + 데이터 기준일 */
@@ -41,26 +40,34 @@ export function RecallNotice({ carId }: { carId?: string }) {
   )
 }
 
-/** 페이지 하단 출처 */
+/** 페이지 하단 출처: 한 줄만 보이고 누르면 그 자리에서 펼침.
+ *  말풍선(InfoTip)은 열 때만 그려서 링크·면책 문구가 HTML에 없었고, 페이지 맨 끝이라 화면 밖으로 잘렸다 → details로 */
 export function RecallSource() {
   return (
-    <p className="mt-12 border-t border-border pt-4 text-[12px] leading-relaxed text-muted-foreground">
-      출처:{" "}
-      <a href={RECALL_CENTER_LIST_URL} target="_blank" rel="noopener" className="underline hover:text-foreground">
-        자동차리콜센터(car.go.kr) 리콜현황
-      </a>
-      (게시판 원문을 그대로 정리){" "}
-      ·{" "}
-      <a href={RECALL_DATASET_URL} target="_blank" rel="noopener" className="underline hover:text-foreground">
-        공공데이터포털 한국교통안전공단_자동차결함 리콜현황
-      </a>{" "}
-      ·{" "}
-      <a href="https://www.molit.go.kr/USR/NEWS/m_71/lst.jsp" target="_blank" rel="noopener" className="underline hover:text-foreground">
-        국토교통부 리콜 보도자료
-      </a>
-      (표 내용은 AI로 정리 후 원문과 대조) — {dataBasisText()}. 리콜 상세 내용과 시정 방법은 자동차리콜센터 원문을 확인하세요. 정비핵은
-      데이터 오류나 누락에 대해 책임지지 않습니다.
-    </p>
+    <details className="group mt-8 text-[12px] text-muted-foreground">
+      <summary className="flex min-h-[44px] cursor-pointer list-none items-center gap-1 break-keep hover:text-foreground [&::-webkit-details-marker]:hidden">
+        출처: 자동차리콜센터 외 2곳
+        <svg viewBox="0 0 20 20" className="h-[16px] w-[16px]" fill="none" stroke="currentColor" strokeWidth={1.6} aria-hidden>
+          <circle cx="10" cy="10" r="8" />
+          <path d="M10 9v5M10 6.2v.1" strokeLinecap="round" />
+        </svg>
+      </summary>
+      <p className="break-keep pb-2 leading-relaxed">
+        <a href={RECALL_CENTER_LIST_URL} target="_blank" rel="noopener" className="underline">
+          자동차리콜센터(car.go.kr) 리콜현황
+        </a>
+        (게시판 원문을 그대로 정리) ·{" "}
+        <a href={RECALL_DATASET_URL} target="_blank" rel="noopener" className="underline">
+          공공데이터포털 한국교통안전공단_자동차결함 리콜현황
+        </a>{" "}
+        ·{" "}
+        <a href="https://www.molit.go.kr/USR/NEWS/m_71/lst.jsp" target="_blank" rel="noopener" className="underline">
+          국토교통부 리콜 보도자료
+        </a>
+        (표 내용은 AI로 정리 후 원문과 대조) — {dataBasisText()}. 리콜 상세 내용과 시정 방법은 자동차리콜센터 원문을
+        확인하세요. 정비핵은 데이터 오류나 누락에 대해 책임지지 않습니다.
+      </p>
+    </details>
   )
 }
 
@@ -204,16 +211,16 @@ export function recallFaq(carName?: string): { q: string; a: string }[] {
 
 export function RecallFaq({ items }: { items: { q: string; a: string }[] }) {
   return (
-    <section className="mt-12">
-      <h2 className={H2}>자주 묻는 질문</h2>
-      <div className="mt-4 divide-y divide-border rounded-[14px] border border-border bg-card">
+    <section className="mt-8">
+      <h2 className="text-[15px] font-semibold text-muted-foreground">자주 묻는 질문</h2>
+      <div className="mt-2 divide-y divide-border rounded-[14px] border border-border bg-card">
         {items.map((f) => (
           <details key={f.q} className="group px-4">
-            <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-3 py-3 font-semibold [&::-webkit-details-marker]:hidden">
-              <h3 className="text-[15px]">{f.q}</h3>
+            <summary className="flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-3 py-2.5 [&::-webkit-details-marker]:hidden">
+              <h3 className="break-keep text-[14px] font-medium">{f.q}</h3>
               <span aria-hidden className="text-muted-foreground transition group-open:rotate-180">⌄</span>
             </summary>
-            <p className="pb-4 text-[15px] leading-relaxed text-muted-foreground">{f.a}</p>
+            <p className="break-keep pb-4 text-[14px] leading-relaxed text-muted-foreground">{f.a}</p>
           </details>
         ))}
       </div>

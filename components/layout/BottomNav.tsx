@@ -21,6 +21,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="아래 메뉴"
+      data-bottom-nav
       className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
     >
       <div className="mx-auto flex max-w-lg">

@@ -406,7 +406,11 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
               </div>
               {isOpen && (
                 <div className="px-4 pb-3">
-                  {!custom && (
+                  {!custom && d.state === "ok" ? (
+                    <p className="mb-3 text-[14px] text-muted-foreground break-keep">
+                      {/ 남음$/.test(d.text) ? `${d.text.replace(/ 남음$/, " 남았어요")}.` : "아직 여유 있어요."} {loggedIn ? "때가 되면 알려 드릴게요." : "때가 되면 여기 표시돼요."}
+                    </p>
+                  ) : !custom && (
                     <div className="mb-3">
                       <LiveCoupang carId={my.car.id} part={d.part.slug} partId={d.part.slug} engine={my.engine} compact emptyText="쿠팡에서 이 차에 맞는 상품을 찾지 못했어요." />
                     </div>

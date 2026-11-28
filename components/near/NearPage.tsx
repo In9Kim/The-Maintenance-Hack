@@ -4,8 +4,6 @@ import { Breadcrumbs } from "@/components/seo/Shared"
 import { NearMap } from "@/components/near/NearMap"
 import { PartsBeforeVisit } from "@/components/near/PartsBeforeVisit"
 import { NEAR_KINDS, type NearKind } from "@/lib/near"
-import { MyCarCostLink } from "@/components/cars/MyCarShortcut"
-import { seoCars } from "@/lib/seo"
 
 const href = (k: NearKind) => (k.slug === "gongim" ? "/near" : `/near/${k.slug}`)
 
@@ -47,21 +45,6 @@ export function NearPage({ kind }: { kind: NearKind }) {
       <div className="mt-5">
         <NearMap key={kind.slug} slug={kind.slug} />
       </div>
-
-      {kind.slug !== "carwash" && (
-        <div className="mt-10 rounded-2xl border border-border bg-card p-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
-          <div>
-            <p className="font-bold">{kind.slug === "gongim" ? "맡기기 전에 부품값부터 확인하세요" : "공식센터 견적, 직접 구매하면 얼마일까요?"}</p>
-            <p className="mt-1 text-[14px] text-muted-foreground">차종을 고르면 소모품 규격과 공식센터·직접 구매 비용을 나란히 보여 드려요.</p>
-          </div>
-          <MyCarCostLink
-            ids={seoCars().map((c) => c.id)}
-            className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-primary px-5 text-[15px] font-bold text-primary-foreground transition hover:brightness-110 active:translate-y-px sm:mt-0 sm:w-auto"
-          >
-            내 차 정비 비용 보기
-          </MyCarCostLink>
-        </div>
-      )}
     </div>
   )
 }

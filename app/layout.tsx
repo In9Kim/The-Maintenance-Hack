@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next"
-import Link from "next/link"
 import { Header } from "@/components/layout/Header"
 import { BottomNav } from "@/components/layout/BottomNav"
 import { RecallBanner } from "@/components/layout/RecallBanner"
@@ -64,22 +63,9 @@ export default function RootLayout({
         <TrackFrom />
         <WebAnalytics />
         <RegisterSW />
-        <main id="content" className="min-h-[calc(100vh-3.5rem)]">{children}</main>
-        <SiteFooter />
+        <main id="content">{children}</main>
         <BottomNav />
       </body>
     </html>
-  )
-}
-
-function SiteFooter() {
-  return (
-    <footer className="mt-16 border-t border-border bg-card">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-1 px-5 py-5 text-[13px] text-muted-foreground">
-        <span>© 2026 정비핵</span>
-        <Link className="hover:text-foreground hover:underline" href="/info">데이터 출처·이용 안내</Link>
-        <span>가격은 참고용 추정치예요</span>
-      </div>
-    </footer>
   )
 }
