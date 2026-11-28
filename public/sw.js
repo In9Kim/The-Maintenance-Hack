@@ -18,3 +18,31 @@ self.addEventListener("fetch", (e) => {
   if (e.request.mode !== "navigate") return
   e.respondWith(fetch(e.request).catch(() => caches.match(OFFLINE)))
 })
+
+// 교체 시기 알림 (서버가 매일 아침 보냄). 누르면 마이 화면으로
+self.addEventListener("push", (e) => {
+  let d = {}
+  try {
+    d = e.data ? e.data.json() : {}
+  } catch {}
+  e.waitUntil(
+    self.registration.showNotification(d.title || "정비핵", {
+      body: d.body || "",
+      icon: "/icon-192.png",
+      badge: "/icon-192.png",
+      tag: "mh-due",
+      data: { url: d.url || "/my" },
+    }),
+  )
+})
+
+self.addEventListener("notificationclick", (e) => {
+  e.notification.close()
+  const url = (e.notification.data && e.notification.data.url) || "/my"
+  e.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const c of list) if ("focus" in c) return c.navigate(url).then((w) => (w || c).focus())
+      return self.clients.openWindow(url)
+    }),
+  )
+})

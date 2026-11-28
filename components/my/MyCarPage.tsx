@@ -20,7 +20,10 @@ import { RegisterCar, FIELD, num, snapshot, customSnapshot, type MyCarOption } f
 import { authEnabled, enabledProviders, supabase, type Provider } from "@/lib/supabase"
 import { deleteCloudCar, fetchCars, fromRow, mergeGarage, pushCars } from "@/lib/cloud-garage"
 import { track } from "@/lib/track"
-import { LoginButtons, takeAfterLogin } from "@/components/my/LoginButtons"
+import { takeAfterLogin } from "@/components/my/LoginButtons"
+import { LoginPanel } from "@/components/my/LoginPanel"
+import { PushToggle } from "@/components/my/PushToggle"
+import { disablePush } from "@/lib/push-client"
 import { LiveCoupang } from "@/components/cars/LiveCoupang"
 
 export type { MyCarOption }
@@ -181,8 +184,7 @@ export function MyCarPage({ options }: { options: MyCarOption[] }) {
           <>
             <h1 className="text-[28px] font-extrabold leading-[1.3] sm:text-[34px]">내 차 등록</h1>
             <p className="mt-2 text-[15px] text-muted-foreground">차종과 연식만 고르면 맞는 부품과 가격을 보여 드려요</p>
-            <div className="mt-6"><LoginButtons providers={providers} /></div>
-            <p className="mt-2 text-[13px] text-muted-foreground">로그인하면 차 여러 대를 저장하고, 폰을 바꿔도 그대로예요</p>
+            <LoginPanel providers={providers} className="mt-6" />
             <button
               onClick={() => setGuest(true)}
               className="mt-6 flex h-12 w-full items-center justify-center rounded-[10px] border border-border bg-card text-[15px] font-semibold"
@@ -247,6 +249,7 @@ function AccountBox({ providers, account, onSignedOut }: { providers: Provider[]
   const [busy, setBusy] = useState(false)
 
   const signOut = async () => {
+    await disablePush().catch(() => {}) // 로그아웃한 폰에는 알림을 보내지 않음
     const sb = await supabase()
     await sb.auth.signOut()
     onSignedOut()
@@ -255,6 +258,7 @@ function AccountBox({ providers, account, onSignedOut }: { providers: Provider[]
   const withdraw = async () => {
     if (!confirm("탈퇴하면 계정에 저장한 차와 교체 기록이 모두 지워지고 되돌릴 수 없어요. 탈퇴할까요?")) return
     setBusy(true)
+    await disablePush().catch(() => {})
     const sb = await supabase()
     const { error } = await sb.rpc("delete_my_account")
     if (error) {
@@ -276,6 +280,7 @@ function AccountBox({ providers, account, onSignedOut }: { providers: Provider[]
           <span className="ml-1.5 text-[13px] font-normal text-muted-foreground">{account.provider === "kakao" ? "카카오" : account.provider === "google" ? "구글" : ""} 로그인 중</span>
         </p>
         <p className="mt-0.5 text-[13px] text-muted-foreground">차 목록과 교체 기록이 계정에 저장돼요</p>
+        <PushToggle />
         <div className="mt-3 flex gap-4 text-[13px]">
           <button onClick={signOut} disabled={busy} className="min-h-[40px] font-semibold underline underline-offset-4">로그아웃</button>
           <button onClick={withdraw} disabled={busy} className="min-h-[40px] text-muted-foreground underline underline-offset-4">회원 탈퇴</button>
@@ -287,13 +292,7 @@ function AccountBox({ providers, account, onSignedOut }: { providers: Provider[]
   if (!providers.length) return null
 
   return (
-    <section className="mt-10 rounded-[14px] border border-border bg-card p-4">
-      <p className="text-[15px] font-semibold">로그인하면 차 여러 대를 폰 바꿔도 그대로</p>
-      <div className="mt-3"><LoginButtons providers={providers} /></div>
-      <p className="mt-2 text-[12px] text-muted-foreground">
-        로그인 없이도 이 폰에서는 그대로 쓸 수 있어요 · <Link href="/privacy" className="underline underline-offset-2">개인정보 처리방침</Link>
-      </p>
-    </section>
+    <LoginPanel providers={providers} className="mt-10" />
   )
 }
 

@@ -8,7 +8,7 @@ import { loadMyCar } from "@/lib/my-car"
 import { parseProductInput } from "@/lib/compat-request"
 import { track } from "@/lib/track"
 import { useAuthToken } from "@/components/my/useAuthToken"
-import { LoginButtons } from "@/components/my/LoginButtons"
+import { LoginPanel } from "@/components/my/LoginPanel"
 import { MyCarLine } from "@/components/my/MyCarLine"
 
 export interface CheckCar {
@@ -193,7 +193,7 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
           </button>
         </div>
         {error && <p role="alert" className="mt-3 rounded-[10px] bg-[#FEF3F2] px-3.5 py-2.5 text-[14px] text-[#B42318]">{error}</p>}
-        {needLogin && !token && <LoginBox providers={providers} />}
+        {needLogin && !token && <LoginPanel providers={providers} next="/check" title="로그인하고 이어서 확인하기" order={["more", "alert", "keep"]} className="mt-3" />}
 
         {car && (
           <details className="mt-3 text-[13px] text-muted-foreground">
@@ -297,15 +297,5 @@ function ResultView({ r, carId, onReset }: { r: Result; carId?: string; onReset:
         )}
       </div>
     </section>
-  )
-}
-
-/** AI 확인 전에 로그인 안내 (로그인 후 이 화면으로 돌아옴) */
-function LoginBox({ providers }: { providers: Parameters<typeof LoginButtons>[0]["providers"] }) {
-  return (
-    <div className="mt-2 rounded-[12px] bg-muted p-3.5">
-      <p className="text-[14px] font-semibold">로그인하면 하루 3번까지 확인할 수 있어요</p>
-      <div className="mt-2.5"><LoginButtons providers={providers} next="/check" /></div>
-    </div>
   )
 }

@@ -5,6 +5,7 @@
  * 미리보기 주소(overhaul-… 등)는 그대로 둔다.
  */
 import handler from "./.open-next/worker.js"
+import { runDailyPush, type KV } from "./lib/push-store"
 
 const CANONICAL_HOST = "jungbihack.com"
 const OLD_HOSTS = new Set(["maintenance-hack.wwe9459.workers.dev", "www.jungbihack.com"])
@@ -16,6 +17,11 @@ export default {
       return Response.redirect(`https://${CANONICAL_HOST}${url.pathname}${url.search}`, 301)
     }
     return handler.fetch(request, env, ctx)
+  },
+  // 매일 09:00(한국 시간) 교체 시기 알림 보내기 (wrangler.jsonc triggers.crons)
+  async scheduled(_event: unknown, env: { VERIFY_LIMIT?: KV; VAPID_PRIVATE_KEY?: string }, ctx: { waitUntil(p: Promise<unknown>): void }) {
+    if (!env.VERIFY_LIMIT || !env.VAPID_PRIVATE_KEY) return
+    ctx.waitUntil(runDailyPush(env.VERIFY_LIMIT, env.VAPID_PRIVATE_KEY).then((r) => console.log(JSON.stringify({ push: r }))))
   },
 }
 

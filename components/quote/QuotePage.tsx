@@ -9,7 +9,7 @@ import { track } from "@/lib/track"
 import { ProductRow } from "@/components/cars/LiveCoupang"
 import { fitsEngine, needsSpecCheck, quoteSearchWord } from "@/lib/quote-analyze"
 import { useAuthToken } from "@/components/my/useAuthToken"
-import { LoginButtons } from "@/components/my/LoginButtons"
+import { LoginPanel } from "@/components/my/LoginPanel"
 import { MyCarLine } from "@/components/my/MyCarLine"
 import { InfoTip } from "@/components/ui/InfoTip"
 
@@ -357,10 +357,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
             )}
             {error && <p role="alert" className="mt-3 rounded-[10px] bg-[#FEF3F2] px-3.5 py-2.5 text-[14px] text-[#B42318]">{error}</p>}
             {needLogin && token === null && (
-              <div className="mt-3 rounded-[12px] bg-muted p-3.5">
-                <p className="text-[14px] font-semibold">로그인하고 이어서 분석하기</p>
-                <div className="mt-2.5"><LoginButtons providers={providers} next="/quote" /></div>
-              </div>
+              <LoginPanel providers={providers} next="/quote" title="로그인하고 이어서 분석하기" order={["more", "alert", "keep"]} className="mt-3" />
             )}
           </div>
         </>
