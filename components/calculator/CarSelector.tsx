@@ -20,6 +20,8 @@ interface CarSelectorProps {
   generateNeedsLogin?: boolean
   /** 호환성 검증 페이지에서 차종이 자동 설정된 경우 true */
   isFromVerify?: boolean
+  /** 상자 제목 (내 차가 있는데 다른 차를 고를 때 '다른 차 고르기') */
+  title?: string
 }
 
 const SELECT_CLS =
@@ -38,6 +40,7 @@ export function CarSelector({
   generateInfo,
   generateNeedsLogin = false,
   isFromVerify = false,
+  title = "차종 선택",
 }: CarSelectorProps) {
   const [showGenerate, setShowGenerate] = useState(false)
   const [genInput, setGenInput] = useState<GenerateCarInput>({
@@ -97,7 +100,7 @@ export function CarSelector({
 
   return (
     <div className="space-y-3">
-      <h2 className="text-[17px] font-bold">차종 선택</h2>
+      <h2 className="text-[17px] font-bold">{title}</h2>
       <div className="grid grid-cols-[0.8fr_1.2fr] gap-2">
         <div>
           <label htmlFor="calc-brand" className="sr-only">브랜드</label>
@@ -128,8 +131,15 @@ export function CarSelector({
       </div>
 
       {selectedCar && (
-        <p className="text-[13px] text-muted-foreground">
-          {selectedCar.brand} {selectedCar.model} {selectedCar.generation} · {selectedCar.engineTypes.join(" / ")}
+        <p className="break-keep text-[13px] text-muted-foreground">
+          {selectedCar.brand} {selectedCar.model} {selectedCar.generation} ·{" "}
+          {/* 엔진 이름은 한 덩어리로 (390px에서 'T-' / 'GDi'처럼 끊기지 않게) */}
+          {selectedCar.engineTypes.map((e, i) => (
+            <span key={e}>
+              {i > 0 && " / "}
+              <span className="whitespace-nowrap">{e}</span>
+            </span>
+          ))}
           {isFromVerify && <span className="ml-1.5 font-semibold text-primary">호환성 확인에서 자동 선택됨</span>}
         </p>
       )}

@@ -3,6 +3,7 @@ import { getSeoCar, partSlug } from "@/lib/seo"
 import { allowSearch, coupangSearch } from "@/lib/coupang-api"
 import { coupangPickFor } from "@/lib/coupang-links"
 import { ENGINE_WORD, filterByEngine, ourEngine } from "./engine"
+import { GEN_CODES, matchPartKind, partKind } from "./part-match"
 import { clientIp } from "@/lib/client-ip"
 
 /**
@@ -17,8 +18,6 @@ const ALIAS: Record<string, string[]> = { 하부암: ["로어암", "로워암", 
 const NOT_PART = /렌치|소켓|점화\s*코일|코일\s*\d|습기|건조기|스포일러|에어댐|사이드\s*스[커컷]|도어\s*모듈|충전기|점프|단자|와이퍼|가스\s*쇼바|도어\s*쇼바|트렁크|본넷|후드\s*리프트|부싱/
 /** 차종 전용이라 상품명에 차 이름이 있어야 믿을 수 있는 부품 (배터리는 규격 공용 상품이 많아 제외) */
 const CAR_SPECIFIC = new Set(["brake", "spark"])
-/** 현대·기아 세대 코드 (상품명에 다른 세대 코드만 있으면 그 세대용) */
-const GEN_CODES = /\b(BL|XM|UM|MQ4|TD|HD|MD|AD|CN7|YD|BD|JF|DL3|LF|YF|NF|DN8|HG|IG|GN7|TL|NX4|QL|NQ5|SL|KA4|YP|VQ|DM|TM|MX5|SP2|JA|TAM|SG2|DE|GL3|YG|TF)\b/g
 
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams
@@ -53,6 +52,9 @@ export async function GET(req: NextRequest) {
     const all = await coupangSearch(keyword, 10, gate)
     let kept = relevant(all)
     let items = kept.length >= 3 ? kept : all
+    // 엔진오일·에어클리너·에어컨 필터·와이퍼: 종류가 다른 상품(오일필터만, 오일 세트, 워셔액)으로 채우지 않는다 (없으면 화면이 검색 링크로 대신)
+    const kind = part ? partKind(part.name) : null
+    if (kind) items = matchPartKind(all, kind, car.model, /^[A-Z][A-Z0-9]{1,4}$/.test(code) ? code : "")
     if (part && ["battery", "brake", "spark"].includes(part.category)) {
       // 배터리·브레이크·점화플러그: 관련 없는 상품으로 채우지 않는다 (적으면 적은 대로)
       const front = /\(전\)|앞/.test(part.name)
@@ -102,6 +104,11 @@ export async function GET(req: NextRequest) {
     const pick = part ? coupangPickFor(part) : undefined
     // 정비핵이 골라 둔 상품(pickId)이 결과에 있으면 맨 앞으로
     const pickNum = pick?.productId ? Number(pick.productId) : null
+    // 골라 둔 상품은 종류 거르기에서 빠졌어도 다시 넣는다
+    if (pickNum && !items.some((x) => Number(x.productId) === pickNum)) {
+      const p = all.find((x) => Number(x.productId) === pickNum)
+      if (p) items = [p, ...items]
+    }
     if (pickNum) items = [...items].sort((a, b) => Number(Number(b.productId) === pickNum) - Number(Number(a.productId) === pickNum))
     return NextResponse.json(
       { keyword, pickId: pick?.productId ? Number(pick.productId) : null, items },
