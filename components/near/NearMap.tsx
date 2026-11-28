@@ -479,7 +479,7 @@ export function NearMap({ slug }: { slug: string }) {
           )}
         </div>
       </div>
-      <p className="mt-3 text-[12px] text-muted-foreground">위치 정보: 카카오 로컬. 지점 정보가 바뀌었을 수 있으니 방문 전 전화로 확인하세요. 위치는 저장하지 않습니다.</p>
+      <p className="mt-3 text-[12px] text-muted-foreground">위치 정보: 카카오 로컬. 지점 정보가 바뀌었을 수 있으니 방문 전 전화로 확인하세요. 위치는 이 폰에만 저장하고 서버로 보내지 않아요.</p>
     </div>
   )
 }
