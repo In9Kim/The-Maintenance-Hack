@@ -17,6 +17,10 @@
 	],
 	// 부품 호환 확인(AI) 하루 조회 횟수 제한용 (lib/verify-limit.ts). 무료 KV
 	"kv_namespaces": [{ "binding": "VERIFY_LIMIT", "id": "19092b499f78410c8c4e5b94fdffb960" }],
+	// 하루 횟수 세기(견적서·부품 확인·쿠팡 검색)를 한 번에 하나씩 처리하는 Durable Object (lib/limit-counter.ts, worker.ts에서 내보냄).
+	// KV는 동시에 몰아 보내면 한도를 넘을 수 있어서. 무료 요금제는 SQLite 방식만 됨
+	"durable_objects": { "bindings": [{ "name": "LIMITS", "class_name": "LimitCounter" }] },
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["LimitCounter"] }],
 	// 무료 방문 분석은 Cloudflare 대시보드 > Workers > maintenance-hack > Metrics 에서 확인
 	"observability": { "enabled": true },
 	// 교체 시기 알림: 매일 00:00 UTC = 09:00 한국 시간 (worker.ts scheduled). 비밀 키는 wrangler secret put VAPID_PRIVATE_KEY

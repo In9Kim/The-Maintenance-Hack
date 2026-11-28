@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { getSeoCar, partSlug } from "@/lib/seo"
 import { allowSearch, coupangSearch } from "@/lib/coupang-api"
 import { coupangPickFor } from "@/lib/coupang-links"
+import { ENGINE_WORD, filterByEngine, ourEngine } from "./engine"
+import { clientIp } from "@/lib/client-ip"
 
 /**
  * /check 화면 안에서 쿠팡 상품 검색 (앱 이동 없이 고르기).
@@ -28,12 +30,20 @@ export async function GET(req: NextRequest) {
   const q = (sp.get("q") ?? "").trim().slice(0, 40)
   if (!part && q.length < 2) return NextResponse.json({ error: "찾을 부품을 고르거나 적어 주세요." }, { status: 400 })
 
-  const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
+  const ip = clientIp(req.headers) // IPv6는 /64로 묶음
   // 하루 횟수는 쿠팡을 실제로 부를 때만 센다 (같은 검색어는 하루 저장돼서 공짜)
   let allowed: boolean | undefined
   const gate = async () => (allowed ??= await allowSearch(ip))
   const partName = part ? part.name.replace(/\s*\(.*?\)/g, "").replace(/\+/g, " ") : ""
-  const keyword = part ? `${name} ${partName}` : q.includes(car.model) ? q : `${name} ${q}`
+  // 엔진에 따라 다른 부품(엔진오일 (디젤) 등)이거나 오일·필터면 엔진을 검색어에 넣고, 다른 엔진용 상품은 뺀다
+  // (괄호를 지우면 디젤·가솔린 검색어가 같아져서 하이브리드 세트가 먼저 나왔음). engine=등록한 엔진 이름 (선택)
+  const engineParam = (sp.get("engine") ?? "").slice(0, 40)
+  const engineKind = part
+    ? ourEngine(part.name, ["oil", "filter", "fluid"].includes(part.category) ? engineParam : null)
+    : null
+  const keyword = part
+    ? `${name} ${partName}${engineKind ? ` ${ENGINE_WORD[engineKind]}` : ""}`
+    : q.includes(car.model) ? q : `${name} ${q}`
   try {
     // 쿠팡 검색은 비슷한 다른 부품(디스크 → 패드)이 섞여 나와서, 부품을 구별하는 낱말이 상품명에 있는 것만
     const base = (part ? partName : q).split(/\s+/).filter((w) => w.length >= 2 && !GENERIC.has(w))
@@ -88,13 +98,23 @@ export async function GET(req: NextRequest) {
       // 우리 세대 코드(BD)가 적힌 상품을 앞으로
       if (genCode) items = [...items].sort((a, b) => Number(b.name.toUpperCase().includes(genCode)) - Number(a.name.toUpperCase().includes(genCode)))
     }
+    items = filterByEngine(items, engineKind)
     const pick = part ? coupangPickFor(part) : undefined
+    // 정비핵이 골라 둔 상품(pickId)이 결과에 있으면 맨 앞으로
+    const pickNum = pick?.productId ? Number(pick.productId) : null
+    if (pickNum) items = [...items].sort((a, b) => Number(Number(b.productId) === pickNum) - Number(Number(a.productId) === pickNum))
     return NextResponse.json(
       { keyword, pickId: pick?.productId ? Number(pick.productId) : null, items },
       { headers: { "Cache-Control": "public, max-age=600" } },
     )
   } catch (e) {
-    if (e instanceof Error && e.message === "LIMIT") return NextResponse.json({ error: "오늘 검색을 많이 했어요. 내일 다시 이용해 주세요." }, { status: 429 })
+    if (e instanceof Error && e.message === "LIMIT") {
+      // 횟수가 다 됐어도 정비핵이 골라 둔 상품이 있으면 그것만 보여 줌
+      const pick = part ? coupangPickFor(part) : undefined
+      if (pick?.productId)
+        return NextResponse.json({ keyword, pickId: Number(pick.productId), items: [{ productId: Number(pick.productId), name: pick.name, price: pick.price, url: pick.url, image: pick.image, rocket: !!pick.rocket }], limited: true })
+      return NextResponse.json({ error: "오늘 검색을 많이 했어요. 내일 다시 이용해 주세요." }, { status: 429 })
+    }
     return NextResponse.json({ error: "쿠팡 검색이 잠시 안 돼요. 조금 뒤 다시 시도해 주세요." }, { status: 502 })
   }
 }

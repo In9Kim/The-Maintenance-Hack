@@ -24,6 +24,15 @@ test("관리자 비밀번호·토큰 확인", async () => {
     assert.equal(await verifyAdminToken(token.slice(0, -1) + (token.endsWith("0") ? "1" : "0")), false)
     assert.equal(await verifyAdminToken(""), false)
 
+    // 만료: 8시간 안에는 통과, 지나면 거절. 만료 시각만 바꾼 토큰도 거절
+    const t0 = Date.UTC(2026, 10, 28, 0)
+    const old = await generateAdminToken(t0)
+    assert.equal(await verifyAdminToken(old, t0 + 7 * 3600_000), true)
+    assert.equal(await verifyAdminToken(old, t0 + 9 * 3600_000), false)
+    const [exp, sig] = old.split(".")
+    assert.equal(await verifyAdminToken(`${Number(exp) + 3600}.${sig}`, t0 + 7 * 3600_000), false)
+    assert.equal(await verifyAdminToken(sig, t0), false)
+
     delete process.env.ADMIN_PASSWORD
     assert.equal(await checkAdminPassword(""), false)
     assert.equal(await verifyAdminToken(token), false)

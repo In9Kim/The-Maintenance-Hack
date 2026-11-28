@@ -4,7 +4,9 @@ import Link from "next/link"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { PartIcon } from "@/components/PartIcon"
 import { deviceId } from "@/lib/device-id"
-import { loadMyCar } from "@/lib/my-car"
+import { loadGarage } from "@/lib/my-car"
+import { garageChips, shortCarLabel, type GarageChip } from "@/lib/quote-saved"
+import { GarageChips } from "@/components/quote/GarageChips"
 import { parseProductInput } from "@/lib/compat-request"
 import { track } from "@/lib/track"
 import { useAuthToken } from "@/components/my/useAuthToken"
@@ -59,16 +61,44 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
   const [needLogin, setNeedLogin] = useState(false)
   const boxRef = useRef<HTMLTextAreaElement>(null)
 
+  // 등록한 차(여러 대면 칩으로 바로 고름)와 지금 고른 칩. 목록에 없는 차(직접 적은 차 등)면 그 이름
+  const [chips, setChips] = useState<GarageChip[]>([])
+  const [chipKey, setChipKey] = useState("")
+  const [customName, setCustomName] = useState("")
+
+  const pickChip = (c: GarageChip) => {
+    const x = cars.find((v) => v.id === c.carId)
+    if (!x) return
+    setBrand(x.brand)
+    setCarId(x.id)
+    setYear(c.year)
+    setEngine(c.engine)
+    setChipKey(c.key)
+    setFromMy(true)
+    setResult(null)
+    setError("")
+  }
+
   // 등록한 내 차가 있으면 미리 골라 둔다
   useEffect(() => {
-    const my = loadMyCar()
-    const c = my && cars.find((x) => x.id === my.car.id)
-    if (c) {
-      setBrand(c.brand)
-      setCarId(c.id)
-      if (my.year) setYear(String(my.year))
-      if (my.engine) setEngine(my.engine)
+    const g = loadGarage()
+    const list = garageChips(g.cars, cars.map((c) => c.id))
+    setChips(list)
+    const my = g.cars.find((c) => c.id === g.active)
+    if (!my) return
+    const y = my.year ? String(my.year) : ""
+    const chip = list.find((ch) => ch.key === my.id) ?? list.find((ch) => ch.carId === my.car.id && ch.year === y && ch.engine === (my.engine ?? ""))
+    const x = chip && cars.find((v) => v.id === chip.carId)
+    if (chip && x) {
+      setBrand(x.brand)
+      setCarId(x.id)
+      setYear(chip.year)
+      setEngine(chip.engine)
+      setChipKey(chip.key)
       setFromMy(true)
+    } else {
+      // 목록에 없는 차: 막다른 화면 대신 안내 + 차종 고르기
+      setCustomName(my.car.name)
     }
   }, [cars])
 
@@ -113,31 +143,39 @@ export function CheckPage({ cars }: { cars: CheckCar[] }) {
     <div>
       {/* ① 내 차: 등록한 차면 한 줄 */}
       {fromMy && car ? (
-        <MyCarLine name={car.name} detail={[year && `${year}년형`, engine || car.engines[0]].filter(Boolean).join(" · ")} onChange={() => setFromMy(false)} />
+        <MyCarLine name={car.name} detail={[year && `${year}년형`, engine || car.engines[0]].filter(Boolean).join(" · ")} onChange={() => { setFromMy(false); setResult(null) }} />
       ) : (
       <div className="rounded-2xl border border-border bg-card p-4">
         <p className="text-[15px] font-bold">내 차</p>
-        <div className="mt-2 grid grid-cols-[0.8fr_1.2fr] gap-2">
+        {customName && !car && (
+          <p className="mt-2 rounded-[10px] bg-[#FFFAEB] px-3 py-2 text-[13px] leading-snug text-[#B54708]">
+            등록한 차({customName})는 아직 확인할 수 없어요. 목록에 있는 차만 돼요.
+          </p>
+        )}
+        <div className="mt-2">
+          <GarageChips chips={chips} current={chipKey} onPick={pickChip} />
+        </div>
+        <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-2">
           <label className="sr-only" htmlFor="ck-brand">브랜드</label>
-          <select id="ck-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setYear(""); setEngine(""); setResult(null) }}>
+          <select id="ck-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setYear(""); setEngine(""); setResult(null); setChipKey("") }}>
             <option value="">브랜드</option>
             {brands.map((b) => <option key={b}>{b}</option>)}
           </select>
           <label className="sr-only" htmlFor="ck-car">차종</label>
-          <select id="ck-car" className={FIELD} value={carId} disabled={!brand} onChange={(e) => { setCarId(e.target.value); setYear(""); setEngine(""); setResult(null) }}>
+          <select id="ck-car" className={FIELD} value={carId} disabled={!brand} onChange={(e) => { setCarId(e.target.value); setYear(""); setEngine(""); setResult(null); setChipKey("") }}>
             <option value="">차종</option>
-            {cars.filter((c) => c.brand === brand).map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+            {cars.filter((c) => c.brand === brand).map((c) => <option key={c.id} value={c.id}>{shortCarLabel(c.label)}</option>)}
           </select>
         </div>
         {car && (
           <div className="mt-2 grid grid-cols-2 gap-2">
             <label className="sr-only" htmlFor="ck-year">연식</label>
-            <select id="ck-year" className={FIELD} value={year} onChange={(e) => setYear(e.target.value)}>
+            <select id="ck-year" className={FIELD} value={year} onChange={(e) => { setYear(e.target.value); setResult(null); setChipKey("") }}>
               <option value="">연식 (선택)</option>
               {car.years.map((y) => <option key={y} value={y}>{y}년형</option>)}
             </select>
             <label className="sr-only" htmlFor="ck-engine">엔진</label>
-            <select id="ck-engine" className={FIELD} value={engine} onChange={(e) => setEngine(e.target.value)} disabled={car.engines.length < 2}>
+            <select id="ck-engine" className={FIELD} value={engine} onChange={(e) => { setEngine(e.target.value); setResult(null); setChipKey("") }} disabled={car.engines.length < 2}>
               <option value="">{car.engines.length < 2 ? car.engines[0] ?? "엔진" : "엔진 (선택)"}</option>
               {car.engines.length > 1 && car.engines.map((x) => <option key={x}>{x}</option>)}
             </select>

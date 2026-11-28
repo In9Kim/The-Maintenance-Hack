@@ -5,6 +5,7 @@ import { carPhoto } from "@/lib/car-photos";
 import { seoCars, carTotals, pageMetadata } from "@/lib/seo";
 import { formatPrice } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/seo/Shared";
+import { MyCarShortcut } from "@/components/cars/MyCarShortcut";
 
 export const metadata: Metadata = pageMetadata({
   title: "차종별 소모품 교체 비용 · 규격 총정리 | 정비핵",
@@ -29,6 +30,9 @@ export default function CarsIndexPage() {
         내 차를 고르면 소모품 규격과 공식센터 대비 아끼는 돈을 볼 수 있어요.
         금액은 소모품을 한 번씩 모두 교체할 때, 대표 엔진 기준이에요.
       </p>
+
+      {/* 등록한 내 차가 있으면 목록을 뒤지지 않게 맨 위에 바로가기 */}
+      <MyCarShortcut ids={cars.map((c) => c.id)} />
 
       {/* 브랜드 바로가기: 휴대폰에서 긴 목록을 건너뛰기 위해 */}
       <nav aria-label="브랜드 바로가기" className="mt-5 flex flex-wrap gap-2">

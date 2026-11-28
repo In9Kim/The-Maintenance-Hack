@@ -29,7 +29,31 @@ async function hash(s: string): Promise<string> {
   return Array.from(new Uint8Array(d).slice(0, 10), (b) => b.toString(16).padStart(2, "0")).join("")
 }
 
-export const pushKey = async (uid: string, endpoint: string) => `push:${await hash(`u|${uid}`)}:${await hash(`e|${endpoint}`)}`
+/** 이 계정의 구독 키 앞머리 (기기 수 세기·탈퇴 때 모두 지우기) */
+export const pushUserPrefix = async (uid: string) => `push:${await hash(`u|${uid}`)}:`
+export const pushKey = async (uid: string, endpoint: string) => `${await pushUserPrefix(uid)}${await hash(`e|${endpoint}`)}`
+
+/** 이 계정의 구독 키 전부 */
+export async function userPushKeys(kv: KV, uid: string): Promise<string[]> {
+  const prefix = await pushUserPrefix(uid)
+  const out: string[] = []
+  let cursor: string | undefined
+  do {
+    const page = await kv.list({ prefix, cursor })
+    out.push(...page.keys.map((k) => k.name))
+    cursor = page.list_complete ? undefined : page.cursor
+  } while (cursor && out.length < 1000)
+  return out
+}
+
+/** 계정별 하루 횟수 (저장·확인 알림). 넘으면 false. 키 앞머리가 push:가 아니라서 매일 알림 작업이 훑지 않음 */
+export async function takePushQuota(kv: KV, uid: string, kind: "save" | "hello", max: number, now = Date.now()): Promise<boolean> {
+  const key = `pq:${kind}:${kstToday(now)}:${await hash(`u|${uid}`)}`
+  const n = Number((await kv.get(key)) ?? 0)
+  if (n >= max) return false
+  await kv.put(key, String(n + 1), { expirationTtl: 60 * 60 * 26 })
+  return true
+}
 
 /** 구독·일정 저장. 이미 보낸 기록은 지금 일정에 남은 것만 이어 간다 */
 export async function savePush(kv: KV, key: string, sub: PushSub, items: PushItem[]) {

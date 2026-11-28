@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { partDue, dueList, parseGarage, upsertCar, removeCar, nextAction, quickRecord, type MyCar } from "./my-car.ts"
+import { partDue, dueList, parseGarage, upsertCar, removeCar, nextAction, quickRecord, makeRecord, removeRecord, type MyCar } from "./my-car.ts"
 
 const oil = { slug: "engine-oil", name: "엔진오일", intervalKm: 10000, intervalMonths: 12 }
 const wiper = { slug: "wiper", name: "와이퍼", intervalMonths: 6 }
@@ -77,4 +77,37 @@ test("다음 할 일: 급한 부품 → 사기, 기록 없으면 주기 짧은 �
 test("대략 답 → 기록 (그때 주행거리는 한 달 1,250km로 추정)", () => {
   assert.deepEqual(quickRecord({ km: 67000 }, 12, "2026-11-27"), { date: "2025-11-27", km: 52000 })
   assert.deepEqual(quickRecord({ km: 0 }, 6, "2026-11-27"), { date: "2026-05-27" })
+  // 추정값이 0 이하면 km를 넣지 않음 (0은 '모름'과 헷갈림)
+  assert.deepEqual(quickRecord({ km: 5000 }, 12, "2026-11-27"), { date: "2025-11-27" })
+})
+
+test("예전에 km:0으로 저장된 기록은 주행거리 모름으로 본다", () => {
+  const r = partDue(oil, { km: 63000, records: { "engine-oil": { date: "2026-11-28", km: 0 } } }, "2026-11-28")
+  assert.equal(r.state, "ok")
+  assert.equal(r.text, "12개월 남음")
+})
+
+test("지금 주행거리를 모르면 기록의 km로 계산하지 않는다", () => {
+  const r = partDue(oil, { km: 0, records: { "engine-oil": { date: "2026-11-01", km: 50000 } } }, "2026-11-28")
+  assert.equal(r.state, "ok")
+  assert.match(r.text, /개월 남음|이번 달/)
+})
+
+test("km 주기만 있는 부품은 주행거리 없이 기록해도 대략 계산 (기록 필요로 숨지 않음)", () => {
+  const r = partDue(pad, { km: 0, records: { "brake-pad": { date: "2024-11-28" } } }, "2026-11-28")
+  assert.notEqual(r.state, "unknown")
+  assert.equal(r.state, "ok") // 24개월 × 1,250 = 30,000km / 40,000km = 0.75
+  assert.equal(r.text, "약 10,000km 남음")
+})
+
+test("기록 만들기: 미래 날짜는 오늘로, km 0은 빼기", () => {
+  assert.deepEqual(makeRecord("2030-11-28", 63000, "2026-11-28"), { date: "2026-11-28", km: 63000 })
+  assert.deepEqual(makeRecord("2026-01-02", 0, "2026-11-28"), { date: "2026-01-02" })
+  assert.deepEqual(makeRecord("2026-01-02", undefined, "2026-11-28"), { date: "2026-01-02" })
+})
+
+test("기록 지우기", () => {
+  const my = { records: { a: { date: "2026-01-01" }, b: { date: "2026-02-01" } } }
+  assert.deepEqual(Object.keys(removeRecord(my, "a").records), ["b"])
+  assert.deepEqual(Object.keys(my.records), ["a", "b"]) // 원본은 그대로
 })

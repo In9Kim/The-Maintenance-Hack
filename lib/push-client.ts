@@ -48,7 +48,10 @@ async function send(sub: PushSubscription, g: Garage, hello = false): Promise<bo
     body: JSON.stringify({ subscription: sub.toJSON(), items: pushSchedule(g, today()), hello }),
   })
   if (!hello) return r.ok
-  if (!r.ok) throw new Error(`알림 저장에 실패했어요 (서버 ${r.status})`)
+  if (!r.ok) {
+    const e = (await r.json().catch(() => ({}))) as { error?: string }
+    throw new Error(r.status === 429 && e.error ? e.error : `알림 저장에 실패했어요 (서버 ${r.status})`)
+  }
   const j = (await r.json().catch(() => ({}))) as { hello?: number | null; stored?: boolean }
   if (j.hello != null && (j.hello < 200 || j.hello >= 300)) throw new Error(`저장은 됐는데 확인 알림을 못 보냈어요 (알림 서버 ${j.hello})`)
   return true
@@ -84,6 +87,23 @@ export async function disablePush(): Promise<void> {
     }).catch(() => {})
   }
   await sub.unsubscribe()
+}
+
+/** 탈퇴할 때: 이 계정으로 켠 모든 기기의 알림 정보를 서버에서 지우고, 이 폰 구독도 끊는다 */
+export async function disableAllPush(): Promise<void> {
+  const token = await accessToken().catch(() => null)
+  if (token) {
+    await fetch("/api/push", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ all: true }),
+    }).catch(() => {})
+  }
+  try {
+    const reg = await navigator.serviceWorker?.getRegistration()
+    const sub = await reg?.pushManager.getSubscription()
+    await sub?.unsubscribe()
+  } catch {}
 }
 
 let timer: ReturnType<typeof setTimeout> | undefined

@@ -1,8 +1,9 @@
 // Simple HMAC-based admin token using Web Crypto API (works in Edge + Node.js 18+)
 
-const SALT = "maintenance-hack-admin-v1"
+// 토큰 = "만료시각(초).HMAC(비밀번호, SALT|만료시각)". 만료가 지나면 서버가 거절한다 (쿠키 maxAge만 믿지 않음)
+const SALT = "maintenance-hack-admin-v2"
 
-async function deriveToken(password: string): Promise<string> {
+async function deriveToken(password: string, exp: number): Promise<string> {
   const encoder = new TextEncoder()
   const key = await crypto.subtle.importKey(
     "raw",
@@ -11,7 +12,7 @@ async function deriveToken(password: string): Promise<string> {
     false,
     ["sign"]
   )
-  const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(SALT))
+  const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(`${SALT}|${exp}`))
   return Array.from(new Uint8Array(sig))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("")
@@ -41,22 +42,29 @@ export async function checkAdminPassword(input: unknown): Promise<boolean> {
   return safeEqual(input, password)
 }
 
-export async function generateAdminToken(): Promise<string> {
+export const ADMIN_COOKIE = "admin_token"
+export const ADMIN_COOKIE_MAX_AGE = 60 * 60 * 8 // 8시간
+
+export async function generateAdminToken(now = Date.now()): Promise<string> {
   const password = process.env.ADMIN_PASSWORD
   if (!password) throw new Error("ADMIN_PASSWORD 환경변수가 설정되지 않았습니다.")
-  return deriveToken(password)
+  const exp = Math.floor(now / 1000) + ADMIN_COOKIE_MAX_AGE
+  return `${exp}.${await deriveToken(password, exp)}`
 }
 
-export async function verifyAdminToken(token: string): Promise<boolean> {
+export async function verifyAdminToken(token: string, now = Date.now()): Promise<boolean> {
   const password = process.env.ADMIN_PASSWORD
   if (!password || !token) return false
+  const m = /^(\d{10,12})\.([0-9a-f]{64})$/.exec(token)
+  if (!m) return false
+  const exp = Number(m[1])
+  const sec = Math.floor(now / 1000)
+  // 만료됐거나, 발급 가능한 범위보다 먼 미래면 거절
+  if (exp <= sec || exp > sec + ADMIN_COOKIE_MAX_AGE + 60) return false
   try {
-    const expected = await deriveToken(password)
-    return await safeEqual(token, expected)
+    const expected = await deriveToken(password, exp)
+    return await safeEqual(m[2], expected)
   } catch {
     return false
   }
 }
-
-export const ADMIN_COOKIE = "admin_token"
-export const ADMIN_COOKIE_MAX_AGE = 60 * 60 * 8 // 8시간

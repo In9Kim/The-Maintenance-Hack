@@ -16,6 +16,8 @@ import {
   recallFaq,
 } from "@/components/recalls/RecallParts"
 import { dataBasisText, fmtDate, recallData, recallsForCar, shortReason } from "@/lib/recalls/data"
+import { carRecallAlerts } from "@/lib/recalls/car-alert"
+import { MyYearRecalls } from "@/components/cars/MyYearRecalls"
 
 export const dynamicParams = false
 
@@ -76,6 +78,9 @@ export default async function CarRecallsPage({ params }: Props) {
       <p className="mt-2 text-[15px] text-muted-foreground">
         {car.generation} · {car.yearRange} 생산 차량 리콜 <b className="num text-foreground">{recalls.length}건</b>
       </p>
+
+      {/* 등록한 내 차 연식에 해당할 수 있는 건수 (맨 위 리콜 띠와 같은 기준) */}
+      <MyYearRecalls carId={car.id} alert={carRecallAlerts()[car.id]} />
 
       <RecallNotice carId={car.id} />
 

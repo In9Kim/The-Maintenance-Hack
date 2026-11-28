@@ -3,7 +3,9 @@
 import { deviceId } from "@/lib/device-id"
 import Link from "next/link"
 import { useEffect, useMemo, useRef, useState } from "react"
-import { loadMyCar } from "@/lib/my-car"
+import { loadGarage } from "@/lib/my-car"
+import { garageChips, parseSavedQuote, serializeQuote, shortCarLabel, QUOTE_SAVED_KEY, type GarageChip } from "@/lib/quote-saved"
+import { GarageChips } from "@/components/quote/GarageChips"
 import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { track } from "@/lib/track"
 import { ProductRow } from "@/components/cars/LiveCoupang"
@@ -89,6 +91,11 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   const [needLogin, setNeedLogin] = useState(false)
   // 등록한 내 차로 채웠으면 입력칸 대신 한 줄로 (바꾸기를 누르면 입력칸)
   const [fromMy, setFromMy] = useState(false)
+  // 등록한 차 중 분석할 수 있는 차(칩)와 지금 고른 칩. 목록에 없는 차(직접 적은 차 등)면 그 이름
+  const [chips, setChips] = useState<GarageChip[]>([])
+  const [chipKey, setChipKey] = useState("")
+  const [customName, setCustomName] = useState("")
+  const analyzeRef = useRef<HTMLButtonElement>(null)
 
   // 분석 중 경과 시간 (진행 단계 표시용)
   useEffect(() => {
@@ -99,16 +106,60 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   }, [busy])
 
   useEffect(() => {
-    const my = loadMyCar()
-    const c = my && cars.find((x) => x.id === my.car.id)
-    if (c) {
+    const ids = cars.map((c) => c.id)
+    const g = loadGarage()
+    const list = garageChips(g.cars, ids)
+    setChips(list)
+    const fill = (id: string, y: string, e: string) => {
+      const c = cars.find((x) => x.id === id)
+      if (!c) return false
       setBrand(c.brand)
       setCarId(c.id)
-      if (my.year) setYear(String(my.year))
-      if (my.engine) setEngine(my.engine)
+      setYear(y)
+      setEngine(e)
+      return true
+    }
+    const keyOf = (id: string, y: string, e: string) => list.find((ch) => ch.carId === id && ch.year === y && ch.engine === e)?.key ?? ""
+    // 직전 결과가 이 기기에 있으면 그대로 다시 보여 준다 (근처 공임나라·쿠팡에 갔다 와도 재분석 안 하게)
+    let saved = null
+    try {
+      saved = parseSavedQuote<Result>(localStorage.getItem(QUOTE_SAVED_KEY), ids)
+    } catch {}
+    if (saved && fill(saved.carId, saved.year, saved.engine)) {
+      const k = keyOf(saved.carId, saved.year, saved.engine)
+      setChipKey(k)
+      setFromMy(!!k)
+      setResult(saved.result)
+      return
+    }
+    const my = g.cars.find((c) => c.id === g.active)
+    if (!my) return
+    const chip = list.find((ch) => ch.key === my.id) ?? list.find((ch) => ch.key === keyOf(my.car.id, my.year ? String(my.year) : "", my.engine ?? ""))
+    if (chip && fill(chip.carId, chip.year, chip.engine)) {
+      setChipKey(chip.key)
       setFromMy(true)
+    } else {
+      // 목록에 없는 차(직접 적은 차·다른 세대): 막다른 화면 대신 안내 + 차종 고르기
+      setCustomName(my.car.name)
     }
   }, [cars])
+
+  const pickChip = (c: GarageChip) => {
+    const x = cars.find((v) => v.id === c.carId)
+    if (!x) return
+    setBrand(x.brand)
+    setCarId(x.id)
+    setYear(c.year)
+    setEngine(c.engine)
+    setChipKey(c.key)
+    setFromMy(true)
+    setError("")
+  }
+  const forget = () => {
+    try {
+      localStorage.removeItem(QUOTE_SAVED_KEY)
+    } catch {}
+  }
 
   const car = cars.find((c) => c.id === carId)
 
@@ -116,9 +167,11 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
     if (!f) return
     setError("")
     setResult(null)
+    forget()
     try {
       setPreview(await shrink(f))
     } catch {
+      setPreview(null) // 이전 사진이 남으면 그 사진으로 분석하는 줄 모르게 되므로 지움
       setError("사진을 열지 못했어요. 다른 사진으로 해 주세요.")
     }
   }
@@ -129,6 +182,11 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
       return
     }
     setResult(res)
+    // 이 기기에 잠깐 저장 (사진은 넣지 않음). 다른 화면에 갔다 와도 다시 보이게
+    try {
+      const s = serializeQuote({ carId: car!.id, year, engine, result: res })
+      if (s) localStorage.setItem(QUOTE_SAVED_KEY, s)
+    } catch {}
     // 결과까지 본 사람 수와 아낄 수 있다고 나온 항목 수 (사용성 확인용, 견적 내용은 보내지 않음)
     track({ type: "report", carId: car!.id, meta: { via: "quote_result", items: res.items.length, gongim: res.items.filter((i) => i.verdict === "gongim").length, login: !!token } })
     setPreview(null) // 결과가 나오면 사진은 화면에서도 지움
@@ -224,10 +282,12 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
   const quoted = (it: Item) => (it.parts_price ?? 0) + (it.labor_price ?? 0)
   // 견적서에 금액이 없으면 공식센터 추정가로
   const base = (it: Item) => quoted(it) || it.ours?.dealer || 0
-  const calc = buy.filter((x) => base(x.it) > 0 && (x.it.ours?.labor ?? 0) > 0)
+  // 공임 0원(와이퍼처럼 직접 바꾸는 부품)도 계산에 넣는다. 공임을 모르는 항목만 뺀다
+  const laborOf = (it: Item) => (typeof it.ours?.labor === "number" && it.ours.labor >= 0 ? it.ours.labor : null)
+  const calc = buy.filter((x) => base(x.it) > 0 && laborOf(x.it) !== null)
   const byCenter = calc.some((x) => !quoted(x.it))
   const quotedSum = calc.reduce((s, x) => s + base(x.it), 0)
-  const mineSum = calc.reduce((s, x) => s + low(x.i) + (x.it.ours?.labor ?? 0), 0)
+  const mineSum = calc.reduce((s, x) => s + low(x.i) + (laborOf(x.it) ?? 0), 0)
   const saved = quotedSum - mineSum
   // 나머지: 상품 없는 공임나라 항목 → 정비소 문의 → 센터 순
   const order = (it: Item) => (it.verdict === "gongim" ? 0 : it.verdict === "ask" ? 1 : 2)
@@ -247,10 +307,16 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
         </button>
         {on && car && (
           <div className="pb-3">
-            {base(it) > 0 && (it.ours?.labor ?? 0) > 0 ? (
+            {base(it) > 0 && laborOf(it) === 0 ? (
               <p className="num mb-2 text-[13px] text-muted-foreground">
-                {quoted(it) ? "견적" : "센터(추정)"} {won(base(it))} → 부품 {won(low(i))} + 공임나라 공임 약 {won(it.ours!.labor!)}
+                {quoted(it) ? "견적" : "센터(추정)"} {won(base(it))} → 부품 {won(low(i))} (직접 바꿀 수 있어요)
               </p>
+            ) : base(it) > 0 && laborOf(it) ? (
+              <p className="num mb-2 text-[13px] text-muted-foreground">
+                {quoted(it) ? "견적" : "센터(추정)"} {won(base(it))} → 부품 {won(low(i))} + 공임나라 공임 약 {won(laborOf(it)!)}
+              </p>
+            ) : laborOf(it) === 0 ? (
+              <p className="mb-2 text-[13px] text-muted-foreground">직접 바꿀 수 있어요.</p>
             ) : (
               <p className="mb-2 text-[13px] text-muted-foreground">공임은 정비소에 물어보세요.</p>
             )}
@@ -298,25 +364,33 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
           ) : (
           <div className="rounded-2xl border border-border bg-card p-4">
             <p className="text-[15px] font-bold">내 차</p>
-            <div className="mt-2 grid grid-cols-[0.8fr_1.2fr] gap-2">
+            {customName && !car && (
+              <p className="mt-2 rounded-[10px] bg-[#FFFAEB] px-3 py-2 text-[13px] leading-snug text-[#B54708]">
+                등록한 차({customName})는 아직 분석할 수 없어요. 목록에 있는 차만 돼요.
+              </p>
+            )}
+            <div className="mt-2">
+              <GarageChips chips={chips} current={chipKey} onPick={pickChip} />
+            </div>
+            <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-2">
               <label className="sr-only" htmlFor="qt-brand">브랜드</label>
-              <select id="qt-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setYear(""); setEngine("") }}>
+              <select id="qt-brand" className={FIELD} value={brand} onChange={(e) => { setBrand(e.target.value); setCarId(""); setYear(""); setEngine(""); setChipKey("") }}>
                 <option value="">브랜드</option>
                 {brands.map((b) => <option key={b}>{b}</option>)}
               </select>
               <label className="sr-only" htmlFor="qt-car">차종</label>
-              <select id="qt-car" className={FIELD} value={carId} disabled={!brand} onChange={(e) => { setCarId(e.target.value); setYear(""); setEngine("") }}>
+              <select id="qt-car" className={FIELD} value={carId} disabled={!brand} onChange={(e) => { setCarId(e.target.value); setYear(""); setEngine(""); setChipKey("") }}>
                 <option value="">차종</option>
-                {cars.filter((c) => c.brand === brand).map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+                {cars.filter((c) => c.brand === brand).map((c) => <option key={c.id} value={c.id}>{shortCarLabel(c.label)}</option>)}
               </select>
             </div>
             {car && (
               <div className="mt-2 grid grid-cols-2 gap-2">
-                <select aria-label="연식" className={FIELD} value={year} onChange={(e) => setYear(e.target.value)}>
+                <select aria-label="연식" className={FIELD} value={year} onChange={(e) => { setYear(e.target.value); setChipKey("") }}>
                   <option value="">연식 (선택)</option>
                   {car.years.map((y) => <option key={y} value={y}>{y}년형</option>)}
                 </select>
-                <select aria-label="엔진" className={FIELD} value={engine} onChange={(e) => setEngine(e.target.value)} disabled={car.engines.length < 2}>
+                <select aria-label="엔진" className={FIELD} value={engine} onChange={(e) => { setEngine(e.target.value); setChipKey("") }} disabled={car.engines.length < 2}>
                   <option value="">{car.engines.length < 2 ? car.engines[0] ?? "엔진" : "엔진 (선택)"}</option>
                   {car.engines.length > 1 && car.engines.map((x) => <option key={x}>{x}</option>)}
                 </select>
@@ -339,7 +413,13 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
             <>
             {preview ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={preview} alt="올린 견적서" className="mt-3 max-h-[320px] w-full rounded-[10px] bg-muted object-contain" />
+              <img
+                src={preview}
+                alt="올린 견적서"
+                // 세로로 긴 사진이면 분석 버튼이 아래 메뉴에 가려지므로, 사진이 뜨면 버튼이 보이게 내림
+                onLoad={() => analyzeRef.current?.scrollIntoView({ block: "center", behavior: "smooth" })}
+                className="mt-3 max-h-[260px] w-full rounded-[10px] bg-muted object-contain"
+              />
             ) : (
               <PhotoExamples />
             )}
@@ -347,6 +427,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
               {preview ? "다른 사진 고르기" : "사진 찍기 / 고르기"}
             </button>
             <button
+              ref={analyzeRef}
               onClick={analyze}
               disabled={!car || !preview || busy || token === undefined}
               className="mt-2 h-12 w-full rounded-[10px] bg-primary text-[16px] font-bold text-primary-foreground disabled:cursor-not-allowed disabled:bg-[#9BB8AD]"
@@ -415,7 +496,7 @@ export function QuotePage({ cars }: { cars: QuoteCar[] }) {
           )}
 
           <div className="mt-3 grid grid-cols-2 gap-2">
-            <button onClick={() => { setResult(null); setOpen([]) }} className="h-12 rounded-[10px] border border-border bg-card text-[14px] font-semibold">
+            <button onClick={() => { setResult(null); setOpen([]); forget() }} className="h-12 rounded-[10px] border border-border bg-card text-[14px] font-semibold">
               다른 견적서
             </button>
             <Link href="/near" className="flex h-12 items-center justify-center rounded-[10px] bg-foreground text-[14px] font-semibold text-background">

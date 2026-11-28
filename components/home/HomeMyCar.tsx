@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { dueList, loadGarage, loadSkipped, quickRecord, saveGarage, saveSkipped, today, type Garage, type MyCar, type PartDue } from "@/lib/my-car"
+import { dueList, loadGarage, loadSkipped, makeRecord, quickRecord, saveGarage, saveSkipped, today, type Garage, type MyCar, type PartDue } from "@/lib/my-car"
 import { pushIfSignedIn } from "@/lib/cloud-garage"
 import { isCustomCar } from "@/lib/car-catalog"
 import { OutboundLink } from "@/components/seo/OutboundLink"
@@ -210,10 +210,18 @@ function Todo({ my, skipped, onSave, onSkip }: { my: MyCar; skipped: string[]; o
   const [open, setOpen] = useState<string | null>(null)
   const list = dueList(my)
   if (!list.length) {
+    // 목록에 있는 차인데 부품이 비어 있으면 예전에 저장한 값 → 마이를 열면 최신 부품 정보로 갈아 끼움
+    if (!isCustomCar(my.car.id))
+      return (
+        <Link href="/my" className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4">
+          <span className="text-[15px] font-bold">마이에서 부품 정보 불러오기</span>
+          <span aria-hidden className="text-muted-foreground">›</span>
+        </Link>
+      )
     return (
       <div className="mt-4 rounded-2xl border border-border bg-card p-4">
         <p className="text-[16px] font-bold">{my.car.name} 부품 정보는 준비 중이에요</p>
-        <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">그동안 견적서 분석과 근처 공임나라 찾기는 그대로 쓸 수 있어요.</p>
+        <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">그동안 근처 공임나라 찾기는 그대로 쓸 수 있어요.</p>
       </div>
     )
   }
@@ -314,7 +322,7 @@ function BuyPanel({ my, due, onSave }: { my: MyCar; due: PartDue; onSave: (c: My
       {p.self ? <p className="num mt-1.5 text-center text-[12px] text-muted-foreground">부품 사 가서 공임나라에 맡기면 약 {won(p.self)} (추정)</p> : null}
       <div className="mt-2 grid grid-cols-2 gap-2">
         <button
-          onClick={() => onSave({ ...my, records: { ...my.records, [p.slug]: { date: today(), km: my.km > 0 ? my.km : undefined } } })}
+          onClick={() => onSave({ ...my, records: { ...my.records, [p.slug]: makeRecord(today(), my.km) } })}
           className="min-h-[44px] rounded-[10px] border border-border text-[14px] font-semibold"
         >
           이미 갈았어요

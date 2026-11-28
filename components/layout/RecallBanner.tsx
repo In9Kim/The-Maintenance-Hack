@@ -43,7 +43,9 @@ export function RecallBanner({ alerts }: { alerts: Record<string, CarRecallAlert
       <div className="mx-auto flex max-w-5xl items-center gap-2 px-5">
         <Link href={`/cars/${state.carId}/recalls`} className="flex min-h-[44px] min-w-0 flex-1 items-center gap-2 text-[14px] font-semibold">
           <span aria-hidden>⚠</span>
-          <span className="truncate">내 차({state.name}) 리콜 {state.count}건 · 해당 여부 확인</span>
+          {/* 390px: 차 이름만 줄이고 '리콜 N건 확인'은 늘 보이게 (건수는 내 연식 기준) */}
+          <span className="min-w-0 truncate">{state.name}</span>
+          <span className="shrink-0 whitespace-nowrap">리콜 {state.count}건 확인</span>
           <span aria-hidden className="ml-auto shrink-0">›</span>
         </Link>
         <button onClick={close} aria-label="리콜 알림 닫기" className="flex h-11 w-11 shrink-0 items-center justify-center text-[18px] text-white/80 hover:text-white">

@@ -17,6 +17,13 @@ export function takeAfterLogin(): string | null {
   }
 }
 
+/** /my에서 로그인한 뒤 돌아올 화면 미리 적어 두기 (예: 계산기의 'AI로 규격 만들기') */
+export function rememberAfterLogin(path: string) {
+  try {
+    sessionStorage.setItem(AFTER_KEY, path)
+  } catch {}
+}
+
 /** 카카오·구글 로그인 버튼. next: 로그인 후 돌아올 화면 */
 export function LoginButtons({ providers, next = "/my" }: { providers: Provider[]; next?: string }) {
   const [busy, setBusy] = useState(false)

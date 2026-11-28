@@ -1,0 +1,7 @@
+# 정적 파일(_next/static, 이미지, sw.js 등) 응답 헤더. Cloudflare Workers 정적 자산이 읽음.
+# 페이지·API 응답 헤더는 worker.ts(SECURITY_HEADERS)에 있음. 값을 바꾸면 둘 다 맞출 것.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Strict-Transport-Security: max-age=31536000; includeSubDomains

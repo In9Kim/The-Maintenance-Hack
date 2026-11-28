@@ -3,6 +3,8 @@ import { generateCarMaintenanceData, decodeVin, friendlyAiError, type GenerateCa
 import type { CarModel } from "@/types"
 import { getAllCars } from "@/lib/data/all-cars"
 import { saveGeneratedCar } from "@/lib/googleSheets"
+import { userIdFrom } from "@/lib/auth-user"
+import { cleanGenInput, genStore, refundGenUser, takeGen } from "./limit"
 
 function normalizeForMatch(str: string): string {
   return str.toLowerCase().replace(/[\s\-_]/g, "").replace(/[^\w가-힣]/g, "")
@@ -30,13 +32,37 @@ function isSimilarCar(existing: CarModel, brand: string, model: string, generati
 }
 
 export async function POST(req: NextRequest) {
+  let body: unknown
   try {
-    const body = await req.json()
-    let input = body as GenerateCarInput
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: "요청을 읽지 못했어요." }, { status: 400 })
+  }
+  const cleaned = cleanGenInput(body)
+  if (!cleaned) return NextResponse.json({ error: "요청을 읽지 못했어요." }, { status: 400 })
 
-    // VIN이 제공된 경우 먼저 디코딩하여 표준화된 차량 정보 획득
+  // AI를 부르기 직전에 한 번만: 로그인 확인 + 계정 하루 한도 + 사이트 전체 하루 상한 (이미 있는 차종 찾기는 공짜)
+  let uid: string | null = null
+  const store = await genStore()
+  const gate = async (): Promise<NextResponse | null> => {
+    if (uid) return null
+    const id = await userIdFrom(req)
+    if (!id) return NextResponse.json({ error: "로그인하면 쓸 수 있어요.", login: true }, { status: 401 })
+    const take = await takeGen(store, id)
+    if (take === "user") return NextResponse.json({ error: "오늘은 여기까지예요. 내일 다시 해 주세요." }, { status: 429 })
+    if (take === "global") return NextResponse.json({ error: "오늘 사용이 많아 잠시 멈췄어요. 내일 다시 해 주세요." }, { status: 429 })
+    uid = id
+    return null
+  }
+
+  try {
+    let input: GenerateCarInput = cleaned
+
+    // VIN이 제공된 경우 먼저 디코딩하여 표준화된 차량 정보 획득 (AI 호출이라 한도 확인 뒤)
     const VIN_PLACEHOLDER = "_vin_"
     if (input.vin) {
+      const blocked = await gate()
+      if (blocked) return blocked
       const vinInfo = await decodeVin(input.vin)
       input = {
         ...input,
@@ -70,6 +96,8 @@ export async function POST(req: NextRequest) {
     }
 
     // 2단계: Gemini로 정규화된 차종 데이터 생성
+    const blocked = await gate()
+    if (blocked) return blocked
     const carData = await generateCarMaintenanceData(input)
 
     // 3단계: Gemini 응답의 표준화된 모델명으로 재중복 검사
@@ -90,6 +118,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ car: carData })
   } catch (err) {
     console.error("[generate-car-data]", err instanceof Error ? err.message : err)
+    // AI가 실패했으면 그 사람 몫 1번은 돌려준다 (전체 상한은 그대로)
+    if (uid) await refundGenUser(store, uid).catch(() => {})
     return NextResponse.json({ error: friendlyAiError(err) }, { status: 500 })
   }
 }

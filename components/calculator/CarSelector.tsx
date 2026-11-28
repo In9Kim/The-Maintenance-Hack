@@ -2,7 +2,9 @@
 
 import { useState, useMemo } from "react"
 import { Sparkles, Loader2, ChevronDown, ChevronUp } from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { rememberAfterLogin } from "@/components/my/LoginButtons"
 import type { CarModel } from "@/types"
 import type { GenerateCarInput } from "@/lib/gemini"
 
@@ -14,6 +16,8 @@ interface CarSelectorProps {
   isGenerating: boolean
   generateError: string | null
   generateInfo: string | null
+  /** 서버가 로그인이 필요하다고 답했으면 true (오류 옆에 로그인 링크) */
+  generateNeedsLogin?: boolean
   /** 호환성 검증 페이지에서 차종이 자동 설정된 경우 true */
   isFromVerify?: boolean
 }
@@ -32,6 +36,7 @@ export function CarSelector({
   isGenerating,
   generateError,
   generateInfo,
+  generateNeedsLogin = false,
   isFromVerify = false,
 }: CarSelectorProps) {
   const [showGenerate, setShowGenerate] = useState(false)
@@ -201,7 +206,7 @@ export function CarSelector({
                 <label className="mb-1 block text-xs text-muted-foreground">브랜드 *</label>
                 <input
                   className={INPUT_CLS}
-                  placeholder="예: BMW, 볼보, 포르쉐"
+                  placeholder="예: BMW, 볼보"
                   value={genInput.brand}
                   onChange={(e) => setField("brand", e.target.value)}
                 />
@@ -273,6 +278,11 @@ export function CarSelector({
           {generateError && (
             <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
               {generateError}
+              {generateNeedsLogin && (
+                <Link href="/my" onClick={() => rememberAfterLogin("/calculator")} className="ml-1 font-semibold underline underline-offset-2">
+                  로그인하기 ›
+                </Link>
+              )}
             </p>
           )}
         </div>

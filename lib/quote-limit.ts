@@ -4,63 +4,36 @@
  *    + 같은 IP 하루 PER_IP번 (휴대폰 통신사는 여러 사람이 IP 하나를 같이 써서 넉넉하게, 마구 부르는 것만 막음)
  *  - 로그인한 사람: 계정마다 하루 USER번
  *  - 사이트 전체: 하루 GLOBAL번 (Haiku 기준 1번 1~2원 추정이라 최악이어도 하루 수백 원)
+ * 실패하면 기기·계정 횟수만 돌려준다(하루 몇 번까지). IP·전체 횟수는 돌려주지 않아 상한이 깨지지 않음.
  * KV가 없는 로컬에서는 제한 없음.
  */
 import { createHash } from "crypto"
-import { kstDay } from "@/lib/verify-limit"
+import { takeCounters, refundCounters, counterStore, type Counter, type CounterSpec } from "@/lib/verify-limit"
 
 export const QUOTE_GUEST = 1
 export const QUOTE_PER_USER = 3
 export const QUOTE_PER_IP = 10
 export const QUOTE_GLOBAL = 300
-
-interface KV {
-  get(key: string): Promise<string | null>
-  put(key: string, value: string, opts?: { expirationTtl?: number }): Promise<void>
-}
-async function kv(): Promise<KV | null> {
-  try {
-    const { getCloudflareContext } = await import("@opennextjs/cloudflare")
-    return ((getCloudflareContext().env as unknown as { VERIFY_LIMIT?: KV }).VERIFY_LIMIT) ?? null
-  } catch {
-    return null
-  }
-}
+/** 비로그인 전체 몫 (사이트 전체 300번 중). 나머지는 로그인 사용자 몫으로 남김 */
+export const QUOTE_GUEST_ALL = 200
+/** 비로그인 전체를 세는 who */
+export const GUEST_ALL = "guest-all"
 
 /** 세는 대상 하나: who("u:계정" / "d:기기" / "ip:주소")와 하루 한도 */
-export interface QuoteCounter {
-  who: string
-  limit: number
-}
+export type QuoteCounter = Counter
 
-const keyOf = (day: string, who: string) => `qu:${day}:${createHash("sha256").update(`${day}|${who}`).digest("hex").slice(0, 20)}`
-const TTL = 60 * 60 * 36
+export const QUOTE_SPEC: CounterSpec = {
+  globalKey: (day) => `qg:${day}`,
+  key: (day, who) => `qu:${day}:${createHash("sha256").update(`${day}|${who}`).digest("hex").slice(0, 20)}`,
+  globalMax: QUOTE_GLOBAL,
+}
 
 /** 모두 한도 안이면 한꺼번에 1번씩 센다. 넘은 게 있으면 그 who를 돌려준다 (아무것도 세지 않음) */
 export async function takeQuote(counters: QuoteCounter[]): Promise<"ok" | "global" | { over: string }> {
-  const store = await kv()
-  if (!store) return "ok"
-  const day = kstDay()
-  const gk = `qg:${day}`
-  const keys = counters.map((c) => keyOf(day, c.who))
-  const [g, ...vals] = await Promise.all([store.get(gk), ...keys.map((k) => store.get(k))])
-  if (Number(g ?? 0) >= QUOTE_GLOBAL) return "global"
-  const over = counters.find((c, i) => Number(vals[i] ?? 0) >= c.limit)
-  if (over) return { over: over.who }
-  await Promise.all([
-    store.put(gk, String(Number(g ?? 0) + 1), { expirationTtl: TTL }),
-    ...keys.map((k, i) => store.put(k, String(Number(vals[i] ?? 0) + 1), { expirationTtl: TTL })),
-  ])
-  return "ok"
+  return takeCounters(await counterStore(), QUOTE_SPEC, counters)
 }
 
-/** 분석이 실패했거나 사진을 못 읽었으면 그 1번은 돌려준다 */
-export async function refundQuote(counters: QuoteCounter[]): Promise<void> {
-  const store = await kv()
-  if (!store) return
-  const day = kstDay()
-  const gk = `qg:${day}`
-  const keys = [gk, ...counters.map((c) => keyOf(day, c.who))]
-  const vals = await Promise.all(keys.map((k) => store.get(k)))
-  await Promise.all(keys.map((k, i) => store.put(k, String(Math.max(0, Number(vals[i] ?? 0) - 1)), { expirationTtl: TTL })))
+/** 분석이 실패했거나 사진을 못 읽었으면 기기·계정 횟수만 돌려준다. aiCalled=false면 전체 횟수도 */
+export async function refundQuote(counters: QuoteCounter[], opts?: { aiCalled?: boolean }): Promise<void> {
+  return refundCounters(await counterStore(), QUOTE_SPEC, counters, opts)
 }

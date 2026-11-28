@@ -19,6 +19,8 @@ import { AffiliateNotice, Breadcrumbs, EstimateNote, JsonLd } from "@/components
 import { ReceiptCard } from "@/components/home/ReceiptCard"
 import { GuideLinks } from "@/components/cars/GuideLinks"
 import { EngineTabs } from "@/components/cars/EngineTabs"
+import { SaveMyCarChip } from "@/components/cars/MyCarShortcut"
+import { AFFILIATE_TEXT } from "@/lib/affiliate"
 import { recallsForCar } from "@/lib/recalls/data"
 import { engineGroups } from "@/lib/engines"
 import { coupangChoicesFor } from "@/lib/coupang-links"
@@ -45,6 +47,9 @@ function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
   const link = coupangChoicesFor(part)[0]
   if (!link) return null
   return (
+    <>
+    {/* 펼친 행은 목록 위 고지와 멀어질 수 있어서 버튼 바로 위에 한 줄 더 */}
+    <p className="mt-2 text-[11px] leading-snug">{AFFILIATE_TEXT}</p>
     <OutboundLink
       href={link.url}
       target="coupang"
@@ -55,6 +60,7 @@ function SpecLinks({ car, part }: { car: CarModel; part: MaintenancePart }) {
     >
       쿠팡에서 보기
     </OutboundLink>
+    </>
   )
 }
 
@@ -180,12 +186,7 @@ export default async function CarPage({ params }: Props) {
             >
               {recallCount > 0 ? `리콜 ${recallCount}건` : "리콜 정보"}
             </Link>
-            <Link
-              href={`/my?add=${car.id}`}
-              className="inline-flex min-h-[36px] items-center rounded-full bg-foreground px-3.5 text-[13px] font-semibold text-background hover:brightness-110"
-            >
-              + 내 차로 저장
-            </Link>
+            <SaveMyCarChip carId={car.id} />
           </div>
           {photo && <CarPhoto photo={photo} alt={`${name} 외관`} priority className="mt-6" />}
         </div>
@@ -203,7 +204,7 @@ export default async function CarPage({ params }: Props) {
         {hasLinks && <AffiliateNotice className="mt-4" />}
         {multi ? (
           <div className="mt-5">
-            <EngineTabs engines={groups.map((g) => g.engine!)} ids={groups.map((g) => engineId(g.engine!))}>
+            <EngineTabs engines={groups.map((g) => g.engine!)} ids={groups.map((g) => engineId(g.engine!))} carId={car.id}>
               {groups.map((g) => {
                 const t = totalsOf(g.parts)
                 return (

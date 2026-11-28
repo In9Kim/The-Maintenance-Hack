@@ -65,6 +65,15 @@ export const today = (now = new Date()) => {
   return d.toISOString().slice(0, 10)
 }
 
+/** 기록에 쓸 만한 주행거리가 있는지 (0은 '모름'으로 저장된 예전 값) */
+export const hasKm = (r: ChangeRecord) => typeof r.km === "number" && r.km > 0
+
+/** 교체 기록 하나 만들기: 주행거리 0(모름)은 넣지 않고, 미래 날짜는 오늘로 맞춤 */
+export function makeRecord(date: string, km?: number, now = today()): ChangeRecord {
+  const d = date > now ? now : date
+  return km != null && km > 0 ? { date: d, km } : { date: d }
+}
+
 function monthsBetween(a: string, b: string): number {
   return (Date.parse(b) - Date.parse(a)) / (86_400_000 * 30.44)
 }
@@ -77,10 +86,18 @@ export function partDue(part: MyPartInfo, my: Pick<MyCar, "km" | "records">, now
   let text = ""
   let kmLeft: number | null = null
   let monLeft: number | null = null
-  if (part.intervalKm && record.km != null) {
-    const used = Math.max(0, my.km - record.km)
+  let kmGuess = false
+  // km:0 기록(예전 '오늘 교체했어요'가 주행거리 없이 0으로 저장)이나 지금 주행거리 모름은 '모름'으로 본다
+  if (part.intervalKm && hasKm(record) && my.km > 0) {
+    const used = Math.max(0, my.km - record.km!)
     ratio = Math.max(ratio, used / part.intervalKm)
     kmLeft = part.intervalKm - used
+  } else if (part.intervalKm && !part.intervalMonths) {
+    // km 주기만 있는 부품인데 주행거리를 모르면 한 달 평균(KM_PER_MONTH)으로 대략 계산
+    const used = Math.max(0, monthsBetween(record.date, now)) * KM_PER_MONTH
+    ratio = Math.max(ratio, used / part.intervalKm)
+    kmLeft = part.intervalKm - used
+    kmGuess = true
   }
   if (part.intervalMonths) {
     const used = Math.max(0, monthsBetween(record.date, now))
@@ -93,7 +110,8 @@ export function partDue(part: MyPartInfo, my: Pick<MyCar, "km" | "records">, now
   const kmRatio = kmLeft != null && part.intervalKm ? 1 - kmLeft / part.intervalKm : -1
   const monRatio = monLeft != null && part.intervalMonths ? 1 - monLeft / part.intervalMonths : -1
   if (kmRatio >= monRatio && kmLeft != null) {
-    text = kmLeft >= 0 ? `${Math.round(kmLeft).toLocaleString("ko-KR")}km 남음` : `${Math.round(-kmLeft).toLocaleString("ko-KR")}km 지남`
+    const n = kmGuess ? Math.round(Math.abs(kmLeft) / 1000) * 1000 : Math.round(Math.abs(kmLeft))
+    text = `${kmGuess ? "약 " : ""}${n.toLocaleString("ko-KR")}km ${kmLeft >= 0 ? "남음" : "지남"}`
   } else if (monLeft != null) {
     const m = Math.round(Math.abs(monLeft))
     text = monLeft >= 0 ? (m < 1 ? "이번 달" : `${m}개월 남음`) : `${Math.max(1, m)}개월 지남`
@@ -147,7 +165,17 @@ export function parseGarage(rawGarage: string | null, rawOld: string | null, mak
 
 export function loadGarage(): Garage {
   try {
-    return parseGarage(localStorage.getItem(GARAGE_KEY), localStorage.getItem(MY_CAR_KEY))
+    const raw = localStorage.getItem(GARAGE_KEY)
+    const old = localStorage.getItem(MY_CAR_KEY)
+    const g = parseGarage(raw, old)
+    // 예전 키만 있으면 바로 새 키로 옮겨서 id를 고정 (안 그러면 열 때마다 새 id → '모르겠어요'가 풀림)
+    if (raw == null && old != null && g.cars.length) {
+      try {
+        localStorage.setItem(GARAGE_KEY, JSON.stringify(g))
+        localStorage.removeItem(MY_CAR_KEY)
+      } catch {}
+    }
+    return g
   } catch {
     return { cars: [], active: "" }
   }
@@ -214,8 +242,15 @@ export function quickRecord(my: Pick<MyCar, "km">, monthsAgo: number, now = toda
   const d = new Date(`${now}T00:00:00Z`)
   d.setUTCMonth(d.getUTCMonth() - monthsAgo) // 달력 기준 N개월 전
   const date = d.toISOString().slice(0, 10)
-  const km = my.km > 0 ? Math.max(0, Math.round((my.km - monthsAgo * KM_PER_MONTH) / 100) * 100) : undefined
-  return km != null ? { date, km } : { date }
+  const km = my.km > 0 ? Math.round((my.km - monthsAgo * KM_PER_MONTH) / 100) * 100 : undefined
+  return km != null && km > 0 ? { date, km } : { date }
+}
+
+/** 교체 기록 하나 지우기 (잘못 누른 기록 되돌리기) */
+export function removeRecord<T extends Pick<MyCar, "records">>(my: T, slug: string): T {
+  const records = { ...my.records }
+  delete records[slug]
+  return { ...my, records }
 }
 
 /** '모름'으로 넘긴 부품 (이 기기에만, 차마다) */

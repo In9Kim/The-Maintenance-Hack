@@ -86,6 +86,12 @@ function str(v, max) {
   return String(v == null ? "" : v).slice(0, max || 500);
 }
 
+/** 밖에서 받은 글을 새 줄로 쓸 때: 시트가 수식으로 읽지 않게 =, +, @, 탭, -글자 로 시작하면 앞에 작은따옴표 (숫자 -5는 그대로) */
+function cellStr(v, max) {
+  var s = str(v, max);
+  return /^[=+@\t\r]|^-[^\d]/.test(s) ? "'" + s : s;
+}
+
 // ── 검증 캐시 ────────────────────────────────────────────────────────────────
 
 function handleSave(data) {
@@ -128,13 +134,13 @@ function handleCount() {
 function handleEvent(data) {
   getTab("events").appendRow([
     new Date().toISOString(),
-    str(data.type, 40),
-    str(data.target, 40),
-    str(data.carId, 100),
-    str(data.partId, 150),
-    str(data.path, 300),
-    str(data.referrer, 200),
-    str(data.meta, 1000)
+    cellStr(data.type, 40),
+    cellStr(data.target, 40),
+    cellStr(data.carId, 100),
+    cellStr(data.partId, 150),
+    cellStr(data.path, 300),
+    cellStr(data.referrer, 200),
+    cellStr(data.meta, 1000)
   ]);
   return { success: true };
 }
@@ -241,7 +247,7 @@ function handleCarSave(data) {
   if (!car || !car.id) throw new Error("carJson에 id가 없습니다.");
   if (findCarRow(car.id) > 0) return { success: true, duplicate: true };
   var now = new Date().toISOString();
-  getTab("cars").appendRow([car.id, car.brand, car.model, car.generation, "pending", JSON.stringify(car), now, now]);
+  getTab("cars").appendRow([cellStr(car.id, 100), cellStr(car.brand, 100), cellStr(car.model, 100), cellStr(car.generation, 100), "pending", JSON.stringify(car), now, now]);
   return { success: true };
 }
 

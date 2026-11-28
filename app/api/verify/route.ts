@@ -4,14 +4,14 @@ import { lookupCache, writeCache, makeVinPrefix, logEvent, sheetsEnabled, lookup
 import { getFixedVehicleSpec } from "@/lib/vehicle-spec"
 import { softenResult } from "@/lib/compat-wording"
 import { createHash } from "crypto"
-import { checkLimit, countUse, GUEST, PER_IP, PER_USER } from "@/lib/verify-limit"
+import { takeVerify, refundVerify, GUEST, GUEST_ALL, GUEST_ALL_MAX, PER_IP, PER_USER } from "@/lib/verify-limit"
+import { clientIp } from "@/lib/client-ip"
+import { checkFetchUrl, guardedFetch } from "@/lib/quote-url-guard"
 import { getSeoCar } from "@/lib/seo"
 import { buildCompatRequest, parseProductInput } from "@/lib/compat-request"
 import { userIdFrom } from "@/lib/auth-user"
 
 const VIN_REGEX = /^[A-HJ-NPR-Z0-9]{17}$/i
-// Block SSRF to private/loopback ranges
-const BLOCKED_HOSTNAMES = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.)/
 
 /**
  * 쇼핑몰 공통 제목(상품명이 아님). 네이버 스마트스토어·쿠팡 등은 서버에서 열면 상품명이 아니라
@@ -33,7 +33,8 @@ async function extractProductInfoFromUrl(url: string): Promise<string | null> {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 6000)
 
-    const res = await fetch(url, {
+    // 내부 주소로 가는 리다이렉트를 막으려고 한 번씩 검사하며 따라감 (lib/quote-url-guard.ts)
+    const res = await guardedFetch(url, {
       signal: controller.signal,
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -43,7 +44,7 @@ async function extractProductInfoFromUrl(url: string): Promise<string | null> {
     })
     clearTimeout(timeoutId)
 
-    if (!res.ok) return null
+    if (!res || !res.ok) return null
 
     const reader = res.body?.getReader()
     if (!reader) return null
@@ -78,9 +79,16 @@ async function extractProductInfoFromUrl(url: string): Promise<string | null> {
 export async function POST(req: NextRequest) {
   // 로그인 안 해도 기기마다 하루 GUEST번 (견적서 분석과 같은 기준). 로그인하면 계정마다 하루 PER_USER번
   const uid = await userIdFrom(req)
-  const ipAddr = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
+  const ipAddr = clientIp(req.headers) // IPv6는 /64로 묶음
+  let body: Record<string, unknown>
   try {
-    const body = await req.json()
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: "요청을 읽지 못했어요." }, { status: 400 })
+  }
+  // 본문이 null·숫자·배열이면 아래에서 TypeError가 나서 'AI 문제'로 잘못 안내되므로 여기서 400
+  if (!body || typeof body !== "object" || Array.isArray(body)) return NextResponse.json({ error: "요청을 읽지 못했어요." }, { status: 400 })
+  try {
     const { vin, carId, year, engine, product } = body as {
       vin?: string
       carId?: string
@@ -119,19 +127,11 @@ export async function POST(req: NextRequest) {
     let urlExtracted = false
 
     if (productUrl && typeof productUrl === "string" && !productInfo) {
-      let parsedUrl: URL
-      try {
-        parsedUrl = new URL(productUrl.trim())
-      } catch {
-        return NextResponse.json({ error: "올바른 URL 형식이 아닙니다." }, { status: 400 })
-      }
-
-      if (!["http:", "https:"].includes(parsedUrl.protocol)) {
-        return NextResponse.json({ error: "HTTP/HTTPS URL만 지원합니다." }, { status: 400 })
-      }
-
-      if (BLOCKED_HOSTNAMES.test(parsedUrl.hostname)) {
-        return NextResponse.json({ error: "접근할 수 없는 주소입니다." }, { status: 400 })
+      const checked = checkFetchUrl(productUrl.trim())
+      if (!checked.ok) {
+        const error =
+          checked.reason === "format" ? "올바른 URL 형식이 아닙니다." : checked.reason === "protocol" ? "HTTP/HTTPS URL만 지원합니다." : "접근할 수 없는 주소입니다."
+        return NextResponse.json({ error }, { status: 400 })
       }
 
       const extracted = await extractProductInfoFromUrl(productUrl.trim())
@@ -186,32 +186,40 @@ export async function POST(req: NextRequest) {
         : [
             { who: `d:${device || ipAddr}`, limit: GUEST },
             { who: `ip:${ipAddr}`, limit: PER_IP },
+            { who: GUEST_ALL, limit: GUEST_ALL_MAX },
           ]
-      const states = await Promise.all(keys.map((k) => checkLimit(k.who, k.limit)))
-      const limit = states.find((s) => s.reason === "global") ?? states.find((s) => !s.ok) ?? states[0]
-      if (!limit.ok) {
+      // AI 부르기 전에 먼저 센다 (응답 뒤에 세면 동시에 보낸 요청이 모두 통과함)
+      const take = await takeVerify(keys)
+      if (take !== "ok") {
         return NextResponse.json(
           {
             error:
-              limit.reason === "global"
+              take === "global"
                 ? "오늘은 확인 요청이 많아 AI 판정을 잠시 멈췄어요. 내일 다시 이용해 주세요. 그동안은 차종 페이지의 규격·순정 품번으로 직접 대조할 수 있어요."
-                : uid
+                : take.over === GUEST_ALL
+                  ? "오늘 무료 확인이 마감됐어요. 로그인하면 이어서 쓸 수 있어요."
+                  : uid
                   ? `AI 판정은 계정마다 하루 ${PER_USER}번까지예요. 내일 다시 이용해 주세요. 이미 누가 확인한 같은 차·같은 상품은 횟수와 상관없이 바로 보여 드려요.`
                   : `오늘 무료 확인 ${GUEST}번을 썼어요. 로그인하면 하루 ${PER_USER}번까지 쓸 수 있어요.`,
             limited: true,
-            login: !uid && limit.reason !== "global",
+            login: !uid && take !== "global",
           },
           { status: 429 }
         )
       }
-      after(() => Promise.all(keys.map((k, i) => countUse(k.who, i === 0))))
       // 차량 정보 확정(저장본 또는 새로 해석) → 그 정보로 부품만 판정
-      if (req2) {
-        result = await verifyCompatibility(null, productInfo, safeCategory, req2.vehicle, req2.reference)
-      } else {
-        const fixed = await getFixedVehicleSpec(normalizedVin)
-        saveVehicle = fixed?.save
-        result = await verifyCompatibility(normalizedVin, productInfo, safeCategory, fixed?.spec)
+      try {
+        if (req2) {
+          result = await verifyCompatibility(null, productInfo, safeCategory, req2.vehicle, req2.reference)
+        } else {
+          const fixed = await getFixedVehicleSpec(normalizedVin)
+          saveVehicle = fixed?.save
+          result = await verifyCompatibility(normalizedVin, productInfo, safeCategory, fixed?.spec)
+        }
+      } catch (e) {
+        // AI가 실패하면 기기·계정 횟수만 돌려준다 (IP·전체 횟수는 그대로 → 상한 유지)
+        await refundVerify(keys).catch(() => {})
+        throw e
       }
     }
 

@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { getSeoCar, partCost, partSlug } from "@/lib/seo"
 import { coupangPickFor } from "@/lib/coupang-links"
 import { analyzeQuoteImage, buildQuotePrompt, streamQuoteImage, type QuoteItem } from "@/lib/quote-analyze"
-import { takeQuote, refundQuote, QUOTE_GUEST, QUOTE_PER_IP, QUOTE_PER_USER, type QuoteCounter } from "@/lib/quote-limit"
+import { takeQuote, refundQuote, QUOTE_GUEST, QUOTE_GUEST_ALL, QUOTE_PER_IP, QUOTE_PER_USER, GUEST_ALL, type QuoteCounter } from "@/lib/quote-limit"
+import { clientIp } from "@/lib/client-ip"
 import { userIdFrom } from "@/lib/auth-user"
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-auth"
 
@@ -17,7 +18,9 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "요청을 읽지 못했어요." }, { status: 400 })
   }
-  const car = getSeoCar(body.carId ?? "")
+  // 본문이 null·숫자·배열이면 아래에서 TypeError(500)가 나므로 여기서 400
+  if (!body || typeof body !== "object" || Array.isArray(body)) return NextResponse.json({ error: "요청을 읽지 못했어요." }, { status: 400 })
+  const car = getSeoCar(typeof body.carId === "string" ? body.carId : "")
   if (!car) return NextResponse.json({ error: "차종을 먼저 골라 주세요." }, { status: 400 })
   const image = typeof body.image === "string" ? body.image.replace(/^data:[^,]+,/, "") : ""
   const mediaType = TYPES.has(body.mediaType ?? "") ? body.mediaType! : "image/jpeg"
@@ -26,7 +29,8 @@ export async function POST(req: NextRequest) {
   // 로그인 안 해도 기기마다 하루 1번 (정비소 앞에서 바로 쓰게). 로그인하면 계정마다 하루 3번
   const uid = await userIdFrom(req)
   const device = typeof body.device === "string" && /^[0-9a-f-]{36}$/.test(body.device) ? body.device : ""
-  const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
+  // IPv6는 /64로 묶어서 셈 (주소만 바꿔 가며 한도를 피하지 못하게)
+  const ip = clientIp(req.headers)
   // 관리자(/admin/login으로 로그인한 운영자)는 개인 한도 없이 테스트. 사이트 전체 한도는 그대로 센다
   const admin = await verifyAdminToken(req.cookies.get(ADMIN_COOKIE)?.value ?? "")
   const counters: QuoteCounter[] = admin
@@ -36,13 +40,17 @@ export async function POST(req: NextRequest) {
     : [
         { who: `d:${device || ip}`, limit: QUOTE_GUEST },
         { who: `ip:${ip}`, limit: QUOTE_PER_IP },
+        // 비로그인 전체 몫: 사이트 전체 한도를 게스트가 다 쓰지 못하게
+        { who: GUEST_ALL, limit: QUOTE_GUEST_ALL },
       ]
   const take = await takeQuote(counters)
   if (take !== "ok") {
     const error =
       take === "global"
         ? "오늘은 분석 요청이 많아 마감됐어요. 내일 다시 이용해 주세요."
-        : uid
+        : take.over === GUEST_ALL
+          ? "오늘 무료 분석이 마감됐어요. 로그인하면 이어서 쓸 수 있어요."
+          : uid
           ? `견적서 분석은 하루 ${QUOTE_PER_USER}번까지예요. 내일 다시 이용해 주세요.`
           : `오늘 무료 분석 ${QUOTE_GUEST}번을 썼어요. 로그인하면 하루 ${QUOTE_PER_USER}번까지 쓸 수 있어요.`
     return NextResponse.json({ error, limited: true, login: !uid && take !== "global" }, { status: 429 })
@@ -83,7 +91,12 @@ export async function POST(req: NextRequest) {
     const enc = new TextEncoder()
     const stream = new ReadableStream({
       async start(ctl) {
-        const send = (o: unknown) => ctl.enqueue(enc.encode(JSON.stringify(o) + "\n"))
+        // 보내기 실패(화면이 연결을 끊음)는 무시: AI 실패와 섞여 횟수를 돌려주면 끊기를 반복해 한도를 피할 수 있음
+        const send = (o: unknown) => {
+          try {
+            ctl.enqueue(enc.encode(JSON.stringify(o) + "\n"))
+          } catch {}
+        }
         try {
           const result = await streamQuoteImage(image, mediaType, prompt, (it) => it.has_part !== false && send({ t: "item", item: enrich(it) }))
           if (!result.readable) await refundQuote(counters)
@@ -91,10 +104,12 @@ export async function POST(req: NextRequest) {
         } catch (e) {
           const msg = e instanceof Error ? e.message : String(e)
           console.error("[quote:stream]", msg.slice(0, 200))
-          await refundQuote(counters)
+          await refundQuote(counters, { aiCalled: msg !== "NO_KEY" })
           send({ t: "error", error: failMsg(msg)[0] })
         } finally {
-          ctl.close()
+          try {
+            ctl.close()
+          } catch {}
         }
       },
     })
@@ -108,7 +123,7 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
     console.error("[quote]", msg.slice(0, 200))
-    await refundQuote(counters)
+    await refundQuote(counters, { aiCalled: msg !== "NO_KEY" })
     const [error, status] = failMsg(msg)
     return NextResponse.json({ error }, { status })
   }

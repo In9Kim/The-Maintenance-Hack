@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { formatPrice } from "@/lib/utils"
 import { GONGIM_RESERVATION_URL } from "@/lib/config"
-import { coupangChoicesFor } from "@/lib/coupang-links"
+import { coupangChoicesFor, oilAmount } from "@/lib/coupang-links"
 import { priceBasis } from "@/lib/seo"
 import { ReceiptCard } from "@/components/home/ReceiptCard"
 import { OutboundLink } from "@/components/seo/OutboundLink"
@@ -75,6 +75,10 @@ export function CostDashboard({ car, summary }: CostDashboardProps) {
             >
               <span className="block text-[14px] font-semibold">{part.name} · {link.title}</span>
               <span className="mt-0.5 block text-[13px] text-muted-foreground">{link.sub}</span>
+              {/* 오일 단품은 한 통 용량이 필요량보다 적을 수 있음 (부품 페이지와 같은 안내) */}
+              {link.kind === "pick" && link.title.startsWith("이 오일") && oilAmount(part) && (
+                <span className="mt-1 block text-[12px] font-semibold text-[#B54708]">필요량 {oilAmount(part)}L · 용량이 모자라면 더 사세요</span>
+              )}
             </OutboundLink>
           ))}
         </div>

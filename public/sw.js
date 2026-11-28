@@ -29,20 +29,36 @@ self.addEventListener("push", (e) => {
     self.registration.showNotification(d.title || "정비핵", {
       body: d.body || "",
       icon: "/icon-192.png",
-      badge: "/icon-192.png",
+      // 안드로이드 상태줄 작은 아이콘: 흰색·투명 배경이어야 함 (컬러 아이콘은 흰 사각형으로 보임)
+      badge: "/badge-96.png",
       tag: "mh-due",
-      data: { url: d.url || "/my" },
+      data: { url: sameOrigin(d.url) },
     }),
   )
 })
 
+/** 알림이 여는 주소는 이 사이트 안만 (없거나 다른 사이트면 마이 화면) */
+function sameOrigin(u) {
+  try {
+    const x = new URL(u || "/my", self.location.origin)
+    return x.origin === self.location.origin ? x.pathname + x.search + x.hash : "/my"
+  } catch {
+    return "/my"
+  }
+}
+
 self.addEventListener("notificationclick", (e) => {
   e.notification.close()
-  const url = (e.notification.data && e.notification.data.url) || "/my"
+  const url = sameOrigin(e.notification.data && e.notification.data.url)
   e.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
-      for (const c of list) if ("focus" in c) return c.navigate(url).then((w) => (w || c).focus())
-      return self.clients.openWindow(url)
+      const c = list.find((w) => "focus" in w && w.url.startsWith(self.location.origin))
+      if (!c) return self.clients.openWindow(url)
+      // 이 서비스 워커가 맡지 않은 창이면 navigate가 실패하므로 그때는 새 창으로
+      return c
+        .navigate(url)
+        .then((w) => (w || c).focus())
+        .catch(() => self.clients.openWindow(url))
     }),
   )
 })

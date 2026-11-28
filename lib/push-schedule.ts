@@ -5,7 +5,10 @@
  *  - km 주기: 그동안 달린 속도로 그날을 추정. 속도를 알 수 없으면 한 달 1,000km로 가정 (평균값 아님, 보수적 가정)
  * key에 마지막 교체일을 넣어서, 새로 갈았다고 기록하면 다음 주기에 다시 알린다.
  */
-import type { Garage, MyCar } from "./my-car"
+import type { ChangeRecord, Garage, MyCar } from "./my-car"
+
+/** km:0은 예전 기록의 '모름' 값 (lib/my-car.ts hasKm과 같은 기준. 테스트가 확장자 없이 불러오지 못해 따로 둠) */
+const hasKm = (r: ChangeRecord) => typeof r.km === "number" && r.km > 0
 
 export interface PushItem {
   key: string
@@ -30,9 +33,9 @@ function itemsFor(my: MyCar, today: string): PushItem[] {
     if (!r) continue
     const dates: string[] = []
     if (part.intervalMonths) dates.push(addDays(r.date, part.intervalMonths * 30.44 * SOON))
-    if (part.intervalKm && r.km != null) {
+    if (part.intervalKm && hasKm(r) && my.km > 0) {
       const days = (Date.parse(my.kmDate) - Date.parse(r.date)) / DAY
-      const driven = my.km - r.km
+      const driven = my.km - (r.km as number)
       const perDay = days >= 14 && driven > 0 ? driven / days : DEFAULT_KM_PER_DAY
       const left = part.intervalKm * SOON - Math.max(0, driven)
       dates.push(addDays(my.kmDate, left / perDay))

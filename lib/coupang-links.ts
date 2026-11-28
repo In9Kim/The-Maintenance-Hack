@@ -14,6 +14,7 @@ import padRaw from "@/data/brake-pad-fitment.json"
 import type { CarModel, MaintenancePart } from "@/types"
 
 import type { CoupangSpecLink } from "./coupang-check"
+import { oilNeedText } from "@/lib/oil-pack"
 export type { CoupangSpecLink }
 
 const LINKS = ((raw as { links?: Record<string, CoupangSpecLink[]> }).links ?? {}) as Record<string, CoupangSpecLink[]>
@@ -153,7 +154,7 @@ export function coupangChoicesFor(part: MaintenancePart): CoupangChoice[] {
           : pick.kind === "set"
           ? "엔진오일 + 오일필터가 함께 든 차종 전용 세트예요. 상품명의 연식·엔진이 내 차와 같은지 한 번 더 보세요."
           : pick.kind === "oil"
-            ? `규격(점도·등급)이 맞는 오일이에요.${need ? ` 필요량은 ${need}L라 용량이 모자라면 1L를 더 사세요.` : ""} 오일필터는 따로 필요해요.`
+            ? `규격(점도·등급)이 맞는 오일이에요.${need ? ` ${oilNeedText(Number(need), pick.name)}` : ""} 오일필터는 따로 필요해요.`
             : pick.kind === "wiper"
               ? "운전석·조수석 길이가 이 차 규격과 같은 세트예요. 사기 전에 지금 달린 블레이드 길이와 한 번 비교하세요."
               : "상품명에 이 차종(또는 순정 품번)이 적힌 필터예요. 연식·엔진이 내 차와 같은지 상품명에서 한 번 더 보세요.",

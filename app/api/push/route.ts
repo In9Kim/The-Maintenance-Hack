@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { userIdFrom } from "@/lib/auth-user"
-import { pushKey, savePush, type KV } from "@/lib/push-store"
+import { pushKey, savePush, takePushQuota, userPushKeys, type KV } from "@/lib/push-store"
+import { isPushEndpoint, MAX_HELLO_PER_DAY, MAX_SAVES_PER_DAY, MAX_SUBS_PER_USER } from "@/lib/push-guard"
 import { buildPush } from "@/lib/web-push"
 import type { PushItem } from "@/lib/push-schedule"
 
@@ -23,7 +24,8 @@ function readSub(v: unknown) {
   const endpoint = str(s?.endpoint, 1000)
   const p256dh = str(s?.keys?.p256dh, 200)
   const auth = str(s?.keys?.auth, 100)
-  if (!endpoint || !p256dh || !auth || !/^https:\/\//.test(endpoint)) return null
+  // 브라우저 푸시 서버 주소만 (아무 주소나 받으면 워커가 남이 고른 곳으로 요청을 보내게 됨)
+  if (!endpoint || !p256dh || !auth || !isPushEndpoint(endpoint)) return null
   return { endpoint, keys: { p256dh, auth } }
 }
 
@@ -50,10 +52,18 @@ export async function POST(req: NextRequest) {
   if (!sub || !items) return NextResponse.json({ error: "알림 정보가 올바르지 않아요." }, { status: 400 })
   const env = await cf()
   if (!env.VERIFY_LIMIT) return NextResponse.json({ ok: true, stored: false })
-  await savePush(env.VERIFY_LIMIT, await pushKey(uid, sub.endpoint), sub, items)
-  // 처음 켤 때: 바로 한 통 보내서 이 폰에서 알림이 오는지 확인시킨다
+  const store = env.VERIFY_LIMIT
+  const key = await pushKey(uid, sub.endpoint)
+  // 비용 한도: 계정당 기기 수·하루 저장 횟수 (KV 쓰기·매일 아침 작업이 끝없이 늘지 않게)
+  const mine = await userPushKeys(store, uid)
+  if (!mine.includes(key) && mine.length >= MAX_SUBS_PER_USER)
+    return NextResponse.json({ error: `알림은 한 계정에 기기 ${MAX_SUBS_PER_USER}대까지 켤 수 있어요. 안 쓰는 폰에서 먼저 꺼 주세요.` }, { status: 429 })
+  if (!(await takePushQuota(store, uid, "save", MAX_SAVES_PER_DAY)))
+    return NextResponse.json({ error: "오늘은 알림 저장을 많이 했어요. 내일 다시 해 주세요." }, { status: 429 })
+  await savePush(store, key, sub, items)
+  // 처음 켤 때: 바로 한 통 보내서 이 폰에서 알림이 오는지 확인시킨다 (계정당 하루 몇 번만)
   let hello: number | null = null
-  if (body?.hello === true && env.VAPID_PRIVATE_KEY) {
+  if (body?.hello === true && env.VAPID_PRIVATE_KEY && (await takePushQuota(store, uid, "hello", MAX_HELLO_PER_DAY))) {
     try {
       const p = await buildPush(sub, { title: "정비핵 알림이 켜졌어요", body: "부품 갈 때가 되면 아침 9시에 이렇게 알려 드려요", url: "/my" }, env.VAPID_PRIVATE_KEY, "https://jungbihack.com", 3600)
       hello = (await fetch(p.endpoint, { method: "POST", headers: p.headers, body: p.body })).status
@@ -67,10 +77,15 @@ export async function POST(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const uid = await userIdFrom(req)
   if (!uid) return NextResponse.json({ error: "로그인이 필요해요.", login: true }, { status: 401 })
-  const body = (await req.json().catch(() => null)) as { endpoint?: unknown } | null
+  const body = (await req.json().catch(() => null)) as { endpoint?: unknown; all?: unknown } | null
+  const store = await kv()
+  // 탈퇴: 이 계정으로 켠 모든 기기의 알림 정보를 지운다
+  if (body?.all === true) {
+    if (store) for (const k of await userPushKeys(store, uid)) await store.delete(k)
+    return NextResponse.json({ ok: true })
+  }
   const endpoint = str(body?.endpoint, 1000)
   if (!endpoint) return NextResponse.json({ error: "알림 정보가 올바르지 않아요." }, { status: 400 })
-  const store = await kv()
   if (store) await store.delete(await pushKey(uid, endpoint))
   return NextResponse.json({ ok: true })
 }

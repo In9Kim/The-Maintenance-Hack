@@ -320,7 +320,7 @@ export function NearMap({ slug }: { slug: string }) {
           id="near-area"
           value={area}
           onChange={(e) => setArea(e.target.value)}
-          placeholder="동네·역 이름 (예: 강남역, 분당 정자동)"
+          placeholder="동네·역 (예: 강남역)"
           className="h-12 min-w-0 flex-1 rounded-[10px] border border-input bg-card px-3.5 text-[16px] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           enterKeyHint="search"
         />

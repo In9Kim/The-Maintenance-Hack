@@ -208,7 +208,7 @@ function Detail({ first, pick, gens, preId, onSave, onBack }: { first: boolean; 
         )}
         {gen === "custom" && (
           <p className="rounded-[10px] bg-muted px-3.5 py-2.5 text-[13px] leading-relaxed text-muted-foreground">
-            이 차는 아직 부품 규격·가격 정보가 없어요. 등록해 두시면 견적서 분석·근처 공임나라·리콜 알림은 바로 쓸 수 있고, 등록이 많은 차부터 정보를 채워요.
+            이 차는 아직 부품 규격·가격 정보가 없어요. 근처 공임나라 찾기는 바로 쓸 수 있고, 등록이 많은 차부터 정보를 채워요.
           </p>
         )}
         {gen && (

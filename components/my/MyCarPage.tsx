@@ -6,7 +6,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   dueList,
   loadGarage,
+  makeRecord,
   removeCar,
+  removeRecord,
   saveGarage,
   today,
   upsertCar,
@@ -23,7 +25,7 @@ import { track } from "@/lib/track"
 import { takeAfterLogin } from "@/components/my/LoginButtons"
 import { LoginPanel } from "@/components/my/LoginPanel"
 import { PushToggle } from "@/components/my/PushToggle"
-import { disablePush } from "@/lib/push-client"
+import { disableAllPush, disablePush } from "@/lib/push-client"
 import { LiveCoupang } from "@/components/cars/LiveCoupang"
 
 export type { MyCarOption }
@@ -253,6 +255,12 @@ function AccountBox({ providers, account, onSignedOut }: { providers: Provider[]
   const [busy, setBusy] = useState(false)
 
   const signOut = async () => {
+    // 로그아웃하면 이 폰의 차 목록을 비우므로, 그 전에 계정에 한 번 더 올려 둔다 (저장 실패했던 수정이 사라지지 않게)
+    setBusy(true)
+    const cars = loadGarage().cars
+    const saved = cars.length ? await pushCars(cars).then(() => true, () => false) : true
+    setBusy(false)
+    if (!saved && !confirm("계정에 저장 못 한 기록이 있어요. 로그아웃하면 이 폰에서 사라져요. 그래도 할까요?")) return
     await disablePush().catch(() => {}) // 로그아웃한 폰에는 알림을 보내지 않음
     const sb = await supabase()
     await sb.auth.signOut()
@@ -262,7 +270,7 @@ function AccountBox({ providers, account, onSignedOut }: { providers: Provider[]
   const withdraw = async () => {
     if (!confirm("탈퇴하면 계정에 저장한 차와 교체 기록이 모두 지워지고 되돌릴 수 없어요. 탈퇴할까요?")) return
     setBusy(true)
-    await disablePush().catch(() => {})
+    await disableAllPush().catch(() => {}) // 이 계정으로 알림을 켠 다른 폰까지 모두 지움
     const sb = await supabase()
     const { error } = await sb.rpc("delete_my_account")
     if (error) {
@@ -309,7 +317,8 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
   const [showUnknown, setShowUnknown] = useState(false)
   const list = dueList(my)
   const urgent = list.filter((d) => d.state === "over" || d.state === "soon").length
-  const unknown = list.filter((d) => d.state === "unknown").length
+  const isBlank = (d: (typeof list)[number]) => d.state === "unknown" && !d.record // 기록 안 한 부품
+  const unknown = list.filter(isBlank).length
 
   const saveKm = () => {
     if (num(km) > 0) update({ ...my, km: num(km), kmDate: today() })
@@ -333,7 +342,7 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
           <span className="text-[14px] text-white/70">주행거리 <span className="text-[12px]">({my.kmDate.slice(5).replace("-", "/")} 기준)</span></span>
           {editKm ? (
             <span className="flex items-center gap-2">
-              <input autoFocus inputMode="numeric" className="h-10 w-32 rounded-lg bg-white px-2.5 text-right text-[16px] text-foreground outline-none" value={num(km).toLocaleString("ko-KR")} onChange={(e) => setKm(e.target.value)} onKeyDown={(e) => e.key === "Enter" && saveKm()} />
+              <input autoFocus inputMode="numeric" className="h-10 w-32 rounded-lg bg-white px-2.5 text-right text-[16px] text-foreground outline-none" placeholder="km" value={num(km) > 0 ? num(km).toLocaleString("ko-KR") : ""} onChange={(e) => setKm(e.target.value)} onKeyDown={(e) => e.key === "Enter" && saveKm()} />
               <button onClick={saveKm} className="h-10 rounded-lg bg-primary px-3 text-[14px] font-bold">저장</button>
             </span>
           ) : (
@@ -360,7 +369,7 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
 
       {custom ? (
         <p className="mt-6 rounded-[14px] border border-border bg-card px-4 py-3.5 text-[14px] leading-relaxed text-muted-foreground">
-          이 차는 아직 부품 규격·가격 정보가 없어요. 등록이 많은 차부터 채우고 있어요. 견적서 분석과 근처 공임나라 찾기는 그대로 쓸 수 있어요.
+          이 차는 아직 부품 규격·가격 정보가 없어요. 등록이 많은 차부터 채우고 있어요. 근처 공임나라 찾기는 그대로 쓸 수 있어요.
         </p>
       ) : (
       <>
@@ -370,7 +379,7 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
       </p>
 
       <ul className="mt-3 divide-y divide-border rounded-[14px] border border-border bg-card">
-        {list.filter((d) => showUnknown || d.state !== "unknown" || unknown === list.length).slice(0, showUnknown ? undefined : unknown === list.length ? 3 : undefined).map((d) => {
+        {list.filter((d) => showUnknown || !isBlank(d) || unknown === list.length).slice(0, showUnknown ? undefined : unknown === list.length ? 3 : undefined).map((d) => {
           const st = STATE_STYLE[d.state]
           const isOpen = open === d.part.slug
           const toggle = () => {
@@ -399,12 +408,12 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
                 <div className="px-4 pb-3">
                   {!custom && (
                     <div className="mb-3">
-                      <LiveCoupang carId={my.car.id} part={d.part.slug} partId={d.part.slug} compact emptyText="쿠팡에서 이 차에 맞는 상품을 찾지 못했어요." />
+                      <LiveCoupang carId={my.car.id} part={d.part.slug} partId={d.part.slug} engine={my.engine} compact emptyText="쿠팡에서 이 차에 맞는 상품을 찾지 못했어요." />
                     </div>
                   )}
                   {editing === d.part.slug ? (
                     <RecordForm
-                      initial={d.record ?? { date: today(), km: my.km }}
+                      initial={d.record ?? { date: today() }}
                       onCancel={() => setEditing(null)}
                       onSave={(r) => {
                         update({ ...my, records: { ...my.records, [d.part.slug]: r } })
@@ -414,7 +423,7 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
                   ) : (
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => update({ ...my, records: { ...my.records, [d.part.slug]: { date: today(), km: my.km } } })}
+                        onClick={() => update({ ...my, records: { ...my.records, [d.part.slug]: makeRecord(today(), my.km) } })}
                         className="min-h-[40px] rounded-lg bg-foreground px-3 text-[13px] font-semibold text-background"
                       >
                         오늘 교체했어요
@@ -425,6 +434,14 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
                       <Link href={`/cars/${my.car.id}/${d.part.slug}`} className="flex min-h-[40px] items-center rounded-lg px-2 text-[13px] font-semibold text-primary">
                         규격·가격 자세히
                       </Link>
+                      {d.record && (
+                        <button
+                          onClick={() => confirm(`${d.part.name} 교체 기록을 지울까요?`) && update(removeRecord(my, d.part.slug))}
+                          className="ml-auto min-h-[40px] px-1 text-[12px] text-muted-foreground underline underline-offset-4"
+                        >
+                          기록 지우기
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
@@ -451,7 +468,7 @@ function Garage({ my, loggedIn, update, remove }: { my: MyCar; loggedIn: boolean
       <p className="mt-6 text-center text-[13px] text-muted-foreground">
         {loggedIn ? "계정에 저장돼요." : "이 휴대폰에만 저장돼요."}{" "}
         <button
-          onClick={() => confirm(`${my.car.name}와 교체 기록을 지울까요?`) && remove()}
+          onClick={() => confirm(`이 차(${my.car.name})와 교체 기록을 지울까요?`) && remove()}
           className="font-semibold underline underline-offset-4"
         >
           이 차 지우기
@@ -484,7 +501,7 @@ function Tools() {
 
 function RecordForm({ initial, onSave, onCancel }: { initial: { date: string; km?: number }; onSave: (r: { date: string; km?: number }) => void; onCancel: () => void }) {
   const [date, setDate] = useState(initial.date)
-  const [km, setKm] = useState(initial.km != null ? String(initial.km) : "")
+  const [km, setKm] = useState(initial.km ? String(initial.km) : "")
   return (
     <div className="mt-3 grid grid-cols-2 gap-2">
       <label className="text-[12px] font-semibold text-muted-foreground">
@@ -495,7 +512,7 @@ function RecordForm({ initial, onSave, onCancel }: { initial: { date: string; km
         그때 주행거리 (모르면 비워 두기)
         <input inputMode="numeric" className={FIELD + " mt-1 h-11 text-[15px]"} placeholder="km" value={km ? num(km).toLocaleString("ko-KR") : ""} onChange={(e) => setKm(e.target.value)} />
       </label>
-      <button onClick={() => date && onSave({ date, km: km ? num(km) : undefined })} className="h-11 rounded-lg bg-primary text-[14px] font-bold text-primary-foreground">저장</button>
+      <button onClick={() => date && onSave(makeRecord(date, km ? num(km) : undefined))} className="h-11 rounded-lg bg-primary text-[14px] font-bold text-primary-foreground">저장</button>
       <button onClick={onCancel} className="h-11 rounded-lg border border-border text-[14px] font-semibold">취소</button>
     </div>
   )

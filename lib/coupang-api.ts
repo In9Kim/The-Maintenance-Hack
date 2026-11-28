@@ -1,4 +1,5 @@
 import { createHmac, createHash } from "crypto"
+import { counterStore, takeCounters, type CounterSpec } from "@/lib/verify-limit"
 
 /**
  * 쿠팡 파트너스 상품 검색 (서버 전용). 결과 링크는 파트너스 링크로 나온다.
@@ -34,17 +35,23 @@ function signedDate(d = new Date()) {
   return `${String(d.getUTCFullYear()).slice(-2)}${p(d.getUTCMonth() + 1)}${p(d.getUTCDate())}T${p(d.getUTCHours())}${p(d.getUTCMinutes())}${p(d.getUTCSeconds())}Z`
 }
 
-/** 한 사람(IP 해시) 하루 검색 횟수 제한. KV가 없으면(로컬) 통과 */
+/** 한 사람(IP 묶음 해시) 하루 검색 횟수 */
 export const SEARCH_PER_USER = 60
+/** 사이트 전체 하루 쿠팡 검색 상한 (같은 검색어는 하루 저장돼서 공짜). 파트너스 API 호출 제한을 넘겨 계정이 막히지 않게.
+ *  쿠팡이 정한 정확한 호출 제한은 확인 필요 → 넘으면 저장된 결과·골라 둔 상품만 보여 줌 */
+export const SEARCH_GLOBAL = 3000
+const SEARCH_SPEC: CounterSpec = {
+  globalKey: (day) => `csg:${day}`,
+  key: (day, who) => `csu:${day}:${createHash("sha256").update(`${day}|${who}`).digest("hex").slice(0, 20)}`,
+  globalMax: SEARCH_GLOBAL,
+}
+/** 쿠팡을 실제로 부르기 전에 센다 (IP 묶음·사이트 전체). 저장소가 없으면(로컬) 통과 */
 export async function allowSearch(ip: string): Promise<boolean> {
-  const store = await kv()
-  if (!store) return true
-  const day = new Date(Date.now() + 9 * 3600_000).toISOString().slice(0, 10)
-  const key = `csu:${day}:${createHash("sha256").update(`${day}|${ip}`).digest("hex").slice(0, 20)}`
-  const n = Number((await store.get(key).catch(() => null)) ?? 0)
-  if (n >= SEARCH_PER_USER) return false
-  await store.put(key, String(n + 1), { expirationTtl: 2 * 86400 }).catch(() => {})
-  return true
+  try {
+    return (await takeCounters(await counterStore(), SEARCH_SPEC, [{ who: ip, limit: SEARCH_PER_USER }])) === "ok"
+  } catch {
+    return true
+  }
 }
 
 /** gate: 저장된 결과가 없어 쿠팡을 실제로 부를 때만 한 번 묻는다 (false면 "LIMIT" 오류). 저장된 결과는 횟수에 안 셈 */

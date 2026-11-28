@@ -9,6 +9,8 @@ import type { CarModel, CostSummary, PartCategory } from "@/types"
 import type { GenerateCarInput } from "@/lib/gemini"
 import { carEngines, partsForEngine } from "@/lib/engines"
 import { formatPrice } from "@/lib/utils"
+import { loadMyCar } from "@/lib/my-car"
+import { useAuthToken } from "@/components/my/useAuthToken"
 
 interface CalculatorPageProps {
   initialCarId?: string
@@ -52,6 +54,7 @@ export function CalculatorPage({
   const [dynamicCars, setDynamicCars] = useState<CarModel[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [generateError, setGenerateError] = useState<string | null>(null)
+  const [generateNeedsLogin, setGenerateNeedsLogin] = useState(false)
   const [generateInfo, setGenerateInfo] = useState<string | null>(null)
 
   const allCars = useMemo(() => [...CAR_DATA, ...dynamicCars], [dynamicCars])
@@ -68,6 +71,20 @@ export function CalculatorPage({
   )
 
   const didPreCheck = useRef(false)
+
+  // 주소로 넘어온 차가 없으면 등록한 내 차(와 엔진)를 미리 골라 둔다 (등록한 차를 다시 고르지 않게)
+  useEffect(() => {
+    if (safeInitialCarId || initialModelQuery) return
+    const my = loadMyCar()
+    const car = my && CAR_DATA.find((c) => c.id === my.car.id)
+    if (!my || !car) return
+    setSelectedCarId(car.id)
+    if (my.engine && carEngines(car).includes(my.engine)) setSelectedEngine(my.engine)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // AI로 규격 만들기는 로그인한 사람만 (서버가 계정 하루 한도로 셈)
+  const { token } = useAuthToken()
 
   // 마운트 시 전달받은 차량 정보 검증 로그
   useEffect(() => {
@@ -132,15 +149,19 @@ export function CalculatorPage({
   const handleGenerateCar = useCallback(async (input: GenerateCarInput): Promise<boolean> => {
     setIsGenerating(true)
     setGenerateError(null)
+    setGenerateNeedsLogin(false)
     setGenerateInfo(null)
     try {
       const res = await fetch("/api/generate-car-data", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify(input),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? "데이터 생성에 실패했습니다.")
+      if (!res.ok) {
+        setGenerateNeedsLogin(res.status === 401 && data.login === true)
+        throw new Error(data.error ?? "데이터 생성에 실패했습니다.")
+      }
 
       const newCar: CarModel = data.car
 
@@ -160,7 +181,7 @@ export function CalculatorPage({
     } finally {
       setIsGenerating(false)
     }
-  }, [])
+  }, [token])
 
   const costSummary = useMemo((): CostSummary | null => {
     if (!selectedCar || selectedParts.size === 0) return null
@@ -212,6 +233,7 @@ export function CalculatorPage({
               isGenerating={isGenerating}
               generateError={generateError}
               generateInfo={generateInfo}
+              generateNeedsLogin={generateNeedsLogin}
               isFromVerify={isFromVerify && Boolean(selectedCarId)}
             />
             {selectedCar && engines.length > 1 && (

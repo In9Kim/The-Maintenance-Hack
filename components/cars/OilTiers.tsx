@@ -1,5 +1,6 @@
 import { OutboundLink } from "@/components/seo/OutboundLink"
 import { naverQueryOf, naverSearchUrl, OIL_TIERS_DATE, type OilTierRow } from "@/lib/coupang-links"
+import { AFFILIATE_TEXT } from "@/lib/affiliate"
 
 const TIER_STYLE = { oem: "bg-[#EFF4FF] text-[#1849A9]", value: "bg-[#ECFDF3] text-[#067647]", premium: "bg-[#FFF6ED] text-[#B54708]" } as const
 
@@ -14,6 +15,8 @@ export function OilTiers({ rows, carId, partId }: { rows: OilTierRow[]; carId: s
         <p className="mt-0.5 text-[12px] text-muted-foreground">
           점도·등급·용량을 이 차 규격과 맞춰 봤어요. 오일필터는 따로 필요해요. 가격은 {date} 쿠팡 기준이고 바뀔 수 있어요.
         </p>
+        {/* 대가성 문구는 쿠팡 버튼과 한 화면에 보이게 목록 바로 위에 */}
+        <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">{AFFILIATE_TEXT}</p>
       </div>
       <ul className="divide-y divide-border">
         {rows.map((r) => (
